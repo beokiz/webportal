@@ -22,13 +22,12 @@ class UserBaseResource extends BaseJsonResource
     public function toArray($request) : array
     {
         return [
-            'id'          => $this->id,
-            'api_user_id' => $this->api_user_id,
-            'name'        => $this->name,
-            'username'    => $this->username,
-            'website'     => $this->website,
-            'email'       => $this->email,
-            'status'      => $this->status,
+            'id'                => $this->id,
+            'first_name'        => $this->first_name,
+            'last_name'         => $this->last_name,
+            'full_name'         => $this->full_name,
+            'email'             => $this->email,
+            'primary_role_name' => $this->primary_role_name,
         ];
     }
 }

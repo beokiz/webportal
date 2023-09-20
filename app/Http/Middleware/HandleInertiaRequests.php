@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
         $user = optional($request->user());
 
         $successes = session()->get('successes') ?? [];
-
+        debug_log($user);
         if (!is_array($successes)) {
             $successes = [$successes];
         }
@@ -52,7 +52,7 @@ class HandleInertiaRequests extends Middleware
             'auth'      => [
                 'canLogin'    => Route::has('auth.login'),
                 'canRegister' => Route::has('auth.register'),
-                'user'        => $user,
+                'user'        => $user->toArray(),
             ],
             'successes' => $successes,
             'ziggy'     => function () use ($request) {

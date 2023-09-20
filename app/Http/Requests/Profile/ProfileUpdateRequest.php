@@ -23,8 +23,9 @@ class ProfileUpdateRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'name'  => ['string', 'max:255'],
-            'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'first_name' => array_merge($this->textRules(), ['required']),
+            'last_name'  => array_merge($this->textRules(), ['nullable']),
+            'email'      => ['required', 'email', Rule::unique(User::class)->ignore($this->user()->id)],
         ];
     }
 

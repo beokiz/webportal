@@ -21,12 +21,12 @@ defineProps({
         class="tw-relative sm:tw-flex sm:tw-justify-center sm:tw-items-center tw-min-h-screen tw-bg-dots-darker tw-bg-center tw-bg-gray-100 dark:tw-bg-dots-lighter dark:tw-bg-gray-900 selection:tw-bg-red-500 selection:tw-text-white"
     >
         <div v-if="canLogin" class="sm:tw-fixed sm:tw-top-0 sm:tw-right-0 tw-p-6 tw-text-right">
-            <Link
-                v-if="$page.props.auth.user"
-                :href="route('dashboard.index')"
-                class="tw-font-semibold tw-text-gray-600 hover:tw-text-gray-900 dark:tw-text-gray-400 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"
-                >Dashboard</Link
-            >
+<!--            <Link-->
+<!--                v-if="$page.props.auth.user"-->
+<!--                :href="route('dashboard.index')"-->
+<!--                class="tw-font-semibold tw-text-gray-600 hover:tw-text-gray-900 dark:tw-text-gray-400 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"-->
+<!--                >Dashboard</Link-->
+<!--            >-->
 
             <template v-else>
                 <Link

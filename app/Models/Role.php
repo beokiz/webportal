@@ -55,8 +55,8 @@ class Role extends SpatieRole
      * @var array
      */
     protected $casts = [
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
+        'created_at' => 'datetime', // timestamp
+        'updated_at' => 'datetime', // timestamp
     ];
 
     /**

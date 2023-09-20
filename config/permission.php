@@ -173,7 +173,10 @@ return [
     'project_roles' => [
         'super_admin' => 'super-admin',
         'admin'       => 'admin',
-        'client'      => 'client',
+        'monitor'     => 'monitor',
+        'monitor_oe'  => 'monitor-oe',
+        'manager'     => 'manager',
+        'employer'    => 'employer',
     ],
 
 ];

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # BeoKiz App
 
 ---
@@ -123,6 +122,3 @@ chown -R www-data:www-data ./
 ```
 http://beokiz.gorka.biz.ua
 ```
-=======
-# Beokiz Webportal
->>>>>>> b9d50867968e32b739e7fde678965dd1641fd24d

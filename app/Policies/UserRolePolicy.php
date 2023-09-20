@@ -37,8 +37,35 @@ class UserRolePolicy extends BasePolicy
      * @param User $user
      * @return bool
      */
-    public function authorizeClientAccess(User $user) : bool
+    public function authorizeMonitorAccess(User $user) : bool
     {
-        return $user->hasRole(config('permission.project_roles.client'));
+        return $user->hasRole(config('permission.project_roles.monitor'));
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeMonitorOeAccess(User $user) : bool
+    {
+        return $user->hasRole(config('permission.project_roles.monitor_oe'));
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeManagerAccess(User $user) : bool
+    {
+        return $user->hasRole(config('permission.project_roles.manager'));
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeEmployerAccess(User $user) : bool
+    {
+        return $user->hasRole(config('permission.project_roles.employer'));
     }
 }

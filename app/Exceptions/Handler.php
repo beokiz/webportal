@@ -121,7 +121,7 @@ class Handler extends ExceptionHandler
         } else {
             switch (true) {
                 case ($exception instanceof AccessDeniedHttpException):
-                    return Redirect::route(RouteServiceProvider::HOME_ROUTE)
+                    return redirect(RouteServiceProvider::HOME)
                         ->withErrors(__('exceptions.user_does_not_have_access'));
                     break;
                 default:

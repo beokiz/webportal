@@ -1,20 +1,21 @@
 <?php
 /*
  * GorKa Team
- * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
+ * Copyright (c) 2023  Vlad Horpynych, Pavel Karpushevskiy
  */
 
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
- * XSS Protection Middleware
+ * User Last Seen Middleware
  *
  * @package \App\Http\Middleware
  */
-class XssProtection
+class UserLastSeenMiddleware
 {
     /**
      * Handle an incoming request.
@@ -25,15 +26,9 @@ class XssProtection
      */
     public function handle(Request $request, Closure $next)
     {
-        $inputs = $request->all();
-
-        array_walk_recursive($inputs, function (&$input) {
-            if ($input) {
-                $input = strip_tags($input);
-            }
-        });
-
-        $request->merge($inputs);
+        if (Auth::check()) {
+            Auth::user()->update(['last_seen_at' => now()]);
+        }
 
         return $next($request);
     }

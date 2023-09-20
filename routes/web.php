@@ -36,7 +36,7 @@ Route::group(['as' => 'main.', 'middleware' => []], function () {
 
     Route::get('/', function () {
         return redirect()
-            ->route('dashboard.index');
+            ->route('profile.edit');
     })->name('index');
 
 });
@@ -46,7 +46,7 @@ Route::group(['as' => 'main.', 'middleware' => []], function () {
  */
 Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['auth', 'verified']], function () {
 
-    Route::get('/', [DashboardController::class, 'index'])->name('index');
+//    Route::get('/', [DashboardController::class, 'index'])->name('index');
 
 });
 
@@ -58,7 +58,7 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth'
 
     Route::get('/', [ProfileController::class, 'edit'])->name('edit');
     Route::patch('/', [ProfileController::class, 'update'])->name('update');
-    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+//    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
 
 });
 

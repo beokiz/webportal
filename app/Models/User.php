@@ -47,6 +47,8 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'two_factor_auth_enabled',
+        'last_seen_at',
     ];
 
     /**
@@ -65,7 +67,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime', // timestamp
+        'last_seen_at'      => 'datetime', // timestamp
+        'is_online'         => 'boolean',
+        'is_super_admin'    => 'boolean',
+        'is_admin'          => 'boolean',
+        'is_monitor'        => 'boolean',
+        'is_monitor_oe'     => 'boolean',
+        'is_manager'        => 'boolean',
+        'is_employer'       => 'boolean',
     ];
 
     /**
@@ -75,10 +85,14 @@ class User extends Authenticatable
      */
     protected $appends = [
         'full_name',
-        'primary_role',
+        'primary_role_name',
+        'is_online',
         'is_super_admin',
         'is_admin',
-        'is_client',
+        'is_monitor',
+        'is_monitor_oe',
+        'is_manager',
+        'is_employer',
     ];
 
     /**
@@ -112,12 +126,32 @@ class User extends Authenticatable
     }
 
     /**
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     public function primaryRole() : Attribute
     {
         return Attribute::make(
+            get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first()) ?? null,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function primaryRoleName() : Attribute
+    {
+        return Attribute::make(
             get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first())->name ?? null,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function isOnline() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->last_seen_at && $this->last_seen_at->diffInMinutes(now()) < 3,
         );
     }
 
@@ -144,10 +178,40 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function isClient() : Attribute
+    public function isMonitor() : Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.client')),
+            get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.monitor')),
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function isMonitorOe() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.monitor_oe')),
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function isManager() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.manager')),
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function isEmployer() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.employer')),
         );
     }
 

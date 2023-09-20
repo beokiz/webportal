@@ -67,7 +67,7 @@ const editedIndex = ref(-1);
 
 const headers = [
     { title: 'First Name', key: 'first_name', width: '20%', sortable: true },
-    { title: 'Role', key: 'is_client', width: '20%', sortable: true },
+    { title: 'Role', key: 'role', width: '20%', sortable: true },
     { title: 'Last Name', key: 'last_name', width: '20%', sortable: true, align: 'start' },
     { title: 'Email', key: 'email', width: '20%', sortable: true },
     { title: 'Actions', key: 'actions', width: '10%', sortable: false },
@@ -140,27 +140,6 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         perPage.value = itemsPerPage;
         loading.value = false;
     }
-};
-
-const checkUserRole = (user) => {
-    let roleName;
-
-    switch (true) {
-        case user.raw.is_super_admin:
-            roleName = 'Super admin';
-            break;
-        case user.raw.is_admin:
-            roleName = 'Admin';
-            break;
-        case user.raw.is_client:
-            roleName = 'Client';
-            break;
-        default:
-            roleName = '-';
-            break;
-    }
-
-    return roleName;
 };
 
 const editItem = (item) => {
@@ -351,7 +330,7 @@ const manageUser = async () => {
                     <tr>
                         <td>{{item.selectable.first_name}}</td>
 
-                        <td>{{checkUserRole(item)}}</td>
+                        <td>{{item.selectable.primary_role_name}}</td>
 
                         <td>{{item.selectable.last_name}}</td>
 

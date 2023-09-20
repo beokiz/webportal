@@ -8,7 +8,6 @@ namespace Database\Factories;
 
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
@@ -43,9 +42,13 @@ class RoleFactory extends BaseFactory
      */
     public function definition() : array
     {
+        $name = $this->faker->unique()->domainWord;
+
         return [
-            'name'        => $this->faker->unique()->domainWord,
-            'guard_name'  => config('auth.defaults.guard'),
+            'name'                => $name,
+            'human_name'          => Str::slug($name),
+            'guard_name'          => config('auth.defaults.guard'),
+            'is_institution_role' => $this->faker->boolean,
         ];
     }
 }

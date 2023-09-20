@@ -18,7 +18,8 @@ const props = defineProps({
 const user = usePage().props.auth.user;
 
 const form = useForm({
-    name: user.name,
+    first_name: user.first_name,
+    last_name: user.last_name,
     email: user.email,
 });
 </script>
@@ -35,19 +36,33 @@ const form = useForm({
 
         <form @submit.prevent="form.patch(route('profile.update'))" class="tw-mt-6 tw-space-y-6">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="first_name" value="First name" />
 
                 <TextInput
-                    id="name"
+                    id="first_name"
                     type="text"
                     class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.name"
+                    v-model="form.first_name"
                     required
                     autofocus
-                    autocomplete="name"
+                    autocomplete="given-name"
                 />
 
-                <InputError class="tw-mt-2" :message="form.errors.name" />
+                <InputError class="tw-mt-2" :message="form.errors.first_name" />
+            </div>
+
+            <div>
+                <InputLabel for="last_name" value="Last name" />
+
+                <TextInput
+                    id="last_name"
+                    type="text"
+                    class="tw-mt-1 tw-block tw-w-full"
+                    v-model="form.last_name"
+                    autocomplete="family-name"
+                />
+
+                <InputError class="tw-mt-2" :message="form.errors.last_name" />
             </div>
 
             <div>

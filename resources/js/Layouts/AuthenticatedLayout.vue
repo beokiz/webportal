@@ -22,7 +22,7 @@ const currentUser = usePage().props.auth.user ?? {};
 const showingNavigationDropdown = ref(false);
 
 const menuItems = {
-    'dashboard.index': 'Dashboard',
+    // 'dashboard.index': 'Dashboard',
     'users.index': 'Users',
 };
 
@@ -46,7 +46,7 @@ const clearErrorsAndSuccesses = () => {
                         <div class="tw-flex">
                             <!-- Logo -->
                             <div class="tw-shrink-0 tw-flex tw-items-center">
-                                <Link :href="route('dashboard.index')">
+                                <Link :href="route('main.index')">
                                     <ApplicationLogo
                                         class="tw-block tw-h-9 tw-w-auto tw-fill-current tw-text-gray-800"
                                     />

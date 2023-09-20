@@ -28,10 +28,11 @@ return new class () extends Action {
          * Create "Super-Admin" User
          */
         $superAdminUser = \App\Models\User::create(array_merge($commonOptions, [
-            'first_name' => 'Admin',
-            'last_name'  => 'Super',
-            'email'      => 'super.admin@sample.gorka.biz.ua',
-            'password'   => '$2y$10$s5P0WCOLu6CSz.9ayOdoYuiXZfSlygegTf8jMpIw4UEgtjDBd.gte', // password
+            'first_name'              => 'Admin',
+            'last_name'               => 'Super',
+            'email'                   => 'super.admin@gorka.biz.ua',
+            'password'                => '$2y$10$s5P0WCOLu6CSz.9ayOdoYuiXZfSlygegTf8jMpIw4UEgtjDBd.gte', // password
+            'two_factor_auth_enabled' => false,
         ]));
 
         // Assign user to 'Super-Admin' Role

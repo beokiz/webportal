@@ -26,7 +26,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/dashboard/';
+    public const HOME = '/profile'; // OLD: /dashboard
 
     /**
      * The path to the "home" route for your application.
@@ -35,7 +35,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME_ROUTE = 'dashboard.index';
+    public const HOME_ROUTE = 'profile.edit'; // OLD: dashboard.index
 
     /**
      * The 'Web' controller namespace for the application.
