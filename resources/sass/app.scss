@@ -1,0 +1,20 @@
+/*!
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
+ */
+
+// Common
+@import "../css/fonts.css";
+@import "common.scss";
+@import "media.scss";
+@import "style.scss";
+
+// For frontend error pages (404, 500 etc)
+//@import "../css/normalize.css";
+//@import "../css/exceptions-layout.css";
+//@import "../css/exceptions-minimal.css";
+//@import "../css/exceptions-illustrated-layout.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

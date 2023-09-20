@@ -1,0 +1,22 @@
+<?php
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych, Pavel Karpushevskiy
+ */
+
+namespace {{ namespace }};
+
+use PHPUnit\Framework\TestCase;
+
+class {{ class }} extends TestCase
+{
+    /**
+     * A basic unit test example.
+     *
+     * @return void
+     */
+    public function test_example()
+    {
+        $this->assertTrue(true);
+    }
+}

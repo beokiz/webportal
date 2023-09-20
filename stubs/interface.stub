@@ -1,0 +1,21 @@
+<?php
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych, Pavel Karpushevskiy
+ */
+
+namespace {{ NAMESPACE }};
+
+/**
+ * Interface {{ CLASS_NAME }}
+ *
+ * @package {{ NAMESPACE }}
+ */
+interface {{ CLASS_NAME }}
+{
+    /**
+     * @param mixed $param
+     * @return mixed
+     */
+    public function someMethod($param);
+}

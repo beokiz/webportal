@@ -1,0 +1,123 @@
+# Test results files
+.phpunit.result.cache
+
+# Composer files
+/vendor
+
+# NPM files
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Laravel Homestead files
+Homestead.json
+Homestead.yaml
+
+# Files with credentials and other sensitive data
+.env
+.env.*
+!.env.example
+auth.json
+
+# Compiled public files
+/public/build
+/public/assets
+/public/css
+/public/fonts
+/public/images
+/public/hot
+/public/js
+/public/storage
+#/public/.htaccess
+/public/mix-manifest.json
+
+# Temporary files
+/tmp
+
+# Log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+!/storage/app/nagios/*.tar.gz
+
+# OS generated files
+ehthumbs.db
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor files
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+_ide_helper.php
+_ide_helper_models.php
+/.idea
+/.vscode
+
+# Eclipse project files
+.buildpath
+.project
+.settings/
+
+# Cache files
+.cache/
+
+# User created files :)
+*.bak
+*.orig
+/*.txt
+
+# System files
+.bash_history
+LICENSE_AFL.txt
+LICENSE.html
+LICENSE.txt
+LICENSE_EE*
+RELEASE_NOTES.txt
+.ssh/
+error_log
+.htpasswds
+#.htaccess
+php.ini.sample
+.modgit/
+_vti_bin/
+_vti_cnf/
+_vti_inf.html
+_vti_log/
+_vti_pvt/
+_vti_txt/
+tmp/
+php.ini
+_old/
+.htpasswds/
+.htpasswd
+.viminfo
+.profile
+.bashrc
+.bash_logout
+.modman/
+pkginfo
+nohup.out
+/.vagrant

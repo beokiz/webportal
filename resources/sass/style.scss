@@ -1,0 +1,31 @@
+/*!
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
+ */
+
+.data-table-container{
+    //&.v-table > .v-table__wrapper > table > tbody > tr > td{
+    //    padding: 15px;
+    //}
+    .v-data-table-footer{
+        padding-bottom: 25px;
+    }
+    .v-data-table-footer__items-per-page{
+        display: none;
+    }
+    tr.disabled > td{
+        background-color: #dadada !important;
+    }
+}
+
+.payment-methods-content-item{
+    background: #7979791c;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+div#stripe-cardElement {
+    margin: 0 0 0 auto;
+    padding: 20px 0 50px;
+}
+
