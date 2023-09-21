@@ -85,8 +85,10 @@ class Kernel extends HttpKernel
         'check_user_role'       => \App\Http\Middleware\CheckUserRole::class,
         'guest'                 => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm'      => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'protect_2fa_page'      => \App\Http\Middleware\ProtectTwoFactorVerificationForm::class,
         'signed'                => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle'              => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'              => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'verified_2fa'          => \App\Http\Middleware\VerifyTwoFactorAuthenticationCode::class,
     ];
 }

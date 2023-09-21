@@ -112,4 +112,35 @@ return [
 
     'password_timeout' => 10800,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Email Verification Settings
+    |--------------------------------------------------------------------------
+    |
+    | The expire time is the number of minutes that each code will be
+    | considered valid. This security feature keeps code short-lived so
+    | they have less time to be guessed. You may change this as needed.
+    |
+    */
+
+    'verification' => [
+        'expire' => 60, // 60 minutes
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | 2FA Settings
+    |--------------------------------------------------------------------------
+    |
+    | The expire time is the number of minutes that each code will be
+    | considered valid. This security feature keeps code short-lived so
+    | they have less time to be guessed. You may change this as needed.
+    |
+    */
+
+    '2fa_settings' => [
+        'max_attempts' => 5,
+        'expire'       => 5, // 5 minutes
+    ],
+
 ];

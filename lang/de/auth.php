@@ -23,4 +23,9 @@ return [
     'logged_in'  => "Sie sind erfolgreich angemeldet!",
     'logged_out' => "Sie sind erfolgreich abgemeldet!",
 
+    '2fa_error'   => '2FA ist gescheitert! Bitte melden Sie sich erneut an.',
+    '2fa_failed'  => 'Der angegebene 2FA-Bestätigungscode ist falsch.',
+    '2fa_expired' => 'Der 2FA-Verifizierungscode ist abgelaufen! Bitte melden Sie sich erneut an.',
+    '2fa_resend'  => 'Der 2FA-Verifizierungscode wurde erneut gesendet.',
+
 ];

@@ -189,6 +189,8 @@ return [
     */
 
     'attributes' => [
+        'two_factor_code' => "2FA-Bestätigungscode",
+
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],
 

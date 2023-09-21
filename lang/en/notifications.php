@@ -52,6 +52,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | 2FA Verification Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    '2fa_verification' => [
+        'subject'     => "2FA verification code",
+        'action_text' => "Verify 2FA Code",
+        'first_line'  => "If you have not tried to log in and have received this notification, please ignore this message.",
+        'second_line' => "Code for two-factor authentication: :code",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Welcome Notification Lines
     |--------------------------------------------------------------------------
     */

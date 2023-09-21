@@ -12,8 +12,9 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\DashboardController;
+//use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -34,15 +35,14 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(['as' => 'main.', 'middleware' => []], function () {
     Route::get('/', function () {
-        return redirect()
-            ->route('profile.edit');
+        return redirect()->route('profile.edit');
     })->name('index');
 });
 
 /*
  * Dashboard routes
  */
-Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['auth', 'verified']], function () {
+Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['auth', 'verified_2fa']], function () {
 //    Route::get('/', [DashboardController::class, 'index'])->name('index');
 });
 
@@ -50,7 +50,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['a
 /*
  * Profile routes
  */
-Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [ProfileController::class, 'edit'])->name('edit');
     Route::patch('/', [ProfileController::class, 'update'])->name('update');
 //    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
@@ -58,17 +58,25 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth'
 
 
 /*
- * Authentication & verification routes
+ * Authentication, 2FA & verification routes
  */
 Route::group(['middleware' => ['guest']], function () {
     Route::group(['as' => 'auth.'], function () {
-        Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-        Route::post('register', [RegisteredUserController::class, 'store']);
+        Route::get('register', function () {
+            return redirect()->route('auth.login');
+        });
+
+//        Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+//        Route::post('register', [RegisteredUserController::class, 'store']);
         Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
     });
 
     Route::group(['as' => 'password.'], function () {
+        Route::get('reset-password', function () {
+            return redirect()->route('auth.login');
+        });
+
         Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('request');
         Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('email');
         Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('reset');
@@ -83,12 +91,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['as' => 'verification.'], function () {
         Route::get('verify-email', EmailVerificationPromptController::class)->name('notice');
-        Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-            ->middleware(['signed', 'throttle:6,1'])
-            ->name('verify');
-        Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-            ->middleware('throttle:6,1')
-            ->name('send');
+        Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verify');
+        Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('send');
     });
 
     Route::group(['as' => 'password.'], function () {
@@ -98,11 +102,17 @@ Route::group(['middleware' => ['auth']], function () {
     });
 });
 
+Route::group(['prefix' => '2fa', 'as' => '2fa.', 'middleware' => ['protect_2fa_page']], function () {
+    Route::get('/', [TwoFactorAuthenticationController::class, 'create'])->name('create');
+    Route::post('/verify', [TwoFactorAuthenticationController::class, 'store'])->name('verify');
+    Route::post('/resend', [TwoFactorAuthenticationController::class, 'resend'])->name('resend');
+});
+
 
 /*
  * Users routes
  */
-Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth']], function () { // OLD: check_user_role:super-admin,manager
+Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'verified_2fa']], function () { // OLD: check_user_role:super-admin,manager
     Route::get('/', [UsersController::class, 'index'])->name('index');
 //    Route::get('/{user}', [UsersController::class, 'show'])->name('show');
     Route::post('/', [UsersController::class, 'store'])->name('store');

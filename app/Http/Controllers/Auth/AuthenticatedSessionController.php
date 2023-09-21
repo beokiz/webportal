@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\AuthenticationRequest;
 use App\Providers\RouteServiceProvider;
+use App\Services\TwoFactorAuthenticationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,7 @@ class AuthenticatedSessionController extends BaseController
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
+            'canRegister'      => Route::has('auth.register'),
             'status'           => session('status'),
         ]);
     }
@@ -48,7 +50,13 @@ class AuthenticatedSessionController extends BaseController
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $user = $request->user();
+
+        if ($user && $user->two_factor_auth_enabled) {
+            return redirect()->route('2fa.create');
+        } else {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
     }
 
     /**
@@ -59,7 +67,11 @@ class AuthenticatedSessionController extends BaseController
      */
     public function destroy(Request $request) : RedirectResponse
     {
+        $twoFactorAuthenticationService = app(TwoFactorAuthenticationService::class);
+
         Auth::guard('web')->logout();
+
+        $twoFactorAuthenticationService->remove();
 
         $request->session()->invalidate();
 

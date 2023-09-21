@@ -52,6 +52,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | 2FA Verification Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    '2fa_verification' => [
+        'subject'     => "2FA-Bestätigungscode",
+        'action_text' => "Überprüfen Sie den 2FA-Code",
+        'first_line'  => "Wenn Sie nicht versucht haben, sich anzumelden und diese Benachrichtigung erhalten haben, ignorieren Sie diese Nachricht bitte.",
+        'second_line' => "Code für die Zwei-Faktor-Authentifizierung: :code",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Welcome Notification Lines
     |--------------------------------------------------------------------------
     */

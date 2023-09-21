@@ -105,7 +105,7 @@ class ResetPasswordNotification extends Notification
             return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
         }
 
-        return sprintf('%1$s/reset-password?token=%2$s&email=%3$s',
+        return sprintf('%1$s/reset-password/%2$s?email=%3$s',
             config('app.url'),
             $this->token,
             $notifiable->getEmailForPasswordReset()

@@ -50,20 +50,30 @@ class AuthenticationRequest extends BaseFormRequest
     {
         $throttleKey = Str::lower($this->input('email')) . '|' . $this->ip();
 
-        parent::ensureIsNotRateLimited(
-            $throttleKey,
-            5,
-            'auth.throttle'
-        );
+        $this->ensureIsNotRateLimited($throttleKey, 5, 'auth.throttle');
 
-        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $credentials = $this->only('email', 'password');
+
+        if (!auth()->once($credentials)) {
             RateLimiter::hit($throttleKey);
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
-        }
+        } else {
+            $this->session()->regenerate();
 
-        RateLimiter::clear($throttleKey);
+            $user = auth()->getUser();
+
+            if ($user->two_factor_auth_enabled) {
+                $user->sendTwoFactorAuthenticationNotification([
+                    'token' => encrypt(json_encode($credentials)),
+                ]);
+            } else {
+                Auth::attempt($this->only('email', 'password'), $this->boolean('remember'));
+            }
+
+            RateLimiter::clear($throttleKey);
+        }
     }
 }

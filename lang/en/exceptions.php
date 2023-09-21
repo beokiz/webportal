@@ -48,6 +48,10 @@ return [
     |--------------------------------------------------------------------------
     */
 
+    '2fa_default_error' => 'Fehler! Bitte versuchen Sie es später noch einmal.',
+
+    'cannot_update_selected_item' => "Error! You cannot update selected item.",
+    'cannot_delete_selected_item' => "Error! You cannot delete selected item.",
     'cannot_update_selected_user' => "Error! You cannot update selected user.",
     'cannot_delete_selected_user' => "Error! You cannot delete selected user.",
 
@@ -56,6 +60,5 @@ return [
     'user_does_not_have_the_required_roles_exception_msg' => "To view the selected page, you must have one of the roles: :roles.",
 
     'service_not_configured_exception_msg' => "Error! \":name\" service is not configured.",
-    'cannot_delete_selected_item'          => "Error! You cannot delete selected item.",
 
 ];

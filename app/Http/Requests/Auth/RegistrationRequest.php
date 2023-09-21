@@ -24,9 +24,10 @@ class RegistrationRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'name'     => ['required', 'string', 'max:64'],
-            'email'    => ['required', 'string', 'email', 'max:64', Rule::unique(User::class)],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'first_name' => array_merge($this->textRules(), ['required']),
+            'last_name'  => array_merge($this->textRules(), ['nullable']),
+            'email'      => ['required', 'email', Rule::unique(User::class)],
+            'password'   => ['required', 'confirmed', Rules\Password::defaults()],
         ];
     }
 

@@ -48,10 +48,17 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'cannot_update_selected_user'                    => "Fehler! Sie können den ausgewählten Benutzer nicht aktualisieren.",
-    'cannot_delete_selected_user'                    => "Fehler! Sie können den ausgewählten Benutzer nicht löschen.",
-    'user_does_not_have_access'                      => "Fehler! Sie haben keinen Zugriff auf diese Seite oder Aktion.",
+    '2fa_default_error' => 'Fehler! Bitte versuchen Sie es später noch einmal.',
+
+    'cannot_update_selected_item' => "Fehler! Sie können das ausgewählte Element nicht aktualisieren.",
+    'cannot_delete_selected_item' => "Fehler! Sie können das ausgewählte Element nicht löschen.",
+    'cannot_update_selected_user' => "Fehler! Sie können den ausgewählten Benutzer nicht aktualisieren.",
+    'cannot_delete_selected_user' => "Fehler! Sie können den ausgewählten Benutzer nicht löschen.",
+
+    'user_does_not_have_access' => "Fehler! Sie haben keinen Zugriff auf diese Seite oder Aktion.",
+
     'user_does_not_have_the_required_roles_exception_msg' => "Um die ausgewählte Seite anzuzeigen, müssen Sie eine der Rollen haben: :roles.",
-    'service_not_configured_exception_msg'           => "Fehler! Der Dienst \":name\" ist nicht konfiguriert.",
+
+    'service_not_configured_exception_msg' => "Fehler! Der Dienst \":name\" ist nicht konfiguriert.",
 
 ];

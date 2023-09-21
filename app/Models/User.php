@@ -11,11 +11,14 @@ use App\ModelFilters\UserFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\TwoFactorVerificationNotification;
 use App\Notifications\VerifyEmailNotification;
 use App\Notifications\WelcomeNotification;
+use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -244,6 +247,21 @@ class User extends Authenticatable
     public function sendEmailVerificationNotification() : void
     {
         $this->notify(new VerifyEmailNotification());
+    }
+
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendTwoFactorAuthenticationNotification(array $args = []) : void
+    {
+        if ($this->two_factor_auth_enabled) {
+            $twoFactorAuthService = app(TwoFactorAuthenticationService::class);
+
+            $twoFactorAuthService->generate($args);
+
+            $this->notify(new TwoFactorVerificationNotification());
+        }
     }
 
     /**
