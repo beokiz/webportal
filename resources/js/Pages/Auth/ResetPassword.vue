@@ -36,55 +36,34 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.email" />
+                <v-text-field autocomplete="username"
+                              autofocus
+                              v-model="form.email"
+                              :error-messages="form.errors.email"
+                              label="Email" required></v-text-field>
             </div>
 
             <div class="tw-mt-4">
-                <InputLabel for="password" value="Password" />
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.password" />
+                <v-text-field type="password"
+                              autocomplete="new-password"
+                              v-model="form.password"
+                              :error-messages="form.errors.password"
+                              label="Password"
+                              required></v-text-field>
             </div>
 
             <div class="tw-mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.password_confirmation" />
+                <v-text-field type="password"
+                              autocomplete="new-password"
+                              v-model="form.password_confirmation"
+                              :error-messages="form.errors.password_confirmation"
+                              label="Confirm Password"
+                              required></v-text-field>
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end tw-mt-4">
-                <PrimaryButton :class="{ 'tw-opacity-25': form.processing }" :disabled="form.processing">
-                    Reset Password
-                </PrimaryButton>
+                <v-btn-primary type="submit">Reset Password</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

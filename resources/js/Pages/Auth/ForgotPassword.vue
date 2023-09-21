@@ -39,25 +39,15 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.email" />
+                <v-text-field autocomplete="username"
+                              autofocus
+                              v-model="form.email"
+                              :error-messages="form.errors.email"
+                              label="Email" required></v-text-field>
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end mt-4">
-                <PrimaryButton :class="{ 'tw-opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </PrimaryButton>
+                <v-btn-primary type="submit">Email Password Reset Link</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

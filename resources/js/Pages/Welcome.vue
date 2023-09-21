@@ -44,7 +44,7 @@ defineProps({
             </template>
         </div>
 
-        <div class="tw-max-w-7xl tw-mx-auto tw-p-6 lg:tw-p-8">
+        <div class="tw-max-w-full tw-mx-auto tw-p-6 lg:tw-p-8">
             <div class="tw-flex tw-justify-center">
                 <svg
                     viewBox="0 0 62 65"

@@ -34,7 +34,7 @@ const hide = () => {
 
 <template>
 <!--    <div v-if="closeMessageState" class="tw-flex tw-items-center tw-justify-between tw-max-w-7xl tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">-->
-    <div class="tw-flex tw-items-center tw-justify-between tw-max-w-7xl tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+    <div class="tw-flex tw-items-center tw-justify-between tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
         <div v-if="hasErrors">
             <div class="tw-font-medium tw-text-red-600">Whoops! Something went wrong.</div>
 

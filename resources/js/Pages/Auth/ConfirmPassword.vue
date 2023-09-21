@@ -32,23 +32,16 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                    autofocus
-                />
-                <InputError class="tw-mt-2" :message="form.errors.password" />
+                <v-text-field type="password"
+                              autocomplete="current-password"
+                              v-model="form.password"
+                              :error-messages="form.errors.password"
+                              label="Password"
+                              required></v-text-field>
             </div>
 
             <div class="tw-flex tw-justify-end tw-mt-4">
-                <PrimaryButton class="tw-ml-4" :class="{ 'tw-opacity-25': form.processing }" :disabled="form.processing">
-                    Confirm
-                </PrimaryButton>
+                <v-btn-primary type="submit">Confirm</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

@@ -109,13 +109,10 @@ watch(dialog, (val) => {
 
 // Methods
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
-    // TODO: Rewrite!!!
     if (clearFilters) {
         fullNameFilter.value = null;
         emailFilter.value = null;
     }
-
-    // TODO: Rewrite!!!
     if (
         (page === currentPage.value && clearFilters) ||
         allFiltersEmpty ||
@@ -286,7 +283,7 @@ const manageUser = async () => {
             </div>
         </template>
 
-        <div class="tw-table-block tw-max-w-7xl tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
                 <div class="tw-w-full">
                     <v-row>

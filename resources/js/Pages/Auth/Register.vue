@@ -12,7 +12,8 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -32,77 +33,59 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.name" />
+                <v-text-field autofocus
+                              v-model="form.first_name"
+                              :error-messages="form.errors.first_name"
+                              label="First Name"
+                              required></v-text-field>
             </div>
 
             <div class="tw-mt-4">
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.email" />
+                <v-text-field autofocus
+                              v-model="form.last_name"
+                              :error-messages="form.errors.last_name"
+                              label="Last Name"
+                              required></v-text-field>
             </div>
 
             <div class="tw-mt-4">
-                <InputLabel for="password" value="Password" />
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.password" />
+                <v-text-field autocomplete="username"
+                              v-model="form.email"
+                              :error-messages="form.errors.email"
+                              label="Email"
+                              required></v-text-field>
             </div>
 
             <div class="tw-mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
 
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
+                <v-text-field type="password"
+                              autocomplete="new-password"
+                              v-model="form.password"
+                              :error-messages="form.errors.password"
+                              label="Password"
+                              required></v-text-field>
+            </div>
 
-                <InputError class="tw-mt-2" :message="form.errors.password_confirmation" />
+            <div class="tw-mt-4">
+
+                <v-text-field type="password"
+                              autocomplete="new-password"
+                              v-model="form.password_confirmation"
+                              :error-messages="form.errors.password_confirmation"
+                              label="Password"
+                              required></v-text-field>
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end tw-mt-4">
                 <Link
                     :href="route('auth.login')"
-                    class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500"
+                    class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
                 >
                     Already registered?
                 </Link>
 
-                <PrimaryButton class="tw-ml-4" :class="{ 'tw-opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
+                <v-btn-primary type="submit" class="tw-ml-4">Register</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

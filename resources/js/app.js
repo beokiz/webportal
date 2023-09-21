@@ -65,12 +65,11 @@ const vuetify = createVuetify({
 
     defaults: {
         VBtnPrimary: {
-            class: ['v-btn--primary', 'text-none'],
             color: 'primary',
             variant: 'flat',
         },
         VBtnSecondary: {
-            class: ['v-btn--primary', 'text-none'],
+
         },
         VBtnDropdown: {
             variant: 'plain',
@@ -79,7 +78,7 @@ const vuetify = createVuetify({
             class: ['basic-table'],
         },
         VBtn: {
-            style: { borderRadius: '45px', textTransform: 'none' },
+            // style: { borderRadius: '45px' },
         },
         VTextField:{
             variant: 'underlined',

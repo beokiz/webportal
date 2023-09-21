@@ -37,15 +37,13 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 
         <form @submit.prevent="submit">
             <div class="tw-mt-4 tw-flex tw-items-center tw-justify-between">
-                <PrimaryButton :class="{ 'tw-opacity-25': form.processing }" :disabled="form.processing">
-                    Resend Verification Email
-                </PrimaryButton>
+                <v-btn-primary type="submit">Resend Verification Email</v-btn-primary>
 
                 <Link
                     :href="route('auth.logout')"
                     method="post"
                     as="button"
-                    class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500"
+                    class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
                     >Log Out</Link
                 >
             </div>
