@@ -26,11 +26,12 @@ class CreateUserRequest extends BaseFormRequest
         $roles = config('permission.project_roles');
 
         return [
-            'first_name' => array_merge($this->textRules(), ['required']),
-            'last_name'  => array_merge($this->textRules(), ['nullable']),
-            'email'      => ['required', 'email', Rule::unique(User::class)],
-            'password'   => ['required', 'confirmed', Rules\Password::defaults()],
-            'role'       => ['required', $this->roleExistRule($roles)],
+            'first_name'              => array_merge($this->textRules(), ['required']),
+            'last_name'               => array_merge($this->textRules(), ['nullable']),
+            'email'                   => ['required', 'email', Rule::unique(User::class)],
+            'password'                => ['required', 'confirmed', Rules\Password::defaults()],
+            'role'                    => ['required', $this->roleExistRule($roles)],
+//            'two_factor_auth_enabled' => ['required', 'boolean'],
         ];
     }
 

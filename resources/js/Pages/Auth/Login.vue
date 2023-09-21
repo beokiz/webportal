@@ -83,7 +83,7 @@ const submit = () => {
             <div class="tw-flex tw-items-center tw-justify-end mt-4">
                 <Link
                     v-if="canResetPassword"
-                    :href="route('auth.password.request')"
+                    :href="route('password.request')"
                     class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500"
                 >
                     Forgot your password?

@@ -32,7 +32,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         Verified::class   => [
-            SendWelcomeNotification::class,
+//            SendWelcomeNotification::class,
             TriggerUserVerifiedEmailEvent::class,
         ],
     ];

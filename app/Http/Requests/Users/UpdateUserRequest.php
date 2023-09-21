@@ -25,11 +25,12 @@ class UpdateUserRequest extends CreateUserRequest
         $roles = config('permission.project_roles');
 
         return [
-            'first_name' => array_merge($this->textRules(), ['sometimes']),
-            'last_name'  => array_merge($this->textRules(), ['nullable']),
-            'email'      => ['sometimes', 'email', Rule::unique(User::class)->ignore($this->route('user'))],
-            'password'   => ['sometimes', 'confirmed', Rules\Password::defaults()],
-            'role'       => ['sometimes', $this->roleExistRule($roles)],
+            'first_name'              => array_merge($this->textRules(), ['sometimes']),
+            'last_name'               => array_merge($this->textRules(), ['nullable']),
+            'email'                   => ['sometimes', 'email', Rule::unique(User::class)->ignore($this->route('user'))],
+            'password'                => ['sometimes', 'confirmed', Rules\Password::defaults()],
+            'role'                    => ['sometimes', $this->roleExistRule($roles)],
+            'two_factor_auth_enabled' => ['sometimes', 'boolean'],
         ];
     }
 

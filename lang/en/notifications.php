@@ -17,7 +17,7 @@ return [
             'error'  => "Whoops!",
             'common' => "Hello!",
         ],
-        'salutation'      => "Regards, \n:from",
+        'salutation'      => "Regards, \nyour :from",
         'salutation_from' => sprintf('%s Team', config('app.name')),
         'subcopy'         => "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below into your web browser: \n",
         'copyright'       => "&#169; " . date("Y") . " " . config('app.name'),
@@ -58,9 +58,10 @@ return [
 
     'welcome' => [
         'subject'     => "Created Account",
-        'greeting'    => "Congratulations to you!",
-        'first_line'  => "You have successfully created an account!",
-        'second_line' => "If you have any questions or problems using our system, please email us: <:support_email>",
+        'greeting'    => "Hello :name,",
+        'action_text' => "Set new password",
+        'first_line'  => "you have been invited to the BeoKiz portal of Berlin milestones.",
+        'second_line' => "To be able to log in, you must first set a password:",
     ],
 
 ];

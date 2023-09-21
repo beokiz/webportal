@@ -106,7 +106,7 @@ class ResetPasswordNotification extends Notification
         }
 
         return sprintf('%1$s/reset-password?token=%2$s&email=%3$s',
-            config('app.front_url'),
+            config('app.url'),
             $this->token,
             $notifiable->getEmailForPasswordReset()
         );

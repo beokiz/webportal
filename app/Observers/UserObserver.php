@@ -7,6 +7,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use Illuminate\Auth\Passwords\PasswordBroker;
 
 /**
  * Observer for User Model
@@ -16,12 +17,19 @@ use App\Models\User;
 class UserObserver extends BaseObserver
 {
     /**
+     * @var \Illuminate\Auth\Passwords\TokenRepositoryInterface
+     */
+    protected $tokens;
+
+    /**
      * UserObserver constructor.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(PasswordBroker $factory)
     {
+        $this->tokens = $factory->getRepository();
+
         parent::__construct();
     }
 
@@ -31,7 +39,9 @@ class UserObserver extends BaseObserver
      */
     public function created(User $user)
     {
-        //
+        $user->sendWelcomeNotification(
+            $this->tokens->create($user)
+        );
     }
 
     /**

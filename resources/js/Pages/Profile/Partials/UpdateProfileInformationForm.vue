@@ -84,7 +84,7 @@ const form = useForm({
                 <p class="tw-text-sm tw-mt-2 tw-text-gray-800">
                     Your email address is unverified.
                     <Link
-                        :href="route('auth.verification.send')"
+                        :href="route('verification.send')"
                         method="post"
                         as="button"
                         class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500"

@@ -67,15 +67,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime', // timestamp
-        'last_seen_at'      => 'datetime', // timestamp
-        'is_online'         => 'boolean',
-        'is_super_admin'    => 'boolean',
-        'is_admin'          => 'boolean',
-        'is_monitor'        => 'boolean',
-        'is_monitor_oe'     => 'boolean',
-        'is_manager'        => 'boolean',
-        'is_employer'       => 'boolean',
+        'email_verified_at'       => 'datetime', // timestamp
+        'last_seen_at'            => 'datetime', // timestamp
+        'two_factor_auth_enabled' => 'boolean',
+        'is_online'               => 'boolean',
+        'is_super_admin'          => 'boolean',
+        'is_admin'                => 'boolean',
+        'is_monitor'              => 'boolean',
+        'is_monitor_oe'           => 'boolean',
+        'is_manager'              => 'boolean',
+        'is_employer'             => 'boolean',
     ];
 
     /**
@@ -246,11 +247,12 @@ class User extends Authenticatable
     }
 
     /**
+     * @param string $token
      * @return void
      */
-    public function sendWelcomeNotification() : void
+    public function sendWelcomeNotification($token) : void
     {
-        $this->notify(new WelcomeNotification());
+        $this->notify(new WelcomeNotification($token));
     }
 
     /*
