@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import DashboardMessagesAndErrors from '@/Components/DashboardMessagesAndErrors.vue';
@@ -19,10 +19,15 @@ const currentUser = usePage().props.auth.user ?? {};
 const showingNavigationDropdown = ref(false);
 const topBar = ref(null);
 
-const menuItems = {
-    // 'dashboard.index': 'Dashboard',
-    'users.index': 'Users',
-};
+let menuItems = ref({});
+
+onMounted(() => {
+    if (currentUser.is_super_admin || currentUser.is_admin) {
+        menuItems.value['users.index'] = 'Users';
+    }
+
+    menuItems.value['profile.edit'] = 'Profile';
+});
 
 const errors = computed(() => props.errors ?? usePage().props.errors);
 const successes = computed(() => props.successes ?? usePage().props.successes);
@@ -45,7 +50,6 @@ const clearErrorsAndSuccesses = () => {
                     <template v-for="(title, name) in menuItems">
                         <v-list-item link :href="route(name)" :active="route().current(name)" :title="title"></v-list-item>
                     </template>
-                    <v-list-item link :href="route('profile.edit')" :active="route().current('profile.edit')" title="Profile"></v-list-item>
                 </v-list>
 
                 <!--Bottom sidebar side-->

@@ -6,7 +6,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
-import { Head, useForm, usePage, router } from '@inertiajs/vue3';
+import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
@@ -24,8 +24,8 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Users/ShowUser' && newProps) {
-        //
+    if (pageType === 'Users/ManageUser' && newProps) {
+        editedUser.value = newProps.user;
     }
 });
 
@@ -35,6 +35,7 @@ Inertia.on('success', (event) => {
  */
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
+const editedUser = ref(props.user);
 const errors = ref(props.errors || {});
 
 const loading = ref(false);
@@ -67,21 +68,6 @@ watch(dialog, (val) => {
 });
 
 // Methods
-const editItem = (item) => {
-    editedIndex.value = modifiedItems.value.indexOf(item);
-
-    Object.assign(manageForm, {
-        id: item.id,
-        first_name: item.first_name,
-        last_name: item.last_name,
-        email: item.email,
-        password: item.password,
-        role: item.roles.length > 0 ? item.roles[0].id : null,
-    });
-
-    dialog.value = true;
-};
-
 const close = () => {
     dialog.value = false;
     manageForm.reset();
@@ -92,14 +78,14 @@ const close = () => {
 };
 
 const manageForm = useForm({
-    id: props.user.id,
-    first_name: props.user.first_name,
-    last_name: props.user.last_name,
-    email: props.user.email,
+    id: editedUser.value.id,
+    first_name: editedUser.value.first_name,
+    last_name: editedUser.value.last_name,
+    email: editedUser.value.email,
     // password: null,
     // password_confirmation: null,
-    role: props.user.primary_role_id,
-    two_factor_auth_enabled: props.user.two_factor_auth_enabled,
+    role: editedUser.value.primary_role_id,
+    two_factor_auth_enabled: editedUser.value.two_factor_auth_enabled,
 });
 
 const manageUser = async () => {
@@ -115,7 +101,7 @@ const manageUser = async () => {
 
     let formOptions = {
         // preserveScroll: true,
-        // preserveState: true,
+        preserveState: false,
         // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
@@ -143,47 +129,28 @@ const manageUser = async () => {
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.first_name" :error-messages="errors.first_name" label="First Name" required></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.last_name" :error-messages="errors.last_name" label="Last Name" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field v-model="manageForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
                     </v-col>
                 </v-row>
 
 
                 <v-row>
-                    <v-col cols="12" md="4" sm="6">
-                        <v-text-field v-model="manageForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
-                    </v-col>
                     <v-col cols="12" sm="4">
                         <v-text-field type="password" autocomplete="new-password" v-model="manageForm.password" :error-messages="errors.password" label="Password" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-text-field type="password" v-model="manageForm.password_confirmation" :error-messages="errors.password_confirmation" label="Password Confirmation" required></v-text-field>
                     </v-col>
-                </v-row>
-
-                <v-row>
-                    <v-col cols="12" md="4" sm="6">
-                        <v-checkbox
-                            v-model="ex4"
-                            label="2-Factor Authentication"
-                            color="primary"
-                            value="primary"
-                        ></v-checkbox>
-
-                        <!--                                                <v-checkbox-->
-                        <!--                                                    v-model="checkbox1"-->
-                        <!--                                                    :label="`Checkbox 1: ${checkbox1.toString()}`"-->
-                        <!--                                                ></v-checkbox>-->
-                    </v-col>
-                </v-row>
-
-
-                <v-row>
                     <v-col cols="12" sm="4">
                         <v-select
+                            :disabled="$page.props.auth.user.id === editedUser.id"
                             v-model="manageForm.role"
                             :items="roles"
                             :error-messages="errors.role"
@@ -194,18 +161,32 @@ const manageUser = async () => {
                         ></v-select>
                     </v-col>
                 </v-row>
+
+                <v-row>
+                    <v-col cols="12" sm="4">
+                        <v-checkbox
+                            v-model="manageForm.two_factor_auth_enabled"
+                            label="2-Factor Authentication"
+                            :value="true"
+                        ></v-checkbox>
+                    </v-col>
+                </v-row>
             </v-container>
 
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="4">
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
-                        </v-hover>
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
-                        </v-hover>
+                    <v-col cols="12" md="3" sm="4">
+                        <div class="tw-flex tw-justify-between">
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <Link :href="route('users.index')">
+                                    <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Back</v-btn>
+                                </Link>
+                            </v-hover>
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
+                            </v-hover>
+                        </div>
                     </v-col>
                 </v-row>
             </v-container>

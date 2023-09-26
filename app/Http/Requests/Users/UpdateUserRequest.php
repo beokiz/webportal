@@ -18,6 +18,21 @@ use Illuminate\Validation\Rule;
 class UpdateUserRequest extends CreateUserRequest
 {
     /**
+     * @return void
+     */
+    protected function prepareForValidation() : void
+    {
+        parent::prepareForValidation();
+
+        // If the ID of the edited user is equal to the ID of the current one, then we remove the “role” field to prevent
+        // possible logical errors (for example, so that Super admin cannot remove this role from himself,
+        // because if there are no other users with this role, he will no longer be able to return)
+        if ($this->user()->id === $this->route('user')->id) {
+            request()->request->remove('role');
+        }
+    }
+
+    /**
      * @return array
      */
     public function rules() : array

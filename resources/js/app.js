@@ -42,10 +42,10 @@ AOS.init();
 const lightTheme = {
     dark: false,
     colors: {
-        background: '#FFFFFF',
-        surface: '#FFFFFF',
-        primary: '#0074b2',
-        secondary: '#00537f',
+        background: '#ececec',
+        surface: '#ffffff',
+        primary: '#00537f',
+        secondary: '#0074b2',
         accent: '#ed6f25',
         'primary-darken-1': '#3700B3',
         'secondary-darken-1': '#018786',
@@ -75,17 +75,29 @@ const vuetify = createVuetify({
             variant: 'plain',
         },
         VDataTableServer:{
+            theme: 'accent',
+            color: 'accent',
             class: ['basic-table'],
+        },
+        VNavigationDrawer:{
+            color: 'secondary'
+        },
+        VToolbar:{
+            color: 'secondary'
         },
         VBtn: {
             // style: { borderRadius: '45px' },
         },
         VTextField:{
             variant: 'underlined',
+            color: 'primary',
         },
         VSelect:{
             variant: 'underlined',
-        }
+        },
+        VCheckbox:{
+            color: 'primary',
+        },
     },
 
     theme: {
@@ -117,7 +129,7 @@ createInertiaApp({
             .mount(el);
     },
     progress: {
-        color: '#4B5563',
+        color: '#ffff',
     },
 });
 

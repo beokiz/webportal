@@ -6,8 +6,9 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
-import { Head, useForm, usePage, router } from '@inertiajs/vue3';
+import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { formatDate } from "@/Composables/common"
 
 const props = defineProps({
     items: Array,
@@ -63,13 +64,16 @@ const errors = ref(props.errors || {});
 
 const loading = ref(false);
 const dialog = ref(false);
+const dialogDeleteUser = ref(false);
 const editedIndex = ref(-1);
 
 const headers = [
-    { title: 'First Name', key: 'first_name', width: '20%', sortable: false },
-    { title: 'Role', key: 'role', width: '20%', sortable: false },
-    { title: 'Last Name', key: 'last_name', width: '20%', sortable: false, align: 'start' },
+    { title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center' },
+    { title: 'Name', key: 'first_name', width: '25%', sortable: false },
     { title: 'Email', key: 'email', width: '20%', sortable: false },
+    { title: 'Role', key: 'primary_role_name', width: '10%', sortable: false },
+    { title: 'Last Seen', key: 'last_seen_at', width: '15%', sortable: false },
+    { title: 'First Login', key: 'first_login_at', width: '15%', sortable: false },
     { title: 'Actions', key: 'actions', width: '10%', sortable: false },
 ];
 
@@ -93,10 +97,6 @@ const allFiltersEmpty = computed(() => {
 
 const someFiltersNotEmpty = computed(() => {
     return fullNameFilter.value !== null || emailFilter.value !== null;
-});
-
-const formTitle = computed(() => {
-    return editedIndex.value === -1 ? 'New Manager' : 'Edit Manager';
 });
 
 
@@ -139,23 +139,36 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     }
 };
 
-const editItem = (item) => {
-    editedIndex.value = modifiedItems.value.indexOf(item);
+const openDeleteUserDialog = (item) => {
+    deleteForm.id = item.id;
+    dialogDeleteUser.value = true
+};
 
-    Object.assign(manageForm, {
-        id: item.id,
-        first_name: item.first_name,
-        last_name: item.last_name,
-        email: item.email,
-        password: item.password,
-        role: item.roles.length > 0 ? item.roles[0].id : null,
-    });
+const deleteForm = useForm({
+    id: null,
+});
 
-    dialog.value = true;
+const deleteUser = async () => {
+    deleteForm.processing = true;
+
+    let formOptions = {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            deleteForm.processing = false;
+        },
+    };
+
+    deleteForm.delete(route('users.destroy', { id: deleteForm.id }), formOptions);
 };
 
 const close = () => {
     dialog.value = false;
+    dialogDeleteUser.value = false;
     manageForm.reset();
     manageForm.clearErrors();
     editedIndex.value = -1;
@@ -164,25 +177,15 @@ const close = () => {
 };
 
 const manageForm = useForm({
-    id: null,
     first_name: null,
     last_name: null,
     email: null,
-    password: null,
-    password_confirmation: null,
     role: null,
+    two_factor_auth_enabled: false,
 });
 
 const manageUser = async () => {
     manageForm.processing = true;
-
-    if (!manageForm.password) {
-        delete manageForm.password;
-    }
-
-    if (!manageForm.password_confirmation) {
-        delete manageForm.password_confirmation;
-    }
 
     let formOptions = {
         // preserveScroll: true,
@@ -199,11 +202,7 @@ const manageUser = async () => {
         },
     };
 
-    if (editedIndex.value === -1) {
-        manageForm.post(route('users.store'), formOptions);
-    } else {
-        manageForm.put(route('users.update', {user: manageForm.id}), formOptions);
-    }
+    manageForm.post(route('users.store'), formOptions);
 };
 </script>
 
@@ -217,12 +216,12 @@ const manageUser = async () => {
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-slot:default="{ isHovering, props }">
                     <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
-                        Add new manager
+                        Add New User
 
                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                             <v-card height="80vh">
                                 <v-card-title>
-                                    <span class="tw-text-h5">{{ formTitle }}</span>
+                                    <span class="tw-text-h5">New User</span>
                                 </v-card-title>
 
                                 <v-card-text>
@@ -238,36 +237,10 @@ const manageUser = async () => {
 
 
                                         <v-row>
-                                            <v-col cols="12" md="4" sm="6">
+                                            <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
                                             </v-col>
-                                            <v-col cols="12" sm="4">
-                                                <v-text-field type="password" autocomplete="new-password" v-model="manageForm.password" :error-messages="errors.password" label="Password" required></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="4">
-                                                <v-text-field type="password" v-model="manageForm.password_confirmation" :error-messages="errors.password_confirmation" label="Password Confirmation" required></v-text-field>
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-row>
-                                            <v-col cols="12" md="4" sm="6">
-                                                <v-checkbox
-                                                    v-model="ex4"
-                                                    label="2-Factor Authentication"
-                                                    color="primary"
-                                                    value="primary"
-                                                ></v-checkbox>
-
-<!--                                                <v-checkbox-->
-<!--                                                    v-model="checkbox1"-->
-<!--                                                    :label="`Checkbox 1: ${checkbox1.toString()}`"-->
-<!--                                                ></v-checkbox>-->
-                                            </v-col>
-                                        </v-row>
-
-
-                                        <v-row>
-                                            <v-col cols="12" sm="4">
+                                            <v-col cols="12" sm="6">
                                                 <v-select
                                                     v-model="manageForm.role"
                                                     :items="roles"
@@ -277,6 +250,16 @@ const manageUser = async () => {
                                                     label="Role"
                                                     required
                                                 ></v-select>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
+                                            <v-col cols="12" md="4" sm="6">
+                                                <v-checkbox
+                                                    v-model="manageForm.two_factor_auth_enabled"
+                                                    label="2-Factor Authentication"
+                                                    :value="true"
+                                                ></v-checkbox>
                                             </v-col>
                                         </v-row>
                                     </v-container>
@@ -296,6 +279,30 @@ const manageUser = async () => {
                     </v-btn>
                 </v-hover>
             </div>
+
+            <v-dialog v-model="dialogDeleteUser" activator="parent" width="20vw">
+                <v-card height="30vh">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12">
+                                    <p>Are you sure that you want to delete current user?</p>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
+                        </v-hover>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="deleteUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Delete</v-btn-primary>
+                        </v-hover>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -340,20 +347,35 @@ const manageUser = async () => {
 
                 <template v-slot:item="{ item }">
                     <tr>
-                        <td>{{item.selectable.first_name}}</td>
+                        <td align="center">
+                            <v-icon size="medium" :class="{ active: item.selectable.is_online }">mdi-circle</v-icon>
+                        </td>
+
+                        <td>{{item.selectable.full_name}}</td>
+
+                        <td>{{item.selectable.email}}</td>
 
                         <td>{{item.selectable.primary_role_name}}</td>
 
-                        <td>{{item.selectable.last_name}}</td>
+                        <td>{{formatDate(item.selectable.last_seen_at)}}</td>
 
-                        <td>{{item.selectable.email}}</td>
+                        <td>{{formatDate(item.selectable.first_login_at)}}</td>
 
                         <td>
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="editItem(item.raw)">mdi-pencil</v-icon>
+                                    <Link :href="route('users.edit', { id: item.selectable.id })">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
+                                    </Link>
                                 </template>
                                 <span>Edit user</span>
+                            </v-tooltip>
+
+                            <v-tooltip location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteUserDialog(item.raw)">mdi-delete</v-icon>
+                                </template>
+                                <span>Delete User</span>
                             </v-tooltip>
                         </td>
                     </tr>

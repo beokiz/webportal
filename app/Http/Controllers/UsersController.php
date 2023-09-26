@@ -63,13 +63,9 @@ class UsersController extends BaseController
         $rolesFilters = [];
 
         if ($currentUser->is_admin) {
-            $usersFilters = [
-                'withoutRoles' => [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')],
-            ];
+            $usersFilters['withoutRoles'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
 
-            $rolesFilters = [
-                'exclude_name' => [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')],
-            ];
+            $rolesFilters['exclude_name'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
         }
 
         $result = $this->userItemService->collection(array_merge($args, $usersFilters));
