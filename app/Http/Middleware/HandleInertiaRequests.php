@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
         $user = optional($request->user());
 
         $successes = session()->get('successes') ?? [];
-        debug_log($user);
+
         if (!is_array($successes)) {
             $successes = [$successes];
         }

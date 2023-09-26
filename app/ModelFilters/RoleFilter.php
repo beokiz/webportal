@@ -43,6 +43,15 @@ class RoleFilter extends BaseFilter
     }
 
     /**
+     * @param array|int $values
+     * @return ModelFilter
+     */
+    public function excludeName($values) : ModelFilter
+    {
+        return $this->whereNotIn('name', (array) $values);
+    }
+
+    /**
      * @param string $value
      * @return ModelFilter
      */

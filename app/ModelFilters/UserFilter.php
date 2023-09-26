@@ -76,10 +76,21 @@ class UserFilter extends BaseFilter
      * @param string|array $values
      * @return ModelFilter
      */
-    public function roles($values) : ModelFilter
+    public function withRoles($values) : ModelFilter
     {
         return $this->whereHas('roles', function ($query) use ($values) {
             $query->whereIn('name', (array) $values);
+        });
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withoutRoles($values) : ModelFilter
+    {
+        return $this->whereHas('roles', function ($query) use ($values) {
+            $query->whereNotIn('name', (array) $values);
         });
     }
 }

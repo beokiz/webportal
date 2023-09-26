@@ -115,6 +115,7 @@ Route::group(['prefix' => '2fa', 'as' => '2fa.', 'middleware' => ['protect_2fa_p
 Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'verified_2fa']], function () { // OLD: check_user_role:super-admin,manager
     Route::get('/', [UsersController::class, 'index'])->name('index');
 //    Route::get('/{user}', [UsersController::class, 'show'])->name('show');
+    Route::get('/{user}', [UsersController::class, 'edit'])->name('edit');
     Route::post('/', [UsersController::class, 'store'])->name('store');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');

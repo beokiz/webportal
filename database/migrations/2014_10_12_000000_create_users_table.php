@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->string('password');
             $table->boolean('two_factor_auth_enabled')->default(false);
             $table->rememberToken();
+            $table->timestamp('first_login_at')->nullable();
             $table->timestamp('last_seen_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

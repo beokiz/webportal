@@ -10,15 +10,7 @@ import { Head, useForm, usePage, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
-    items: Array,
-    currentPage: Number,
-    perPage: Number,
-    lastPage: Number,
-    total: Number,
-    paging: Boolean,
-    orderBy: String,
-    sort: String,
-    filters: Object,
+    user: Object,
     errors: Object,
     roles: Array,
 });
@@ -32,15 +24,8 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Users' && newProps) {
-        currentPage.value = newProps.currentPage;
-        perPage.value = newProps.perPage;
-        orderBy.value = newProps.orderBy;
-        sort.value = newProps.sort;
-        totalItems.value = newProps.total;
-        lastPage.value = newProps.lastPage;
-        fullNameFilter.value = newProps.filters.full_name ?? null;
-        emailFilter.value = newProps.filters.email ?? null;
+    if (pageType === 'Users/ShowUser' && newProps) {
+        //
     }
 });
 
@@ -50,29 +35,11 @@ Inertia.on('success', (event) => {
  */
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
-const currentPage = ref(props.currentPage); // Track the current page number
-const perPage = ref(props.perPage); // Number of products per page
-const orderBy = ref(props.orderBy);
-const sort = ref(props.sort);
-const totalItems = ref(props.total);
-const lastPage = ref(props.lastPage);
-const fullNameFilter = ref(props.filters.full_name ?? null);
-const emailFilter = ref(props.filters.email ?? null);
-const search = ref('');
 const errors = ref(props.errors || {});
 
 const loading = ref(false);
 const dialog = ref(false);
 const editedIndex = ref(-1);
-
-const headers = [
-    { title: 'First Name', key: 'first_name', width: '20%', sortable: false },
-    { title: 'Role', key: 'role', width: '20%', sortable: false },
-    { title: 'Last Name', key: 'last_name', width: '20%', sortable: false, align: 'start' },
-    { title: 'Email', key: 'email', width: '20%', sortable: false },
-    { title: 'Actions', key: 'actions', width: '10%', sortable: false },
-];
-
 
 // Computed
 const modifiedItems = computed(() => {
@@ -85,14 +52,6 @@ const modifiedItems = computed(() => {
         }
         return modifiedItem;
     });
-});
-
-const allFiltersEmpty = computed(() => {
-    return fullNameFilter.value === null && emailFilter.value === null;
-});
-
-const someFiltersNotEmpty = computed(() => {
-    return fullNameFilter.value !== null || emailFilter.value !== null;
 });
 
 const formTitle = computed(() => {
@@ -108,37 +67,6 @@ watch(dialog, (val) => {
 });
 
 // Methods
-const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
-    if (clearFilters) {
-        fullNameFilter.value = null;
-        emailFilter.value = null;
-    }
-    if (
-        (page === currentPage.value && clearFilters) ||
-        allFiltersEmpty ||
-        someFiltersNotEmpty
-    ) {
-        loading.value = true;
-
-        let options = { data: { page: page, per_page: itemsPerPage } };
-
-        if (sortBy && sortBy.length > 0) {
-            options.data.order_by = sortBy[0].key;
-            options.data.sort = sortBy[0].order;
-        }
-
-        // Search filters
-        options.data.full_name = fullNameFilter.value;
-        options.data.email = emailFilter.value;
-
-        await router.reload(options);
-
-        currentPage.value = page;
-        perPage.value = itemsPerPage;
-        loading.value = false;
-    }
-};
-
 const editItem = (item) => {
     editedIndex.value = modifiedItems.value.indexOf(item);
 
@@ -164,25 +92,26 @@ const close = () => {
 };
 
 const manageForm = useForm({
-    id: null,
-    first_name: null,
-    last_name: null,
-    email: null,
-    password: null,
-    password_confirmation: null,
-    role: null,
+    id: props.user.id,
+    first_name: props.user.first_name,
+    last_name: props.user.last_name,
+    email: props.user.email,
+    // password: null,
+    // password_confirmation: null,
+    role: props.user.primary_role_id,
+    two_factor_auth_enabled: props.user.two_factor_auth_enabled,
 });
 
 const manageUser = async () => {
     manageForm.processing = true;
 
-    if (!manageForm.password) {
-        delete manageForm.password;
-    }
-
-    if (!manageForm.password_confirmation) {
-        delete manageForm.password_confirmation;
-    }
+    // if (!manageForm.password) {
+    //     delete manageForm.password;
+    // }
+    //
+    // if (!manageForm.password_confirmation) {
+    //     delete manageForm.password_confirmation;
+    // }
 
     let formOptions = {
         // preserveScroll: true,
@@ -199,16 +128,12 @@ const manageUser = async () => {
         },
     };
 
-    if (editedIndex.value === -1) {
-        manageForm.post(route('users.store'), formOptions);
-    } else {
-        manageForm.put(route('users.update', {user: manageForm.id}), formOptions);
-    }
+    manageForm.put(route('users.update', { user: manageForm.id }), formOptions);
 };
 </script>
 
 <template>
-    <Head title="Users" />
+    <Head title="Manage User" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>

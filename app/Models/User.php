@@ -18,7 +18,6 @@ use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,7 +50,9 @@ class User extends Authenticatable
         'email',
         'password',
         'two_factor_auth_enabled',
+        'first_login_at',
         'last_seen_at',
+        'deleted_at',
     ];
 
     /**
@@ -71,6 +72,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at'       => 'datetime', // timestamp
+        'first_login_at'          => 'datetime', // timestamp
         'last_seen_at'            => 'datetime', // timestamp
         'two_factor_auth_enabled' => 'boolean',
         'is_online'               => 'boolean',
@@ -90,6 +92,7 @@ class User extends Authenticatable
     protected $appends = [
         'full_name',
         'primary_role_name',
+        'primary_role_id',
         'is_online',
         'is_super_admin',
         'is_admin',
@@ -146,6 +149,16 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first())->name ?? null,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function primaryRoleId() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first())->id ?? null,
         );
     }
 

@@ -9,7 +9,7 @@ namespace App\Http\Requests\Users;
 use App\Http\Requests\BaseFormRequest;
 use App\Models\User;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
+//use Illuminate\Validation\Rules;
 
 /**
  * Create User Request
@@ -29,9 +29,9 @@ class CreateUserRequest extends BaseFormRequest
             'first_name'              => array_merge($this->textRules(), ['required']),
             'last_name'               => array_merge($this->textRules(), ['nullable']),
             'email'                   => ['required', 'email', Rule::unique(User::class)],
-            'password'                => ['required', 'confirmed', Rules\Password::defaults()],
+//            'password'                => ['required', 'confirmed', Rules\Password::defaults()],
             'role'                    => ['required', $this->roleExistRule($roles)],
-//            'two_factor_auth_enabled' => ['required', 'boolean'],
+            'two_factor_auth_enabled' => ['required', 'boolean'],
         ];
     }
 

@@ -27,7 +27,17 @@ class UserLastSeenMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            Auth::user()->update(['last_seen_at' => now()]);
+            $user = Auth::user();
+
+            $attributes = [
+                'last_seen_at' => now(),
+            ];
+
+            if (empty($user->first_login_at)) {
+                $attributes['first_login_at'] = now();
+            }
+
+            $user->update($attributes);
         }
 
         return $next($request);
