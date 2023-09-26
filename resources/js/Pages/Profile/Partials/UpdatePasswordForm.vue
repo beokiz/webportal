@@ -50,51 +50,31 @@ const updatePassword = () => {
 
         <form @submit.prevent="updatePassword" class="tw-mt-6 tw-space-y-6">
             <div>
-                <InputLabel for="current_password" value="Current Password" />
-
-                <TextInput
-                    id="current_password"
-                    ref="currentPasswordInput"
-                    v-model="form.current_password"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    autocomplete="current-password"
-                />
-
-                <InputError :message="form.errors.current_password" class="tw-mt-2" />
+                <v-text-field type="password"
+                              autocomplete="current-password"
+                              v-model="form.current_password"
+                              :error-messages="form.errors.current_password"
+                              label="Current Password"></v-text-field>
             </div>
 
             <div>
-                <InputLabel for="password" value="New Password" />
-
-                <TextInput
-                    id="password"
-                    ref="passwordInput"
-                    v-model="form.password"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    autocomplete="new-password"
-                />
-
-                <InputError :message="form.errors.password" class="tw-mt-2" />
+                <v-text-field type="password"
+                              autocomplete="new-password"
+                              v-model="form.password"
+                              :error-messages="form.errors.password"
+                              label="New Password"></v-text-field>
             </div>
 
             <div>
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    autocomplete="new-password"
-                />
-
-                <InputError :message="form.errors.password_confirmation" class="tw-mt-2" />
+                <v-text-field type="password"
+                              autocomplete="new-password"
+                              v-model="form.password_confirmation"
+                              :error-messages="form.errors.password_confirmation"
+                              label="Confirm Password"></v-text-field>
             </div>
 
             <div class="tw-flex tw-items-center tw-gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <v-btn-primary type="submit" class="tw-ml-4" :disabled="form.processing">Save</v-btn-primary>
 
                 <Transition enter-from-class="tw-opacity-0" leave-to-class="tw-opacity-0" class="tw-transition ease-in-out">
                     <p v-if="form.recentlySuccessful" class="tw-text-sm tw-text-gray-600">Saved.</p>

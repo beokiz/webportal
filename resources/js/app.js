@@ -44,9 +44,9 @@ const lightTheme = {
     colors: {
         background: '#FFFFFF',
         surface: '#FFFFFF',
-        primary: '#6200EE',
-        secondary: '#03DAC6',
-        accent: '#000',
+        primary: '#0074b2',
+        secondary: '#00537f',
+        accent: '#ed6f25',
         'primary-darken-1': '#3700B3',
         'secondary-darken-1': '#018786',
         error: '#B00020',

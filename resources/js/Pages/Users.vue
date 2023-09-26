@@ -66,10 +66,10 @@ const dialog = ref(false);
 const editedIndex = ref(-1);
 
 const headers = [
-    { title: 'First Name', key: 'first_name', width: '20%', sortable: true },
-    { title: 'Role', key: 'role', width: '20%', sortable: true },
-    { title: 'Last Name', key: 'last_name', width: '20%', sortable: true, align: 'start' },
-    { title: 'Email', key: 'email', width: '20%', sortable: true },
+    { title: 'First Name', key: 'first_name', width: '20%', sortable: false },
+    { title: 'Role', key: 'role', width: '20%', sortable: false },
+    { title: 'Last Name', key: 'last_name', width: '20%', sortable: false, align: 'start' },
+    { title: 'Email', key: 'email', width: '20%', sortable: false },
     { title: 'Actions', key: 'actions', width: '10%', sortable: false },
 ];
 
@@ -214,7 +214,7 @@ const manageUser = async () => {
         <template #header>
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Users</h2>
 
-            <div class="tw-flex tw-items-center tw-justify-end tw-mb-6">
+            <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-slot:default="{ isHovering, props }">
                     <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
                         Add new manager
@@ -250,6 +250,23 @@ const manageUser = async () => {
                                         </v-row>
 
                                         <v-row>
+                                            <v-col cols="12" md="4" sm="6">
+                                                <v-checkbox
+                                                    v-model="ex4"
+                                                    label="2-Factor Authentication"
+                                                    color="primary"
+                                                    value="primary"
+                                                ></v-checkbox>
+
+<!--                                                <v-checkbox-->
+<!--                                                    v-model="checkbox1"-->
+<!--                                                    :label="`Checkbox 1: ${checkbox1.toString()}`"-->
+<!--                                                ></v-checkbox>-->
+                                            </v-col>
+                                        </v-row>
+
+
+                                        <v-row>
                                             <v-col cols="12" sm="4">
                                                 <v-select
                                                     v-model="manageForm.role"
@@ -268,13 +285,11 @@ const manageUser = async () => {
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'" variant="elevated">Cancel</v-btn>
+                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
                                     </v-hover>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn>
+                                        <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
                                     </v-hover>
-
-                                    <v-btn-primary @click="close" v-bind="props">Cancel</v-btn-primary>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>

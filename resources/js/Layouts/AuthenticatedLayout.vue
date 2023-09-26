@@ -72,7 +72,7 @@ const clearErrorsAndSuccesses = () => {
             <v-main style="min-height: 100vh;">
                 <!-- Page Heading -->
                 <header class="tw-bg-white tw-shadow" v-if="$slots.header">
-                    <div class="tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
                         <slot name="header" />
                     </div>
                 </header>

@@ -36,48 +36,24 @@ const form = useForm({
 
         <form @submit.prevent="form.patch(route('profile.update'))" class="tw-mt-6 tw-space-y-6">
             <div>
-                <InputLabel for="first_name" value="First name" />
-
-                <TextInput
-                    id="first_name"
-                    type="text"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.first_name"
-                    required
-                    autofocus
-                    autocomplete="given-name"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.first_name" />
+                <v-text-field type="text"
+                              v-model="form.first_name"
+                              :error-messages="form.errors.first_name"
+                              label="First name"></v-text-field>
             </div>
 
             <div>
-                <InputLabel for="last_name" value="Last name" />
-
-                <TextInput
-                    id="last_name"
-                    type="text"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.last_name"
-                    autocomplete="family-name"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.last_name" />
+                <v-text-field type="text"
+                              v-model="form.last_name"
+                              :error-messages="form.errors.last_name"
+                              label="Last name"></v-text-field>
             </div>
 
             <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.email" />
+                <v-text-field type="email"
+                              v-model="form.email"
+                              :error-messages="form.errors.email"
+                              label="Email"></v-text-field>
             </div>
 
             <div v-if="props.mustVerifyEmail && user.email_verified_at === null">
@@ -102,7 +78,7 @@ const form = useForm({
             </div>
 
             <div class="tw-flex tw-items-center tw-gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <v-btn-primary type="submit" class="tw-ml-4" :disabled="form.processing">Save</v-btn-primary>
 
                 <Transition enter-from-class="tw-opacity-0" leave-to-class="tw-opacity-0" class="tw-transition tw-ease-in-out">
                     <p v-if="form.recentlySuccessful" class="tw-text-sm tw-text-gray-600">Saved.</p>

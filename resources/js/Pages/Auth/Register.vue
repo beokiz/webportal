@@ -73,7 +73,7 @@ const submit = () => {
                               autocomplete="new-password"
                               v-model="form.password_confirmation"
                               :error-messages="form.errors.password_confirmation"
-                              label="Password"
+                              label="Confirm Password"
                               required></v-text-field>
             </div>
 

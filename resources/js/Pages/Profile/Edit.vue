@@ -5,7 +5,7 @@
 
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import DeleteUserForm from './Partials/DeleteUserForm.vue';
+// import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
@@ -26,7 +26,7 @@ defineProps({
 
         <div class="tw-py-12">
             <div class="tw-max-w-full tw-mx-auto sm:tw-px-6 lg:tw-px-8 tw-space-y-6">
-                <div class="p-4 sm:tw-p-8 tw-bg-white tw-shadow sm:tw-rounded-lg">
+                <div class="p-4 sm:tw-p-8 tw-bg-white tw-shadow">
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
@@ -34,13 +34,13 @@ defineProps({
                     />
                 </div>
 
-                <div class="tw-p-4 sm:tw-p-8 tw-bg-white tw-shadow sm:tw-rounded-lg">
+                <div class="tw-p-4 sm:tw-p-8 tw-bg-white tw-shadow">
                     <UpdatePasswordForm class="tw-max-w-xl" />
                 </div>
 
-                <div class="tw-p-4 sm:tw-p-8 tw-bg-white tw-shadow sm:tw-rounded-lg">
-                    <DeleteUserForm class="tw-max-w-xl" />
-                </div>
+<!--                <div class="tw-p-4 sm:tw-p-8 tw-bg-white tw-shadow">-->
+<!--                    <DeleteUserForm class="tw-max-w-xl" />-->
+<!--                </div>-->
             </div>
         </div>
     </AuthenticatedLayout>
