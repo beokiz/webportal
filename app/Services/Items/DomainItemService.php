@@ -6,21 +6,19 @@
 
 namespace App\Services\Items;
 
-use App\Exceptions\Custom\SuperAdminDeletingException;
-use App\Exceptions\Custom\SuperAdminUpdatingException;
-use App\Models\User;
+use App\Models\Domain;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
- * User Item Service
+ * Domain Item Service
  *
  * @package \App\Services\Items
  */
-class UserItemService extends BaseItemService
+class DomainItemService extends BaseItemService
 {
     /**
-     * UserItemService constructor.
+     * DomainItemService constructor.
      *
      * @return void
      */
@@ -44,9 +42,9 @@ class UserItemService extends BaseItemService
         /*
          * Filter & order query
          */
-        $query = User::query()->filter($filters)
+        $query = Domain::query()->filter($filters)
             ->customOrderBy($params->order_by ?? 'id', $params->sort === 'desc')
-            ->with(['roles']);
+            ->with(['subdomains']);
 
         /*
          * Return results
@@ -58,7 +56,7 @@ class UserItemService extends BaseItemService
             $result->additionalMeta = [];
 
             if ($result->isEmpty()) {
-                $result->additionalMeta['is_totally_empty'] = !User::query()->exists();
+                $result->additionalMeta['is_totally_empty'] = !Domain::query()->exists();
             }
 
             return $result;
@@ -70,29 +68,29 @@ class UserItemService extends BaseItemService
     /**
      * @param int  $id
      * @param bool $throwExceptionIfFail
-     * @return User|null
+     * @return Domain|null
      */
-    public function find(int $id, bool $throwExceptionIfFail = true) : ?User
+    public function find(int $id, bool $throwExceptionIfFail = true) : ?Domain
     {
         return $throwExceptionIfFail
-            ? User::findOrFail($id)
-            : User::find($id);
+            ? Domain::findOrFail($id)
+            : Domain::find($id);
     }
 
     /**
      * @param array $attributes
-     * @return ?User
+     * @return ?Domain
      */
-    public function create(array $attributes) : ?User
+    public function create(array $attributes) : ?Domain
     {
         $this->prepareAttributes($attributes);
 
-        $item = User::create($attributes);
+        $item = Domain::create($attributes);
 
         if ($item->exists) {
             $this->updateRelations($item, $attributes);
 
-            return $item->loadMissing(['roles']);
+            return $item->loadMissing(['subdomains']);
         } else {
             return null;
         }
@@ -105,7 +103,7 @@ class UserItemService extends BaseItemService
      */
     public function update(int $id, array $attributes) : bool
     {
-        $item = $this->find($id);
+        $item = $this->find($id, true);
 
         $this->prepareAttributes($attributes);
 
@@ -138,35 +136,18 @@ class UserItemService extends BaseItemService
      */
     protected function prepareAttributes(array &$attributes)
     {
-        // Prepare 'password' field
-        if (!empty($attributes['password'])) {
-            $attributes['password'] = Hash::make($attributes['password']);
+        if (empty($attributes['slug']) && !empty($attributes['name'])) {
+            $attributes['slug'] = Str::slug($attributes['name']);
         }
     }
 
     /**
-     * @param User  $item
-     * @param array $attributes
+     * @param Domain $item
+     * @param array  $attributes
      * @return void
      */
-    protected function updateRelations(User $item, array $attributes)
+    protected function updateRelations(Domain $item, array $attributes)
     {
-        /*
-         * Update 'roles' relation
-         */
-        if (!empty($attributes['role'])) {
-            $roleIds = (array) $attributes['role'];
-
-//            // Remove 'super-admin' Role ID from selected roles
-//            $superAdminRole = Role::whereIn('name', [config('permission.project_roles.super_admin')])->first();
-//
-//            if ($superAdminRole && ($key = array_search($superAdminRole->id, $roleIds)) !== false) {
-//                unset($roleIds[$key]);
-//            }
-
-            if (!empty($roleIds)) {
-                $item->syncRoles($roleIds);
-            }
-        }
+        //
     }
 }

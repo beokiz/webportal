@@ -33,7 +33,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes, Filterable, HasOrderScope, CanGetTableNameStatically;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, Filterable, HasOrderScope, CanGetTableNameStatically; // SoftDeletes
 
     /**
      * @var string

@@ -43,4 +43,24 @@ return [
         'restore_denied'  => "Error! Selected user cannot be restored.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Domain CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'domain' => [
+        'create_success'  => "Success! Domain has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating a domain. Please try again later.",
+        'update_success'  => "Success! Domain has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating a domain. Please try again later.",
+        'update_denied'   => "Error! Selected domain cannot be updated.",
+        'delete_success'  => "Success! Domain has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting a domain. Please try again later.",
+        'delete_denied'   => "Error! Selected domain cannot be deleted.",
+        'restore_success' => "Success! Domain has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring a domain. Please try again later.",
+        'restore_denied'  => "Error! Selected domain cannot be restored.",
+    ],
+
 ];

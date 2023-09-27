@@ -43,4 +43,24 @@ return [
         'restore_denied'  => "Fehler! Der ausgewählte Benutzer kann nicht wiederhergestellt werden.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Domain CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'domain' => [
+        'create_success'  => "Erfolg! Die Domain wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Bei der Erstellung der Domain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Erfolg! Die Domain wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Bei der Aktualisierung der Domain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Die ausgewählte Domain kann nicht aktualisiert werden.",
+        'delete_success'  => "Erfolg! Die Domain wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Bei der Löschung der Domain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Die ausgewählte Domain kann nicht gelöscht werden.",
+        'restore_success' => "Erfolg! Die Domain wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Bei der Wiederherstellung der Domain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Die ausgewählte Domain kann nicht wiederhergestellt werden.",
+    ],
+
 ];

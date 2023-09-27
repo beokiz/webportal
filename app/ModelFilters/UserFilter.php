@@ -28,7 +28,7 @@ class UserFilter extends BaseFilter
     /**
      * @return void
      */
-    public function setup()
+    public function setup() : void
     {
         //
     }

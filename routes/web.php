@@ -130,10 +130,9 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
  */
 Route::group(['prefix' => 'domains', 'as' => 'domains.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [DomainsController::class, 'index'])->name('index');
-    Route::get('/{id}', [DomainsController::class, 'show'])->name('show');
-//    Route::get('/{domain}', [DomainsController::class, 'show'])->name('show');
-//    Route::post('/', [DomainsController::class, 'store'])->name('store');
-//    Route::put('/{domain}', [DomainsController::class, 'update'])->name('update');
-//    Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
-//    Route::post('/{domain}/restore', [DomainsController::class, 'restore'])->name('restore');
+    Route::get('/{domain}', [DomainsController::class, 'show'])->name('show');
+    Route::post('/', [DomainsController::class, 'store'])->name('store');
+    Route::put('/{domain}', [DomainsController::class, 'update'])->name('update');
+    Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
+    Route::post('/{domain}/restore', [DomainsController::class, 'restore'])->name('restore');
 });

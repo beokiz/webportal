@@ -9,20 +9,20 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 /**
- * Database Seeder
+ * Seeder for "Domain" and related models tables
  *
  * @package Database\Seeders
  */
-class DatabaseSeeder extends Seeder
+class DomainsSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
-     *
      * @return void
      */
     public function run()
     {
-        $this->call(UsersSeeder::class);
-        $this->call(DomainsSeeder::class);
+        \App\Models\Domain::factory()
+            ->count(50)
+            ->hasSubdomain(rand(1, 5))
+            ->create();
     }
 }
