@@ -26,6 +26,7 @@ onMounted(() => {
         menuItems.value['users.index'] = 'Users';
     }
 
+    menuItems.value['domains.index'] = 'Domains';
     menuItems.value['profile.edit'] = 'Profile';
 });
 

@@ -24,7 +24,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Users/ManageUser' && newProps) {
+    if (pageType === 'Users/Partials/ManageUser' && newProps) {
         editedUser.value = newProps.user;
     }
 });

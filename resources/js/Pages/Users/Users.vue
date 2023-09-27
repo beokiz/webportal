@@ -33,7 +33,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Users' && newProps) {
+    if (pageType === 'Users/Users' && newProps) {
         currentPage.value = newProps.currentPage;
         perPage.value = newProps.perPage;
         orderBy.value = newProps.orderBy;

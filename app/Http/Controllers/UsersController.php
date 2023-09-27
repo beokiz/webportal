@@ -70,7 +70,7 @@ class UsersController extends BaseController
 
         $result = $this->userItemService->collection(array_merge($args, $usersFilters));
 
-        return Inertia::render('Users', array_merge(BaseInertiaResourceCollection::make($result)->resolve(), [
+        return Inertia::render('Users/Users', array_merge(BaseInertiaResourceCollection::make($result)->resolve(), [
             'roles'   => $this->roleItemService->collection($rolesFilters),
             'filters' => $request->only(['full_name', 'email']),
         ]));
@@ -84,7 +84,7 @@ class UsersController extends BaseController
     {
         $this->authorize('authorizeAdminAccess', User::class);
 
-        return Inertia::render('Users/ShowUser', [
+        return Inertia::render('Users/Partials/ManageUser', [
             'user' => $user,
         ]);
     }
@@ -112,7 +112,7 @@ class UsersController extends BaseController
             ];
         }
 
-        return Inertia::render('Users/ManageUser', [
+        return Inertia::render('Users/Partials/ManageUser', [
             'user'  => $user,
             'roles' => $this->roleItemService->collection($rolesFilters),
         ]);
