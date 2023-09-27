@@ -42,24 +42,15 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="2fa-code" value="Code" />
-
-                <TextInput
-                    id="2fa-code"
-                    type="text"
-                    class="tw-mt-1 tw-block tw-w-full"
-                    v-model="form.two_factor_code"
-                    required
-                    autofocus
-                />
-
-                <InputError class="tw-mt-2" :message="form.errors.two_factor_code" />
+                <v-text-field v-model="form.two_factor_code"
+                              autofocus
+                              :error-messages="form.errors.two_factor_code"
+                              label="Code"
+                              required></v-text-field>
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end mt-4">
-                <PrimaryButton :class="{ 'tw-opacity-25': form.processing }" :disabled="form.processing">
-                    Verify
-                </PrimaryButton>
+                <v-btn-primary type="submit">Verify</v-btn-primary>
             </div>
         </form>
     </GuestLayout>
