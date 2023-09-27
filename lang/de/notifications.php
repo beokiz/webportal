@@ -30,7 +30,7 @@ return [
     */
 
     'reset_password' => [
-        'subject'     => "Passwortwiederherstellung",
+        'subject'     => "BeoKiz-Passwortwiederherstellung",
         'greeting'    => "Hallo!",
         'action_text' => "Passwort wiederherstellen",
         'first_line'  => "Dies ist eine E-Mail zur Passwortwiederherstellung. Wenn Sie sich nicht angemeldet haben und diese Benachrichtigung erhalten haben, teilen Sie uns dies bitte mit.",
@@ -44,7 +44,7 @@ return [
     */
 
     'email_verification' => [
-        'subject'     => "E-Mail-Bestätigung",
+        'subject'     => "BeoKiz-E-Mail-Bestätigung",
         'greeting'    => "Hallo!",
         'action_text' => "Bestätigen",
         'first_line'  => "Bestätigen Sie Ihre E-Mail-Adresse, um die Registrierung Ihres Kontos abzuschließen. Wenn Sie kein Konto in unserem System erstellt haben, ignorieren Sie bitte diese Nachricht.",
@@ -57,7 +57,7 @@ return [
     */
 
     '2fa_verification' => [
-        'subject'     => "2FA-Bestätigungscode",
+        'subject'     => "2FA BeoKiz-Bestätigungscode",
         'action_text' => "Überprüfen Sie den 2FA-Code",
         'first_line'  => "Wenn Sie nicht versucht haben, sich anzumelden und diese Benachrichtigung erhalten haben, ignorieren Sie diese Nachricht bitte.",
         'second_line' => "Code für die Zwei-Faktor-Authentifizierung: :code",
@@ -70,11 +70,27 @@ return [
     */
 
     'welcome' => [
-        'subject'     => "Konto erstellt",
+        'subject'     => "BeoKiz-Konto erstellt",
         'greeting'    => "Hallo :name,",
         'action_text' => "Neues Passwort festlegen",
         'first_line'  => "du wurdest zum BeoKiz Portal der Berliner Meilensteine eingeladen.",
         'second_line' => "Damit du dich anmelden kannst, musst du erstmal ein Passwort setzen:",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Password Changed Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'password_changed' => [
+        'subject'     => "Passwortänderung für Beokiz bestätigt",
+        'greeting'    => "Hallo :name,",
+//        'action_text' => "",
+        'first_line'  => "wir möchten Sie darüber informieren, dass das Passwort für Ihr Beokiz-Konto erfolgreich geändert wurde.",
+        'second_line' => "Wenn Sie diese Änderung nicht veranlasst haben, kontaktieren Sie bitte sofort unseren Support unter <:support_email>.",
+        'third_line'  => "Ihre Sicherheit ist uns wichtig. Es ist immer eine gute Idee, regelmäßig Ihr Passwort zu ändern und sicherzustellen, dass Sie ein starkes und einzigartiges Passwort für jedes Online-Konto verwenden.",
+        'fourth_line' => "Vielen Dank, dass Sie Beokiz verwenden!",
     ],
 
 ];

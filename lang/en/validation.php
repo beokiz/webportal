@@ -172,6 +172,10 @@ return [
 
         'invalid' => "The selected \":attribute\" is invalid.",
 
+        'password' => [
+            'regex' => "The password must contain: at least one uppercase letter, at least one lowercase letter, at least one digit, at least one special character (including non-English characters), at least one letter (including non-English letters).",
+        ],
+
         'attribute-name' => [
             'rule-name' => "custom-message",
         ],

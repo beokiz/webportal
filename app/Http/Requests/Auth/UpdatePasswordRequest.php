@@ -7,7 +7,6 @@
 namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\BaseFormRequest;
-use Illuminate\Validation\Rules\Password;
 
 /**
  * Update Password Request
@@ -23,7 +22,7 @@ class UpdatePasswordRequest extends BaseFormRequest
     {
         return [
             'current_password' => ['required', 'current_password'],
-            'password'         => ['required', 'confirmed', Password::defaults()],
+            'password'         => array_merge($this->passwordRules(), ['required']),
         ];
     }
 

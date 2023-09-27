@@ -11,11 +11,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 /**
- * Two-Factor Verification Notification
+ * Password Changed Notification
  *
  * @package \App\Notifications
  */
-class TwoFactorVerificationNotification extends Notification
+class PasswordChangedNotification extends Notification
 {
     use Queueable;
 
@@ -48,17 +48,15 @@ class TwoFactorVerificationNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $verificationCode = decrypt(session('2fa_data.code'));
-
         return (new CustomMailMessage)
-            ->subject(__('notifications.2fa_verification.subject'))
-            ->line(__('notifications.2fa_verification.first_line'))
-            ->line(__('notifications.2fa_verification.second_line', [
-                'code' => $verificationCode,
+            ->subject(__('notifications.password_changed.subject'))
+            ->greeting(__('notifications.password_changed.greeting', ['name' => $notifiable->full_name]))
+            ->line(__('notifications.password_changed.first_line'))
+            ->line(__('notifications.password_changed.second_line', [
+                'support_email' => config('app.emails.support'),
             ]))
-            ->action(__('notifications.2fa_verification.action_text'), route('2fa.create', [
-                'two_factor_code' => $verificationCode,
-            ]));
+            ->line(__('notifications.password_changed.third_line'))
+            ->line(__('notifications.password_changed.fourth_line'));
     }
 
     /**

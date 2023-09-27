@@ -43,7 +43,7 @@ class UpdateUserRequest extends CreateUserRequest
             'first_name'              => array_merge($this->textRules(), ['sometimes']),
             'last_name'               => array_merge($this->textRules(), ['nullable']),
             'email'                   => ['sometimes', 'email', Rule::unique(User::class)->ignore($this->route('user'))],
-//            'password'                => ['sometimes', 'confirmed', Rules\Password::defaults()],
+//            'password'                => array_merge($this->passwordRules(), ['sometimes']),
             'role'                    => ['sometimes', $this->roleExistRule($roles)],
             'two_factor_auth_enabled' => ['sometimes', 'boolean'],
         ];

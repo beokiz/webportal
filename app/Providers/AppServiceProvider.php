@@ -7,6 +7,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
@@ -39,6 +40,13 @@ class AppServiceProvider extends ServiceProvider
          * Define custom Blade directives
          */
         $this->defineCustomBladeDirectives();
+
+        /*
+         * Forced HTTPS scheme
+         */
+        if (env('APP_ENV') == 'production') {
+            URL::forceScheme('https');
+        }
     }
 
     /**

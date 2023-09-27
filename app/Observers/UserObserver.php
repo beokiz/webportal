@@ -50,7 +50,9 @@ class UserObserver extends BaseObserver
      */
     public function updated(User $user)
     {
-        //
+        if ($user->isDirty('password')) {
+            $user->sendPasswordChangedNotification();
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ namespace App\Models;
 use App\ModelFilters\UserFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
+use App\Notifications\PasswordChangedNotification;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TwoFactorVerificationNotification;
 use App\Notifications\VerifyEmailNotification;
@@ -284,6 +285,14 @@ class User extends Authenticatable
     public function sendWelcomeNotification($token) : void
     {
         $this->notify(new WelcomeNotification($token));
+    }
+
+    /**
+     * @return void
+     */
+    public function sendPasswordChangedNotification() : void
+    {
+        $this->notify(new PasswordChangedNotification());
     }
 
     /*

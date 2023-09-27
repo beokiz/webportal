@@ -175,17 +175,35 @@ trait BaseValidationRules
 
     /**
      * @param boolean $mustBeConfirmed
-     * @param boolean $checkOldPassword
      * @return array
      */
-    protected function passwordRules(bool $mustBeConfirmed = true, bool $checkOldPassword = true) : array
+    protected function passwordRules(bool $mustBeConfirmed = true) : array
     {
+        // ^ - Start of the string.
+        // (?=.*[A-Z]) - Must contain at least one uppercase letter.
+        // (?=.*[a-z]) - Must contain at least one lowercase letter.
+        // (?=.*\d) - Must contain at least one digit.
+        // (?=.*[\p{P}\p{S}]) - Must contain at least one special character.
+        // \p{P} and \p{S} match any punctuation or symbol characters, which includes non-English characters.
+        // (?=.*[\p{L}]) - Must contain at least one letter (can be non-English letter).
+        // .{8,} - Must have a minimum length of 8 characters.
+        // $/u - End of the string. The 'u' flag is used to support Unicode characters.
+
+        // This regular expression enforces the following criteria for a password:
+        // - At least one uppercase letter.
+        // - At least one lowercase letter.
+        // - At least one digit.
+        // - At least one special character (including non-English characters).
+        // - At least one letter (including non-English letters).
+        // - Minimum length of 12 characters.
+
         $rules = [
-            'min:6',
-            // OLD (1 latin letter & 1 number): /^(?=.*[a-zA-Z])(?=.*\d).+$/
-            // CURRENT: 1 letter (in any language) & 1 number
-            'regex:/^(?=.*[{\p{L}}])(?=.*\d).+$/',
+            'min:12',
+            'regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\p{P}\p{S}])(?=.*[\p{L}]).{12,}$/u',
         ];
+
+        // Also can be used
+        // $rules[] = Rules\Password::defaults()
 
         if ($mustBeConfirmed) {
             $rules[] = 'confirmed';
