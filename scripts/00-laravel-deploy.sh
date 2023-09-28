@@ -4,7 +4,7 @@
 # Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
 #
 
-echo "Running composer"
+echo "Running composer..."
 cp /etc/secrets/.env .env
 composer global require hirak/prestissimo
 composer install --no-dev --working-dir=/var/www/html
@@ -21,5 +21,9 @@ php artisan route:cache
 echo "Running DB migrations & actions..."
 php artisan migrate --force
 php artisan actions --force
+
+echo "Running NPM..."
+npm install
+npm run production
 
 echo "Done deploying"
