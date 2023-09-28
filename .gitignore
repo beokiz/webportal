@@ -20,16 +20,16 @@ Homestead.yaml
 auth.json
 
 # Compiled public files
-/public/build
-/public/assets
-/public/css
-/public/fonts
-/public/images
-/public/hot
-/public/js
-/public/storage
+#/public/build
+#/public/assets
+#/public/css
+#/public/fonts
+#/public/images
+#/public/js
 #/public/.htaccess
-/public/mix-manifest.json
+#/public/mix-manifest.json
+/public/hot
+/public/storage
 
 # Temporary files
 /tmp
