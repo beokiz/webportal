@@ -6,6 +6,9 @@
 
 cat /etc/os-release
 
+echo "Installing additional dependencies..."
+apk add php-bcmath
+
 echo "Running composer..."
 cp /etc/secrets/.env .env
 #composer global require hirak/prestissimo
