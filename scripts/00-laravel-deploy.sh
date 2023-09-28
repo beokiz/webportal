@@ -22,8 +22,4 @@ echo "Running DB migrations & actions..."
 php artisan migrate --force
 php artisan actions --force
 
-echo "Running NPM..."
-npm install
-npm run production
-
 echo "Done deploying"
