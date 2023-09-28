@@ -63,4 +63,24 @@ return [
         'restore_denied'  => "Fehler! Die ausgewählte Domain kann nicht wiederhergestellt werden.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Subdomain CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'subdomain' => [
+        'create_success'  => "Erfolg! Die Subdomain wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Bei der Erstellung der Subdomain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Erfolg! Die Subdomain wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Bei der Aktualisierung der Subdomain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Die ausgewählte Subdomain kann nicht aktualisiert werden.",
+        'delete_success'  => "Erfolg! Die Subdomain wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Bei der Löschung der Subdomain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Die ausgewählte Subdomain kann nicht gelöscht werden.",
+        'restore_success' => "Erfolg! Die Subdomain wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Bei der Wiederherstellung der Subdomain ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Die ausgewählte Subdomain kann nicht wiederhergestellt werden.",
+    ],
+
 ];

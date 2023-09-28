@@ -27,7 +27,7 @@ class DomainFactory extends BaseFactory
 
         return [
             'name'                       => $name,
-            'slug'                       => Str::slug($name),
+            'abbreviation'               => Str::slug($name),
             'order'                      => $this->faker->numberBetween(1, 999),
             'age_2_red_threshold'        => $this->faker->numberBetween(1, 100),
             'age_2_red_threshold_daz'    => $this->faker->numberBetween(1, 100),

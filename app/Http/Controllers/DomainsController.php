@@ -8,8 +8,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Domains\CreateDomainRequest;
 use App\Http\Requests\Domains\UpdateDomainRequest;
-use App\Http\Requests\Users\CreateUserRequest;
-use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\Domain;
 use App\Services\Items\DomainItemService;
 use Illuminate\Http\Request;
@@ -76,7 +74,7 @@ class DomainsController extends BaseController
     }
 
     /**
-     * @param CreateUserRequest $request
+     * @param CreateDomainRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(CreateDomainRequest $request)
@@ -92,18 +90,18 @@ class DomainsController extends BaseController
     }
 
     /**
-     * @param UpdateUserRequest $request
-     * @param Domain            $user
+     * @param UpdateDomainRequest $request
+     * @param Domain              $domain
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateDomainRequest $request, Domain $user)
+    public function update(UpdateDomainRequest $request, Domain $domain)
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $currentUser = $request->user();
 
         $attributes = $request->validated();
-        $result     = $this->domainItemService->update($user->id, $attributes);
+        $result     = $this->domainItemService->update($domain->id, $attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.domain.update_success'))
@@ -112,16 +110,16 @@ class DomainsController extends BaseController
 
     /**
      * @param Request $request
-     * @param Domain  $user
+     * @param Domain  $domain
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, Domain $user)
+    public function destroy(Request $request, Domain $domain)
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $currentUser = $request->user();
 
-        $result = $this->domainItemService->delete($user->id);
+        $result = $this->domainItemService->delete($domain->id);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.domain.delete_success'))
@@ -130,16 +128,16 @@ class DomainsController extends BaseController
 
     /**
      * @param Request $request
-     * @param Domain  $user
+     * @param Domain  $domain
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function restore(Request $request, Domain $user)
+    public function restore(Request $request, Domain $domain)
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $currentUser = $request->user();
 
-        $result = $this->domainItemService->update($user->id, [
+        $result = $this->domainItemService->update($domain->id, [
             'deleted_at' => null,
         ]);
 

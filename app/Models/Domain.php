@@ -24,7 +24,7 @@ class Domain extends Model
 {
     use HasFactory, Filterable, HasOrderScope, CanGetTableNameStatically;
 
-    // SoftDeletes
+    // use SoftDeletes;
 
     /**
      * @var string
@@ -38,7 +38,7 @@ class Domain extends Model
      */
     protected $fillable = [
         'name',
-        'slug',
+        'abbreviation',
         'order',
         'age_2_red_threshold',
         'age_2_red_threshold_daz',
@@ -48,6 +48,7 @@ class Domain extends Model
         'age_4_red_threshold_daz',
         'age_4_yellow_threshold',
         'age_4_yellow_threshold_daz',
+        'deleted_at',
     ];
 
     /**
@@ -56,7 +57,15 @@ class Domain extends Model
      * @var array
      */
     protected $casts = [
-        //
+        'order'                      => 'integer',
+        'age_2_red_threshold'        => 'integer',
+        'age_2_red_threshold_daz'    => 'integer',
+        'age_2_yellow_threshold'     => 'integer',
+        'age_2_yellow_threshold_daz' => 'integer',
+        'age_4_red_threshold'        => 'integer',
+        'age_4_red_threshold_daz'    => 'integer',
+        'age_4_yellow_threshold'     => 'integer',
+        'age_4_yellow_threshold_daz' => 'integer',
     ];
 
     /**

@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DomainsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubdomainsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -121,7 +122,7 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
     Route::post('/', [UsersController::class, 'store'])->name('store');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
-    Route::post('/{user}/restore', [UsersController::class, 'restore'])->name('restore');
+//    Route::post('/{user}/restore', [UsersController::class, 'restore'])->name('restore');
 });
 
 
@@ -134,5 +135,18 @@ Route::group(['prefix' => 'domains', 'as' => 'domains.', 'middleware' => ['auth'
     Route::post('/', [DomainsController::class, 'store'])->name('store');
     Route::put('/{domain}', [DomainsController::class, 'update'])->name('update');
     Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
-    Route::post('/{domain}/restore', [DomainsController::class, 'restore'])->name('restore');
+//    Route::post('/{domain}/restore', [DomainsController::class, 'restore'])->name('restore');
+});
+
+
+/*
+ * Subomains routes
+ */
+Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.', 'middleware' => ['auth', 'verified_2fa']], function () {
+//    Route::get('/', [SubdomainsController::class, 'index'])->name('index');
+    Route::get('/{subdomain}', [SubdomainsController::class, 'show'])->name('show');
+    Route::post('/', [SubdomainsController::class, 'store'])->name('store');
+    Route::put('/{subdomain}', [SubdomainsController::class, 'update'])->name('update');
+    Route::delete('/{subdomain}', [SubdomainsController::class, 'destroy'])->name('destroy');
+//    Route::post('/{subdomain}/restore', [SubdomainsController::class, 'restore'])->name('restore');
 });

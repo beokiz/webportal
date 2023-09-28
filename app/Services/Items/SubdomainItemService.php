@@ -6,10 +6,8 @@
 
 namespace App\Services\Items;
 
-use App\Models\Domain;
 use App\Models\Subdomain;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * Subdomain Item Service
@@ -142,7 +140,7 @@ class SubdomainItemService extends BaseItemService
 
     /**
      * @param Subdomain $item
-     * @param array  $attributes
+     * @param array     $attributes
      * @return void
      */
     protected function updateRelations(Subdomain $item, array $attributes) : void

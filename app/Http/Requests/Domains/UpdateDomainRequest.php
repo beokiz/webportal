@@ -7,7 +7,7 @@
 namespace App\Http\Requests\Domains;
 
 /**
- * Update User Request
+ * Update Domain Request
  *
  * @package \App\Http\Requests\Domains
  */
@@ -20,7 +20,8 @@ class UpdateDomainRequest extends CreateDomainRequest
     {
         return [
             'name'                       => array_merge($this->textRules(), ['sometimes']),
-            'slug'                       => array_merge($this->textRules(), ['sometimes']),
+            'abbreviation'               => array_merge($this->textRules(), ['sometimes']),
+            'order'                      => array_merge($this->integerRules(), ['sometimes']),
             'age_2_red_threshold'        => array_merge($this->smallIntegerRules(), ['sometimes']),
             'age_2_red_threshold_daz'    => array_merge($this->smallIntegerRules(), ['sometimes']),
             'age_2_yellow_threshold'     => array_merge($this->smallIntegerRules(), ['sometimes']),

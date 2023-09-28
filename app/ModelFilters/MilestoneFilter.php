@@ -9,11 +9,11 @@ namespace App\ModelFilters;
 use EloquentFilter\ModelFilter;
 
 /**
- * Domain Model Filter
+ * Milestone Model Filter
  *
  * @package \App\ModelFilters
  */
-class DomainFilter extends BaseFilter
+class MilestoneFilter extends BaseFilter
 {
     /**
      * @var array
@@ -33,13 +33,13 @@ class DomainFilter extends BaseFilter
         //
     }
 
-    /**
-     * @param string $value
-     * @return ModelFilter
-     */
-    public function search(string $value) : ModelFilter
-    {
-        return $this->where('name', 'LIKE', '%' . trim($value) . '%')
-            ->orWhere('abbreviation', 'LIKE', '%' . trim($value) . '%');
-    }
+//    /**
+//     * @param string $value
+//     * @return ModelFilter
+//     */
+//    public function search(string $value) : ModelFilter
+//    {
+//        return $this->where('name', 'LIKE', '%' . trim($value) . '%')
+//            ->orWhere('abbreviation', 'LIKE', '%' . trim($value) . '%');
+//    }
 }

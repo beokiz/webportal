@@ -16,19 +16,19 @@ return new class extends Migration {
      */
     public function up() : void
     {
-        Schema::create('domains', function (Blueprint $table) {
+        Schema::create('milestones', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('subdomain_id')
+                ->constrained('subdomains', 'id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->string('abbreviation');
-            $table->string('name');
+            $table->string('title');
+            $table->text('text');
             $table->integer('order')->default(0);
-            $table->unsignedSmallInteger('age_2_red_threshold');
-            $table->unsignedSmallInteger('age_2_red_threshold_daz');
-            $table->unsignedSmallInteger('age_2_yellow_threshold');
-            $table->unsignedSmallInteger('age_2_yellow_threshold_daz');
-            $table->unsignedSmallInteger('age_4_red_threshold');
-            $table->unsignedSmallInteger('age_4_red_threshold_daz');
-            $table->unsignedSmallInteger('age_4_yellow_threshold');
-            $table->unsignedSmallInteger('age_4_yellow_threshold_daz');
+            $table->double('emphasis');
+            $table->double('emphasis_daz');
+            $table->enum('age', ['2.5', '4.5'])->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -41,6 +41,6 @@ return new class extends Migration {
      */
     public function down() : void
     {
-        Schema::dropIfExists('domains');
+        Schema::dropIfExists('milestones');
     }
 };

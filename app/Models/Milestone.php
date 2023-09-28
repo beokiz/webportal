@@ -6,22 +6,21 @@
 
 namespace App\Models;
 
-use App\ModelFilters\SubdomainFilter;
+use App\ModelFilters\MilestoneFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Subdomain Model
+ * Milestone Model
  *
  * @mixin \Eloquent
  * @package \App\Models
  */
-class Subdomain extends Model
+class Milestone extends Model
 {
     use HasFactory, Filterable, HasOrderScope, CanGetTableNameStatically;
 
@@ -30,7 +29,7 @@ class Subdomain extends Model
     /**
      * @var string
      */
-    protected $table = 'subdomains';
+    protected $table = 'milestones';
 
     /**
      * The attributes that are mass assignable.
@@ -38,10 +37,14 @@ class Subdomain extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'domain_id',
-        'name',
+        'subdomain_id',
+        'abbreviation',
+        'title',
+        'text',
         'order',
-        'deleted_at',
+        'emphasis',
+        'emphasis_daz',
+        'age',
     ];
 
     /**
@@ -50,7 +53,9 @@ class Subdomain extends Model
      * @var array
      */
     protected $casts = [
-        'order' => 'integer',
+        'order'        => 'integer',
+        'emphasis'     => 'double',
+        'emphasis_daz' => 'double',
     ];
 
     /**
@@ -58,7 +63,7 @@ class Subdomain extends Model
      */
     public function modelFilter() : ?string
     {
-        return $this->provideFilter(SubdomainFilter::class);
+        return $this->provideFilter(MilestoneFilter::class);
     }
 
     /*
@@ -69,16 +74,8 @@ class Subdomain extends Model
     /**
      * @return BelongsTo
      */
-    public function domain() : BelongsTo
+    public function subdomain() : BelongsTo
     {
-        return $this->belongsTo(Domain::class, 'domain_id', 'id');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function milestones() : HasMany
-    {
-        return $this->hasMany(Milestone::class, 'subdomain_id', 'id');
+        return $this->belongsTo(Subdomain::class, 'subdomain_id', 'id');
     }
 }

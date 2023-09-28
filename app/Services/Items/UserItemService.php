@@ -6,8 +6,6 @@
 
 namespace App\Services\Items;
 
-use App\Exceptions\Custom\SuperAdminDeletingException;
-use App\Exceptions\Custom\SuperAdminUpdatingException;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;

@@ -25,8 +25,8 @@ return new class () extends Action {
 
         \App\Models\Domain::insert([
             array_merge($commonOptions, [
-                'name'                       => 'Grobmotorik',
-                'slug'                       => 'GM',
+                'name'                       => "Grobmotorik",
+                'abbreviation'               => "GM",
                 'order'                      => 1,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -38,8 +38,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Feinmotorik',
-                'slug'                       => 'FM',
+                'name'                       => "Feinmotorik",
+                'abbreviation'               => "FM",
                 'order'                      => 2,
                 'age_2_red_threshold'        => 15,
                 'age_2_red_threshold_daz'    => 15,
@@ -51,8 +51,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 35,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Kognitive Grundfunktion',
-                'slug'                       => 'KG',
+                'name'                       => "Kognitive Grundfunktion",
+                'abbreviation'               => "KG",
                 'order'                      => 3,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -64,8 +64,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Denken',
-                'slug'                       => 'D',
+                'name'                       => "Denken",
+                'abbreviation'               => "D",
                 'order'                      => 4,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -77,8 +77,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Höhere kognitive Funktionen',
-                'slug'                       => 'HF',
+                'name'                       => "Höhere kognitive Funktionen",
+                'abbreviation'               => "HF",
                 'order'                      => 5,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -90,8 +90,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Schulische Vorläuferfähigkeiten',
-                'slug'                       => 'SV',
+                'name'                       => "Schulische Vorläuferfähigkeiten",
+                'abbreviation'               => "SV",
                 'order'                      => 6,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -103,8 +103,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Sprache 1',
-                'slug'                       => 'S1',
+                'name'                       => "Sprache 1",
+                'abbreviation'               => "S1",
                 'order'                      => 7,
                 'age_2_red_threshold'        => 40,
                 'age_2_red_threshold_daz'    => 40,
@@ -116,8 +116,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 40,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Sprache 2',
-                'slug'                       => 'S2',
+                'name'                       => "Sprache 2",
+                'abbreviation'               => "S2",
                 'order'                      => 8,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -129,8 +129,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Sprache 3',
-                'slug'                       => 'S3',
+                'name'                       => "Sprache 3",
+                'abbreviation'               => "S3",
                 'order'                      => 9,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -142,8 +142,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Soziale Beziehungen',
-                'slug'                       => 'SB',
+                'name'                       => "Soziale Beziehungen",
+                'abbreviation'               => "SB",
                 'order'                      => 10,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -155,8 +155,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Soziale Entwicklung',
-                'slug'                       => 'SE',
+                'name'                       => "Soziale Entwicklung",
+                'abbreviation'               => "SE",
                 'order'                      => 11,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -168,8 +168,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Selbstregulation',
-                'slug'                       => 'SR',
+                'name'                       => "Selbstregulation",
+                'abbreviation'               => "SR",
                 'order'                      => 12,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,
@@ -181,8 +181,8 @@ return new class () extends Action {
                 'age_4_yellow_threshold_daz' => 30,
             ]),
             array_merge($commonOptions, [
-                'name'                       => 'Gefühle',
-                'slug'                       => 'G',
+                'name'                       => "Gefühle",
+                'abbreviation'               => "G",
                 'order'                      => 13,
                 'age_2_red_threshold'        => 10,
                 'age_2_red_threshold_daz'    => 10,

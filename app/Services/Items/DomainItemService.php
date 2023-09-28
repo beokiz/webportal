@@ -136,9 +136,7 @@ class DomainItemService extends BaseItemService
      */
     protected function prepareAttributes(array &$attributes)
     {
-        if (empty($attributes['slug']) && !empty($attributes['name'])) {
-            $attributes['slug'] = Str::slug($attributes['name']);
-        }
+        //
     }
 
     /**

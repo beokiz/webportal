@@ -8,7 +8,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
-use App\Http\Resources\BaseInertiaResourceCollection;
 use App\Models\User;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
