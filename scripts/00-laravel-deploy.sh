@@ -4,8 +4,6 @@
 # Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
 #
 
-cat /etc/os-release
-
 echo "Installing additional dependencies..."
 curl -sSLf \
         -o /usr/local/bin/install-php-extensions \
@@ -13,24 +11,22 @@ curl -sSLf \
     chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions bcmath
 
-php -m
-php -v
-#echo "Running composer..."
-#cp /etc/secrets/.env .env
-##composer global require hirak/prestissimo
-#composer install --no-dev --working-dir=/var/www/html
-#
-#echo "Clearing caches..."
-#php artisan optimize:clear
-#
-#echo "Caching config..."
-#php artisan config:cache
-#
-#echo "Caching routes..."
-#php artisan route:cache
-#
-#echo "Running DB migrations & actions..."
-#php artisan migrate --force
-#php artisan actions --force
-#
-#echo "Done deploying"
+echo "Running composer..."
+cp /etc/secrets/.env .env
+#composer global require hirak/prestissimo
+composer install --no-dev --working-dir=/var/www/html
+
+echo "Clearing caches..."
+php artisan optimize:clear
+
+echo "Caching config..."
+php artisan config:cache
+
+echo "Caching routes..."
+php artisan route:cache
+
+echo "Running DB migrations & actions..."
+php artisan migrate --force
+php artisan actions --force
+
+echo "Done deploying"
