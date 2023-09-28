@@ -26,7 +26,7 @@ echo "Caching routes..."
 php artisan route:cache
 
 echo "Running DB migrations & actions..."
-php artisan migrate --force
+php artisan migrate:refresh
 php artisan actions --force
 
 echo "Done deploying"
