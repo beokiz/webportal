@@ -108,7 +108,7 @@ _vti_log/
 _vti_pvt/
 _vti_txt/
 tmp/
-php.ini
+#php.ini
 _old/
 .htpasswds/
 .htpasswd

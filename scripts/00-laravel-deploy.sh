@@ -7,10 +7,11 @@
 cat /etc/os-release
 
 echo "Installing additional dependencies..."
-apk add php-bcmath
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-php -m
-php -v
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions bcmath
+
 #echo "Running composer..."
 #cp /etc/secrets/.env .env
 ##composer global require hirak/prestissimo
