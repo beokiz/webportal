@@ -74,20 +74,21 @@ class ResetPasswordNotification extends Notification
             return call_user_func(static::$toMailCallback, $notifiable, $this->token);
         }
 
-        return $this->buildMailMessage($this->resetUrl($notifiable));
+        return $this->buildMailMessage($this->resetUrl($notifiable), $notifiable->full_name);
     }
 
     /**
      * Get the reset password notification mail message for the given URL.
      *
      * @param string $url
+     * @param string $name
      * @return CustomMailMessage
      */
-    protected function buildMailMessage($url)
+    protected function buildMailMessage($url, $name)
     {
         return (new CustomMailMessage())
             ->subject(__('notifications.reset_password.subject'))
-            ->greeting(__('notifications.reset_password.greeting'))
+            ->greeting(__('notifications.reset_password.greeting', ['name' => $name]))
             ->line(__('notifications.reset_password.first_line'))
             ->line(__('notifications.reset_password.second_line'))
             ->action(__('notifications.reset_password.action_text'), $url);
