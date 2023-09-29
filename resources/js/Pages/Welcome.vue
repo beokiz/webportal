@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Welcome" />
+    <Head title="Willkommen" />
 
     <div
         class="tw-relative sm:tw-flex sm:tw-justify-center sm:tw-items-center tw-min-h-screen tw-bg-dots-darker tw-bg-center tw-bg-gray-100 dark:tw-bg-dots-lighter dark:tw-bg-gray-900 selection:tw-bg-red-500 selection:tw-text-white"
@@ -32,14 +32,14 @@ defineProps({
                 <Link
                     :href="route('auth.login')"
                     class="tw-font-semibold tw-text-gray-600 hover:tw-text-gray-900 dark:tw-text-gray-400 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"
-                    >Log in</Link
+                    >Anmelden</Link
                 >
 
                 <Link
                     v-if="canRegister"
                     :href="route('auth.register')"
                     class="tw-ml-4 tw-font-semibold tw-text-gray-600 hover:tw-text-gray-900 dark:tw-text-gray-400 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"
-                    >Register</Link
+                    >Registrieren</Link
                 >
             </template>
         </div>
@@ -84,12 +84,12 @@ defineProps({
                                 </svg>
                             </div>
 
-                            <h2 class="tw-mt-6 tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white">Documentation</h2>
+                            <h2 class="tw-mt-6 tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white">Dokumentation</h2>
 
                             <p class="tw-mt-4 tw-text-gray-500 dark:tw-text-gray-400 tw-text-sm tw-leading-relaxed">
-                                Laravel has wonderful documentation covering every aspect of the framework. Whether you
-                                are a newcomer or have prior experience with Laravel, we recommend reading our
-                                documentation from beginning to end.
+                                Laravel verfügt über eine wunderbare Dokumentation, die jeden Aspekt des Frameworks abdeckt. Ob sie
+                                Wenn Sie ein Neuling sind oder bereits Erfahrung mit Laravel haben, empfehlen wir Ihnen, unsere zu lesen
+                                Dokumentation von Anfang bis Ende.
                             </p>
                         </div>
 
@@ -133,9 +133,9 @@ defineProps({
                             <h2 class="tw-mt-6 tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white">Laracasts</h2>
 
                             <p class="tw-mt-4 tw-text-gray-500 dark:tw-text-gray-400 tw-text-sm tw-leading-relaxed">
-                                Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript
-                                development. Check them out, see for yourself, and massively level up your development
-                                skills in the process.
+                                Laracasts bietet Tausende von Video-Tutorials zu Laravel, PHP und JavaScript
+                                Entwicklung. Probieren Sie sie aus, überzeugen Sie sich selbst und steigern Sie Ihre Entwicklung massiv
+                                Fähigkeiten im Prozess.
                             </p>
                         </div>
 
@@ -177,12 +177,12 @@ defineProps({
                                 </svg>
                             </div>
 
-                            <h2 class="tw-mt-6 tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white">Laravel News</h2>
+                            <h2 class="tw-mt-6 tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white">Laravel-Neuigkeiten</h2>
 
                             <p class="tw-mt-4 tw-text-gray-500 dark:tw-text-gray-400 tw-text-sm tw-leading-relaxed">
-                                Laravel News is a community driven portal and newsletter aggregating all of the latest
-                                and most important news in the Laravel ecosystem, including new package releases and
-                                tutorials.
+                                Laravel News ist ein von der Community betriebenes Portal und Newsletter, der alle Neuigkeiten zusammenfasst
+                                und die wichtigsten Neuigkeiten im Laravel-Ökosystem, einschließlich neuer Paketveröffentlichungen und
+                                Tutorials.
                             </p>
                         </div>
 
@@ -223,10 +223,10 @@ defineProps({
                                 </svg>
                             </div>
 
-                            <h2 class="tw-mt-6 tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white">Vibrant Ecosystem</h2>
+                            <h2 class="tw-mt-6 tw-text-xl tw-font-semibold tw-text-gray-900 dark:tw-text-white">Lebendiges Ökosystem</h2>
 
                             <p class="tw-mt-4 tw-text-gray-500 dark:tw-text-gray-400 tw-text-sm tw-leading-relaxed">
-                                Laravel's robust library of first-party tools and libraries, such as
+                                Die robuste Bibliothek von Laravel mit Tools und Bibliotheken von Erstanbietern, wie z
                                 <a
                                     href="https://forge.laravel.com"
                                     class="tw-underline hover:tw-text-gray-700 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"
@@ -247,8 +247,8 @@ defineProps({
                                     class="tw-underline hover:tw-text-gray-700 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"
                                     >Envoyer</a
                                 >
-                                help you take your projects to the next level. Pair them with powerful open source
-                                libraries like
+                                helfen Ihnen, Ihre Projekte auf die nächste Stufe zu bringen. Kombinieren Sie sie mit leistungsstarkem Open Source
+                                Bibliotheken mögen
                                 <a
                                     href="https://laravel.com/docs/billing"
                                     class="tw-underline hover:tw-text-gray-700 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"
@@ -278,7 +278,7 @@ defineProps({
                                     href="https://laravel.com/docs/telescope"
                                     class="tw-underline hover:tw-text-gray-700 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500underline hover:tw-text-gray-700 dark:hover:tw-text-white focus:tw-outline focus:tw-outline-2 focus:tw-rounded-sm focus:tw-outline-red-500"
                                     >Telescope</a
-                                >, and more.
+                                >, und mehr.
                             </p>
                         </div>
                     </div>

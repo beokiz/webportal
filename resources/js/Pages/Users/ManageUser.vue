@@ -119,21 +119,21 @@ const manageUser = async () => {
 </script>
 
 <template>
-    <Head title="Manage User" />
+    <Head title="Benutzer verwalten" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Manage User</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Benutzer verwalten</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <v-container>
                 <v-row>
                     <v-col cols="12" sm="4">
-                        <v-text-field v-model="manageForm.first_name" :error-messages="errors.first_name" label="First Name" required></v-text-field>
+                        <v-text-field v-model="manageForm.first_name" :error-messages="errors.first_name" label="Vorname" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
-                        <v-text-field v-model="manageForm.last_name" :error-messages="errors.last_name" label="Last Name" required></v-text-field>
+                        <v-text-field v-model="manageForm.last_name" :error-messages="errors.last_name" label="Nachname" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
@@ -143,10 +143,10 @@ const manageUser = async () => {
 
                 <v-row>
                     <v-col cols="12" sm="4">
-                        <v-text-field type="password" autocomplete="new-password" v-model="manageForm.password" :error-messages="errors.password" label="Password" required></v-text-field>
+                        <v-text-field type="password" autocomplete="new-password" v-model="manageForm.password" :error-messages="errors.password" label="Passwort" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
-                        <v-text-field type="password" v-model="manageForm.password_confirmation" :error-messages="errors.password_confirmation" label="Password Confirmation" required></v-text-field>
+                        <v-text-field type="password" v-model="manageForm.password_confirmation" :error-messages="errors.password_confirmation" label="Passwort Bestätigung" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-select
@@ -156,7 +156,7 @@ const manageUser = async () => {
                             :error-messages="errors.role"
                             item-title="name"
                             item-value="id"
-                            label="Role"
+                            label="Rolle"
                             required
                         ></v-select>
                     </v-col>
@@ -166,7 +166,7 @@ const manageUser = async () => {
                     <v-col cols="12" sm="4">
                         <v-checkbox
                             v-model="manageForm.two_factor_auth_enabled"
-                            label="2-Factor Authentication"
+                            label="Zwei-Faktor-Authentifizierung"
                             :value="true"
                         ></v-checkbox>
                     </v-col>
@@ -180,11 +180,11 @@ const manageUser = async () => {
                         <div class="tw-flex tw-justify-between">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <Link :href="route('users.index')">
-                                    <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Back</v-btn>
+                                    <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurück</v-btn>
                                 </Link>
                             </v-hover>
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
+                                <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                             </v-hover>
                         </div>
                     </v-col>

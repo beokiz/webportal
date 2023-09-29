@@ -29,11 +29,11 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Two-Factor Authentication" />
+        <Head title="Zwei-Faktor-Authentifizierung" />
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
-            You have received an email which contains 2FA verification code. If you haven't received it, press
-            <Link :href="route('2fa.resend')" method="post" as="button">here</Link>.
+            Sie haben eine E-Mail erhalten, die einen 2FA-Verifizierungscode enthält. Wenn Sie sie nicht erhalten haben, drücken Sie
+            <Link :href="route('2fa.resend')" method="post" as="button">hier</Link>.
         </div>
 
         <div v-if="status" class="tw-mb-4 tw-font-medium tw-text-sm tw-text-green-600">
@@ -58,7 +58,7 @@ const submit = () => {
 
             <div class="tw-flex tw-items-center tw-justify-end mt-4">
                 <PrimaryButton :class="{ 'tw-opacity-25': form.processing }" :disabled="form.processing">
-                    Verify
+                    Verifizieren
                 </PrimaryButton>
             </div>
         </form>

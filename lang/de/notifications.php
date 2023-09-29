@@ -30,11 +30,12 @@ return [
     */
 
     'reset_password' => [
-        'subject'     => "BeoKiz-Passwortwiederherstellung",
-        'greeting'    => "Hallo!",
+        'subject'     => "BeoKiz password recovery",
+        'greeting'    => "Hello :name,",
         'action_text' => "Passwort wiederherstellen",
-        'first_line'  => "Dies ist eine E-Mail zur Passwortwiederherstellung. Wenn Sie sich nicht angemeldet haben und diese Benachrichtigung erhalten haben, teilen Sie uns dies bitte mit.",
-        'second_line' => "Um Ihr Passwort wiederherzustellen, drücken Sie bitte die Schaltfläche:",
+        'first_line'  => "du hast eine Anfrage zur Zurücksetzung deines Passworts für dein Konto des BeoKiz Ampel-Portals der Berliner Meilensteine erhalten.",
+        'second_line' => "Um dein Passwort zurückzusetzen, folge bitte dem untenstehenden Link:",
+        'third_line'  => "Falls du diese Anfrage nicht gestellt hast, ignoriere diese E-Mail bitte und informiere uns eventuell über <:support_email>, damit wir entsprechende Maßnahmen ergreifen können.",
     ],
 
     /*
@@ -58,7 +59,7 @@ return [
 
     '2fa_verification' => [
         'subject'     => "2FA BeoKiz-Bestätigungscode",
-        'action_text' => "Überprüfen Sie den 2FA-Code",
+        'action_text' => "Überprüfen Sie den 2FA (Zwei-Faktor-Authentifizierung) Code",
         'first_line'  => "Wenn Sie nicht versucht haben, sich anzumelden und diese Benachrichtigung erhalten haben, ignorieren Sie diese Nachricht bitte.",
         'second_line' => "Code für die Zwei-Faktor-Authentifizierung: :code",
     ],
@@ -73,7 +74,7 @@ return [
         'subject'     => "BeoKiz-Konto erstellt",
         'greeting'    => "Hallo :name,",
         'action_text' => "Neues Passwort festlegen",
-        'first_line'  => "du wurdest zum BeoKiz Portal der Berliner Meilensteine eingeladen.",
+        'first_line'  => "du wurdest zum BeoKiz Ampel-Portal der Berliner Meilensteine eingeladen.",
         'second_line' => "Damit du dich anmelden kannst, musst du erstmal ein Passwort setzen:",
     ],
 

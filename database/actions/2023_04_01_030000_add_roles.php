@@ -52,7 +52,7 @@ return new class () extends Action {
             ]),
             array_merge($commonOptions, [
                 'name'                => config('permission.project_roles.employer'),
-                'human_name'          => "Employer",
+                'human_name'          => "Mitarbeiter",
                 'is_institution_role' => true,
             ]),
         ]);

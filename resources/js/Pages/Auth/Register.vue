@@ -29,14 +29,14 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Registrieren" />
 
         <form @submit.prevent="submit">
             <div>
                 <v-text-field autofocus
                               v-model="form.first_name"
                               :error-messages="form.errors.first_name"
-                              label="First Name"
+                              label="Vorname"
                               required></v-text-field>
             </div>
 
@@ -44,7 +44,7 @@ const submit = () => {
                 <v-text-field autofocus
                               v-model="form.last_name"
                               :error-messages="form.errors.last_name"
-                              label="Last Name"
+                              label="Nachname"
                               required></v-text-field>
             </div>
 
@@ -63,7 +63,7 @@ const submit = () => {
                               autocomplete="new-password"
                               v-model="form.password"
                               :error-messages="form.errors.password"
-                              label="Password"
+                              label="Passwort"
                               required></v-text-field>
             </div>
 
@@ -73,7 +73,7 @@ const submit = () => {
                               autocomplete="new-password"
                               v-model="form.password_confirmation"
                               :error-messages="form.errors.password_confirmation"
-                              label="Confirm Password"
+                              label="Passwort bestätigen"
                               required></v-text-field>
             </div>
 
@@ -82,10 +82,10 @@ const submit = () => {
                     :href="route('auth.login')"
                     class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
                 >
-                    Already registered?
+                    Bereits registriert?
                 </Link>
 
-                <v-btn-primary type="submit" class="tw-ml-4">Register</v-btn-primary>
+                <v-btn-primary type="submit" class="tw-ml-4">Registrieren</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

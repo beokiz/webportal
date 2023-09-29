@@ -41,10 +41,10 @@ const updatePassword = () => {
 <template>
     <section>
         <header>
-            <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">Update Password</h2>
+            <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">Passwort aktualisieren</h2>
 
             <p class="tw-mt-1 tw-text-sm tw-text-gray-600">
-                Ensure your account is using a long, random password to stay secure.
+                Stellen Sie sicher, dass Ihr Konto ein langes, zufälliges Passwort verwendet, um sicher zu bleiben.
             </p>
         </header>
 
@@ -54,7 +54,7 @@ const updatePassword = () => {
                               autocomplete="current-password"
                               v-model="form.current_password"
                               :error-messages="form.errors.current_password"
-                              label="Current Password"></v-text-field>
+                              label="Aktuelles Passwort"></v-text-field>
             </div>
 
             <div>
@@ -62,7 +62,7 @@ const updatePassword = () => {
                               autocomplete="new-password"
                               v-model="form.password"
                               :error-messages="form.errors.password"
-                              label="New Password"></v-text-field>
+                              label="Neues Passwort"></v-text-field>
             </div>
 
             <div>
@@ -70,14 +70,14 @@ const updatePassword = () => {
                               autocomplete="new-password"
                               v-model="form.password_confirmation"
                               :error-messages="form.errors.password_confirmation"
-                              label="Confirm Password"></v-text-field>
+                              label="Passwort bestätigen"></v-text-field>
             </div>
 
             <div class="tw-flex tw-items-center tw-gap-4">
-                <v-btn-primary type="submit" class="tw-ml-4" :disabled="form.processing">Save</v-btn-primary>
+                <v-btn-primary type="submit" class="tw-ml-4" :disabled="form.processing">Speichern</v-btn-primary>
 
                 <Transition enter-from-class="tw-opacity-0" leave-to-class="tw-opacity-0" class="tw-transition ease-in-out">
-                    <p v-if="form.recentlySuccessful" class="tw-text-sm tw-text-gray-600">Saved.</p>
+                    <p v-if="form.recentlySuccessful" class="tw-text-sm tw-text-gray-600">Gespeichert.</p>
                 </Transition>
             </div>
         </form>

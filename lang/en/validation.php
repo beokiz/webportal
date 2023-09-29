@@ -173,7 +173,7 @@ return [
         'invalid' => "The selected \":attribute\" is invalid.",
 
         'password' => [
-            'regex' => "The password must contain: at least one uppercase letter, at least one lowercase letter, at least one digit, at least one special character (including non-English characters), at least one letter (including non-English letters).",
+            'regex' => "The password must contain: \nat least one uppercase letter, \nat least one lowercase letter, \nat least one digit, \nat least one special character (including non-English characters), \nat least one letter (including non-English letters)",
         ],
 
         'attribute-name' => [

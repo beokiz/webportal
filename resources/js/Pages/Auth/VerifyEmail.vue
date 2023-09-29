@@ -24,27 +24,28 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 
 <template>
     <GuestLayout>
-        <Head title="Email Verification" />
+        <Head title="E-Mail-Verifizierung" />
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your email address by clicking on the link
-            we just emailed to you? If you didn't receive the email, we will gladly send you another.
+            Vielen Dank für Ihre Anmeldung! Bevor Sie beginnen können, würden Sie bitte Ihre E-Mail-Adresse bestätigen,
+            indem Sie auf den Link klicken, den wir Ihnen gerade per E-Mail geschickt haben? Falls Sie die E-Mail nicht
+            erhalten haben, senden wir Ihnen gerne eine weitere.
         </div>
 
         <div class="tw-mb-4 tw-font-medium tw-text-sm tw-text-green-600" v-if="verificationLinkSent">
-            A new verification link has been sent to the email address you provided during registration.
+            Ein neuer Bestätigungslink wurde an die E-Mail-Adresse gesendet, die Sie bei der Registrierung angegeben haben.
         </div>
 
         <form @submit.prevent="submit">
             <div class="tw-mt-4 tw-flex tw-items-center tw-justify-between">
-                <v-btn-primary type="submit">Resend Verification Email</v-btn-primary>
+                <v-btn-primary type="submit">Bestätigungs-E-Mail erneut senden</v-btn-primary>
 
                 <Link
                     :href="route('auth.logout')"
                     method="post"
                     as="button"
                     class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
-                    >Log Out</Link
+                    >Abmelden</Link
                 >
             </div>
         </form>

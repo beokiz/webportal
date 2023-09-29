@@ -3,8 +3,19 @@
  * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
  */
 
-export const formatDate = (value) => {
+export const formatDate = (value, locales = 'en-US') => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const formattedDate = new Date(value).toLocaleDateString('en-US', options);
+    const formattedDate = new Date(value).toLocaleDateString(locales, options);
+    return formattedDate.replace(/\//g, '.');
+};
+
+export const formatDateTime = (value, locales = 'en-US', withSeconds = false) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+
+    if (withSeconds) {
+        options.second = '2-digit';
+    }
+
+    const formattedDate = new Date(value).toLocaleDateString(locales, options);
     return formattedDate.replace(/\//g, '.');
 };

@@ -29,8 +29,8 @@ const submit = () => {
         <Head title="Forgot Password" />
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset
-            link that will allow you to choose a new one.
+            Passwort vergessen? Kein Problem. Teilen Sie uns einfach Ihre E-Mail-Adresse mit und wir senden Ihnen einen
+            Link zum Zurücksetzen des Passworts, mit dem Sie ein neues auswählen können.
         </div>
 
         <div v-if="status" class="tw-mb-4 tw-font-medium tw-text-sm tw-text-green-600">
@@ -47,7 +47,7 @@ const submit = () => {
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end mt-4">
-                <v-btn-primary type="submit">Email Password Reset Link</v-btn-primary>
+                <v-btn-primary type="submit">Link zum Zurücksetzen des Passworts per E-Mail senden</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

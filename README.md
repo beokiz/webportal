@@ -1,6 +1,28 @@
 # BeoKiz App
 
 ---
+## Deploy on render.com
+
+### 1. [Create](https://dashboard.render.com/new/database) a new PostgreSQL database on Render and copy the internal DB URL to use below.
+
+
+### 2. [Create](https://dashboard.render.com/create?type=web) a new Web Service on Render, giving Render permission to access your repo from GitHub or GitLab connected account.
+
+
+### 3. Select branch, select 'Docker' for the runtime, and add the following environment variables under the Advanced section:
+| KEY           | VALUE                                                             |
+| ------------- | ----------------------------------------------------------------- |
+| DATABASE_URL  | The **internal database URL** for the database you created above. |
+| DB_CONNECTION | `pgsql`                                                           |
+| APP_KEY       | Copy the output of `php artisan key:generate --show`              |
+
+##### Or you can copy the contents of the `.env.example` file, set the variables and add the contents through the "Add Secret File" button (the name of the added file is `.env`)
+
+
+### 4. Wait for the deployment process to complete and enjoy the result!
+
+
+---
 ## Deploy on production
 
 ### 1. Install php, Apache, Nginx (and setup for using it as reverse proxy), Supervisor and Composer on the host
