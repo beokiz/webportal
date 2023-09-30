@@ -245,7 +245,7 @@ const manageUser = async () => {
                                                     v-model="manageForm.role"
                                                     :items="roles"
                                                     :error-messages="errors.role"
-                                                    item-title="name"
+                                                    item-title="human_name"
                                                     item-value="id"
                                                     label="Role"
                                                     required
@@ -327,7 +327,7 @@ const manageUser = async () => {
                             :color="isHovering ? 'accent' : 'primary'"
                             @click="search = String(Date.now())"
                             dark
-                        >Search</v-btn>
+                        >Suche</v-btn>
                     </v-hover>
                 </div>
             </div>
@@ -357,9 +357,9 @@ const manageUser = async () => {
 
                         <td>{{item.selectable.primary_role_name}}</td>
 
-                        <td>{{formatDateTime(item.selectable.last_seen_at, 'sv-SE')}}</td>
+                        <td>{{!item.selectable.last_seen_at || item.selectable.last_seen_at === '-' ? item.selectable.last_seen_at : formatDateTime(item.selectable.last_seen_at, 'sv-SE')}}</td>
 
-                        <td>{{formatDate(item.selectable.first_login_at, 'fr-CA')}}</td>
+                        <td>{{!item.selectable.first_login_at || item.selectable.first_login_at === '-' ? item.selectable.first_login_at : formatDate(item.selectable.first_login_at, 'fr-CA')}}</td>
 
                         <td>
                             <v-tooltip location="top">

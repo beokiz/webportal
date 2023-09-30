@@ -23,10 +23,10 @@ let menuItems = ref({});
 
 onMounted(() => {
     if (currentUser.is_super_admin || currentUser.is_admin) {
-        menuItems.value['users.index'] = 'Users';
+        menuItems.value['users.index'] = 'Benutzer';
     }
 
-    menuItems.value['profile.edit'] = 'Profile';
+    menuItems.value['profile.edit'] = 'Profil';
 });
 
 const errors = computed(() => props.errors ?? usePage().props.errors);

@@ -30,8 +30,8 @@ return [
     */
 
     'reset_password' => [
-        'subject'     => "BeoKiz password recovery",
-        'greeting'    => "Hello :name,",
+        'subject'     => "BeoKiz Passwort-Wiederherstellung",
+        'greeting'    => "Hallo :name,",
         'action_text' => "Passwort wiederherstellen",
         'first_line'  => "du hast eine Anfrage zur Zurücksetzung deines Passworts für dein Konto des BeoKiz Ampel-Portals der Berliner Meilensteine erhalten.",
         'second_line' => "Um dein Passwort zurückzusetzen, folge bitte dem untenstehenden Link:",

@@ -154,7 +154,7 @@ const manageUser = async () => {
                             v-model="manageForm.role"
                             :items="roles"
                             :error-messages="errors.role"
-                            item-title="name"
+                            item-title="human_name"
                             item-value="id"
                             label="Rolle"
                             required

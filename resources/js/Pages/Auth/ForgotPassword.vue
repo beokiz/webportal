@@ -26,7 +26,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Forgot Password" />
+        <Head title="Password vergessen" />
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
             Passwort vergessen? Kein Problem. Teilen Sie uns einfach Ihre E-Mail-Adresse mit und wir senden Ihnen einen
@@ -47,7 +47,10 @@ const submit = () => {
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end mt-4">
-                <v-btn-primary type="submit">Link zum Zurücksetzen des Passworts per E-Mail senden</v-btn-primary>
+                <v-btn-primary class="tw-text-xs tw-w-full tw-py-1" type="submit" :height="46">
+                    Link zum Zurücksetzen des <br/>
+                    Passworts per E-Mail senden
+                </v-btn-primary>
             </div>
         </form>
     </GuestLayout>
