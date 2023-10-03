@@ -64,7 +64,6 @@ class UsersController extends BaseController
 
         if ($currentUser->is_admin) {
             $usersFilters['withoutRoles'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
-
             $rolesFilters['exclude_name'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
         }
 

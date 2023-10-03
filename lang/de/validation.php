@@ -174,7 +174,8 @@ return [
 
         'password' => [
 //            'regex' => "Das Passwort muss enthalten: mindestens einen Großbuchstaben, mindestens einen Kleinbuchstaben, mindestens eine Ziffer, 8 Zeichen lang.",
-            'min' => "Ihr Passwort muss mindestens :min Zeichen lang sein.",
+            'regex' => "Das Passwort erfüllt nicht die gestellten Mindestanforderungen.",
+            'min'   => "Ihr Passwort muss mindestens :min Zeichen lang sein.",
         ],
 
         'email' => [

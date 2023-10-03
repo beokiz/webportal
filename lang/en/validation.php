@@ -174,7 +174,8 @@ return [
 
         'password' => [
 //            'regex' => "The password must contain: at least one uppercase letter, at least one lowercase letter, at least one digit, 8 characters in length.",
-            'min' => "Your password must be at least :min characters long.",
+            'regex' => "The password does not meet the minimum requirements.",
+            'min'   => "Your password must be at least :min characters long.",
         ],
 
         'email' => [

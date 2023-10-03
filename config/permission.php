@@ -176,7 +176,7 @@ return [
         'monitor'         => 'monitor',
         'monitor_oe'      => 'monitor-oe',
         'manager'         => 'manager',
-        'user_multiplier' => 'User-Multiplikator',
+        'user_multiplier' => 'user-multiplikator',
         'employer'        => 'mitarbeiter',
     ],
 
