@@ -51,6 +51,11 @@ return new class () extends Action {
                 'is_institution_role' => true,
             ]),
             array_merge($commonOptions, [
+                'name'                => config('permission.project_roles.user_multiplier'),
+                'human_name'          => "User-Multiplikator",
+                'is_institution_role' => true,
+            ]),
+            array_merge($commonOptions, [
                 'name'                => config('permission.project_roles.employer'),
                 'human_name'          => "Mitarbeiter",
                 'is_institution_role' => true,

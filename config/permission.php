@@ -171,12 +171,13 @@ return [
      */
 
     'project_roles' => [
-        'super_admin' => 'superadmin',
-        'admin'       => 'admin',
-        'monitor'     => 'monitor',
-        'monitor_oe'  => 'monitor-oe',
-        'manager'     => 'manager',
-        'employer'    => 'mitarbeiter',
+        'super_admin'     => 'superadmin',
+        'admin'           => 'admin',
+        'monitor'         => 'monitor',
+        'monitor_oe'      => 'monitor-oe',
+        'manager'         => 'manager',
+        'user_multiplier' => 'User-Multiplikator',
+        'employer'        => 'mitarbeiter',
     ],
 
 ];

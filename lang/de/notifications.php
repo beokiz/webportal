@@ -17,7 +17,7 @@ return [
             'error'  => "Hoppla!",
             'common' => "Hallo!",
         ],
-        'salutation'      => "Mit freundlichen und gesunden Grüßen, \nDein :from",
+        'salutation'      => "Mit freundlichen und gesunden Grüßen, \nIhr :from",
         'salutation_from' => sprintf('%s Team', config('app.name')),
         'subcopy'         => "Wenn Sie Schwierigkeiten beim Klicken auf die Schaltfläche \":actionText\" haben, kopieren Sie die folgende URL und fügen Sie sie in Ihren Webbrowser ein: \n",
         'copyright'       => "&#169; " . date("Y") . " " . config('app.name'),
@@ -85,13 +85,13 @@ return [
     */
 
     'password_changed' => [
-        'subject'     => "Passwortänderung für Beokiz bestätigt",
+        'subject'     => "Passwortänderung für das BeoKiz-Ampelportal bestätigt",
         'greeting'    => "Hallo :name,",
 //        'action_text' => "",
-        'first_line'  => "wir möchten Sie darüber informieren, dass das Passwort für Ihr Beokiz-Konto erfolgreich geändert wurde.",
+        'first_line'  => "wir möchten Sie darüber informieren, dass das Passwort für Ihr BeoKiz-Konto erfolgreich geändert wurde.",
         'second_line' => "Wenn Sie diese Änderung nicht veranlasst haben, kontaktieren Sie bitte sofort unseren Support unter <:support_email>.",
         'third_line'  => "Ihre Sicherheit ist uns wichtig. Es ist immer eine gute Idee, regelmäßig Ihr Passwort zu ändern und sicherzustellen, dass Sie ein starkes und einzigartiges Passwort für jedes Online-Konto verwenden.",
-        'fourth_line' => "Vielen Dank, dass Sie Beokiz verwenden!",
+        'fourth_line' => "Vielen Dank, dass Sie BeoKiz verwenden!",
     ],
 
 ];

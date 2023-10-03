@@ -46,6 +46,17 @@ const updatePassword = () => {
             <p class="tw-mt-1 tw-text-sm tw-text-gray-600">
                 Stellen Sie sicher, dass Ihr Konto ein langes, zufälliges Passwort verwendet, um sicher zu bleiben.
             </p>
+
+            <p class="tw-mt-2 tw-text-sm tw-text-gray-600">
+                Das Passwort muss enthalten:
+            </p>
+
+            <ul class="tw-text-sm tw-text-gray-600 tw-list-disc tw-pl-5">
+                <li>mindestens einen Großbuchstaben,</li>
+                <li>mindestens einen Kleinbuchstaben</li>
+                <li>mindestens eine Ziffer</li>
+                <li>8 Zeichen lang</li>
+            </ul>
         </header>
 
         <form @submit.prevent="updatePassword" class="tw-mt-6 tw-space-y-6">

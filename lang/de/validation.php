@@ -173,7 +173,12 @@ return [
         'invalid' => "Die ausgewählte \":attribute\" ist ungültig.",
 
         'password' => [
-            'regex' => "Das Passwort muss Folgendes enthalten: \nmindestens einen Großbuchstaben, \nmindestens einen Kleinbuchstaben, \nmindestens eine Ziffer, \nmindestens ein Sonderzeichen (einschließlich nicht-englischer Zeichen), \nmindestens einen Buchstaben (einschließlich nicht-englischer Buchstaben)",
+//            'regex' => "Das Passwort muss enthalten: mindestens einen Großbuchstaben, mindestens einen Kleinbuchstaben, mindestens eine Ziffer, 8 Zeichen lang.",
+            'min' => "Ihr Passwort muss mindestens :min Zeichen lang sein.",
+        ],
+
+        'email' => [
+            'unique' => "Die Emailadresse ist schon einem anderen Nutzer zugeordnet.",
         ],
 
         'attribute-name' => [
