@@ -48,6 +48,16 @@ class UsersController extends BaseController
     }
 
     /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function accessDeniedResponse()
+    {
+        return redirect()
+            ->route('users.index')
+            ->withErrors(__('exceptions.user_does_not_have_access'));
+    }
+
+    /**
      * @param Request $request
      * @return \Inertia\Response
      */
@@ -72,16 +82,6 @@ class UsersController extends BaseController
             'roles'   => $this->roleItemService->collection($rolesFilters),
             'filters' => $request->only(['full_name', 'email']),
         ]));
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function accessDeniedResponse()
-    {
-        return redirect()
-            ->route('users.index')
-            ->withErrors(__('exceptions.user_does_not_have_access'));
     }
 
     /**
@@ -198,7 +198,7 @@ class UsersController extends BaseController
         }
 
         if (
-            !$user->is_super_admin &&
+            !$user->hasRole(config('permission.project_roles.super_admin')) &&
             $request->user()->id !== (int) $user->id
         ) {
             $result = $this->userItemService->delete($user->id);

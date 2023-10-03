@@ -95,6 +95,7 @@ class User extends Authenticatable
     protected $appends = [
         'full_name',
         'primary_role_name',
+        'primary_role_human_name',
         'primary_role_id',
         'is_online',
         'is_super_admin',
@@ -153,6 +154,16 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first())->name ?? null,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function primaryRoleHumanName() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first())->human_name ?? null,
         );
     }
 

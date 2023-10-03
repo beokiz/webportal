@@ -355,14 +355,14 @@ const manageUser = async () => {
 
                         <td>{{item.selectable.email}}</td>
 
-                        <td>{{item.selectable.primary_role_name}}</td>
+                        <td>{{item.selectable.primary_role_human_name}}</td>
 
                         <td>{{!item.selectable.last_seen_at || item.selectable.last_seen_at === '-' ? item.selectable.last_seen_at : formatDateTime(item.selectable.last_seen_at, 'sv-SE')}}</td>
 
                         <td>{{!item.selectable.first_login_at || item.selectable.first_login_at === '-' ? item.selectable.first_login_at : formatDate(item.selectable.first_login_at, 'fr-CA')}}</td>
 
                         <td>
-                            <v-tooltip location="top">
+                            <v-tooltip v-if="$page.props.auth.user.is_super_admin || ($page.props.auth.user.is_admin && !item.selectable.is_super_admin && !item.selectable.is_admin) || ($page.props.auth.user.is_admin && $page.props.auth.user.id === item.selectable.id)" location="top">
                                 <template v-slot:activator="{ props }">
                                     <Link :href="route('users.edit', { id: item.selectable.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
@@ -371,7 +371,7 @@ const manageUser = async () => {
                                 <span>Benutzer bearbeiten</span>
                             </v-tooltip>
 
-                            <v-tooltip location="top">
+                            <v-tooltip v-if="$page.props.auth.user.is_super_admin || ($page.props.auth.user.is_admin && !item.selectable.is_super_admin && !item.selectable.is_admin)" location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteUserDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
