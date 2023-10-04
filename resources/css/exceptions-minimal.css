@@ -1,0 +1,19 @@
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
+ */
+
+/*
+ * Default
+ */
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+body.antialiased .js-cookie-consent{
+    display: none !important;
+}
+
+/*
+ * Custom
+ */

@@ -1,0 +1,59 @@
+/*!
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
+ */
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #888;
+}
+
+.v-field__input input{
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    background-color: unset !important;
+    --tw-ring-color: unset !important;
+    --tw-ring-offset-shadow: unset !important;
+    --tw-ring-shadow: unset !important;
+}
+label.v-label{
+    z-index: 9;
+}
+
+.dp__today{
+    border: 1px solid #e91e63 !important;
+}
+.dp__overlay_cell_active,
+.dp__action_select,
+.dp__range_end,
+.dp__range_start,
+.dp__active_date{
+    background: #e91e63 !important;
+}
+.dp__action_cancel,
+.dp__action_select{
+    padding: 5px !important;
+    height: auto !important;
+}
+.dp__input_reg {
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}

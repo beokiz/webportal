@@ -1,0 +1,85 @@
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
+ */
+
+/****************************/
+/********* OpenSans *********/
+/****************************/
+@font-face {
+    font-family: 'OpenSans-Regular';
+    src: local('Open Sans Regular'), local('OpenSans-Regular'),
+    url('../fonts/open-sans/OpenSans-Regular.woff2') format('woff2');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans-BoldItalic';
+    src: local('Open Sans Bold Italic'), local('OpenSans-BoldItalic'),
+    url('../fonts/open-sans/OpenSans-BoldItalic.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'OpenSans-SemiBold';
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'),
+    url('../fonts/open-sans/OpenSans-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans-ExtraBoldItalic';
+    src: local('Open Sans ExtraBold Italic'), local('OpenSans-ExtraBoldItalic'),
+    url('../fonts/open-sans/OpenSans-ExtraBoldItalic.woff2') format('woff2');
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'OpenSans-LightItalic';
+    src: local('Open Sans Light Italic'), local('OpenSans-LightItalic'),
+    url('../fonts/open-sans/OpenSans-LightItalic.woff2') format('woff2');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'OpenSans-Bold';
+    src: local('Open Sans Bold'), local('OpenSans-Bold'),
+    url('../fonts/open-sans/OpenSans-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans-ExtraBold';
+    src: local('Open Sans ExtraBold'), local('OpenSans-ExtraBold'),
+    url('../fonts/open-sans/OpenSans-ExtraBold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans-Light';
+    src: local('Open Sans Light'), local('OpenSans-Light'),
+    url('../fonts/open-sans/OpenSans-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/***************************/
+/********* Raleway *********/
+/***************************/
+@font-face {
+    font-family: 'Raleway-Regular';
+    src: local('Raleway Regular'), local('Raleway-Regular'),
+    url('../fonts/raleway/raleway-regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Raleway-Bold';
+    src: local('Raleway Bold'), local('Raleway-Bold'),
+    url('../fonts/raleway/raleway-bold.woff2') format('woff2');
+}
