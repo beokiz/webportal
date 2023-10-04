@@ -173,7 +173,13 @@ return [
         'invalid' => "Die ausgewählte \":attribute\" ist ungültig.",
 
         'password' => [
-            'regex' => "Das Passwort muss Folgendes enthalten: mindestens einen Großbuchstaben, mindestens einen Kleinbuchstaben, mindestens eine Ziffer, mindestens ein Sonderzeichen (einschließlich nicht-englischer Zeichen), mindestens einen Buchstaben (einschließlich nicht-englischer Buchstaben)",
+//            'regex' => "Das Passwort muss enthalten: mindestens einen Großbuchstaben, mindestens einen Kleinbuchstaben, mindestens eine Ziffer, 8 Zeichen lang.",
+            'regex' => "Das Passwort erfüllt nicht die gestellten Mindestanforderungen.",
+            'min'   => "Ihr Passwort muss mindestens :min Zeichen lang sein.",
+        ],
+
+        'email' => [
+            'unique' => "Die Emailadresse ist schon einem anderen Nutzer zugeordnet.",
         ],
 
         'attribute-name' => [
@@ -193,7 +199,7 @@ return [
     */
 
     'attributes' => [
-        'two_factor_code' => "2FA-Bestätigungscode",
+        'two_factor_code' => "2FA (Zwei-Faktor-Authentifizierung) Bestätigungscode",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

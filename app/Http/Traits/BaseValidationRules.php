@@ -193,13 +193,13 @@ trait BaseValidationRules
         // - At least one uppercase letter.
         // - At least one lowercase letter.
         // - At least one digit.
-        // - At least one special character (including non-English characters).
         // - At least one letter (including non-English letters).
-        // - Minimum length of 12 characters.
+        // - Minimum length of 8 characters.
 
         $rules = [
-            'min:12',
-            'regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\p{P}\p{S}])(?=.*[\p{L}]).{12,}$/u',
+            'min:8',
+//            'regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\p{P}\p{S}])(?=.*[\p{L}]).{8,}$/u',
+            'regex:/^(?=.*[A-ZÄÖÜ])(?=.*[a-zäöüß])(?=.*\d).{8,}$/u',
         ];
 
         // Also can be used

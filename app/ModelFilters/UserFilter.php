@@ -28,7 +28,7 @@ class UserFilter extends BaseFilter
     /**
      * @return void
      */
-    public function setup()
+    public function setup() : void
     {
         //
     }
@@ -58,8 +58,13 @@ class UserFilter extends BaseFilter
     public function fullName(string $value) : ModelFilter
     {
         return $this->where(function ($query) use ($value) {
-            return $query->whereRaw("CONCAT(COALESCE(`first_name`,''), ' ', COALESCE(`last_name`,'')) LIKE ?", ["%$value%"])
-                ->orWhereRaw("CONCAT(COALESCE(`last_name`,''), ' ', COALESCE(`first_name`,'')) LIKE ?", ["%$value%"]);
+            if (config('database.default') === 'mysql') {
+                return $query->whereRaw("CONCAT(COALESCE(`first_name`,''), ' ', COALESCE(`last_name`,'')) LIKE ?", ["%$value%"])
+                    ->orWhereRaw("CONCAT(COALESCE(`last_name`,''), ' ', COALESCE(`first_name`,'')) LIKE ?", ["%$value%"]);
+            } elseif (config('database.default') === 'pgsql') {
+                return $query->whereRaw("CONCAT(COALESCE(\"first_name\",''), ' ', COALESCE(\"last_name\",'')) ILIKE ?", ["%$value%"])
+                    ->orWhereRaw("CONCAT(COALESCE(\"last_name\",''), ' ', COALESCE(\"first_name\",'')) ILIKE ?", ["%$value%"]);
+            }
         });
     }
 

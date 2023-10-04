@@ -6,8 +6,6 @@
 
 namespace App\Services\Items;
 
-use App\Exceptions\Custom\SuperAdminDeletingException;
-use App\Exceptions\Custom\SuperAdminUpdatingException;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -105,12 +103,7 @@ class UserItemService extends BaseItemService
      */
     public function update(int $id, array $attributes) : bool
     {
-        $item = $this->find($id, true);
-
-        // TODO: Refactor this code for better performance.
-//        if ($item->hasRole(config('permission.project_roles.super_admin')) && (optional(auth('sanctum')->user())->id !== $item->id)) {
-//            throw new SuperAdminUpdatingException();
-//        }
+        $item = $this->find($id);
 
         $this->prepareAttributes($attributes);
 
@@ -129,14 +122,7 @@ class UserItemService extends BaseItemService
      */
     public function delete(int $id) : ?bool
     {
-        $user = $this->find($id, true);
-
-        // TODO: Refactor this code for better performance.
-//        if ($user->hasRole(config('permission.project_roles.super_admin'))) {
-//            throw new SuperAdminDeletingException();
-//        }
-
-        return $user->delete();
+        return $this->find($id)->delete();
     }
 
     /*

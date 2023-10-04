@@ -24,10 +24,10 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Confirm Password" />
+        <Head title="Passwort bestätigen" />
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
-            This is a secure area of the application. Please confirm your password before continuing.
+            Bitte bestätigen Sie Ihr Passwort, bevor Sie fortfahren.
         </div>
 
         <form @submit.prevent="submit">
@@ -36,12 +36,12 @@ const submit = () => {
                               autocomplete="current-password"
                               v-model="form.password"
                               :error-messages="form.errors.password"
-                              label="Password"
+                              label="Passwort"
                               required></v-text-field>
             </div>
 
             <div class="tw-flex tw-justify-end tw-mt-4">
-                <v-btn-primary type="submit">Confirm</v-btn-primary>
+                <v-btn-primary type="submit">Bestätigen</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

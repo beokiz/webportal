@@ -8,7 +8,7 @@ import { computed, ref, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { formatDate } from "@/Composables/common"
+import { formatDate, formatDateTime } from "@/Composables/common"
 
 const props = defineProps({
     items: Array,
@@ -33,7 +33,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Users' && newProps) {
+    if (pageType === 'Users/Users' && newProps) {
         currentPage.value = newProps.currentPage;
         perPage.value = newProps.perPage;
         orderBy.value = newProps.orderBy;
@@ -70,10 +70,10 @@ const headers = [
     { title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center' },
     { title: 'Name', key: 'first_name', width: '25%', sortable: false },
     { title: 'Email', key: 'email', width: '20%', sortable: false },
-    { title: 'Role', key: 'primary_role_name', width: '10%', sortable: false },
-    { title: 'Last Seen', key: 'last_seen_at', width: '15%', sortable: false },
-    { title: 'First Login', key: 'first_login_at', width: '15%', sortable: false },
-    { title: 'Actions', key: 'actions', width: '10%', sortable: false },
+    { title: 'Rolle', key: 'primary_role_name', width: '10%', sortable: false },
+    { title: 'Letzter Login', key: 'last_seen_at', width: '15%', sortable: false },
+    { title: 'Erster Login', key: 'first_login_at', width: '15%', sortable: false },
+    { title: 'Aktionen', key: 'actions', width: '10%', sortable: false },
 ];
 
 
@@ -205,31 +205,31 @@ const manageUser = async () => {
 </script>
 
 <template>
-    <Head title="Users" />
+    <Head title="Benutzer" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Users</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Benutzer</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-slot:default="{ isHovering, props }">
                     <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
-                        Add New User
+                        Neuen Benutzer hinzufügen
 
                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                             <v-card height="80vh">
                                 <v-card-title>
-                                    <span class="tw-text-h5">New User</span>
+                                    <span class="tw-text-h5">Neuen Benutzer</span>
                                 </v-card-title>
 
                                 <v-card-text>
                                     <v-container>
                                         <v-row>
                                             <v-col cols="12" sm="6">
-                                                <v-text-field v-model="manageForm.first_name" :error-messages="errors.first_name" label="First Name" required></v-text-field>
+                                                <v-text-field v-model="manageForm.first_name" :error-messages="errors.first_name" label="Vorname" required></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6">
-                                                <v-text-field v-model="manageForm.last_name" :error-messages="errors.last_name" label="Last Name" required></v-text-field>
+                                                <v-text-field v-model="manageForm.last_name" :error-messages="errors.last_name" label="Nachname" required></v-text-field>
                                             </v-col>
                                         </v-row>
 
@@ -243,7 +243,7 @@ const manageUser = async () => {
                                                     v-model="manageForm.role"
                                                     :items="roles"
                                                     :error-messages="errors.role"
-                                                    item-title="name"
+                                                    item-title="human_name"
                                                     item-value="id"
                                                     label="Role"
                                                     required
@@ -255,7 +255,7 @@ const manageUser = async () => {
                                             <v-col cols="12" md="4" sm="6">
                                                 <v-checkbox
                                                     v-model="manageForm.two_factor_auth_enabled"
-                                                    label="2-Factor Authentication"
+                                                    label="Zwei-Faktor-Authentifizierung"
                                                     :value="true"
                                                 ></v-checkbox>
                                             </v-col>
@@ -266,10 +266,10 @@ const manageUser = async () => {
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
+                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                     </v-hover>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
+                                        <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                                     </v-hover>
                                 </v-card-actions>
                             </v-card>
@@ -284,7 +284,7 @@ const manageUser = async () => {
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <p>Are you sure that you want to delete current user?</p>
+                                    <p>Sind Sie sicher, dass Sie den aktuellen Benutzer löschen möchten?</p>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -293,10 +293,10 @@ const manageUser = async () => {
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
+                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                         </v-hover>
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="deleteUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Delete</v-btn-primary>
+                            <v-btn-primary @click="deleteUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                         </v-hover>
                     </v-card-actions>
                 </v-card>
@@ -325,7 +325,7 @@ const manageUser = async () => {
                             :color="isHovering ? 'accent' : 'primary'"
                             @click="search = String(Date.now())"
                             dark
-                        >Search</v-btn>
+                        >Suche</v-btn>
                     </v-hover>
                 </div>
             </div>
@@ -353,27 +353,27 @@ const manageUser = async () => {
 
                         <td>{{item.selectable.email}}</td>
 
-                        <td>{{item.selectable.primary_role_name}}</td>
+                        <td>{{item.selectable.primary_role_human_name}}</td>
 
-                        <td>{{formatDate(item.selectable.last_seen_at)}}</td>
+                        <td>{{!item.selectable.last_seen_at || item.selectable.last_seen_at === '-' ? item.selectable.last_seen_at : formatDateTime(item.selectable.last_seen_at, 'sv-SE')}}</td>
 
-                        <td>{{formatDate(item.selectable.first_login_at)}}</td>
+                        <td>{{!item.selectable.first_login_at || item.selectable.first_login_at === '-' ? item.selectable.first_login_at : formatDate(item.selectable.first_login_at, 'fr-CA')}}</td>
 
                         <td>
-                            <v-tooltip location="top">
+                            <v-tooltip v-if="$page.props.auth.user.is_super_admin || ($page.props.auth.user.is_admin && !item.selectable.is_super_admin && !item.selectable.is_admin) || ($page.props.auth.user.is_admin && $page.props.auth.user.id === item.selectable.id)" location="top">
                                 <template v-slot:activator="{ props }">
                                     <Link :href="route('users.edit', { id: item.selectable.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
-                                <span>Edit user</span>
+                                <span>Benutzer bearbeiten</span>
                             </v-tooltip>
 
-                            <v-tooltip location="top">
+                            <v-tooltip v-if="$page.props.auth.user.is_super_admin || ($page.props.auth.user.is_admin && !item.selectable.is_super_admin && !item.selectable.is_admin)" location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteUserDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
-                                <span>Delete User</span>
+                                <span>Benutzer löschen</span>
                             </v-tooltip>
                         </td>
                     </tr>
@@ -382,12 +382,12 @@ const manageUser = async () => {
                 <template v-slot:no-data>
                     <div class="tw-py-6">
                         <template v-if="allFiltersEmpty">
-                            <h3 class="tw-mb-4">Table is empty</h3>
+                            <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
                         </template>
                         <template v-else>
-                            <h3 class="tw-mb-4">Table is empty. Please, reset search filters</h3>
+                            <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>
 
-                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>
+                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Zurücksetzen</v-btn>
                         </template>
                     </div>
                 </template>

@@ -19,7 +19,6 @@ use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -33,7 +32,9 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes, Filterable, HasOrderScope, CanGetTableNameStatically;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, Filterable, HasOrderScope, CanGetTableNameStatically;
+
+    // SoftDeletes
 
     /**
      * @var string
@@ -82,6 +83,7 @@ class User extends Authenticatable
         'is_monitor'              => 'boolean',
         'is_monitor_oe'           => 'boolean',
         'is_manager'              => 'boolean',
+        'is_user_multiplier'      => 'boolean',
         'is_employer'             => 'boolean',
     ];
 
@@ -93,6 +95,7 @@ class User extends Authenticatable
     protected $appends = [
         'full_name',
         'primary_role_name',
+        'primary_role_human_name',
         'primary_role_id',
         'is_online',
         'is_super_admin',
@@ -100,6 +103,7 @@ class User extends Authenticatable
         'is_monitor',
         'is_monitor_oe',
         'is_manager',
+        'is_user_multiplier',
         'is_employer',
     ];
 
@@ -150,6 +154,16 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first())->name ?? null,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function primaryRoleHumanName() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => optional($this->roles()->orderBy('id')->first())->human_name ?? null,
         );
     }
 
@@ -220,6 +234,16 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.manager')),
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function isUserMultiplier() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.user_multiplier')),
         );
     }
 

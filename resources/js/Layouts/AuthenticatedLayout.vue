@@ -23,10 +23,10 @@ let menuItems = ref({});
 
 onMounted(() => {
     if (currentUser.is_super_admin || currentUser.is_admin) {
-        menuItems.value['users.index'] = 'Users';
+        menuItems.value['users.index'] = 'Benutzer';
     }
 
-    menuItems.value['profile.edit'] = 'Profile';
+    menuItems.value['profile.edit'] = 'Profil';
 });
 
 const errors = computed(() => props.errors ?? usePage().props.errors);
@@ -56,7 +56,7 @@ const clearErrorsAndSuccesses = () => {
                 <template v-slot:append>
                     <div class="pa-2">
                        <Link :href="route('auth.logout')" method="post">
-                         <v-btn block>Log Out</v-btn>
+                         <v-btn block>Abmelden</v-btn>
                        </Link>
                     </div>
                 </template>
@@ -65,7 +65,6 @@ const clearErrorsAndSuccesses = () => {
             <v-app-bar>
                 <div class="tw-max-w-full tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
                     {{ $page.props.auth.user.full_name }}
-                    {{ $page.props.auth.user.last_seen_at }}
                 </div>
 
                 <template v-slot:append>

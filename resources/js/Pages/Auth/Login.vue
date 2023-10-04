@@ -34,7 +34,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head title="Anmeldung" />
 
 <!--        <BreezeValidationErrors class="tw-mb-4"/>-->
 
@@ -48,11 +48,11 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <v-text-field type="password" autocomplete="current-password" v-model="form.password" :error-messages="form.errors.password" label="Password" required></v-text-field>
+                <v-text-field type="password" autocomplete="current-password" v-model="form.password" :error-messages="form.errors.password" label="Passwort" required></v-text-field>
             </div>
 
             <div class="tw-block tw-mt-4">
-                <v-checkbox label="Remember me" v-model:checked="form.remember"></v-checkbox>
+                <v-checkbox label="Angemeldet bleiben" v-model:checked="form.remember"></v-checkbox>
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end mt-4">
@@ -62,7 +62,7 @@ const submit = () => {
                         :href="route('password.request')"
                         class="tw-block tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
                     >
-                        Forgot your password?
+                        Passwort vergessen?
                     </Link>
 
                     <Link
@@ -70,12 +70,12 @@ const submit = () => {
                         :href="route('auth.register')"
                         class="tw-block tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
                     >
-                        Don't have an account?
+                        Noch kein Konto?
                     </Link>
                 </div>
 
 
-                <v-btn-primary type="submit" class="tw-ml-4">Log in</v-btn-primary>
+                <v-btn-primary type="submit" class="tw-ml-4">Anmelden</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

@@ -6,9 +6,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BaseInertiaResourceCollection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
 
 /**
@@ -19,4 +22,17 @@ use Illuminate\Routing\Controller;
 abstract class BaseController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * @param LengthAwarePaginator|Collection $collection
+     * @param array                           $additionalData
+     * @return array
+     */
+    protected function prepareItemsCollection($collection, array $additionalData)
+    {
+        return array_merge(
+            BaseInertiaResourceCollection::make($collection)->resolve(),
+            $additionalData
+        );
+    }
 }

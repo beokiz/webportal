@@ -20,16 +20,16 @@ Homestead.yaml
 auth.json
 
 # Compiled public files
-/public/build
-/public/assets
-/public/css
-/public/fonts
-/public/images
-/public/hot
-/public/js
-/public/storage
+#/public/build
+#/public/assets
+#/public/css
+#/public/fonts
+#/public/images
+#/public/js
 #/public/.htaccess
-/public/mix-manifest.json
+#/public/mix-manifest.json
+/public/hot
+/public/storage
 
 # Temporary files
 /tmp
@@ -108,7 +108,7 @@ _vti_log/
 _vti_pvt/
 _vti_txt/
 tmp/
-php.ini
+#php.ini
 _old/
 .htpasswds/
 .htpasswd

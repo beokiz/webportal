@@ -45,25 +45,25 @@ const closeModal = () => {
 <template>
     <section class="tw-space-y-6">
         <header>
-            <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">Delete Account</h2>
+            <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">Konto löschen</h2>
 
             <p class="tw-mt-1 tw-text-sm tw-text-gray-600">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting
-                your account, please download any data or information that you wish to retain.
+                Sobald Ihr Konto gelöscht ist, werden alle zugehörigen Ressourcen und Daten dauerhaft gelöscht. Bevor
+                Sie Ihr Konto löschen, laden Sie bitte alle Daten oder Informationen herunter, die Sie behalten möchten.
             </p>
         </header>
 
-        <DangerButton @click="confirmUserDeletion">Delete Account</DangerButton>
+        <DangerButton @click="confirmUserDeletion">Konto löschen</DangerButton>
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
             <div class="tw-p-6">
                 <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">
-                    Are you sure you want to delete your account?
+                    Sind Sie sicher, dass Sie Ihr Konto löschen möchten?
                 </h2>
 
                 <p class="tw-mt-1 tw-text-sm tw-text-gray-600">
-                    Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                    enter your password to confirm you would like to permanently delete your account.
+                    Sobald Ihr Konto gelöscht ist, werden alle zugehörigen Ressourcen und Daten dauerhaft gelöscht.
+                    Bitte geben Sie Ihr Passwort ein, um zu bestätigen, dass Sie Ihr Konto dauerhaft löschen möchten.
                 </p>
 
                 <div class="tw-mt-6">
@@ -75,7 +75,7 @@ const closeModal = () => {
                         v-model="form.password"
                         type="password"
                         class="tw-mt-1 tw-block tw-w-3/4"
-                        placeholder="Password"
+                        placeholder="Passwort"
                         @keyup.enter="deleteUser"
                     />
 
@@ -83,7 +83,7 @@ const closeModal = () => {
                 </div>
 
                 <div class="tw-mt-6 tw-flex tw-justify-end">
-                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+                    <SecondaryButton @click="closeModal"> Abbrechen </SecondaryButton>
 
                     <DangerButton
                         class="tw-ml-3"
@@ -91,7 +91,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        Delete Account
+                        Konto löschen
                     </DangerButton>
                 </div>
             </div>
