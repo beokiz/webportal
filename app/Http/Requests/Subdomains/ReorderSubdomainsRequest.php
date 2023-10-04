@@ -9,11 +9,11 @@ namespace App\Http\Requests\Subdomains;
 use App\Http\Requests\BaseFormRequest;
 
 /**
- * Create Subdomain Request
+ * Reorder Subdomains Request
  *
  * @package \App\Http\Requests\Subdomains
  */
-class CreateSubdomainRequest extends BaseFormRequest
+class ReorderSubdomainsRequest extends BaseFormRequest
 {
     /**
      * @return array
@@ -21,9 +21,9 @@ class CreateSubdomainRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'domain' => ['required', $this->domainExistRule()],
-            'name'   => array_merge($this->textRules(), ['required']),
-            'order'  => array_merge($this->integerRules(), ['sometimes']),
+            'items'         => ['required', 'array'],
+            'items.*.id'    => ['required', $this->subdomainExistRule()],
+            'items.*.order' => ['required', 'numeric'],
         ];
     }
 
@@ -32,8 +32,8 @@ class CreateSubdomainRequest extends BaseFormRequest
      */
     public function attributes() : array
     {
-        return [
+        return array_merge(parent::attributes(), [
             //
-        ];
+        ]);
     }
 }

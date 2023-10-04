@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Domains\CreateDomainRequest;
+use App\Http\Requests\Domains\ReorderDomainsRequest;
 use App\Http\Requests\Domains\UpdateDomainRequest;
 use App\Models\Domain;
 use App\Services\Items\DomainItemService;
@@ -45,8 +46,7 @@ class DomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-        $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
+        $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
 
         $result = $this->domainItemService->collection(array_merge($args, [
             'paginated' => true,
@@ -66,8 +66,6 @@ class DomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         return Inertia::render('Domains/Partials/ManageDomain', [
             'domain' => $domain->loadMissing(['subdomains']),
         ]);
@@ -85,8 +83,8 @@ class DomainsController extends BaseController
         $result     = $this->domainItemService->create($attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.domain.create_success'))
-            : Redirect::back()->withErrors(__('crud.domain.create_error'));
+            ? Redirect::back()->withSuccesses(__('crud.domains.create_success'))
+            : Redirect::back()->withErrors(__('crud.domains.create_error'));
     }
 
     /**
@@ -98,14 +96,12 @@ class DomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         $attributes = $request->validated();
         $result     = $this->domainItemService->update($domain->id, $attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.domain.update_success'))
-            : Redirect::back()->withErrors(__('crud.domain.update_error'));
+            ? Redirect::back()->withSuccesses(__('crud.domains.update_success'))
+            : Redirect::back()->withErrors(__('crud.domains.update_error'));
     }
 
     /**
@@ -117,13 +113,11 @@ class DomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         $result = $this->domainItemService->delete($domain->id);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.domain.delete_success'))
-            : Redirect::back()->withErrors(__('crud.domain.delete_error'));
+            ? Redirect::back()->withSuccesses(__('crud.domains.delete_success'))
+            : Redirect::back()->withErrors(__('crud.domains.delete_error'));
     }
 
     /**
@@ -135,14 +129,28 @@ class DomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         $result = $this->domainItemService->update($domain->id, [
             'deleted_at' => null,
         ]);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.domain.restore_success'))
-            : Redirect::back()->withErrors(__('crud.domain.restore_error'));
+            ? Redirect::back()->withSuccesses(__('crud.domains.restore_success'))
+            : Redirect::back()->withErrors(__('crud.domains.restore_error'));
+    }
+
+    /**
+     * @param ReorderDomainsRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reorder(ReorderDomainsRequest $request)
+    {
+//        $this->authorize('authorizeAdminAccess', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->domainItemService->reorder($attributes);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.domains.reorder_success'))
+            : Redirect::back()->withErrors(__('crud.domains.reorder_error'));
     }
 }

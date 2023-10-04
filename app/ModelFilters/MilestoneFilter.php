@@ -33,13 +33,14 @@ class MilestoneFilter extends BaseFilter
         //
     }
 
-//    /**
-//     * @param string $value
-//     * @return ModelFilter
-//     */
-//    public function search(string $value) : ModelFilter
-//    {
-//        return $this->where('name', 'LIKE', '%' . trim($value) . '%')
-//            ->orWhere('abbreviation', 'LIKE', '%' . trim($value) . '%');
-//    }
+    /**
+     * @param string $value
+     * @return ModelFilter
+     */
+    public function search(string $value) : ModelFilter
+    {
+        return $this->where('title', 'LIKE', '%' . trim($value) . '%')
+            ->orWhere('abbreviation', 'LIKE', '%' . trim($value) . '%')
+            ->orWhere('text', 'LIKE', '%' . trim($value) . '%');
+    }
 }

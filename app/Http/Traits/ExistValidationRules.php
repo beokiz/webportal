@@ -47,4 +47,28 @@ trait ExistValidationRules
 
         return $rule;
     }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function domainExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('domains');
+    }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function subdomainExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('subdomains');
+    }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function milestoneExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('milestones');
+    }
 }

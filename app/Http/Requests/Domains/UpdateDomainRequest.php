@@ -21,7 +21,7 @@ class UpdateDomainRequest extends CreateDomainRequest
         return [
             'name'                       => array_merge($this->textRules(), ['sometimes']),
             'abbreviation'               => array_merge($this->textRules(), ['sometimes']),
-            'order'                      => array_merge($this->integerRules(), ['sometimes']),
+            'order'                      => array_merge($this->integerRules(), ['nullable']),
             'age_2_red_threshold'        => array_merge($this->smallIntegerRules(), ['sometimes']),
             'age_2_red_threshold_daz'    => array_merge($this->smallIntegerRules(), ['sometimes']),
             'age_2_yellow_threshold'     => array_merge($this->smallIntegerRules(), ['sometimes']),

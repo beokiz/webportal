@@ -4,14 +4,16 @@
  * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
  */
 
-namespace App\Http\Requests\Subdomains;
+namespace App\Http\Requests\Milestones;
+
+use App\Http\Requests\BaseFormRequest;
 
 /**
- * Update Subdomain Request
+ * Reorder Milestones Request
  *
- * @package \App\Http\Requests\Subdomains
+ * @package \App\Http\Requests\Milestones
  */
-class UpdateSubdomainRequest extends CreateSubdomainRequest
+class ReorderMilestonesRequest extends BaseFormRequest
 {
     /**
      * @return array
@@ -19,9 +21,9 @@ class UpdateSubdomainRequest extends CreateSubdomainRequest
     public function rules() : array
     {
         return [
-            'domain' => ['sometimes', $this->domainExistRule()],
-            'name'   => array_merge($this->textRules(), ['sometimes']),
-            'order'  => array_merge($this->integerRules(), ['sometimes']),
+            'items'         => ['required', 'array'],
+            'items.*.id'    => ['required', $this->milestoneExistRule()],
+            'items.*.order' => ['required', 'numeric'],
         ];
     }
 
