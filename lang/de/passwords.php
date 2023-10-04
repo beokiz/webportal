@@ -19,7 +19,7 @@ return [
 
     'reset'     => "Ihr Passwort wurde zurückgesetzt!",
     'invalid'   => "Dieses Passwort-Token ist ungültig oder abgelaufen.",
-    'sent'      => "Der Brief zur Passwortwiederherstellung wird an die E-Mail-Adresse gesendet, wenn sie im System existiert.",
+    'sent'      => "Eine Nachricht zur Passwortwiederherstellung wird an die E-Mail-Adresse gesendet, wenn sie im System existiert.",
     'throttled' => "Bitte warten Sie, bevor Sie es erneut versuchen.",
     'token'     => "Dieses Passwort-Reset-Token ist ungültig.",
     'user'      => "Wir können keinen Benutzer mit dieser E-Mail-Adresse finden.",

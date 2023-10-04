@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Users Controller
@@ -48,6 +47,16 @@ class UsersController extends BaseController
     }
 
     /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function accessDeniedResponse()
+    {
+        return redirect()
+            ->route('users.index')
+            ->withErrors(__('exceptions.user_does_not_have_access'));
+    }
+
+    /**
      * @param Request $request
      * @return \Inertia\Response
      */
@@ -62,8 +71,7 @@ class UsersController extends BaseController
         $rolesFilters = [];
 
         if ($currentUser->is_admin) {
-            $usersFilters['withoutRoles'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
-
+//            $usersFilters['withoutRoles'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
             $rolesFilters['exclude_name'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
         }
 
@@ -91,7 +99,8 @@ class UsersController extends BaseController
     /**
      * @param Request $request
      * @param User    $user
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\RedirectResponse|\Inertia\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Request $request, User $user)
     {
@@ -99,8 +108,12 @@ class UsersController extends BaseController
 
         $currentUser = $request->user();
 
-        if ($currentUser->hasRole(config('permission.project_roles.admin')) && $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])) {
-            throw new AccessDeniedHttpException();
+        if (
+            $currentUser->hasRole(config('permission.project_roles.admin')) &&
+            $currentUser->id !== $user->id &&
+            $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])
+        ) {
+            return $this->accessDeniedResponse();
         }
 
         $rolesFilters = [];
@@ -139,6 +152,7 @@ class UsersController extends BaseController
      * @param UpdateUserRequest $request
      * @param User              $user
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(UpdateUserRequest $request, User $user)
     {
@@ -146,8 +160,12 @@ class UsersController extends BaseController
 
         $currentUser = $request->user();
 
-        if ($currentUser->hasRole(config('permission.project_roles.admin')) && $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])) {
-            throw new AccessDeniedHttpException();
+        if (
+            $currentUser->hasRole(config('permission.project_roles.admin')) &&
+            $currentUser->id !== $user->id &&
+            $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])
+        ) {
+            return $this->accessDeniedResponse();
         }
 
         $attributes = $request->validated();
@@ -162,6 +180,7 @@ class UsersController extends BaseController
      * @param Request $request
      * @param User    $user
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Request $request, User $user)
     {
@@ -169,12 +188,16 @@ class UsersController extends BaseController
 
         $currentUser = $request->user();
 
-        if ($currentUser->hasRole(config('permission.project_roles.admin')) && $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])) {
-            throw new AccessDeniedHttpException();
+        if (
+            $currentUser->hasRole(config('permission.project_roles.admin')) &&
+            $currentUser->id !== $user->id &&
+            $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])
+        ) {
+            return $this->accessDeniedResponse();
         }
 
         if (
-            !$user->is_super_admin &&
+            !$user->hasRole(config('permission.project_roles.super_admin')) &&
             $request->user()->id !== (int) $user->id
         ) {
             $result = $this->userItemService->delete($user->id);
@@ -191,6 +214,7 @@ class UsersController extends BaseController
      * @param Request $request
      * @param User    $user
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function restore(Request $request, User $user)
     {
@@ -198,8 +222,12 @@ class UsersController extends BaseController
 
         $currentUser = $request->user();
 
-        if ($currentUser->hasRole(config('permission.project_roles.admin')) && $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])) {
-            throw new AccessDeniedHttpException();
+        if (
+            $currentUser->hasRole(config('permission.project_roles.admin')) &&
+            $currentUser->id !== $user->id &&
+            $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])
+        ) {
+            return $this->accessDeniedResponse();
         }
 
         $result = $this->userItemService->update($user->id, [

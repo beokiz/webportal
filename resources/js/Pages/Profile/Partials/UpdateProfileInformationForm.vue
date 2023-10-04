@@ -27,10 +27,10 @@ const form = useForm({
 <template>
     <section>
         <header>
-            <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">Profile Information</h2>
+            <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">Profilinformationen</h2>
 
             <p class="tw-mt-1 tw-text-sm tw-text-gray-600">
-                Update your account's profile information and email address.
+                Aktualisieren Sie die Profilinformationen und die E-Mail-Adresse Ihres Kontos.
             </p>
         </header>
 
@@ -39,14 +39,14 @@ const form = useForm({
                 <v-text-field type="text"
                               v-model="form.first_name"
                               :error-messages="form.errors.first_name"
-                              label="First name"></v-text-field>
+                              label="Vorname"></v-text-field>
             </div>
 
             <div>
                 <v-text-field type="text"
                               v-model="form.last_name"
                               :error-messages="form.errors.last_name"
-                              label="Last name"></v-text-field>
+                              label="Nachname"></v-text-field>
             </div>
 
             <div>
@@ -58,14 +58,14 @@ const form = useForm({
 
             <div v-if="props.mustVerifyEmail && user.email_verified_at === null">
                 <p class="tw-text-sm tw-mt-2 tw-text-gray-800">
-                    Your email address is unverified.
+                    Ihre E-Mail-Adresse ist nicht verifiziert.
                     <Link
                         :href="route('verification.send')"
                         method="post"
                         as="button"
                         class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500"
                     >
-                        Click here to re-send the verification email.
+                        Klicken Sie hier, um die Verifizierungs-E-Mail erneut zu senden.
                     </Link>
                 </p>
 
@@ -73,15 +73,15 @@ const form = useForm({
                     v-show="props.status === 'verification-link-sent'"
                     class="tw-mt-2 tw-font-medium tw-text-sm tw-text-green-600"
                 >
-                    A new verification link has been sent to your email address.
+                    Ein neuer Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet.
                 </div>
             </div>
 
             <div class="tw-flex tw-items-center tw-gap-4">
-                <v-btn-primary type="submit" class="tw-ml-4" :disabled="form.processing">Save</v-btn-primary>
+                <v-btn-primary type="submit" class="tw-ml-4" :disabled="form.processing">Speichern</v-btn-primary>
 
                 <Transition enter-from-class="tw-opacity-0" leave-to-class="tw-opacity-0" class="tw-transition tw-ease-in-out">
-                    <p v-if="form.recentlySuccessful" class="tw-text-sm tw-text-gray-600">Saved.</p>
+                    <p v-if="form.recentlySuccessful" class="tw-text-sm tw-text-gray-600">Gespeichert.</p>
                 </Transition>
             </div>
         </form>

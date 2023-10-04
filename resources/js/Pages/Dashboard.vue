@@ -19,7 +19,7 @@ import { Head } from '@inertiajs/vue3';
         <div class="tw-py-12">
             <div class="tw-max-w-full tw-mx-auto sm:tw-px-6 lg:tw-px-8">
                 <div class="tw-bg-white tw-overflow-hidden tw-shadow-sm sm:tw-rounded-lg">
-                    <div class="tw-p-6 tw-text-gray-900">You're logged in!</div>
+                    <div class="tw-p-6 tw-text-gray-900">Sie sind angemeldet!</div>
                 </div>
             </div>
         </div>

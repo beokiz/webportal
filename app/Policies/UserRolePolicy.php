@@ -64,6 +64,15 @@ class UserRolePolicy extends BasePolicy
      * @param User $user
      * @return bool
      */
+    public function authorizeUserMultiplierAccess(User $user) : bool
+    {
+        return $user->hasRole(config('permission.project_roles.user_multiplier'));
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function authorizeEmployerAccess(User $user) : bool
     {
         return $user->hasRole(config('permission.project_roles.employer'));

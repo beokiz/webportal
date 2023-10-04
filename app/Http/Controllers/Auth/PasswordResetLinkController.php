@@ -53,7 +53,9 @@ class PasswordResetLinkController extends BaseController
         );
 
         if ($status == Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
+//            return back()->with('status', __($status));
+            return redirect()->route('auth.login')
+                ->with('status', __($status));
         }
 
         throw ValidationException::withMessages([

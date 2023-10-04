@@ -32,7 +32,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Reset Password" />
+        <Head title="Passwort zurücksetzen" />
 
         <form @submit.prevent="submit">
             <div>
@@ -49,7 +49,7 @@ const submit = () => {
                               autocomplete="new-password"
                               v-model="form.password"
                               :error-messages="form.errors.password"
-                              label="Password"
+                              label="Passwort"
                               required></v-text-field>
             </div>
 
@@ -58,12 +58,12 @@ const submit = () => {
                               autocomplete="new-password"
                               v-model="form.password_confirmation"
                               :error-messages="form.errors.password_confirmation"
-                              label="Confirm Password"
+                              label="Passwort bestätigen"
                               required></v-text-field>
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-end tw-mt-4">
-                <v-btn-primary type="submit">Reset Password</v-btn-primary>
+                <v-btn-primary type="submit">Passwort zurücksetzen</v-btn-primary>
             </div>
         </form>
     </GuestLayout>

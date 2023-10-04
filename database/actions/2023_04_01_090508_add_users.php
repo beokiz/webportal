@@ -30,8 +30,8 @@ return new class () extends Action {
         $superAdminUser = \App\Models\User::create(array_merge($commonOptions, [
             'first_name'              => 'Admin',
             'last_name'               => 'Super',
-            'email'                   => 'super.admin@gorka.biz.ua',
-            'password'                => '$2y$10$s5P0WCOLu6CSz.9ayOdoYuiXZfSlygegTf8jMpIw4UEgtjDBd.gte', // password
+            'email'                   => 'beokiznimda@gmail.com',
+            'password'                => '$2y$10$U3Da2rmDrEtZ/rJyg8SkJuj9XYAj7xzyfbAeMbWGrACm9hAx6/zz6',
             'two_factor_auth_enabled' => false,
         ]));
 
