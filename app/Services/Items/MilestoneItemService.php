@@ -6,20 +6,19 @@
 
 namespace App\Services\Items;
 
-use App\Models\Domain;
+use App\Models\Milestone;
 use Batch;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 /**
- * Domain Item Service
+ * Milestone Item Service
  *
  * @package \App\Services\Items
  */
-class DomainItemService extends BaseItemService
+class MilestoneItemService extends BaseItemService
 {
     /**
-     * DomainItemService constructor.
+     * MilestoneItemService constructor.
      *
      * @return void
      */
@@ -43,13 +42,9 @@ class DomainItemService extends BaseItemService
         /*
          * Filter & order query
          */
-        $query = Domain::query()->filter($filters)
+        $query = Milestone::query()->filter($filters)
             ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc')
-            ->with([
-                'subdomains' => function ($query) {
-                    $query->orderBy('order');
-                }
-            ]);
+            ->with(['subdomain']);
 
         /*
          * Return results
@@ -61,7 +56,7 @@ class DomainItemService extends BaseItemService
             $result->additionalMeta = [];
 
             if ($result->isEmpty()) {
-                $result->additionalMeta['is_totally_empty'] = !Domain::query()->exists();
+                $result->additionalMeta['is_totally_empty'] = !Milestone::query()->exists();
             }
 
             return $result;
@@ -73,29 +68,29 @@ class DomainItemService extends BaseItemService
     /**
      * @param int  $id
      * @param bool $throwExceptionIfFail
-     * @return Domain|null
+     * @return Milestone|null
      */
-    public function find(int $id, bool $throwExceptionIfFail = true) : ?Domain
+    public function find(int $id, bool $throwExceptionIfFail = true) : ?Milestone
     {
         return $throwExceptionIfFail
-            ? Domain::findOrFail($id)
-            : Domain::find($id);
+            ? Milestone::findOrFail($id)
+            : Milestone::find($id);
     }
 
     /**
      * @param array $attributes
-     * @return ?Domain
+     * @return ?Milestone
      */
-    public function create(array $attributes) : ?Domain
+    public function create(array $attributes) : ?Milestone
     {
         $this->prepareAttributes($attributes);
 
-        $item = Domain::create($attributes);
+        $item = Milestone::create($attributes);
 
         if ($item->exists) {
             $this->updateRelations($item, $attributes);
 
-            return $item->loadMissing(['subdomains']);
+            return $item->loadMissing(['subSubdomains']);
         } else {
             return null;
         }
@@ -137,7 +132,7 @@ class DomainItemService extends BaseItemService
     public function reorder(array $attributes) : bool
     {
         if (!empty($attributes['items'])) {
-            return Batch::update(new Domain, $attributes['items'], 'id');
+            return Batch::update(new Milestone, $attributes['items'], 'id');
         } else {
             return false;
         }
@@ -152,19 +147,25 @@ class DomainItemService extends BaseItemService
      * @param array $attributes
      * @return void
      */
-    protected function prepareAttributes(array &$attributes)
+    protected function prepareAttributes(array &$attributes) : void
     {
+        if (empty($attributes['subdomain'])) {
+            $attributes['subdomain_id'] = $attributes['subdomain'];
+
+            unset($attributes['subdomain']);
+        }
+
         if (empty($attributes['order'])) {
-            $attributes['order'] = Domain::max('order') + 1;
+            $attributes['order'] = Milestone::max('order') + 1;
         }
     }
 
     /**
-     * @param Domain $item
-     * @param array  $attributes
+     * @param Milestone $item
+     * @param array     $attributes
      * @return void
      */
-    protected function updateRelations(Domain $item, array $attributes)
+    protected function updateRelations(Milestone $item, array $attributes) : void
     {
         //
     }

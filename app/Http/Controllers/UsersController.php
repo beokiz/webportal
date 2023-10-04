@@ -144,8 +144,8 @@ class UsersController extends BaseController
         ]));
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.user.create_success'))
-            : Redirect::back()->withErrors(__('crud.user.create_error'));
+            ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
+            : Redirect::back()->withErrors(__('crud.users.create_error'));
     }
 
     /**
@@ -172,8 +172,8 @@ class UsersController extends BaseController
         $result     = $this->userItemService->update($user->id, $attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.user.update_success'))
-            : Redirect::back()->withErrors(__('crud.user.update_error'));
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
     }
 
     /**
@@ -203,10 +203,10 @@ class UsersController extends BaseController
             $result = $this->userItemService->delete($user->id);
 
             return $result
-                ? Redirect::back()->withSuccesses(__('crud.user.delete_success'))
-                : Redirect::back()->withErrors(__('crud.user.delete_error'));
+                ? Redirect::back()->withSuccesses(__('crud.users.delete_success'))
+                : Redirect::back()->withErrors(__('crud.users.delete_error'));
         } else {
-            return Redirect::back()->withErrors(__('crud.user.delete_denied'));
+            return Redirect::back()->withErrors(__('crud.users.delete_denied'));
         }
     }
 
@@ -235,7 +235,7 @@ class UsersController extends BaseController
         ]);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.user.restore_success'))
-            : Redirect::back()->withErrors(__('crud.user.restore_error'));
+            ? Redirect::back()->withSuccesses(__('crud.users.restore_success'))
+            : Redirect::back()->withErrors(__('crud.users.restore_error'));
     }
 }

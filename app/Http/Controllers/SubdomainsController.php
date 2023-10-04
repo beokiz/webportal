@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Subdomains\CreateSubdomainRequest;
+use App\Http\Requests\Subdomains\ReorderSubdomainsRequest;
 use App\Http\Requests\Subdomains\UpdateSubdomainRequest;
 use App\Models\Subdomain;
 use App\Services\Items\SubdomainItemService;
@@ -45,8 +46,7 @@ class SubdomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-        $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
+        $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
 
         $result = $this->subdomainItemService->collection(array_merge($args, [
             'paginated' => true,
@@ -66,8 +66,6 @@ class SubdomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         return Inertia::render('Subdomains/Partials/ManageSubdomain', [
             'subdomain' => $subdomain->loadMissing(['domain']),
         ]);
@@ -85,8 +83,8 @@ class SubdomainsController extends BaseController
         $result     = $this->subdomainItemService->create($attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.subdomain.create_success'))
-            : Redirect::back()->withErrors(__('crud.subdomain.create_error'));
+            ? Redirect::back()->withSuccesses(__('crud.subdomains.create_success'))
+            : Redirect::back()->withErrors(__('crud.subdomains.create_error'));
     }
 
     /**
@@ -98,14 +96,12 @@ class SubdomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         $attributes = $request->validated();
         $result     = $this->subdomainItemService->update($subdomain->id, $attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.subdomain.update_success'))
-            : Redirect::back()->withErrors(__('crud.subdomain.update_error'));
+            ? Redirect::back()->withSuccesses(__('crud.subdomains.update_success'))
+            : Redirect::back()->withErrors(__('crud.subdomains.update_error'));
     }
 
     /**
@@ -117,13 +113,11 @@ class SubdomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         $result = $this->subdomainItemService->delete($subdomain->id);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.subdomain.delete_success'))
-            : Redirect::back()->withErrors(__('crud.subdomain.delete_error'));
+            ? Redirect::back()->withSuccesses(__('crud.subdomains.delete_success'))
+            : Redirect::back()->withErrors(__('crud.subdomains.delete_error'));
     }
 
     /**
@@ -135,14 +129,28 @@ class SubdomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $currentUser = $request->user();
-
         $result = $this->subdomainItemService->update($subdomain->id, [
             'deleted_at' => null,
         ]);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.subdomain.restore_success'))
-            : Redirect::back()->withErrors(__('crud.subdomain.restore_error'));
+            ? Redirect::back()->withSuccesses(__('crud.subdomains.restore_success'))
+            : Redirect::back()->withErrors(__('crud.subdomains.restore_error'));
+    }
+
+    /**
+     * @param ReorderSubdomainsRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reorder(ReorderSubdomainsRequest $request)
+    {
+//        $this->authorize('authorizeAdminAccess', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->subdomainItemService->reorder($attributes);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.subdomains.reorder_success'))
+            : Redirect::back()->withErrors(__('crud.subdomains.reorder_error'));
     }
 }

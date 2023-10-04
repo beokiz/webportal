@@ -199,7 +199,26 @@ return [
     */
 
     'attributes' => [
-        'two_factor_code' => "2FA verification code",
+        'email'                      => "Email",
+        'password'                   => "Password",
+        'token'                      => "Token",
+        'first_name'                 => "First name",
+        'last_name'                  => "Last name",
+        'two_factor_code'            => "2FA verification code",
+        'current_password'           => "Current password",
+        'name'                       => "Name",
+        'abbreviation'               => "Abbreviation",
+        'order'                      => "Order",
+        'age_2_red_threshold'        => "Age2 Red Threshold",
+        'age_2_red_threshold_daz'    => "Age2 Red Threshold Daz",
+        'age_2_yellow_threshold'     => "Age 2 Yellow Threshold",
+        'age_2_yellow_threshold_daz' => "Age 2 Yellow Threshold Daz",
+        'age_4_red_threshold'        => "Age 4 Red Threshold",
+        'age_4_red_threshold_daz'    => "Age 4 Red Threshold Daz",
+        'age_4_yellow_threshold'     => "Age 4 Yellow Threshold",
+        'age_4_yellow_threshold_daz' => "Age 4 Yellow Threshold Daz",
+        'role'                       => "Role",
+        'two_factor_auth_enabled'    => "2FA Enabled",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

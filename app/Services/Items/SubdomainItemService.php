@@ -7,6 +7,7 @@
 namespace App\Services\Items;
 
 use App\Models\Subdomain;
+use Batch;
 use Illuminate\Support\Arr;
 
 /**
@@ -42,8 +43,13 @@ class SubdomainItemService extends BaseItemService
          * Filter & order query
          */
         $query = Subdomain::query()->filter($filters)
-            ->customOrderBy($params->order_by ?? 'id', $params->sort === 'desc')
-            ->with(['domain']);
+            ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc')
+            ->with([
+                'domain',
+                'milestones' => function ($query) {
+                    $query->orderBy('order');
+                }
+            ]);
 
         /*
          * Return results
@@ -124,6 +130,19 @@ class SubdomainItemService extends BaseItemService
         return $this->find($id)->delete();
     }
 
+    /**
+     * @param array $attributes
+     * @return bool
+     */
+    public function reorder(array $attributes) : bool
+    {
+        if (!empty($attributes['items'])) {
+            return Batch::update(new Subdomain, $attributes['items'], 'id');
+        } else {
+            return false;
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional methods
@@ -135,7 +154,15 @@ class SubdomainItemService extends BaseItemService
      */
     protected function prepareAttributes(array &$attributes) : void
     {
-        //
+        if (empty($attributes['domain'])) {
+            $attributes['domain_id'] = $attributes['domain'];
+
+            unset($attributes['domain']);
+        }
+
+        if (empty($attributes['order'])) {
+            $attributes['order'] = Subdomain::max('order') + 1;
+        }
     }
 
     /**
