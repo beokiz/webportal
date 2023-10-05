@@ -83,6 +83,10 @@ class MilestoneItemService extends BaseItemService
      */
     public function create(array $attributes) : ?Milestone
     {
+        if (empty($attributes['order'])) {
+            $attributes['order'] = Milestone::max('order') + 1;
+        }
+
         $this->prepareAttributes($attributes);
 
         $item = Milestone::create($attributes);
@@ -90,7 +94,7 @@ class MilestoneItemService extends BaseItemService
         if ($item->exists) {
             $this->updateRelations($item, $attributes);
 
-            return $item->loadMissing(['subSubdomains']);
+            return $item->loadMissing(['subdomain']);
         } else {
             return null;
         }
@@ -153,10 +157,6 @@ class MilestoneItemService extends BaseItemService
             $attributes['subdomain_id'] = $attributes['subdomain'];
 
             unset($attributes['subdomain']);
-        }
-
-        if (empty($attributes['order'])) {
-            $attributes['order'] = Milestone::max('order') + 1;
         }
     }
 

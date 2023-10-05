@@ -88,6 +88,10 @@ class DomainItemService extends BaseItemService
      */
     public function create(array $attributes) : ?Domain
     {
+        if (empty($attributes['order'])) {
+            $attributes['order'] = Domain::max('order') + 1;
+        }
+
         $this->prepareAttributes($attributes);
 
         $item = Domain::create($attributes);
@@ -154,9 +158,7 @@ class DomainItemService extends BaseItemService
      */
     protected function prepareAttributes(array &$attributes) : void
     {
-        if (empty($attributes['order'])) {
-            $attributes['order'] = Domain::max('order') + 1;
-        }
+        //
     }
 
     /**
