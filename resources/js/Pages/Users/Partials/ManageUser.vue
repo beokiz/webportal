@@ -39,20 +39,6 @@ const editedUser = ref(props.user);
 const errors = ref(props.errors || {});
 const loading = ref(false);
 
-
-// Computed
-const modifiedItems = computed(() => {
-    return props.items.map(item => {
-        const modifiedItem = { ...item };
-        for (const key in modifiedItem) {
-            if (modifiedItem[key] === null || modifiedItem[key] === undefined) {
-                modifiedItem[key] = '-';
-            }
-        }
-        return modifiedItem;
-    });
-});
-
 // Methods
 const close = () => {
     manageForm.reset();
@@ -83,7 +69,7 @@ const manageUser = async () => {
     //     delete manageForm.password_confirmation;
     // }
 
-    let formOptions = {
+    manageForm.put(route('users.update', { user: manageForm.id }), {
         // preserveScroll: true,
         preserveState: false,
         // resetOnSuccess: false,
@@ -96,9 +82,7 @@ const manageUser = async () => {
         onFinish: () => {
             manageForm.processing = false;
         },
-    };
-
-    manageForm.put(route('users.update', { user: manageForm.id }), formOptions);
+    });
 };
 </script>
 

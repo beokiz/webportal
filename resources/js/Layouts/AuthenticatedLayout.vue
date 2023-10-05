@@ -26,6 +26,7 @@ onMounted(() => {
         menuItems.value['users.index'] = 'Benutzer';
     }
 
+    menuItems.value['domains.index'] = 'Domänen';
     menuItems.value['profile.edit'] = 'Profil';
 });
 
@@ -33,8 +34,7 @@ const errors = computed(() => props.errors ?? usePage().props.errors);
 const successes = computed(() => props.successes ?? usePage().props.successes);
 
 const clearErrorsAndSuccesses = () => {
-    // props.errors = [];
-    // props.successes = [];
+    //
 };
 </script>
 
@@ -48,7 +48,9 @@ const clearErrorsAndSuccesses = () => {
                     </Link>
 
                     <template v-for="(title, name) in menuItems">
-                        <v-list-item link :href="route(name)" :active="route().current(name)" :title="title"></v-list-item>
+                        <Link :href="route(name)" :active="route().current(name)">
+                            <v-list-item :to="route(name)" :active="route().current(name)" :title="title"></v-list-item>
+                        </Link>
                     </template>
                 </v-list>
 
@@ -56,15 +58,17 @@ const clearErrorsAndSuccesses = () => {
                 <template v-slot:append>
                     <div class="pa-2">
                        <Link :href="route('auth.logout')" method="post">
-                         <v-btn block>Abmelden</v-btn>
+                           <v-btn-primary block>Abmelden</v-btn-primary>
                        </Link>
                     </div>
                 </template>
             </v-navigation-drawer>
 
             <v-app-bar>
-                <div class="tw-max-w-full tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
-                    {{ $page.props.auth.user.full_name }}
+                <div class="tw-max-w-full tw-flex tw-w-full tw-justify-between tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+                    <div class="full-name-head">
+                        {{ $page.props.auth.user.full_name }}
+                    </div>
                 </div>
 
                 <template v-slot:append>

@@ -153,7 +153,7 @@ class MilestoneItemService extends BaseItemService
      */
     protected function prepareAttributes(array &$attributes) : void
     {
-        if (empty($attributes['subdomain'])) {
+        if (!empty($attributes['subdomain'])) {
             $attributes['subdomain_id'] = $attributes['subdomain'];
 
             unset($attributes['subdomain']);

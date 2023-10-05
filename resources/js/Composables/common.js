@@ -31,3 +31,9 @@ export const formatDateTime = (value, locales = 'en-US', withSeconds = false) =>
     const formattedDate = new Date(value).toLocaleDateString(locales, options);
     return formattedDate.replace(/\//g, '.');
 };
+
+
+export const ages = [
+    {age_name: '2.5', age_number: 2.5},
+    {age_name: '4.5', age_number: 4.5},
+];

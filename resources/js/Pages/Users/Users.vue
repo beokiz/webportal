@@ -168,6 +168,7 @@ const deleteUser = async () => {
 const close = () => {
     dialog.value = false;
     dialogDeleteUser.value = false;
+    deleteForm.id = null;
     manageForm.reset();
     manageForm.clearErrors();
 
@@ -278,7 +279,7 @@ const manageUser = async () => {
                 </v-hover>
             </div>
 
-            <v-dialog v-model="dialogDeleteUser" activator="parent" width="20vw">
+            <v-dialog v-model="dialogDeleteUser" width="20vw">
                 <v-card height="30vh">
                     <v-card-text>
                         <v-container>

@@ -9,9 +9,10 @@ import {Inertia} from "@inertiajs/inertia";
 import {Head, useForm, usePage, router, Link} from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Sortable from "sortablejs";
+import { ages } from "@/Composables/common"
 
 const props = defineProps({
-    domain: Object,
+    subdomain: Object,
     errors: Object,
 });
 
@@ -24,8 +25,8 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Domains/Partials/ManageDomain' && newProps) {
-        editedDomain.value = newProps.domain;
+    if (pageType === 'Domains/Partials/ManageSubdomain' && newProps) {
+        editedSubdomain.value = newProps.subdomain;
     }
 });
 
@@ -35,21 +36,27 @@ Inertia.on('success', (event) => {
  */
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
-const editedDomain = ref(props.domain);
+const editedSubdomain = ref(props.subdomain);
 const errors = ref(props.errors || {});
 const loading = ref(false);
-const dialogDeleteSubdomain = ref(false);
+const dialogDeleteMilestone = ref(false);
 const draggableItem = ref(null);
 const dialog = ref(false);
 
 const headers = [
-    {title: 'Name', key: 'first_name', width: '90%', sortable: false},
+    {title: 'Kürzel', key: 'abbreviation', width: '10%', sortable: false},
+    {title: 'Titel', key: 'title', width: '20%', sortable: false},
+    {title: 'Subtext', key: 'text', width: '60%', sortable: false},
     {title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
+// const ages = [
+//     {age_name: '2.5', age_number: 2.5},
+//     {age_name: '4.5', age_number: 4.5},
+// ];
 
 // Computed
 const modifiedItems = computed(() => {
-    return props.domain.subdomains.map(item => {
+    return props.subdomain.milestones.map(item => {
         const modifiedItem = { ...item };
         for (const key in modifiedItem) {
             if (modifiedItem[key] === null || modifiedItem[key] === undefined) {
@@ -80,15 +87,15 @@ onMounted(() => {
 // Methods
 const close = () => {
     dialog.value = false;
-    dialogDeleteSubdomain.value = false;
-    manageCreateSubdomainForm.reset();
-    manageCreateSubdomainForm.clearErrors();
+    dialogDeleteMilestone.value = false;
+    manageCreateMilestoneForm.reset();
+    manageCreateMilestoneForm.clearErrors();
     errors.value = {};
 };
 
 const clear = () => {
-    manageCreateSubdomainForm.reset();
-    manageCreateSubdomainForm.clearErrors();
+    manageCreateMilestoneForm.reset();
+    manageCreateMilestoneForm.clearErrors();
 };
 
 const reorderForm = useForm({
@@ -112,7 +119,7 @@ const saveNewOrder = (event) => {
 
     reorderForm.items = items;
 
-    reorderForm.post(route('subdomains.reorder'), {
+    reorderForm.post(route('milestones.reorder'), {
         preserveScroll: true,
         preserveState: false,
         // resetOnSuccess: false,
@@ -130,14 +137,14 @@ const saveNewOrder = (event) => {
 
 const openDeleteSubdomainDialog = (item) => {
     deleteForm.id = item.id;
-    dialogDeleteSubdomain.value = true
+    dialogDeleteMilestone.value = true
 };
 
 const deleteForm = useForm({
     id: null,
 });
 
-const deleteSubdomain = async () => {
+const deleteMilestone = async () => {
     deleteForm.processing = true;
 
     let formOptions = {
@@ -152,24 +159,15 @@ const deleteSubdomain = async () => {
         },
     };
 
-    deleteForm.delete(route('subdomains.destroy', { id: deleteForm.id }), formOptions);
+    deleteForm.delete(route('milestones.destroy', { id: deleteForm.id }), formOptions);
 };
 
 const manageForm = useForm({
-    id: editedDomain.value.id,
-    name: editedDomain.value.name,
-    abbreviation: editedDomain.value.abbreviation,
-    age_2_red_threshold: editedDomain.value.age_2_red_threshold,
-    age_2_red_threshold_daz: editedDomain.value.age_2_red_threshold_daz,
-    age_2_yellow_threshold: editedDomain.value.age_2_yellow_threshold,
-    age_2_yellow_threshold_daz: editedDomain.value.age_2_yellow_threshold_daz,
-    age_4_red_threshold: editedDomain.value.age_4_red_threshold,
-    age_4_red_threshold_daz: editedDomain.value.age_4_red_threshold_daz,
-    age_4_yellow_threshold: editedDomain.value.age_4_yellow_threshold,
-    age_4_yellow_threshold_daz: editedDomain.value.age_4_yellow_threshold_daz,
+    id: editedSubdomain.value.id,
+    name: editedSubdomain.value.name,
 });
 
-const manageDomain = async () => {
+const manageSubdomain = async () => {
     manageForm.processing = true;
 
     let formOptions = {
@@ -187,19 +185,24 @@ const manageDomain = async () => {
         },
     };
 
-    manageForm.put(route('domains.update', {domain: manageForm.id}), formOptions);
+    manageForm.put(route('subdomains.update', {subdomain: manageForm.id}), formOptions);
 };
 
 
-const manageCreateSubdomainForm = useForm({
-    name: null,
-    domain: editedDomain.value.id
+const manageCreateMilestoneForm = useForm({
+    subdomain: editedSubdomain.value.id,
+    abbreviation: null,
+    title: null,
+    text: null,
+    emphasis: null,
+    emphasis_daz: null,
+    age: null,
 });
 
 const manageCreateSubdomain = async () => {
-    manageCreateSubdomainForm.processing = true;
+    manageCreateMilestoneForm.processing = true;
 
-    manageCreateSubdomainForm.post(route('subdomains.store'), {
+    manageCreateMilestoneForm.post(route('milestones.store'), {
         // preserveScroll: true,
         preserveState: false,
         // resetOnSuccess: false,
@@ -210,18 +213,18 @@ const manageCreateSubdomain = async () => {
             errors.value = err;
         },
         onFinish: () => {
-            manageCreateSubdomainForm.processing = false;
+            manageCreateMilestoneForm.processing = false;
         },
     });
 };
 </script>
 
 <template>
-    <Head title="Manage Domain"/>
+    <Head title="Manage Subdomain"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Manage Domain</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Manage Subdomain</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -230,12 +233,12 @@ const manageCreateSubdomain = async () => {
                     <v-col cols="12" md="3" sm="4">
                         <div class="tw-flex tw-justify-between">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <Link :href="route('domains.index')">
+                                <Link :href="route('domains.show', { id: editedSubdomain.domain_id })">
                                     <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurück</v-btn>
                                 </Link>
                             </v-hover>
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="manageDomain" v-bind="props"
+                                <v-btn-primary @click="manageSubdomain" v-bind="props"
                                                :color="isHovering ? 'accent' : 'primary'">Speichern
                                 </v-btn-primary>
                             </v-hover>
@@ -246,90 +249,9 @@ const manageCreateSubdomain = async () => {
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.abbreviation" :error-messages="errors.abbreviation"
-                                      label="Kürzel*" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="9">
+                    <v-col cols="12">
                         <v-text-field v-model="manageForm.name" :error-messages="errors.name"
-                                      label="Name der Domäne*" required></v-text-field>
-                    </v-col>
-                </v-row>
-
-                <v-row>
-                    <v-col cols="12">
-                        <p>Schwellenwerte für Altersgruppe bis 2,5 Jahre</p>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_2_red_threshold"
-                                      :error-messages="errors.age_2_red_threshold"
-                                      label="Schwellwert Rot*"
-                                      placeholder="z.B. 5"
-                                      type="number"
-                                      required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_2_red_threshold_daz"
-                                      :error-messages="errors.age_2_red_threshold_daz"
-                                      label="Schwellwert Rot mit Daz*"
-                                      placeholder="z.B. 3"
-                                      type="number"
-                                      required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_2_yellow_threshold"
-                                      :error-messages="errors.age_2_yellow_threshold"
-                                      label="Schwellwert Gelb*"
-                                      placeholder="z.B. 10"
-                                      type="number"
-                                      required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_2_yellow_threshold_daz"
-                                      :error-messages="errors.age_2_yellow_threshold_daz"
-                                      label="Schwellwert Gelb mit Daz*"
-                                      placeholder="z.B. 8"
-                                      type="number"
-                                      required></v-text-field>
-                    </v-col>
-                </v-row>
-
-                <v-row>
-                    <v-spacer></v-spacer>
-                    <v-col cols="12">
-                        <p>Schwellenwerte für Altersgruppe bis 4,5 Jahre</p>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_4_red_threshold"
-                                      :error-messages="errors.age_4_red_threshold"
-                                      label="Schwellwert Rot*"
-                                      placeholder="z.B. 5"
-                                      type="number"
-                                      required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_4_red_threshold_daz"
-                                      :error-messages="errors.age_4_red_threshold_daz"
-                                      label="Schwellwert Rot mit Daz*"
-                                      placeholder="z.B. 3"
-                                      type="number"
-                                      required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_4_yellow_threshold"
-                                      :error-messages="errors.age_4_yellow_threshold"
-                                      label="Schwellwert Gelb*"
-                                      placeholder="z.B. 10"
-                                      type="number"
-                                      required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.age_4_yellow_threshold_daz"
-                                      :error-messages="errors.age_4_yellow_threshold_daz"
-                                      label="Schwellwert Gelb mit Daz*"
-                                      placeholder="z.B. 8"
-                                      type="number"
-                                      required></v-text-field>
+                                      label="Name der Subdomäne*" required></v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -351,9 +273,42 @@ const manageCreateSubdomain = async () => {
                                             <v-card-text>
                                                 <v-container>
                                                     <v-row>
-                                                        <v-col cols="12" sm="12">
-                                                            <v-text-field v-model="manageCreateSubdomainForm.name" :error-messages="errors.name"
-                                                                          label="Name der Subdomäne*" required></v-text-field>
+                                                        <v-col cols="12" sm="3">
+                                                            <v-text-field v-model="manageCreateMilestoneForm.abbreviation" :error-messages="errors.abbreviation"
+                                                                          label="Kürzel*" required></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="3">
+                                                            <v-select
+                                                                v-model="manageCreateMilestoneForm.age"
+                                                                :items="ages"
+                                                                :error-messages="errors.age"
+                                                                item-title="age_name"
+                                                                item-value="age_number"
+                                                                label="Altersgruppe"
+                                                            ></v-select>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="3">
+                                                            <v-text-field v-model="manageCreateMilestoneForm.emphasis" :error-messages="errors.emphasis"
+                                                                          type="number" label="Gewichtung*" required></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="3">
+                                                            <v-text-field v-model="manageCreateMilestoneForm.emphasis_daz" :error-messages="errors.emphasis_daz"
+                                                                          type="number" label="Gewichtung mit Daz*" required></v-text-field>
+                                                        </v-col>
+                                                    </v-row>
+
+
+                                                    <v-row>
+                                                        <v-col cols="12">
+                                                            <v-text-field v-model="manageCreateMilestoneForm.title" :error-messages="errors.title"
+                                                                          label="Titel*" required></v-text-field>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <v-row>
+                                                        <v-col cols="12">
+                                                            <v-textarea v-model="manageCreateMilestoneForm.text" :error-messages="errors.text"
+                                                                          label="Subtext*" required></v-textarea>
                                                         </v-col>
                                                     </v-row>
                                                 </v-container>
@@ -381,13 +336,13 @@ const manageCreateSubdomain = async () => {
             </v-container>
 
             <v-container>
-                <v-dialog v-model="dialogDeleteSubdomain" width="20vw">
+                <v-dialog v-model="dialogDeleteMilestone" width="20vw">
                     <v-card height="30vh">
                         <v-card-text>
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <p>Sind Sie sicher, dass Sie den aktuellen Subdomain löschen möchten?</p>
+                                        <p>Sind Sie sicher, dass Sie den aktuellen Mielenstein löschen möchten?</p>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -399,7 +354,7 @@ const manageCreateSubdomain = async () => {
                                 <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                             </v-hover>
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="deleteSubdomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                <v-btn-primary @click="deleteMilestone" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                             </v-hover>
                         </v-card-actions>
                     </v-card>
@@ -418,7 +373,9 @@ const manageCreateSubdomain = async () => {
 
                             <template v-slot:item="{ item }">
                                 <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                                    <td>{{ item.selectable.name }}</td>
+                                    <td>{{ item.selectable.abbreviation }}</td>
+                                    <td>{{ item.selectable.title }}</td>
+                                    <td>{{ item.selectable.text }}</td>
 
                                     <td>
                                         <v-tooltip location="top">
@@ -436,7 +393,7 @@ const manageCreateSubdomain = async () => {
 
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
-                                                <Link :href="route('subdomains.show', { id: item.selectable.id })">
+                                                <Link :href="route('milestones.show', { id: item.selectable.id })">
                                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
                                                 </Link>
                                             </template>

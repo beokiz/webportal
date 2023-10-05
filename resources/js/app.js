@@ -69,7 +69,8 @@ const vuetify = createVuetify({
             variant: 'flat',
         },
         VBtnSecondary: {
-
+            color: 'accent',
+            variant: 'flat',
         },
         VBtnDropdown: {
             variant: 'plain',
@@ -89,6 +90,10 @@ const vuetify = createVuetify({
             // style: { borderRadius: '45px' },
         },
         VTextField:{
+            variant: 'underlined',
+            color: 'primary',
+        },
+        VTextarea:{
             variant: 'underlined',
             color: 'primary',
         },
@@ -129,7 +134,7 @@ createInertiaApp({
             .mount(el);
     },
     progress: {
-        color: '#ffff',
+        color: '#ed6f25',
     },
 });
 
