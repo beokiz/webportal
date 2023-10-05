@@ -66,8 +66,13 @@ class SubdomainsController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        return Inertia::render('Subdomains/Partials/ManageSubdomain', [
-            'subdomain' => $subdomain->loadMissing(['domain']),
+        return Inertia::render('Domains/Partials/ManageSubdomain', [
+            'subdomain' => $subdomain->loadMissing([
+                'domain',
+                'milestones' => function ($query) {
+                    $query->orderBy('order');
+                }
+            ]),
         ]);
     }
 
