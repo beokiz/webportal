@@ -152,7 +152,7 @@ class DomainItemService extends BaseItemService
      * @param array $attributes
      * @return void
      */
-    protected function prepareAttributes(array &$attributes)
+    protected function prepareAttributes(array &$attributes) : void
     {
         if (empty($attributes['order'])) {
             $attributes['order'] = Domain::max('order') + 1;
@@ -164,7 +164,7 @@ class DomainItemService extends BaseItemService
      * @param array  $attributes
      * @return void
      */
-    protected function updateRelations(Domain $item, array $attributes)
+    protected function updateRelations(Domain $item, array $attributes) : void
     {
         //
     }

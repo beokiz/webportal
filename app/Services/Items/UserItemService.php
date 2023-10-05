@@ -134,7 +134,7 @@ class UserItemService extends BaseItemService
      * @param array $attributes
      * @return void
      */
-    protected function prepareAttributes(array &$attributes)
+    protected function prepareAttributes(array &$attributes) : void
     {
         // Prepare 'password' field
         if (!empty($attributes['password'])) {
@@ -147,7 +147,7 @@ class UserItemService extends BaseItemService
      * @param array $attributes
      * @return void
      */
-    protected function updateRelations(User $item, array $attributes)
+    protected function updateRelations(User $item, array $attributes) : void
     {
         /*
          * Update 'roles' relation
