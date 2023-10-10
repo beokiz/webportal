@@ -42,6 +42,7 @@ const loading = ref(false);
 const dialogDeleteMilestone = ref(false);
 const draggableItem = ref(null);
 const dialog = ref(false);
+const deletingItemName = ref(null);
 
 const headers = [
     {title: 'Kürzel', key: 'abbreviation', width: '10%', sortable: false},
@@ -96,6 +97,10 @@ const close = () => {
 const clear = () => {
     manageCreateMilestoneForm.reset();
     manageCreateMilestoneForm.clearErrors();
+
+    manageForm.reset();
+    manageForm.clearErrors();
+    manageForm.name = null
 };
 
 const reorderForm = useForm({
@@ -136,6 +141,7 @@ const saveNewOrder = (event) => {
 };
 
 const openDeleteSubdomainDialog = (item) => {
+    deletingItemName.value = item.title
     deleteForm.id = item.id;
     dialogDeleteMilestone.value = true
 };
@@ -224,11 +230,16 @@ const manageCreateSubdomain = async () => {
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Manage Subdomain</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Subdomäne</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <v-container>
+                <v-row>
+                    <v-col cols="12">
+                        <h3>Eigenschaften</h3>
+                    </v-col>
+                </v-row>
                 <v-row>
                     <v-col cols="12" md="3" sm="4">
                         <div class="tw-flex tw-justify-between">
@@ -254,15 +265,27 @@ const manageCreateSubdomain = async () => {
                                       label="Name der Subdomäne*" required></v-text-field>
                     </v-col>
                 </v-row>
+                <v-row>
+                    <v-col cols="12">
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>
+                        </v-hover>
+                    </v-col>
+                </v-row>
             </v-container>
 
             <v-container>
                 <v-row>
                     <v-col cols="12">
+                        <h3 class="tw-border-t-8 tw-mt-8 tw-pt-8">Zugeordnete Meilensteine</h3>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12">
                         <div class="tw-flex tw-items-center tw-justify-end">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
-                                    Anlegen
+                                    Meilenstein hinzufügen
 
                                     <v-dialog v-model="dialog" activator="parent" width="80vw">
                                         <v-card height="80vh">
@@ -342,7 +365,7 @@ const manageCreateSubdomain = async () => {
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <p>Sind Sie sicher, dass Sie den aktuellen Mielenstein löschen möchten?</p>
+                                        <p>Sind Sie sicher, dass Sie den Meilenstein {{deletingItemName}} löschen möchten?</p>
                                     </v-col>
                                 </v-row>
                             </v-container>

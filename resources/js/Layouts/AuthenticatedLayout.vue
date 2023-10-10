@@ -26,7 +26,7 @@ onMounted(() => {
         menuItems.value['users.index'] = 'Benutzer';
     }
 
-    menuItems.value['domains.index'] = 'Domänen';
+    menuItems.value['domains.index'] = 'Meilensteinliste';
     menuItems.value['profile.edit'] = 'Profil';
 });
 

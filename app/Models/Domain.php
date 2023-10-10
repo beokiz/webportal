@@ -59,6 +59,7 @@ class Domain extends Model
      */
     protected $casts = [
         'order'                      => 'integer',
+        'daz_dependent'              => 'boolean',
         'age_2_red_threshold'        => 'integer',
         'age_2_red_threshold_daz'    => 'integer',
         'age_2_yellow_threshold'     => 'integer',

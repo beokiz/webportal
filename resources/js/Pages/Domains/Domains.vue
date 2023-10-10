@@ -62,9 +62,9 @@ const errors = ref(props.errors || {});
 const draggableItem = ref(null);
 
 const loading = ref(false);
-const dazInputState = ref(false);
 const dialog = ref(false);
 const dialogDeleteDomain = ref(false);
+const deletingItemName = ref(null);
 
 const headers = [
     { title: 'Kürzel', key: 'is_online', width: '15%', sortable: false},
@@ -86,7 +86,7 @@ const modifiedItems = computed(() => {
     });
 });
 const checkDazInputState = computed(() => {
-    return !dazInputState.value ? 6 : 3;
+    return !manageForm.daz_dependent ? 6 : 3;
 });
 
 const allFiltersEmpty = computed(() => {
@@ -146,6 +146,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 };
 
 const openDeleteDomainDialog = (item) => {
+    deletingItemName.value = item.name
     deleteForm.id = item.id;
     dialogDeleteDomain.value = true
 };
@@ -177,7 +178,7 @@ const close = () => {
     dialogDeleteDomain.value = false;
     manageForm.reset();
     manageForm.clearErrors();
-    dazInputState.value = false
+    manageForm.daz_dependent = false
 
     errors.value = {};
 };
@@ -185,7 +186,7 @@ const close = () => {
 const clear = () => {
     manageForm.reset();
     manageForm.clearErrors();
-    dazInputState.value = false
+    manageForm.daz_dependent = false
 };
 
 
@@ -201,12 +202,13 @@ const manageForm = useForm({
     age_4_red_threshold_daz: null,
     age_4_yellow_threshold: null,
     age_4_yellow_threshold_daz: null,
+    daz_dependent: false,
 });
 
 const manageDomain = async () => {
     manageForm.processing = true;
 
-    if(!dazInputState.value){
+    if(!manageForm.daz_dependent){
         manageForm.age_2_red_threshold_daz = manageForm.age_2_red_threshold
         manageForm.age_2_yellow_threshold_daz = manageForm.age_2_yellow_threshold
         manageForm.age_4_red_threshold_daz = manageForm.age_4_red_threshold
@@ -276,7 +278,7 @@ const saveNewOrder = (event) => {
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Domänen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Domäne</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-slot:default="{ isHovering, props }">
@@ -286,7 +288,7 @@ const saveNewOrder = (event) => {
                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                             <v-card height="80vh">
                                 <v-card-title>
-                                    <span class="tw-text-h5">Neue Domäne</span>
+                                    <span class="tw-text-h5">Verwalte Domäne</span>
                                 </v-card-title>
 
                                 <v-card-text>
@@ -305,7 +307,7 @@ const saveNewOrder = (event) => {
                                         <v-row class="mt-10">
                                             <v-col cols="12">
                                                 <v-switch
-                                                    v-model="dazInputState"
+                                                    v-model="manageForm.daz_dependent"
                                                     hide-details
                                                     label="Einstellen mit Daz"
                                                 ></v-switch>
@@ -323,7 +325,7 @@ const saveNewOrder = (event) => {
                                                               type="number"
                                                               required></v-text-field>
                                             </v-col>
-                                            <v-col v-if="dazInputState" cols="12" :sm="checkDazInputState">
+                                            <v-col v-if="manageForm.daz_dependent" cols="12" :sm="checkDazInputState">
                                                 <v-text-field v-model="manageForm.age_2_red_threshold_daz"
                                                               :error-messages="errors.age_2_red_threshold_daz"
                                                               label="Schwellwert Rot mit Daz*"
@@ -339,7 +341,7 @@ const saveNewOrder = (event) => {
                                                               type="number"
                                                               required></v-text-field>
                                             </v-col>
-                                            <v-col v-if="dazInputState" cols="12" :sm="checkDazInputState">
+                                            <v-col v-if="manageForm.daz_dependent" cols="12" :sm="checkDazInputState">
                                                 <v-text-field v-model="manageForm.age_2_yellow_threshold_daz"
                                                               :error-messages="errors.age_2_yellow_threshold_daz"
                                                               label="Schwellwert Gelb mit Daz*"
@@ -362,7 +364,7 @@ const saveNewOrder = (event) => {
                                                               type="number"
                                                               required></v-text-field>
                                             </v-col>
-                                            <v-col v-if="dazInputState" cols="12" :sm="checkDazInputState">
+                                            <v-col v-if="manageForm.daz_dependent" cols="12" :sm="checkDazInputState">
                                                 <v-text-field v-model="manageForm.age_4_red_threshold_daz"
                                                               :error-messages="errors.age_4_red_threshold_daz"
                                                               label="Schwellwert Rot mit Daz*"
@@ -378,7 +380,7 @@ const saveNewOrder = (event) => {
                                                               type="number"
                                                               required></v-text-field>
                                             </v-col>
-                                            <v-col v-if="dazInputState" cols="12" :sm="checkDazInputState">
+                                            <v-col v-if="manageForm.daz_dependent" cols="12" :sm="checkDazInputState">
                                                 <v-text-field v-model="manageForm.age_4_yellow_threshold_daz"
                                                               :error-messages="errors.age_4_yellow_threshold_daz"
                                                               label="Schwellwert Gelb mit Daz*"
@@ -392,14 +394,14 @@ const saveNewOrder = (event) => {
 
                                 <v-card-actions>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Clear</v-btn-primary>
+                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>
                                     </v-hover>
                                     <v-spacer></v-spacer>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
+                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
                                     </v-hover>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn-primary @click="manageDomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
+                                        <v-btn-primary @click="manageDomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                                     </v-hover>
                                 </v-card-actions>
                             </v-card>
@@ -414,7 +416,7 @@ const saveNewOrder = (event) => {
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <p>Sind Sie sicher, dass Sie den aktuellen Domain löschen möchten?</p>
+                                    <p>Sind Sie sicher, dass Sie die Domäne {{deletingItemName}} löschen möchten?</p>
                                 </v-col>
                             </v-row>
                         </v-container>
