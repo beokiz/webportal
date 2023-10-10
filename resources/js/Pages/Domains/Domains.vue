@@ -511,7 +511,7 @@ const saveNewOrder = (event) => {
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDomainDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
-                                <span>Benutzer löschen</span>
+                                <span>Domäne löschen</span>
                             </v-tooltip>
                         </td>
                     </tr>

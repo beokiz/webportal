@@ -79,7 +79,7 @@ const manageMilestone = async () => {
 </script>
 
 <template>
-    <Head title="Benutzer verwalten" />
+    <Head title="Meilenstein verwalten" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>

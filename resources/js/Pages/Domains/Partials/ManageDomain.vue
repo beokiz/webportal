@@ -493,7 +493,7 @@ const manageCreateSubdomain = async () => {
                                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
                                                 </Link>
                                             </template>
-                                            <span>Domäne anzeigen</span>
+                                            <span>Subdomäne löschen</span>
                                         </v-tooltip>
 
                                         <v-tooltip location="top">
@@ -502,7 +502,7 @@ const manageCreateSubdomain = async () => {
                                                         @click="openDeleteSubdomainDialog(item.raw)">mdi-delete
                                                 </v-icon>
                                             </template>
-                                            <span>Benutzer löschen</span>
+                                            <span>Subdomäne löschen</span>
                                         </v-tooltip>
                                     </td>
                                 </tr>
