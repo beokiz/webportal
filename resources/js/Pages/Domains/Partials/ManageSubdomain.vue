@@ -240,22 +240,6 @@ const manageCreateSubdomain = async () => {
                         <h3>Eigenschaften</h3>
                     </v-col>
                 </v-row>
-                <v-row>
-                    <v-col cols="12" md="3" sm="4">
-                        <div class="tw-flex tw-justify-between">
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <Link :href="route('domains.show', { id: editedSubdomain.domain_id })">
-                                    <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurück</v-btn>
-                                </Link>
-                            </v-hover>
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="manageSubdomain" v-bind="props"
-                                               :color="isHovering ? 'accent' : 'primary'">Speichern
-                                </v-btn-primary>
-                            </v-hover>
-                        </div>
-                    </v-col>
-                </v-row>
             </v-container>
 
             <v-container>
@@ -266,11 +250,24 @@ const manageCreateSubdomain = async () => {
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col cols="12">
+                    <v-col cols="12" sm="6">
                         <v-hover v-slot:default="{ isHovering, props }">
                             <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
                         </v-hover>
                     </v-col>
+                    <v-col cols="12" sm="6" align="right">
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <Link :href="route('domains.show', { id: editedSubdomain.domain_id })">
+                                <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
+                            </Link>
+                        </v-hover>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="manageSubdomain" v-bind="props"
+                                           :color="isHovering ? 'accent' : 'primary'">Speichern
+                            </v-btn-primary>
+                        </v-hover>
+                    </v-col>
+
                 </v-row>
             </v-container>
 
@@ -341,7 +338,7 @@ const manageCreateSubdomain = async () => {
                                                 </v-hover>
                                                 <v-spacer></v-spacer>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
+                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                                                 </v-hover>
                                                 <v-hover v-slot:default="{ isHovering, props }">
                                                     <v-btn-primary @click="manageCreateSubdomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>

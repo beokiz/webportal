@@ -47,6 +47,18 @@ const close = () => {
     errors.value = {};
 };
 
+const clear = () => {
+    manageForm.reset();
+    manageForm.clearErrors();
+    manageForm.subdomain = null
+    manageForm.abbreviation = null
+    manageForm.title = null
+    manageForm.text = null
+    manageForm.emphasis = null
+    manageForm.emphasis_daz = null
+    manageForm.age = null
+};
+
 const manageForm = useForm({
     id: editedMilestone.value.id,
     subdomain: editedMilestone.value.subdomain_id,
@@ -132,18 +144,24 @@ const manageMilestone = async () => {
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" md="3" sm="4">
-                        <div class="tw-flex tw-justify-between">
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <Link :href="route('subdomains.show', { id: editedMilestone.subdomain_id })">
-                                    <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurück</v-btn>
-                                </Link>
-                            </v-hover>
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="manageMilestone" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
-                            </v-hover>
-                        </div>
+                    <v-col cols="12" sm="6">
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
+                        </v-hover>
                     </v-col>
+                    <v-col cols="12" sm="6" align="right">
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <Link :href="route('subdomains.show', { id: editedMilestone.subdomain_id })">
+                                <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
+                            </Link>
+                        </v-hover>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="manageMilestone" v-bind="props"
+                                           :color="isHovering ? 'accent' : 'primary'">Speichern
+                            </v-btn-primary>
+                        </v-hover>
+                    </v-col>
+
                 </v-row>
             </v-container>
         </div>

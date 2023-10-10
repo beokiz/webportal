@@ -298,14 +298,11 @@ const saveNewOrder = (event) => {
                                                 <v-text-field v-model="manageForm.abbreviation" :error-messages="errors.abbreviation"
                                                               label="Kürzel*" required></v-text-field>
                                             </v-col>
-                                            <v-col cols="12" sm="9">
+                                            <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.name" :error-messages="errors.name"
                                                               label="Name der Domäne*" required></v-text-field>
                                             </v-col>
-                                        </v-row>
-
-                                        <v-row class="mt-10">
-                                            <v-col cols="12">
+                                            <v-col cols="12" sm="3">
                                                 <v-switch
                                                     v-model="manageForm.daz_dependent"
                                                     hide-details
@@ -398,7 +395,7 @@ const saveNewOrder = (event) => {
                                     </v-hover>
                                     <v-spacer></v-spacer>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
+                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                                     </v-hover>
                                     <v-hover v-slot:default="{ isHovering, props }">
                                         <v-btn-primary @click="manageDomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
