@@ -394,7 +394,7 @@ const saveNewOrder = (event) => {
 
                                 <v-card-actions>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>
+                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn-primary>
                                     </v-hover>
                                     <v-spacer></v-spacer>
                                     <v-hover v-slot:default="{ isHovering, props }">

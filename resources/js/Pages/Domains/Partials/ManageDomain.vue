@@ -379,20 +379,18 @@ const manageCreateSubdomain = async () => {
                 <v-row>
                     <v-col cols="12">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>
+                            <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
                         </v-hover>
                     </v-col>
                 </v-row>
             </v-container>
 
             <v-container>
-                <v-row>
-                    <v-col cols="12">
-                        <h3 class="tw-border-t-8 tw-mt-8 tw-pt-8">Zugeordnete Subdomänen</h3>
+                <v-row class="tw-border-t-8 tw-mt-8 tw-pt-8">
+                    <v-col cols="12" sm="6">
+                        <h3>Zugeordnete Subdomänen</h3>
                     </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12">
+                    <v-col cols="12" sm="6">
                         <div class="tw-flex tw-items-center tw-justify-end">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
@@ -416,14 +414,14 @@ const manageCreateSubdomain = async () => {
 
                                             <v-card-actions>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Clear</v-btn-primary>
+                                                    <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn-primary>
                                                 </v-hover>
                                                 <v-spacer></v-spacer>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
+                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
                                                 </v-hover>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="manageCreateSubdomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
+                                                    <v-btn-primary @click="manageCreateSubdomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                                                 </v-hover>
                                             </v-card-actions>
                                         </v-card>
