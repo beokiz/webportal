@@ -417,9 +417,9 @@ const manageCreateSubdomain = async () => {
                             item-value="name">
 
                             <template v-slot:item="{ item }">
-                                <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
+                                <tr :data-id="item.selectable.id" :data-order="item.selectable.order"
+                                    @click="navigateToSubdomain(item.selectable.id)">
                                     <td>{{ item.selectable.name }}</td>
-
                                     <td>
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
@@ -433,23 +433,13 @@ const manageCreateSubdomain = async () => {
                                             <span>neu anordnen</span>
                                         </v-tooltip>
 
-
-                                        <v-tooltip location="top">
-                                            <template v-slot:activator="{ props }">
-                                                <Link :href="route('subdomains.show', { id: item.selectable.id })">
-                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
-                                                </Link>
-                                            </template>
-                                            <span>Domäne anzeigen</span>
-                                        </v-tooltip>
-
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <v-icon v-bind="props" size="small" class="tw-me-2"
                                                         @click="openDeleteSubdomainDialog(item.raw)">mdi-delete
                                                 </v-icon>
                                             </template>
-                                            <span>Benutzer löschen</span>
+                                            <span>Subdomäne löschen</span>
                                         </v-tooltip>
                                     </td>
                                 </tr>

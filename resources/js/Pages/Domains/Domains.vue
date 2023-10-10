@@ -479,7 +479,8 @@ const saveNewOrder = (event) => {
             >
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
+                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order"
+                        @click="navigateToDomain(item.selectable.id)">
                         <td>{{item.selectable.abbreviation}}</td>
 
                         <td>{{item.selectable.name}}</td>
@@ -490,7 +491,8 @@ const saveNewOrder = (event) => {
                                     <v-icon
                                         draggable="true"
                                         @dragstart="draggableItem = item.raw"
-                                        color="primary" v-bind="props" size="small" class="tw-me-2 glyphicon-move">mdi-arrow-collapse-vertical</v-icon>
+                                        color="primary" v-bind="props" size="small" class="tw-me-2 glyphicon-move">mdi-arrow-collapse-vertical
+                                    </v-icon>
                                 </template>
                                 <span>neu anordnen</span>
                             </v-tooltip>
@@ -498,18 +500,9 @@ const saveNewOrder = (event) => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('domains.show', { id: item.selectable.id })">
-                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
-                                    </Link>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click.stop="openDeleteDomainDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
-                                <span>Domäne anzeigen</span>
-                            </v-tooltip>
-
-                            <v-tooltip location="top">
-                                <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDomainDialog(item.raw)">mdi-delete</v-icon>
-                                </template>
-                                <span>Benutzer löschen</span>
+                                <span>Domäne löschen</span>
                             </v-tooltip>
                         </td>
                     </tr>
