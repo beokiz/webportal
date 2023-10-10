@@ -27,7 +27,7 @@ abstract class BaseFormRequest extends FormRequest
      * @param array $fields
      * @return void
      */
-    protected function prepareBooleanFieldsForValidation(array $fields)
+    protected function prepareBooleanFieldsForValidation(array $fields) : void
     {
         $preparedFields = [];
 
@@ -63,7 +63,7 @@ abstract class BaseFormRequest extends FormRequest
      * @return void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function ensureIsNotRateLimited(string $throttleKey, int $maxAttempts = 5, string $msgKey = '')
+    public function ensureIsNotRateLimited(string $throttleKey, int $maxAttempts = 5, string $msgKey = '') : void
     {
         if (!RateLimiter::tooManyAttempts($throttleKey, $maxAttempts)) {
             return;

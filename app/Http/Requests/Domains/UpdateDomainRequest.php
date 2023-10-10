@@ -14,6 +14,19 @@ namespace App\Http\Requests\Domains;
 class UpdateDomainRequest extends CreateDomainRequest
 {
     /**
+     * @return void
+     */
+    protected function prepareForValidation() : void
+    {
+        /*
+         * Prepare boolean fields
+         */
+        $this->prepareBooleanFieldsForValidation([
+            'daz_dependent',
+        ]);
+    }
+
+    /**
      * @return array
      */
     public function rules() : array
@@ -22,6 +35,7 @@ class UpdateDomainRequest extends CreateDomainRequest
             'name'                       => array_merge($this->textRules(), ['sometimes']),
             'abbreviation'               => array_merge($this->textRules(), ['sometimes']),
             'order'                      => array_merge($this->integerRules(), ['nullable']),
+            'daz_dependent'              => ['nullable', 'boolean'],
             'age_2_red_threshold'        => array_merge($this->smallIntegerRules(), ['sometimes']),
             'age_2_red_threshold_daz'    => array_merge($this->smallIntegerRules(), ['sometimes']),
             'age_2_yellow_threshold'     => array_merge($this->smallIntegerRules(), ['sometimes']),

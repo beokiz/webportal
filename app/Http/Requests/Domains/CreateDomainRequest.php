@@ -24,6 +24,7 @@ class CreateDomainRequest extends BaseFormRequest
             'name'                       => array_merge($this->textRules(), ['required']),
             'abbreviation'               => array_merge($this->textRules(), ['required']),
             'order'                      => array_merge($this->integerRules(), ['nullable']),
+            'daz_dependent'              => ['nullable', 'boolean'],
             'age_2_red_threshold'        => array_merge($this->smallIntegerRules(), ['required']),
             'age_2_red_threshold_daz'    => array_merge($this->smallIntegerRules(), ['required']),
             'age_2_yellow_threshold'     => array_merge($this->smallIntegerRules(), ['required']),

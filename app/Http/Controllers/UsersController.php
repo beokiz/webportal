@@ -51,8 +51,7 @@ class UsersController extends BaseController
      */
     protected function accessDeniedResponse()
     {
-        return redirect()
-            ->route('users.index')
+        return Redirect::route('users.index')
             ->withErrors(__('exceptions.user_does_not_have_access'));
     }
 

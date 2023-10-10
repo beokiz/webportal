@@ -40,6 +40,7 @@ class Domain extends Model
         'name',
         'abbreviation',
         'order',
+        'daz_dependent',
         'age_2_red_threshold',
         'age_2_red_threshold_daz',
         'age_2_yellow_threshold',

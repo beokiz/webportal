@@ -50,9 +50,11 @@ class ProfileController extends BaseController
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $result = $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return $result
+            ? Redirect::back()->withStatus(__('profile.info_success'))
+            : Redirect::back()->withErrors(__('profile.info_error'));
     }
 
     /**
