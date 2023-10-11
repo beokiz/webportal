@@ -109,4 +109,26 @@ return [
         'reorder_error'   => "Fehler! Beim Neuanordnen der Meilensteine ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Kitas CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'kitas' => [
+        'create_success'  => "Kita wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Beim Erstellen eines Kita ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Kita wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Beim Aktualisieren eines Kita ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Ausgewählter Kita kann nicht aktualisiert werden.",
+        'delete_success'  => "Kita wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Beim Löschen eines Kita ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Ausgewählter Kita kann nicht gelöscht werden.",
+        'restore_success' => "Kita wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Beim Wiederherstellen eines Kita ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Ausgewählter Kita kann nicht wiederhergestellt werden.",
+        'reorder_success' => "Kitas wurden erfolgreich neu angeordnet.",
+        'reorder_error'   => "Fehler! Beim Neuanordnen der Kitas ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+    ],
+
 ];

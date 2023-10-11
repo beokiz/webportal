@@ -19,6 +19,7 @@ use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -324,4 +325,8 @@ class User extends Authenticatable
     | Define Model Relations
     |--------------------------------------------------------------------------
     */
+    public function kitas() : BelongsToMany
+    {
+        return $this->BelongsToMany(Kita::class, 'kita_has_users_primary', 'user_id', 'kita_id');
+    }
 }
