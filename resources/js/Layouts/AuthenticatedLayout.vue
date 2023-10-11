@@ -27,6 +27,7 @@ onMounted(() => {
     }
 
     menuItems.value['domains.index'] = 'Meilensteinliste';
+    menuItems.value['kitas.index'] = 'Kitas';
     menuItems.value['profile.edit'] = 'Profil';
 });
 

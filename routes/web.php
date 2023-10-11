@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubdomainsController;
@@ -156,7 +157,7 @@ Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.', 'middleware' => [
 
 
 /*
- * Subdomains routes
+ * Milestones routes
  */
 Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => ['auth', 'verified_2fa']], function () {
 //    Route::get('/', [MilestonesController::class, 'index'])->name('index');
@@ -166,4 +167,18 @@ Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => [
     Route::delete('/{milestone}', [MilestonesController::class, 'destroy'])->name('destroy');
 //    Route::post('/{milestone}/restore', [MilestonesController::class, 'restore'])->name('restore');
     Route::post('/reorder', [MilestonesController::class, 'reorder'])->name('reorder');
+});
+
+
+/*
+ * Kita routes
+ */
+Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [KitaController::class, 'index'])->name('index');
+    Route::get('/{kita}', [KitaController::class, 'show'])->name('show');
+    Route::post('/', [KitaController::class, 'store'])->name('store');
+    Route::put('/{kita}', [KitaController::class, 'update'])->name('update');
+    Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
+//    Route::post('/{domain}/restore', [KitaController::class, 'restore'])->name('restore');
+    Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');
 });

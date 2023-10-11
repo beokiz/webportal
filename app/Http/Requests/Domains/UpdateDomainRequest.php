@@ -18,12 +18,7 @@ class UpdateDomainRequest extends CreateDomainRequest
      */
     protected function prepareForValidation() : void
     {
-        /*
-         * Prepare boolean fields
-         */
-        $this->prepareBooleanFieldsForValidation([
-            'daz_dependent',
-        ]);
+        parent::prepareForValidation();
     }
 
     /**

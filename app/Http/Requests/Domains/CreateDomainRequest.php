@@ -16,6 +16,19 @@ use App\Http\Requests\BaseFormRequest;
 class CreateDomainRequest extends BaseFormRequest
 {
     /**
+     * @return void
+     */
+    protected function prepareForValidation() : void
+    {
+        /*
+         * Prepare boolean fields
+         */
+        $this->prepareBooleanFieldsForValidation([
+            'daz_dependent',
+        ]);
+    }
+
+    /**
      * @return array
      */
     public function rules() : array
