@@ -478,17 +478,17 @@ const manageCreateSubdomain = async () => {
                                                     class="tw-me-2 glyphicon-move">mdi-arrow-collapse-vertical
                                                 </v-icon>
                                             </template>
-                                            <span>neu anordnen</span>
+                                            <span>Neu anordnen</span>
                                         </v-tooltip>
 
 
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <Link :href="route('subdomains.show', { id: item.selectable.id })">
-                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
+                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>
-                                            <span>Subdomäne löschen</span>
+                                            <span>Subdomäne bearbeiten</span>
                                         </v-tooltip>
 
                                         <v-tooltip location="top">
