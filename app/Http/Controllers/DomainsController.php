@@ -59,7 +59,7 @@ class DomainsController extends BaseController
 
     /**
      * @param Request $request
-     * @param Domain $domain
+     * @param Domain  $domain
      * @return \Inertia\Response
      */
     public function show(Request $request, Domain $domain)
@@ -82,7 +82,7 @@ class DomainsController extends BaseController
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->domainItemService->create($attributes);
+        $result     = $this->domainItemService->create($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.domains.create_success'))
@@ -91,7 +91,7 @@ class DomainsController extends BaseController
 
     /**
      * @param UpdateDomainRequest $request
-     * @param Domain $domain
+     * @param Domain              $domain
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateDomainRequest $request, Domain $domain)
@@ -99,7 +99,7 @@ class DomainsController extends BaseController
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->domainItemService->update($domain->id, $attributes);
+        $result     = $this->domainItemService->update($domain->id, $attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.domains.update_success'))
@@ -108,7 +108,7 @@ class DomainsController extends BaseController
 
     /**
      * @param Request $request
-     * @param Domain $domain
+     * @param Domain  $domain
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request, Domain $domain)
@@ -124,7 +124,7 @@ class DomainsController extends BaseController
 
     /**
      * @param Request $request
-     * @param Domain $domain
+     * @param Domain  $domain
      * @return \Illuminate\Http\RedirectResponse
      */
     public function restore(Request $request, Domain $domain)
@@ -149,7 +149,7 @@ class DomainsController extends BaseController
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->domainItemService->reorder($attributes);
+        $result     = $this->domainItemService->reorder($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.domains.reorder_success'))

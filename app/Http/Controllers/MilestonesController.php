@@ -58,7 +58,7 @@ class MilestonesController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Milestone $milestone
      * @return \Inertia\Response
      */
@@ -80,7 +80,7 @@ class MilestonesController extends BaseController
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->milestoneItemService->create($attributes);
+        $result     = $this->milestoneItemService->create($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.milestones.create_success'))
@@ -89,7 +89,7 @@ class MilestonesController extends BaseController
 
     /**
      * @param UpdateMilestoneRequest $request
-     * @param Milestone $milestone
+     * @param Milestone              $milestone
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateMilestoneRequest $request, Milestone $milestone)
@@ -97,7 +97,7 @@ class MilestonesController extends BaseController
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->milestoneItemService->update($milestone->id, $attributes);
+        $result     = $this->milestoneItemService->update($milestone->id, $attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.milestones.update_success'))
@@ -105,7 +105,7 @@ class MilestonesController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Milestone $milestone
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -121,7 +121,7 @@ class MilestonesController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Milestone $milestone
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -147,7 +147,7 @@ class MilestonesController extends BaseController
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->milestoneItemService->reorder($attributes);
+        $result     = $this->milestoneItemService->reorder($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.milestones.reorder_success'))

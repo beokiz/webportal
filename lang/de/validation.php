@@ -199,6 +199,19 @@ return [
     */
 
     'attributes' => [
+        'user'       => "Benutzer",
+        'users'      => "Benutzer",
+        'role'       => "Rolle",
+        'roles'      => "Rollen",
+        'domain'     => "Domäne",
+        'domains'    => "Domänen",
+        'subdomain'  => "Subdomäne",
+        'subdomains' => "Subdomänen",
+        'kita'       => "Kita",
+        'kitas'      => "Kitas",
+        'milestone'  => "Meilenstein",
+        'milestones' => "Meilensteine",
+
         'email'                      => "Email",
         'password'                   => "Passwort",
         'token'                      => "Zeichen",
@@ -206,6 +219,7 @@ return [
         'last_name'                  => "Nachname",
         'two_factor_code'            => "2FA (Zwei-Faktor-Authentifizierung) Bestätigungscode",
         'current_password'           => "Aktuelles Passwort",
+        'two_factor_auth_enabled'    => "2FA (Zwei-Faktor-Authentifizierung) Aktiviert",
         'name'                       => "Name",
         'abbreviation'               => "Kürzel",
         'order'                      => "Befehl",
@@ -217,9 +231,11 @@ return [
         'age_4_red_threshold_daz'    => "Altersgruppe bis 4,5 Jahre: Schwellwert Rot mit Daz",
         'age_4_yellow_threshold'     => "Altersgruppe bis 4,5 Jahre: Schwellwert Gelb",
         'age_4_yellow_threshold_daz' => "Altersgruppe bis 4,5 Jahre: Schwellwert Gelb mit Daz",
-        'role'                       => "Rolle",
-        'two_factor_auth_enabled'    => "2FA (Zwei-Faktor-Authentifizierung) Aktiviert",
-
+        'title'                      => "Titel",
+        'emphasis'                   => "Gewichtung",
+        'emphasis_daz'               => "Gewichtung mit Daz",
+        'age'                        => "Altersgruppe",
+        'zip_code'                   => "Postleitzahl",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

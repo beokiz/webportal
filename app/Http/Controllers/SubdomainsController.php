@@ -71,7 +71,7 @@ class SubdomainsController extends BaseController
                 'domain',
                 'milestones' => function ($query) {
                     $query->orderBy('order');
-                }
+                },
             ]),
         ]);
     }

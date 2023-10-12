@@ -6,7 +6,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Kitas\ConnectUsersToKitaRequest;
+use App\Http\Requests\Kitas\ConnectUserToKitaRequest;
 use App\Http\Requests\Kitas\CreateKitaRequest;
+use App\Http\Requests\Kitas\DisconnectUsersToKitaRequest;
+use App\Http\Requests\Kitas\DisconnectUserToKitaRequest;
 use App\Http\Requests\Kitas\ReorderKitasRequest;
 use App\Http\Requests\Kitas\UpdateKitaRequest;
 use App\Models\Kita;
@@ -59,18 +63,15 @@ class KitaController extends BaseController
 
     /**
      * @param Request $request
-     * @param Kita  $domain
+     * @param Kita    $kita
      * @return \Inertia\Response
      */
-    public function show(Request $request, Kita $domain)
+    public function show(Request $request, Kita $kita)
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         return Inertia::render('Kita/Partials/ManageKita', [
-            'kita' => $domain
-//                ->loadMissing(['subdomains' => function ($query) {
-//                    $query->orderBy('order');
-//                }]),
+            'kita' => $kita->loadMissing(['users']),
         ]);
     }
 
@@ -92,15 +93,83 @@ class KitaController extends BaseController
 
     /**
      * @param UpdateKitaRequest $request
-     * @param Kita              $domain
+     * @param Kita              $kita
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateKitaRequest $request, Kita $domain)
+    public function update(UpdateKitaRequest $request, Kita $kita)
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result     = $this->kitaItemService->update($domain->id, $attributes);
+        $result     = $this->kitaItemService->update($kita->id, $attributes);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.kitas.update_success'))
+            : Redirect::back()->withErrors(__('crud.kitas.update_error'));
+    }
+
+    /**
+     * @param ConnectUserToKitaRequest $request
+     * @param Kita                     $kita
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectUser(ConnectUserToKitaRequest $request, Kita $kita)
+    {
+//        $this->authorize('authorizeAdminAccess', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->kitaItemService->updateAttachedUsers($kita->id, [$attributes['user']]);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.kitas.update_success'))
+            : Redirect::back()->withErrors(__('crud.kitas.update_error'));
+    }
+
+    /**
+     * @param ConnectUsersToKitaRequest $request
+     * @param Kita                      $kita
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectUsers(ConnectUsersToKitaRequest $request, Kita $kita)
+    {
+//        $this->authorize('authorizeAdminAccess', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->kitaItemService->updateAttachedUsers($kita->id, $attributes['users']);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.kitas.update_success'))
+            : Redirect::back()->withErrors(__('crud.kitas.update_error'));
+    }
+
+    /**
+     * @param DisconnectUserToKitaRequest $request
+     * @param Kita                        $kita
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectUser(DisconnectUserToKitaRequest $request, Kita $kita)
+    {
+//        $this->authorize('authorizeAdminAccess', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->kitaItemService->updateAttachedUsers($kita->id, [$attributes['user']], true);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.kitas.update_success'))
+            : Redirect::back()->withErrors(__('crud.kitas.update_error'));
+    }
+
+    /**
+     * @param DisconnectUsersToKitaRequest $request
+     * @param Kita                         $kita
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectUsers(DisconnectUsersToKitaRequest $request, Kita $kita)
+    {
+//        $this->authorize('authorizeAdminAccess', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->kitaItemService->updateAttachedUsers($kita->id, $attributes['users'], true);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.kitas.update_success'))
@@ -109,14 +178,18 @@ class KitaController extends BaseController
 
     /**
      * @param Request $request
-     * @param Kita  $domain
+     * @param Kita    $kita
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, Kita $domain)
+    public function destroy(Request $request, Kita $kita)
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $result = $this->kitaItemService->delete($domain->id);
+        if ($kita->users()->exists()) {
+            Redirect::back()->withErrors(__('crud.kitas.delete_users_denied'));
+        }
+
+        $result = $this->kitaItemService->delete($kita->id);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.kitas.delete_success'))
@@ -125,14 +198,14 @@ class KitaController extends BaseController
 
     /**
      * @param Request $request
-     * @param Kita  $domain
+     * @param Kita    $kita
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function restore(Request $request, Kita $domain)
+    public function restore(Request $request, Kita $kita)
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
-        $result = $this->kitaItemService->update($domain->id, [
+        $result = $this->kitaItemService->update($kita->id, [
             'deleted_at' => null,
         ]);
 

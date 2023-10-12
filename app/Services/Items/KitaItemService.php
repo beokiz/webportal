@@ -120,6 +120,29 @@ class KitaItemService extends BaseItemService
     }
 
     /**
+     * @param int   $id
+     * @param array $users
+     * @param bool  $removeUsers
+     * @return bool|null
+     */
+    public function updateAttachedUsers(int $id, array $users, bool $removeUsers = false) : ?bool
+    {
+        $item = $this->find($id);
+
+        if (!empty($users)) {
+            if ($removeUsers) {
+                $item->users()->detach($users);
+            } else {
+                $item->users()->attach($users);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param int $id
      * @return bool|null
      */
@@ -156,12 +179,17 @@ class KitaItemService extends BaseItemService
     }
 
     /**
-     * @param Kita $item
-     * @param array  $attributes
+     * @param Kita  $item
+     * @param array $attributes
      * @return void
      */
     protected function updateRelations(Kita $item, array $attributes) : void
     {
-        //
+        /*
+         * Update 'users' relation
+         */
+        if (!empty($attributes['users'])) {
+            $item->users()->sync($attributes['users']);
+        }
     }
 }
