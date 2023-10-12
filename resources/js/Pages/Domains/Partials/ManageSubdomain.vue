@@ -226,11 +226,11 @@ const manageCreateSubdomain = async () => {
 </script>
 
 <template>
-    <Head title="Verwalte Subdomäne"/>
+    <Head :title="`Verwalte Subdomäne ${subdomain.name}`"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Subdomäne</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">{{ `Verwalte Subdomäne ${subdomain.name}` }}</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
