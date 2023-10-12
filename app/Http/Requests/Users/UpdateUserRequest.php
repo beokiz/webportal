@@ -38,16 +38,23 @@ class UpdateUserRequest extends CreateUserRequest
      */
     public function rules() : array
     {
-        $roles = config('permission.project_roles');
-
-        return [
+        $rules = [
             'first_name'              => array_merge($this->textRules(), ['sometimes']),
             'last_name'               => array_merge($this->textRules(), ['nullable']),
             'email'                   => ['sometimes', 'email', Rule::unique(User::class)->ignore($this->route('user'))],
 //            'password'                => array_merge($this->passwordRules(), ['sometimes']),
-            'role'                    => ['sometimes', $this->roleExistRule($roles)],
+            'role'                    => ['sometimes', $this->roleExistRule(config('permission.project_roles'))],
             'two_factor_auth_enabled' => ['sometimes', 'boolean'],
         ];
+
+        if (!empty($this->input('kitas'))) {
+            array_overwrite($rules, [
+                'kitas'   => ['nullable'],
+                'kitas.*' => ['required', $this->kitaExistRule()],
+            ]);
+        }
+
+        return $rules;
     }
 
     /**

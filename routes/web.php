@@ -178,6 +178,10 @@ Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'v
     Route::get('/{kita}', [KitaController::class, 'show'])->name('show');
     Route::post('/', [KitaController::class, 'store'])->name('store');
     Route::put('/{kita}', [KitaController::class, 'update'])->name('update');
+    Route::post('/{kita}/connect-user', [KitaController::class, 'connectUser'])->name('connect_user');
+    Route::post('/{kita}/connect-users', [KitaController::class, 'connectUsers'])->name('connect_users');
+    Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');
+    Route::post('/{kita}/disconnect-users', [KitaController::class, 'disconnectUsers'])->name('disconnect_users');
     Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
 //    Route::post('/{domain}/restore', [KitaController::class, 'restore'])->name('restore');
     Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');

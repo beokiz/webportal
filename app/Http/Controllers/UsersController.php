@@ -86,7 +86,7 @@ class UsersController extends BaseController
      * @param User $user
      * @return \Inertia\Response
      */
-    public function show(User $user)
+    public function show(Request $request, User $user)
     {
         $this->authorize('authorizeAdminAccess', User::class);
 
@@ -126,6 +126,7 @@ class UsersController extends BaseController
         return Inertia::render('Users/Partials/ManageUser', [
             'user'  => $user,
             'roles' => $this->roleItemService->collection($rolesFilters),
+            'from'  => $request->input('from'),
         ]);
     }
 

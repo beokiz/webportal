@@ -166,5 +166,12 @@ class UserItemService extends BaseItemService
                 $item->syncRoles($roleIds);
             }
         }
+
+        /*
+         * Update 'kitas' relation
+         */
+        if (!empty($attributes['kitas'])) {
+            $item->kitas()->attach($attributes['kitas']);
+        }
     }
 }
