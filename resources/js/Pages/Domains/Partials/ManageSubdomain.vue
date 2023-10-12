@@ -47,7 +47,7 @@ const deletingItemName = ref(null);
 const headers = [
     {title: 'Kürzel', key: 'abbreviation', width: '10%', sortable: false},
     {title: 'Titel', key: 'title', width: '20%', sortable: false},
-    {title: 'Subtext', key: 'text', width: '60%', sortable: false},
+    {title: 'Beschreibungstext', key: 'text', width: '60%', sortable: false},
     {title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 // const ages = [
@@ -226,11 +226,11 @@ const manageCreateSubdomain = async () => {
 </script>
 
 <template>
-    <Head title="Manage Subdomain"/>
+    <Head :title="`Verwalte Subdomäne ${subdomain.name}`"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Subdomäne</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">{{ `Verwalte Subdomäne ${subdomain.name}` }}</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -238,22 +238,6 @@ const manageCreateSubdomain = async () => {
                 <v-row>
                     <v-col cols="12">
                         <h3>Eigenschaften</h3>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12" md="3" sm="4">
-                        <div class="tw-flex tw-justify-between">
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <Link :href="route('domains.show', { id: editedSubdomain.domain_id })">
-                                    <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurück</v-btn>
-                                </Link>
-                            </v-hover>
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="manageSubdomain" v-bind="props"
-                                               :color="isHovering ? 'accent' : 'primary'">Speichern
-                                </v-btn-primary>
-                            </v-hover>
-                        </div>
                     </v-col>
                 </v-row>
             </v-container>
@@ -266,22 +250,33 @@ const manageCreateSubdomain = async () => {
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col cols="12">
+                    <v-col cols="12" sm="6">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>
+                            <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
                         </v-hover>
                     </v-col>
+                    <v-col cols="12" sm="6" align="right">
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <Link :href="route('domains.show', { id: editedSubdomain.domain_id })">
+                                <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
+                            </Link>
+                        </v-hover>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="manageSubdomain" v-bind="props"
+                                           :color="isHovering ? 'accent' : 'primary'">Speichern
+                            </v-btn-primary>
+                        </v-hover>
+                    </v-col>
+
                 </v-row>
             </v-container>
 
             <v-container>
-                <v-row>
-                    <v-col cols="12">
-                        <h3 class="tw-border-t-8 tw-mt-8 tw-pt-8">Zugeordnete Meilensteine</h3>
+                <v-row class="tw-border-t-8 tw-mt-8 tw-pt-8">
+                    <v-col cols="12" sm="6">
+                        <h3>Zugeordnete Meilensteine</h3>
                     </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12">
+                    <v-col cols="12" sm="6">
                         <div class="tw-flex tw-items-center tw-justify-end">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
@@ -290,7 +285,7 @@ const manageCreateSubdomain = async () => {
                                     <v-dialog v-model="dialog" activator="parent" width="80vw">
                                         <v-card height="80vh">
                                             <v-card-title>
-                                                <span class="tw-text-h5">Neue Subdomäne</span>
+                                                <span class="tw-text-h5">Neuer Meilenstein</span>
                                             </v-card-title>
 
                                             <v-card-text>
@@ -331,7 +326,7 @@ const manageCreateSubdomain = async () => {
                                                     <v-row>
                                                         <v-col cols="12">
                                                             <v-textarea v-model="manageCreateMilestoneForm.text" :error-messages="errors.text"
-                                                                          label="Subtext*" required></v-textarea>
+                                                                          label="Beschreibungstext*" required></v-textarea>
                                                         </v-col>
                                                     </v-row>
                                                 </v-container>
@@ -339,14 +334,14 @@ const manageCreateSubdomain = async () => {
 
                                             <v-card-actions>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Clear</v-btn-primary>
+                                                    <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn-primary>
                                                 </v-hover>
                                                 <v-spacer></v-spacer>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Cancel</v-btn>
+                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                                                 </v-hover>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="manageCreateSubdomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn-primary>
+                                                    <v-btn-primary @click="manageCreateSubdomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                                                 </v-hover>
                                             </v-card-actions>
                                         </v-card>
@@ -417,10 +412,10 @@ const manageCreateSubdomain = async () => {
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <Link :href="route('milestones.show', { id: item.selectable.id })">
-                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
+                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>
-                                            <span>Domäne anzeigen</span>
+                                            <span>Meilenstein bearbeiten</span>
                                         </v-tooltip>
 
                                         <v-tooltip location="top">
@@ -429,7 +424,7 @@ const manageCreateSubdomain = async () => {
                                                         @click="openDeleteSubdomainDialog(item.raw)">mdi-delete
                                                 </v-icon>
                                             </template>
-                                            <span>Benutzer löschen</span>
+                                            <span>Meilenstein löschen</span>
                                         </v-tooltip>
                                     </td>
                                 </tr>
