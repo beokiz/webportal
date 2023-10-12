@@ -47,7 +47,7 @@ const deletingItemName = ref(null);
 const headers = [
     {title: 'Kürzel', key: 'abbreviation', width: '10%', sortable: false},
     {title: 'Titel', key: 'title', width: '20%', sortable: false},
-    {title: 'Subtext', key: 'text', width: '60%', sortable: false},
+    {title: 'Beschreibungstext', key: 'text', width: '60%', sortable: false},
     {title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 // const ages = [
@@ -226,11 +226,11 @@ const manageCreateSubdomain = async () => {
 </script>
 
 <template>
-    <Head title="Manage Subdomain"/>
+    <Head :title="`Verwalte Subdomäne ${subdomain.name}`"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Subdomäne</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">{{ `Verwalte Subdomäne ${subdomain.name}` }}</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -285,7 +285,7 @@ const manageCreateSubdomain = async () => {
                                     <v-dialog v-model="dialog" activator="parent" width="80vw">
                                         <v-card height="80vh">
                                             <v-card-title>
-                                                <span class="tw-text-h5">Neue Subdomäne</span>
+                                                <span class="tw-text-h5">Neuer Meilenstein</span>
                                             </v-card-title>
 
                                             <v-card-text>
@@ -326,7 +326,7 @@ const manageCreateSubdomain = async () => {
                                                     <v-row>
                                                         <v-col cols="12">
                                                             <v-textarea v-model="manageCreateMilestoneForm.text" :error-messages="errors.text"
-                                                                          label="Subtext*" required></v-textarea>
+                                                                          label="Beschreibungstext*" required></v-textarea>
                                                         </v-col>
                                                     </v-row>
                                                 </v-container>
@@ -412,10 +412,10 @@ const manageCreateSubdomain = async () => {
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <Link :href="route('milestones.show', { id: item.selectable.id })">
-                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
+                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>
-                                            <span>Meilenstein anzeigen</span>
+                                            <span>Meilenstein bearbeiten</span>
                                         </v-tooltip>
 
                                         <v-tooltip location="top">

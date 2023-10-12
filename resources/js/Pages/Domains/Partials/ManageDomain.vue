@@ -245,11 +245,11 @@ const manageCreateSubdomain = async () => {
 </script>
 
 <template>
-    <Head title="Verwalte Subdomäne"/>
+    <Head :title="`Verwalte Domäne ${domain.name}`"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Subdomäne</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">{{ `Verwalte Domäne ${domain.name}` }}</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -478,17 +478,17 @@ const manageCreateSubdomain = async () => {
                                                     class="tw-me-2 glyphicon-move">mdi-arrow-collapse-vertical
                                                 </v-icon>
                                             </template>
-                                            <span>neu anordnen</span>
+                                            <span>Neu anordnen</span>
                                         </v-tooltip>
 
 
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <Link :href="route('subdomains.show', { id: item.selectable.id })">
-                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
+                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>
-                                            <span>Subdomäne löschen</span>
+                                            <span>Subdomäne bearbeiten</span>
                                         </v-tooltip>
 
                                         <v-tooltip location="top">
