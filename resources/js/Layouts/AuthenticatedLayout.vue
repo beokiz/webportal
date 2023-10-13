@@ -19,16 +19,21 @@ const currentUser = usePage().props.auth.user ?? {};
 const showingNavigationDropdown = ref(false);
 const topBar = ref(null);
 
-let menuItems = ref({});
+let menuItemsList = ref({});
+let menuGroupsList = ref({});
 
 onMounted(() => {
     if (currentUser.is_super_admin || currentUser.is_admin) {
-        menuItems.value['users.index'] = 'Benutzer';
+        menuItemsList.value['users.index'] = 'Benutzer';
+        menuGroupsList.value['users.index'] = 'users.*';
     }
 
-    menuItems.value['domains.index'] = 'Meilensteinliste';
-    menuItems.value['kitas.index'] = 'Kitas';
-    menuItems.value['profile.edit'] = 'Profil';
+    menuItemsList.value['domains.index'] = 'Meilensteinliste';
+    menuGroupsList.value['domains.index'] = 'domains.*';
+    menuItemsList.value['kitas.index'] = 'Kitas';
+    menuGroupsList.value['kitas.index'] = 'kitas.*';
+    menuItemsList.value['profile.edit'] = 'Profil';
+    menuGroupsList.value['profile.edit'] = 'profile.*';
 });
 
 const errors = computed(() => props.errors ?? usePage().props.errors);
@@ -48,9 +53,9 @@ const clearErrorsAndSuccesses = () => {
                         <ApplicationLogo class="tw-px-6 tw-my-5"/>
                     </Link>
 
-                    <template v-for="(title, name) in menuItems">
+                    <template v-for="(title, name) in menuItemsList">
                         <Link :href="route(name)" :active="route().current(name)">
-                            <v-list-item :to="route(name)" :active="route().current(name)" :title="title"></v-list-item>
+                            <v-list-item :to="route(name)" :active="route().current(menuGroupsList[name])" :title="title"></v-list-item>
                         </Link>
                     </template>
                 </v-list>
