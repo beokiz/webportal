@@ -203,7 +203,7 @@ class KitaController extends BaseController
 //        $this->authorize('authorizeAdminAccess', User::class);
 
         if ($kita->users()->exists()) {
-            Redirect::back()->withErrors(__('crud.kitas.delete_users_denied'));
+            return Redirect::back()->withErrors(__('crud.kitas.delete_users_denied'));
         }
 
         $result = $this->kitaItemService->delete($kita->id);
