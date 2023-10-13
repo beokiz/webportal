@@ -10,6 +10,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\UpdatePasswordRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 
 /**
  * Password Controller
@@ -28,10 +29,12 @@ class PasswordController extends BaseController
     {
         $validated = $request->validated();
 
-        $request->user()->update([
+        $result = $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back();
+        return $result
+            ? Redirect::back()->withStatus(__('profile.password_success'))
+            : Redirect::back()->withErrors(__('profile.password_error'));
     }
 }

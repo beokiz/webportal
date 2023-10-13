@@ -199,7 +199,27 @@ return [
     */
 
     'attributes' => [
-        'two_factor_code' => "2FA (Zwei-Faktor-Authentifizierung) Bestätigungscode",
+        'email'                      => "Email",
+        'password'                   => "Passwort",
+        'token'                      => "Zeichen",
+        'first_name'                 => "Vorname",
+        'last_name'                  => "Nachname",
+        'two_factor_code'            => "2FA (Zwei-Faktor-Authentifizierung) Bestätigungscode",
+        'current_password'           => "Aktuelles Passwort",
+        'name'                       => "Name",
+        'abbreviation'               => "Kürzel",
+        'order'                      => "Befehl",
+        'age_2_red_threshold'        => "Altersgruppe bis 2,5 Jahre: Schwellwert Rot",
+        'age_2_red_threshold_daz'    => "Altersgruppe bis 2,5 Jahre: Schwellwert Rot mit Daz",
+        'age_2_yellow_threshold'     => "Altersgruppe bis 2,5 Jahre: Schwellwert Gelb",
+        'age_2_yellow_threshold_daz' => "Altersgruppe bis 2,5 Jahre: Schwellwert Gelb",
+        'age_4_red_threshold'        => "Altersgruppe bis 4,5 Jahre: Schwellwert Rot",
+        'age_4_red_threshold_daz'    => "Altersgruppe bis 4,5 Jahre: Schwellwert Rot mit Daz",
+        'age_4_yellow_threshold'     => "Altersgruppe bis 4,5 Jahre: Schwellwert Gelb",
+        'age_4_yellow_threshold_daz' => "Altersgruppe bis 4,5 Jahre: Schwellwert Gelb mit Daz",
+        'role'                       => "Rolle",
+        'two_factor_auth_enabled'    => "2FA (Zwei-Faktor-Authentifizierung) Aktiviert",
+
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

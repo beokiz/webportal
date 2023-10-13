@@ -28,11 +28,11 @@ class ProfileController extends BaseController
      * @param Request $request
      * @return Response
      */
-    public function edit(Request $request) : Response
+    public function edit(Request $request): Response
     {
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status'          => session('status'),
+            'status' => session('status'),
         ]);
     }
 
@@ -42,7 +42,7 @@ class ProfileController extends BaseController
      * @param ProfileUpdateRequest $request
      * @return RedirectResponse
      */
-    public function update(ProfileUpdateRequest $request) : RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
 
@@ -50,9 +50,11 @@ class ProfileController extends BaseController
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $result = $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return $result
+            ? Redirect::back()->withStatus(__('profile.info_success'))
+            : Redirect::back()->withErrors(__('profile.info_error'));
     }
 
     /**
@@ -61,7 +63,7 @@ class ProfileController extends BaseController
      * @param Request $request
      * @return RedirectResponse
      */
-    public function destroy(Request $request) : RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current-password'],

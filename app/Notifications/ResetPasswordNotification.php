@@ -91,7 +91,10 @@ class ResetPasswordNotification extends Notification
             ->greeting(__('notifications.reset_password.greeting', ['name' => $name]))
             ->line(__('notifications.reset_password.first_line'))
             ->line(__('notifications.reset_password.second_line'))
-            ->action(__('notifications.reset_password.action_text'), $url);
+            ->action(__('notifications.reset_password.action_text'), $url)
+            ->line(__('notifications.reset_password.third_line', [
+                'support_email' => config('app.emails.support'),
+            ]));
     }
 
     /**

@@ -8,7 +8,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
-use App\Http\Resources\BaseInertiaResourceCollection;
 use App\Models\User;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
@@ -52,8 +51,7 @@ class UsersController extends BaseController
      */
     protected function accessDeniedResponse()
     {
-        return redirect()
-            ->route('users.index')
+        return Redirect::route('users.index')
             ->withErrors(__('exceptions.user_does_not_have_access'));
     }
 
@@ -78,7 +76,7 @@ class UsersController extends BaseController
 
         $result = $this->userItemService->collection(array_merge($args, $usersFilters));
 
-        return Inertia::render('Users', array_merge(BaseInertiaResourceCollection::make($result)->resolve(), [
+        return Inertia::render('Users/Users', $this->prepareItemsCollection($result, [
             'roles'   => $this->roleItemService->collection($rolesFilters),
             'filters' => $request->only(['full_name', 'email']),
         ]));
@@ -92,7 +90,7 @@ class UsersController extends BaseController
     {
         $this->authorize('authorizeAdminAccess', User::class);
 
-        return Inertia::render('Users/ShowUser', [
+        return Inertia::render('Users/Partials/ManageUser', [
             'user' => $user,
         ]);
     }
@@ -125,7 +123,7 @@ class UsersController extends BaseController
             ];
         }
 
-        return Inertia::render('Users/ManageUser', [
+        return Inertia::render('Users/Partials/ManageUser', [
             'user'  => $user,
             'roles' => $this->roleItemService->collection($rolesFilters),
         ]);
@@ -145,8 +143,8 @@ class UsersController extends BaseController
         ]));
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.user.create_success'))
-            : Redirect::back()->withErrors(__('crud.user.create_error'));
+            ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
+            : Redirect::back()->withErrors(__('crud.users.create_error'));
     }
 
     /**
@@ -173,8 +171,8 @@ class UsersController extends BaseController
         $result     = $this->userItemService->update($user->id, $attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.user.update_success'))
-            : Redirect::back()->withErrors(__('crud.user.update_error'));
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
     }
 
     /**
@@ -204,10 +202,10 @@ class UsersController extends BaseController
             $result = $this->userItemService->delete($user->id);
 
             return $result
-                ? Redirect::back()->withSuccesses(__('crud.user.delete_success'))
-                : Redirect::back()->withErrors(__('crud.user.delete_error'));
+                ? Redirect::back()->withSuccesses(__('crud.users.delete_success'))
+                : Redirect::back()->withErrors(__('crud.users.delete_error'));
         } else {
-            return Redirect::back()->withErrors(__('crud.user.delete_denied'));
+            return Redirect::back()->withErrors(__('crud.users.delete_denied'));
         }
     }
 
@@ -236,7 +234,7 @@ class UsersController extends BaseController
         ]);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.user.restore_success'))
-            : Redirect::back()->withErrors(__('crud.user.restore_error'));
+            ? Redirect::back()->withSuccesses(__('crud.users.restore_success'))
+            : Redirect::back()->withErrors(__('crud.users.restore_error'));
     }
 }

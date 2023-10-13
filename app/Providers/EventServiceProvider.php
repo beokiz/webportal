@@ -6,7 +6,6 @@
 
 namespace App\Providers;
 
-use App\Listeners\SendWelcomeNotification;
 use App\Listeners\TriggerUserVerifiedEmailEvent;
 use App\Models\User;
 use App\Observers\UserObserver;

@@ -31,10 +31,11 @@ return [
 
     'reset_password' => [
         'subject'     => "BeoKiz password recovery",
-        'greeting'    => "Hello!",
+        'greeting'    => "Hello :name,",
         'action_text' => "Restore Password",
-        'first_line'  => "This is a password recovery email. If you have not tried to log in and you have received this notification, please let us know.",
-        'second_line' => "To restore your password, please press the button:",
+        'first_line'  => "We have received a request to reset your password for your account on the BeoKiz traffic light portal of the Berlin Milestones.",
+        'second_line' => "To reset your password, please follow the link below:",
+        'third_line'  => "If you did not make this request, please ignore this email and possibly inform us at <:support_email> so that we can take appropriate action.",
     ],
 
     /*
