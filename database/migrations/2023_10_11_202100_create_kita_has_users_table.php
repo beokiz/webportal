@@ -22,7 +22,7 @@ return new class extends Migration {
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreignId('user_id')
-                ->constrained('dashboard_users', 'id')
+                ->constrained('users', 'id')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 

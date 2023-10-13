@@ -71,6 +71,6 @@ class Kita extends Model
      */
     public function users() : BelongsToMany
     {
-        return $this->BelongsToMany(User::class, 'kita_has_users_primary', 'kita_id', 'user_id');
+        return $this->BelongsToMany(User::class, 'kita_has_users', 'kita_id', 'user_id');
     }
 }
