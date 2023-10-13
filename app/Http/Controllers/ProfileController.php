@@ -30,11 +30,19 @@ class ProfileController extends BaseController
      */
     public function edit(Request $request) : Response
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+        $currentUser = $request->user();
+
+        $props = [
+            'mustVerifyEmail' => $currentUser instanceof MustVerifyEmail,
             'status'          => session('status'),
-            'kitas'           => $request->user()->kitas,
-        ]);
+            'kitas'           => [],
+        ];
+
+        if ($currentUser->is_manager || $currentUser->is_employer) {
+            $props['kitas'] = $currentUser->kitas;
+        }
+
+        return Inertia::render('Profile/Edit', $props);
     }
 
     /**

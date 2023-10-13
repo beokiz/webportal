@@ -84,9 +84,7 @@ const manageUser = async () => {
     // }
 
     manageForm.put(route('users.update', { user: manageForm.id }), {
-        // preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },

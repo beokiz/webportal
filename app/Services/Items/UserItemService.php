@@ -171,7 +171,12 @@ class UserItemService extends BaseItemService
          * Update 'kitas' relation
          */
         if (!empty($attributes['kitas'])) {
-            $item->kitas()->attach($attributes['kitas']);
+            $currentKitas = $item->kitas->pluck('id');
+            $newKitas     = collect($attributes['kitas']);
+
+            $item->users()->attach(
+                $currentKitas->diff($newKitas)->merge($newKitas->diff($currentKitas))
+            );
         }
     }
 }

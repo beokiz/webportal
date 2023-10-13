@@ -216,9 +216,6 @@ const manageDomain = async () => {
     }
 
     manageForm.post(route('domains.store'), {
-        // preserveScroll: true,
-        // preserveState: true,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -259,7 +256,6 @@ const saveNewOrder = (event) => {
     reorderForm.post(route('domains.reorder'), {
         preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             //
         },

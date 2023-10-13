@@ -187,9 +187,6 @@ const manageUser = async () => {
     manageForm.processing = true;
 
     let formOptions = {
-        // preserveScroll: true,
-        // preserveState: true,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },

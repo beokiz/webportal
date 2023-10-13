@@ -179,9 +179,6 @@ const manageKita = async () => {
     manageForm.processing = true;
 
     manageForm.post(route('kitas.store'), {
-        // preserveScroll: true,
-        // preserveState: true,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },

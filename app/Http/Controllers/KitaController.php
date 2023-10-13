@@ -75,20 +75,10 @@ class KitaController extends BaseController
         $roleItemService = app(RoleItemService::class);
         $userItemService = app(UserItemService::class);
 
-        $currentUser = $request->user();
-
-        $rolesFilters = [];
-        $usersFilters = [];
-
-        if ($currentUser->is_admin) {
-            $rolesFilters['exclude_name'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
-            $usersFilters['withoutRoles'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
-        }
-
         return Inertia::render('Kita/Partials/ManageKita', [
             'kita'  => $kita->loadMissing(['users']),
-            'roles' => $roleItemService->collection($rolesFilters),
-            'users' => $userItemService->collection($usersFilters),
+            'roles' => $roleItemService->collection(['only_name' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
+            'users' => $userItemService->collection(['with_roles' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
         ]);
     }
 

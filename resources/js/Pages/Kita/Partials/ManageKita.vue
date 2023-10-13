@@ -136,9 +136,7 @@ const manageKita = async () => {
     manageForm.processing = true;
 
     let formOptions = {
-        // preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -167,9 +165,6 @@ const manageCreateKitaUser = async () => {
     manageCreateKitaUserForm.processing = true;
 
     manageCreateKitaUserForm.post(route('users.store'), {
-        // preserveScroll: true,
-        preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -193,9 +188,6 @@ const manageConnectKitaUser = async () => {
     manageConnectKitaUserForm.processing = true;
 
     manageConnectKitaUserForm.post(route('kitas.connect_users', {kita: manageCreateKitaUserForm.kitas}), {
-        // preserveScroll: true,
-        preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -267,10 +259,11 @@ const manageConnectKitaUser = async () => {
                     <v-col cols="12" sm="6">
                         <h3>Zugeordnete Benutzer</h3>
                     </v-col>
-                    <v-col cols="12" sm="3">
+
+                    <v-col cols="12" sm="6">
                         <div class="tw-flex tw-items-center tw-justify-end">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
+                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark class="mr-2">
                                     Benutzer verbinden
 
                                     <v-dialog v-model="connectUserDialog" activator="parent" width="80vw">
@@ -319,10 +312,7 @@ const manageConnectKitaUser = async () => {
                                     </v-dialog>
                                 </v-btn>
                             </v-hover>
-                        </div>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <div class="tw-flex tw-items-center tw-justify-end">
+
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
                                     Benutzer hinzufügen
