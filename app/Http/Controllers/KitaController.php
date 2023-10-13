@@ -15,6 +15,8 @@ use App\Http\Requests\Kitas\ReorderKitasRequest;
 use App\Http\Requests\Kitas\UpdateKitaRequest;
 use App\Models\Kita;
 use App\Services\Items\KitaItemService;
+use App\Services\Items\RoleItemService;
+use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -70,8 +72,23 @@ class KitaController extends BaseController
     {
 //        $this->authorize('authorizeAdminAccess', User::class);
 
+        $roleItemService = app(RoleItemService::class);
+        $userItemService = app(UserItemService::class);
+
+        $currentUser = $request->user();
+
+        $rolesFilters = [];
+        $usersFilters = [];
+
+        if ($currentUser->is_admin) {
+            $rolesFilters['exclude_name'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
+            $usersFilters['withoutRoles'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
+        }
+
         return Inertia::render('Kita/Partials/ManageKita', [
-            'kita' => $kita->loadMissing(['users']),
+            'kita'  => $kita->loadMissing(['users']),
+            'roles' => $roleItemService->collection($rolesFilters),
+            'users' => $userItemService->collection($usersFilters),
         ]);
     }
 

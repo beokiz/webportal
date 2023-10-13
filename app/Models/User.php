@@ -327,6 +327,6 @@ class User extends Authenticatable
     */
     public function kitas() : BelongsToMany
     {
-        return $this->BelongsToMany(Kita::class, 'kita_has_users_primary', 'user_id', 'kita_id');
+        return $this->BelongsToMany(Kita::class, 'kita_has_users', 'user_id', 'kita_id');
     }
 }
