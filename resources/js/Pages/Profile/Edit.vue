@@ -48,7 +48,7 @@ const modifiedItems = computed(() => {
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Profil</h2>
         </template>
 
-        <v-container>
+        <v-container v-if="kitas.length > 0">
             <v-row>
                 <v-col cols="12">
                     <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Eure Kitas</h2>
