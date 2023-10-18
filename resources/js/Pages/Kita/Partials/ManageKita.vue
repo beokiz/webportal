@@ -281,7 +281,7 @@ const manageConnectKitaUser = async () => {
                                                     </v-row>
                                                     <v-row>
                                                         <v-col cols="12">
-                                                            <v-select
+                                                            <v-autocomplete
                                                                 v-model="manageConnectKitaUserForm.users"
                                                                 :items="users"
                                                                 :error-messages="errors.users"
@@ -290,7 +290,7 @@ const manageConnectKitaUser = async () => {
                                                                 label="User"
                                                                 multiple
                                                                 required
-                                                            ></v-select>
+                                                            ></v-autocomplete>
                                                         </v-col>
                                                     </v-row>
                                                 </v-container>
