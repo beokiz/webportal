@@ -16,22 +16,27 @@ const props = defineProps({
 
 const currentUser = usePage().props.auth.user ?? {};
 
-const showingNavigationDropdown = ref(false);
 const topBar = ref(null);
 
 let menuItemsList = ref({});
 let menuGroupsList = ref({});
 
 onMounted(() => {
-    if (currentUser.is_super_admin || currentUser.is_admin) {
+    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager) {
         menuItemsList.value['users.index'] = 'Benutzer';
         menuGroupsList.value['users.index'] = 'users.*';
     }
 
-    menuItemsList.value['domains.index'] = 'Meilensteinliste';
-    menuGroupsList.value['domains.index'] = 'domains.*';
-    menuItemsList.value['kitas.index'] = 'Kitas';
-    menuGroupsList.value['kitas.index'] = 'kitas.*';
+    if (currentUser.is_super_admin || currentUser.is_admin) {
+        menuItemsList.value['domains.index'] = 'Meilensteinliste';
+        menuGroupsList.value['domains.index'] = 'domains.*';
+    }
+
+    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager) {
+        menuItemsList.value['kitas.index'] = 'Kitas';
+        menuGroupsList.value['kitas.index'] = 'kitas.*';
+    }
+
     menuItemsList.value['profile.edit'] = 'Profil';
     menuGroupsList.value['profile.edit'] = 'profile.*';
 });

@@ -136,9 +136,13 @@ class KitaItemService extends BaseItemService
                 $currentUsers = $item->users->pluck('id');
                 $newUsers     = collect($users);
 
-                $item->users()->attach(
-                    $currentUsers->diff($newUsers)->merge($newUsers->diff($currentUsers))
-                );
+                $newUsersIds = $currentUsers->diff($newUsers)->merge($newUsers->diff($currentUsers));
+
+                $item->users()->attach($newUsersIds);
+
+                $item->users()->whereIn('id', $newUsersIds)->get()->map(function ($user) use($item) {
+                    $user->sendConnectedToKitasNotification([$item->name]);
+                });
             }
 
             return true;
@@ -190,11 +194,6 @@ class KitaItemService extends BaseItemService
      */
     protected function updateRelations(Kita $item, array $attributes) : void
     {
-        /*
-         * Update 'users' relation
-         */
-        if (!empty($attributes['users'])) {
-            $item->users()->sync($attributes['users']);
-        }
+        //
     }
 }

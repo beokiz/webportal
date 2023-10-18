@@ -24,7 +24,7 @@ class CreateUserRequest extends BaseFormRequest
      */
     public function rules() : array
     {
-        $rules = [
+        return [
             'first_name'              => array_merge($this->textRules(), ['required']),
             'last_name'               => array_merge($this->textRules(), ['nullable']),
             'email'                   => ['required', 'email', Rule::unique(User::class)],
@@ -32,15 +32,6 @@ class CreateUserRequest extends BaseFormRequest
             'role'                    => ['required', $this->roleExistRule(config('permission.project_roles'))],
             'two_factor_auth_enabled' => ['required', 'boolean'],
         ];
-
-        if (!empty($this->input('kitas'))) {
-            array_overwrite($rules, [
-                'kitas'   => ['nullable'],
-                'kitas.*' => ['required', $this->kitaExistRule()],
-            ]);
-        }
-
-        return $rules;
     }
 
     /**

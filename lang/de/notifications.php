@@ -94,4 +94,18 @@ return [
         'fourth_line' => "Vielen Dank, dass Sie BeoKiz verwenden!",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Connected To Kitas Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'connected_to_kitas' => [
+        'subject_single'      => "Mit Kita verbunden",
+        'subject_multiple'    => "Mit Kitas verbunden",
+        'greeting'            => "Hallo :name,",
+        'first_line_single'   => "Sie wurden mit der :kitas Kita verbunden.",
+        'first_line_multiple' => "Sie wurden mit den Kitas :kitas verbunden.",
+    ],
+
 ];

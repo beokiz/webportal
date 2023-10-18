@@ -122,6 +122,7 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
 //    Route::get('/{user}', [UsersController::class, 'show'])->name('show');
     Route::get('/{user}', [UsersController::class, 'edit'])->name('edit');
     Route::post('/', [UsersController::class, 'store'])->name('store');
+    Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
 //    Route::post('/{user}/restore', [UsersController::class, 'restore'])->name('restore');

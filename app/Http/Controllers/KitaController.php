@@ -14,6 +14,7 @@ use App\Http\Requests\Kitas\DisconnectUserToKitaRequest;
 use App\Http\Requests\Kitas\ReorderKitasRequest;
 use App\Http\Requests\Kitas\UpdateKitaRequest;
 use App\Models\Kita;
+use App\Models\User;
 use App\Services\Items\KitaItemService;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
@@ -50,9 +51,15 @@ class KitaController extends BaseController
      */
     public function index(Request $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToKitas', User::class);
+
+        $currentUser = $request->user();
 
         $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
+
+        if ($currentUser->is_manager) {
+            $args['with_users'] = $currentUser->id;
+        }
 
         $result = $this->kitaItemService->collection(array_merge($args, [
             'paginated' => true,
@@ -70,7 +77,8 @@ class KitaController extends BaseController
      */
     public function show(Request $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToKitas', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $roleItemService = app(RoleItemService::class);
         $userItemService = app(UserItemService::class);
@@ -88,7 +96,7 @@ class KitaController extends BaseController
      */
     public function store(CreateKitaRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToKitas', User::class);
 
         $attributes = $request->validated();
         $result     = $this->kitaItemService->create($attributes);
@@ -105,7 +113,7 @@ class KitaController extends BaseController
      */
     public function update(UpdateKitaRequest $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $attributes = $request->validated();
         $result     = $this->kitaItemService->update($kita->id, $attributes);
@@ -122,7 +130,7 @@ class KitaController extends BaseController
      */
     public function connectUser(ConnectUserToKitaRequest $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $attributes = $request->validated();
         $result     = $this->kitaItemService->updateAttachedUsers($kita->id, [$attributes['user']]);
@@ -139,7 +147,7 @@ class KitaController extends BaseController
      */
     public function connectUsers(ConnectUsersToKitaRequest $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $attributes = $request->validated();
         $result     = $this->kitaItemService->updateAttachedUsers($kita->id, $attributes['users']);
@@ -156,7 +164,7 @@ class KitaController extends BaseController
      */
     public function disconnectUser(DisconnectUserToKitaRequest $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $attributes = $request->validated();
         $result     = $this->kitaItemService->updateAttachedUsers($kita->id, [$attributes['user']], true);
@@ -173,7 +181,7 @@ class KitaController extends BaseController
      */
     public function disconnectUsers(DisconnectUsersToKitaRequest $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $attributes = $request->validated();
         $result     = $this->kitaItemService->updateAttachedUsers($kita->id, $attributes['users'], true);
@@ -190,7 +198,7 @@ class KitaController extends BaseController
      */
     public function destroy(Request $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         if ($kita->users()->exists()) {
             return Redirect::back()->withErrors(__('crud.kitas.delete_users_denied'));
@@ -210,7 +218,7 @@ class KitaController extends BaseController
      */
     public function restore(Request $request, Kita $kita)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $result = $this->kitaItemService->update($kita->id, [
             'deleted_at' => null,
@@ -227,7 +235,7 @@ class KitaController extends BaseController
      */
     public function reorder(ReorderKitasRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToKitas', User::class);
 
         $attributes = $request->validated();
         $result     = $this->kitaItemService->reorder($attributes);

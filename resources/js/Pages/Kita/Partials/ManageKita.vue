@@ -164,7 +164,7 @@ const manageCreateKitaUserForm = useForm({
 const manageCreateKitaUser = async () => {
     manageCreateKitaUserForm.processing = true;
 
-    manageCreateKitaUserForm.post(route('users.store'), {
+    manageCreateKitaUserForm.post(route('users.store_from_kita'), {
         onSuccess: (page) => {
             close();
         },
@@ -262,7 +262,7 @@ const manageConnectKitaUser = async () => {
 
                     <v-col cols="12" sm="6">
                         <div class="tw-flex tw-items-center tw-justify-end">
-                            <v-hover v-slot:default="{ isHovering, props }">
+                            <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
                                 <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark class="mr-2">
                                     Benutzer verbinden
 

@@ -38,7 +38,7 @@ class UpdateUserRequest extends CreateUserRequest
      */
     public function rules() : array
     {
-        $rules = [
+        return [
             'first_name'              => array_merge($this->textRules(), ['sometimes']),
             'last_name'               => array_merge($this->textRules(), ['nullable']),
             'email'                   => ['sometimes', 'email', Rule::unique(User::class)->ignore($this->route('user'))],
@@ -46,15 +46,6 @@ class UpdateUserRequest extends CreateUserRequest
             'role'                    => ['sometimes', $this->roleExistRule(config('permission.project_roles'))],
             'two_factor_auth_enabled' => ['sometimes', 'boolean'],
         ];
-
-        if (!empty($this->input('kitas'))) {
-            array_overwrite($rules, [
-                'kitas'   => ['nullable'],
-                'kitas.*' => ['required', $this->kitaExistRule()],
-            ]);
-        }
-
-        return $rules;
     }
 
     /**

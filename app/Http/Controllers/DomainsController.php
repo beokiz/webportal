@@ -10,6 +10,7 @@ use App\Http\Requests\Domains\CreateDomainRequest;
 use App\Http\Requests\Domains\ReorderDomainsRequest;
 use App\Http\Requests\Domains\UpdateDomainRequest;
 use App\Models\Domain;
+use App\Models\User;
 use App\Services\Items\DomainItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -44,7 +45,7 @@ class DomainsController extends BaseController
      */
     public function index(Request $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
 
@@ -64,7 +65,7 @@ class DomainsController extends BaseController
      */
     public function show(Request $request, Domain $domain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         return Inertia::render('Domains/Partials/ManageDomain', [
             'domain' => $domain->loadMissing(['subdomains' => function ($query) {
@@ -79,7 +80,7 @@ class DomainsController extends BaseController
      */
     public function store(CreateDomainRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
         $result     = $this->domainItemService->create($attributes);
@@ -96,7 +97,7 @@ class DomainsController extends BaseController
      */
     public function update(UpdateDomainRequest $request, Domain $domain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
         $result     = $this->domainItemService->update($domain->id, $attributes);
@@ -113,7 +114,7 @@ class DomainsController extends BaseController
      */
     public function destroy(Request $request, Domain $domain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $result = $this->domainItemService->delete($domain->id);
 
@@ -129,7 +130,7 @@ class DomainsController extends BaseController
      */
     public function restore(Request $request, Domain $domain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $result = $this->domainItemService->update($domain->id, [
             'deleted_at' => null,
@@ -146,7 +147,7 @@ class DomainsController extends BaseController
      */
     public function reorder(ReorderDomainsRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
         $result     = $this->domainItemService->reorder($attributes);

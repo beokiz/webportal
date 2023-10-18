@@ -97,6 +97,23 @@ class UserItemService extends BaseItemService
     }
 
     /**
+     * @param array $attributes
+     * @return mixed
+     */
+    public function createFromKita(array $attributes)
+    {
+        if (!empty($attributes['email'])) {
+            $user = User::where('email', $attributes['email'])->first();
+
+            return $user
+                ? $this->update($user->id, $attributes)
+                : $this->create($attributes);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * @param int   $id
      * @param array $attributes
      * @return bool
@@ -174,8 +191,15 @@ class UserItemService extends BaseItemService
             $currentKitas = $item->kitas->pluck('id');
             $newKitas     = collect($attributes['kitas']);
 
-            $item->users()->attach(
-                $currentKitas->diff($newKitas)->merge($newKitas->diff($currentKitas))
+            $newKitasIds = $currentKitas->diff($newKitas)->merge($newKitas->diff($currentKitas));
+
+            $item->kitas()->attach($newKitasIds);
+
+            $item->sendConnectedToKitasNotification(
+                $item->kitas()
+                    ->whereIn('id', $newKitasIds)
+                    ->pluck('name')
+                    ->toArray()
             );
         }
     }

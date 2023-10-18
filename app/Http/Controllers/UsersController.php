@@ -6,6 +6,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Users\CreateUserFromKitaRequest;
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
@@ -61,9 +62,9 @@ class UsersController extends BaseController
      */
     public function index(Request $request)
     {
-        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToUsers', User::class);
 
-        $currentUser = $request->user();
+        $currentUser = $request->user()->loadMissing(['kitas']);
         $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'full_name', 'email']);
 
         $usersFilters = ['paginated' => true];
@@ -72,6 +73,14 @@ class UsersController extends BaseController
         if ($currentUser->is_admin) {
             $rolesFilters['exclude_name'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
 //            $usersFilters['without_roles'] = [config('permission.project_roles.super_admin'), config('permission.project_roles.admin')];
+        } else if ($currentUser->is_manager) {
+            $rolesFilters['only_name']  = [config('permission.project_roles.manager'), config('permission.project_roles.employer')];
+            $usersFilters['with_roles'] = [config('permission.project_roles.manager'), config('permission.project_roles.employer')];
+
+            // ID 999999 is used so that if no Kita is associated with the manager, it does not display a list of all users
+            $usersFilters['with_kitas'] = $currentUser->kitas->count() > 0 ? $currentUser->kitas->pluck('id') : 999999;
+        } else {
+            //
         }
 
         $result = $this->userItemService->collection(array_merge($args, $usersFilters));
@@ -88,7 +97,7 @@ class UsersController extends BaseController
      */
     public function show(Request $request, User $user)
     {
-        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         return Inertia::render('Users/Partials/ManageUser', [
             'user' => $user,
@@ -103,7 +112,7 @@ class UsersController extends BaseController
      */
     public function edit(Request $request, User $user)
     {
-        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 
@@ -134,12 +143,28 @@ class UsersController extends BaseController
      */
     public function store(CreateUserRequest $request)
     {
-        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToUsers', User::class);
 
         $attributes = $request->validated();
         $result     = $this->userItemService->create(array_merge($attributes, [
             'password' => Str::random(20),
         ]));
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
+            : Redirect::back()->withErrors(__('crud.users.create_error'));
+    }
+
+    /**
+     * @param CreateUserFromKitaRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeFromKita(CreateUserFromKitaRequest $request)
+    {
+        $this->authorize('authorizeAccessToUsers', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->createFromKita($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
@@ -154,7 +179,7 @@ class UsersController extends BaseController
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 
@@ -182,7 +207,7 @@ class UsersController extends BaseController
      */
     public function destroy(Request $request, User $user)
     {
-        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 
@@ -216,7 +241,7 @@ class UsersController extends BaseController
      */
     public function restore(Request $request, User $user)
     {
-        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 

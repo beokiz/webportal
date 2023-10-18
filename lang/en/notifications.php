@@ -94,4 +94,18 @@ return [
         'fourth_line' => "Thank you for using Beokiz!",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Connected To Kitas Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'connected_to_kitas' => [
+        'subject_single'      => "Connected to Kita",
+        'subject_multiple'    => "Connected to Kitas",
+        'greeting'            => "Hello :name,",
+        'first_line_single'   => "you have been connected to the :kitas kita.",
+        'first_line_multiple' => "you have been connected to the :kitas kitas.",
+    ],
+
 ];

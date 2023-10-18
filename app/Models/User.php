@@ -10,6 +10,7 @@ namespace App\Models;
 use App\ModelFilters\UserFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
+use App\Notifications\ConnectedToKitasNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TwoFactorVerificationNotification;
@@ -318,6 +319,17 @@ class User extends Authenticatable
     public function sendPasswordChangedNotification() : void
     {
         $this->notify(new PasswordChangedNotification());
+    }
+
+    /**
+     * @param array|null $kitas
+     * @return void
+     */
+    public function sendConnectedToKitasNotification(?array $kitas) : void
+    {
+        if (!empty($kitas)) {
+            $this->notify(new ConnectedToKitasNotification($kitas));
+        }
     }
 
     /*

@@ -51,7 +51,7 @@ const modifiedItems = computed(() => {
         <v-container v-if="kitas.length > 0">
             <v-row>
                 <v-col cols="12">
-                    <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Meine Kitas</h2>
+                    <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Ihre Kitas</h2>
                 </v-col>
                 <v-col cols="12"></v-col>
             </v-row>

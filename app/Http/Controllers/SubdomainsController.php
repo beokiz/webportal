@@ -10,6 +10,7 @@ use App\Http\Requests\Subdomains\CreateSubdomainRequest;
 use App\Http\Requests\Subdomains\ReorderSubdomainsRequest;
 use App\Http\Requests\Subdomains\UpdateSubdomainRequest;
 use App\Models\Subdomain;
+use App\Models\User;
 use App\Services\Items\SubdomainItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -44,7 +45,7 @@ class SubdomainsController extends BaseController
      */
     public function index(Request $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
 
@@ -64,7 +65,7 @@ class SubdomainsController extends BaseController
      */
     public function show(Request $request, Subdomain $subdomain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         return Inertia::render('Domains/Partials/ManageSubdomain', [
             'subdomain' => $subdomain->loadMissing([
@@ -82,7 +83,7 @@ class SubdomainsController extends BaseController
      */
     public function store(CreateSubdomainRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
         $result     = $this->subdomainItemService->create($attributes);
@@ -99,7 +100,7 @@ class SubdomainsController extends BaseController
      */
     public function update(UpdateSubdomainRequest $request, Subdomain $subdomain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
         $result     = $this->subdomainItemService->update($subdomain->id, $attributes);
@@ -116,7 +117,7 @@ class SubdomainsController extends BaseController
      */
     public function destroy(Request $request, Subdomain $subdomain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $result = $this->subdomainItemService->delete($subdomain->id);
 
@@ -132,7 +133,7 @@ class SubdomainsController extends BaseController
      */
     public function restore(Request $request, Subdomain $subdomain)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $result = $this->subdomainItemService->update($subdomain->id, [
             'deleted_at' => null,
@@ -149,7 +150,7 @@ class SubdomainsController extends BaseController
      */
     public function reorder(ReorderSubdomainsRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
         $result     = $this->subdomainItemService->reorder($attributes);
