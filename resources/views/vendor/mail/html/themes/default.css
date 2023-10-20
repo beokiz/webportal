@@ -32,6 +32,9 @@ blockquote {
     line-height: 1.4;
     text-align: left;
 }
+p span {
+    color: #718096 !important;
+}
 
 a {
     color: #3869d4;
