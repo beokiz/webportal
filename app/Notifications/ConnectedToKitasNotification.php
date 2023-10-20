@@ -57,11 +57,13 @@ class ConnectedToKitasNotification extends Notification
     {
         if (is_array($this->kitas)) {
             $kitas = count($this->kitas) > 1
-                ? "<br/> &#x2022; " . implode("<br/> &#x2022; ", (array) $this->kitas)
-                : "<br/> &#x2022; {$this->kitas[0]}";
+                ? "\n &#x2022; " . implode("\n &#x2022; ", (array) $this->kitas)
+                : "\n &#x2022; {$this->kitas[0]}";
         } else {
-            $kitas = "<br/> &#x2022; {$this->kitas}";
+            $kitas = "\n &#x2022; {$this->kitas}";
         }
+
+        $kitas = nl2br($kitas);
 
         return (new CustomMailMessage)
             ->subject(__('notifications.connected_to_kitas.subject'))
