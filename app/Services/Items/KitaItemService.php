@@ -133,16 +133,27 @@ class KitaItemService extends BaseItemService
             if ($removeUsers) {
                 $item->users()->detach($users);
             } else {
-                $currentUsers = $item->users->pluck('id');
-                $newUsers     = collect($users);
+                $kitaUsers = $item->users->pluck('id');
 
-                $newUsersIds = $currentUsers->diff($newUsers)->merge($newUsers->diff($currentUsers));
+                foreach ($users as $userId) {
+                    $userId = (int) $userId;
 
-                $item->users()->attach($newUsersIds);
+                    if (!$kitaUsers->contains($userId)) {
+                        $kitaUsers->add($userId);
+                    }
+                }
 
-                $item->users()->whereIn('id', $newUsersIds)->get()->map(function ($user) use($item) {
-                    $user->sendConnectedToKitasNotification([$item->name]);
-                });
+                if (!empty($kitaUsers)) {
+                    $item->users()->sync($kitaUsers);
+
+                    $item->users()->whereIn('id', $kitaUsers)->get()->map(function ($user) use ($item) {
+                        $user->sendConnectedToKitasNotification(
+                            $user->kitas()
+                                ->pluck('name')
+                                ->toArray()
+                        );
+                    });
+                }
             }
 
             return true;

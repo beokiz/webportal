@@ -101,11 +101,11 @@ return [
     */
 
     'connected_to_kitas' => [
-        'subject_single'      => "Connected to Kita",
-        'subject_multiple'    => "Connected to Kitas",
-        'greeting'            => "Hello :name,",
-        'first_line_single'   => "you have been connected to the :kitas kita.",
-        'first_line_multiple' => "you have been connected to the :kitas kitas.",
+        'subject'     => "Connected to Kitas",
+        'greeting'    => "Hello :name,",
+        'first_line'  => "you have just been assigned to another facility in the BeoKiz traffic light portal. You are now assigned to the following facilities: \n :kitas",
+        'second_line' => "Your access data has not changed as a result.",
+        'third_line'  => "If you believe this assignment is an error, please contact our support at <:support_email>",
     ],
 
 ];

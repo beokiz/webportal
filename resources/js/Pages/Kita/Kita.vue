@@ -201,7 +201,7 @@ const manageKita = async () => {
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Kita</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
-                <v-hover v-slot:default="{ isHovering, props }">
+                <v-hover v-if="!$page.props.auth.user.is_manager" v-slot:default="{ isHovering, props }">
                     <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
                         Anlegen
 
@@ -330,7 +330,7 @@ const manageKita = async () => {
                                 <span>Kita bearbeiten</span>
                             </v-tooltip>
 
-                            <v-tooltip location="top">
+                            <v-tooltip v-if="!$page.props.auth.user.is_manager" location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteKitaDialog(item.raw)">mdi-delete</v-icon>
                                 </template>

@@ -55,12 +55,20 @@ class ConnectedToKitasNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $isMultiply = is_array($this->kitas) && count($this->kitas) > 1;
+        if (is_array($this->kitas)) {
+            $kitas = count($this->kitas) > 1
+                ? "<br/> &#x2022; " . implode("<br/> &#x2022; ", (array) $this->kitas)
+                : "<br/> &#x2022; {$this->kitas[0]}";
+        } else {
+            $kitas = "<br/> &#x2022; {$this->kitas}";
+        }
 
         return (new CustomMailMessage)
-            ->subject(__($isMultiply ? 'notifications.connected_to_kitas.subject_multiple' : 'notifications.connected_to_kitas.subject_single'))
+            ->subject(__('notifications.connected_to_kitas.subject'))
             ->greeting(__('notifications.connected_to_kitas.greeting', ['name' => $notifiable->full_name]))
-            ->line(__($isMultiply ? 'notifications.connected_to_kitas.first_line_multiple' : 'notifications.connected_to_kitas.first_line_single', ['kitas' => implode(', ', (array) $this->kitas)]));
+            ->line(__('notifications.connected_to_kitas.first_line', ['kitas' => $kitas]))
+            ->line(__('notifications.connected_to_kitas.second_line'))
+            ->line(__('notifications.connected_to_kitas.third_line', ['support_email' => config('app.emails.support')]));
     }
 
     /**

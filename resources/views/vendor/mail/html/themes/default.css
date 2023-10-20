@@ -28,6 +28,7 @@ p,
 ul,
 ol,
 blockquote {
+    color: #718096 !important;
     line-height: 1.4;
     text-align: left;
 }
