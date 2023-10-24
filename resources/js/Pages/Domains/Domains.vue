@@ -270,11 +270,11 @@ const saveNewOrder = (event) => {
 </script>
 
 <template>
-    <Head title="Domains" />
+    <Head title="Domänen" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Domäne</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Domänen</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-slot:default="{ isHovering, props }">

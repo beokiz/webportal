@@ -202,11 +202,11 @@ const manageConnectKitaUser = async () => {
 </script>
 
 <template>
-    <Head :title="`Verwalte Kita ${kita.name}`"/>
+    <Head :title="`Verwalte Einrichtung ${kita.name}`"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Kita</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Einrichtung</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -222,7 +222,7 @@ const manageConnectKitaUser = async () => {
                 <v-row>
                     <v-col cols="12" sm="9">
                         <v-text-field v-model="manageForm.name" :error-messages="errors.name"
-                                      label="Name der Einrichtung / Kita*" required></v-text-field>
+                                      label="Name der Einrichtung / Einrichtung*" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="3">
                         <v-text-field v-model="manageForm.zip_code" :error-messages="errors.zip_code"
@@ -276,7 +276,7 @@ const manageConnectKitaUser = async () => {
                                                 <v-container>
                                                     <v-row>
                                                         <v-col cols="12">
-                                                            <p>Wählen Sie die Benutzer aus, die Sie diesem Kita hinzufügen möchten</p>
+                                                            <p>Wählen Sie die Benutzer aus, die Sie diesem Einrichtung hinzufügen möchten</p>
                                                         </v-col>
                                                     </v-row>
                                                     <v-row>
@@ -392,7 +392,7 @@ const manageConnectKitaUser = async () => {
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <p>Sind Sie sicher, dass Sie den Benutzer {{deletingItemName}} aus Kita Liste löschen möchten? (Der Benutzer wird vom aktuellen Kita getrennt)</p>
+                                        <p>Sind Sie sicher, dass Sie den Benutzer {{deletingItemName}} aus Einrichtung Liste löschen möchten? (Der Benutzer wird vom aktuellen Einrichtung getrennt)</p>
                                     </v-col>
                                 </v-row>
                             </v-container>

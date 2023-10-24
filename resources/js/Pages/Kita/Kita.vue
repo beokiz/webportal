@@ -194,11 +194,11 @@ const manageKita = async () => {
 </script>
 
 <template>
-    <Head title="Kita" />
+    <Head title="Einrichtungen" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Kita</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Einrichtungen</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-if="!$page.props.auth.user.is_manager" v-slot:default="{ isHovering, props }">
@@ -208,7 +208,7 @@ const manageKita = async () => {
                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                             <v-card height="80vh">
                                 <v-card-title>
-                                    <span class="tw-text-h5">Verwalte Kita</span>
+                                    <span class="tw-text-h5">Verwalte Einrichtung</span>
                                 </v-card-title>
 
                                 <v-card-text>
@@ -216,7 +216,7 @@ const manageKita = async () => {
                                         <v-row>
                                             <v-col cols="12" sm="9">
                                                 <v-text-field v-model="manageForm.name" :error-messages="errors.name"
-                                                              label="Name der Einrichtung / Kita*" required></v-text-field>
+                                                              label="Name der Einrichtung / Einrichtung*" required></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="3">
                                                 <v-text-field v-model="manageForm.zip_code" :error-messages="errors.zip_code"
@@ -250,7 +250,7 @@ const manageKita = async () => {
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <p>Sind Sie sicher, dass Sie die Kita {{deletingItemName}} löschen möchten?</p>
+                                    <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -327,14 +327,14 @@ const manageKita = async () => {
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
-                                <span>Kita bearbeiten</span>
+                                <span>Einrichtung bearbeiten</span>
                             </v-tooltip>
 
                             <v-tooltip v-if="!$page.props.auth.user.is_manager" location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteKitaDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
-                                <span>Kita löschen</span>
+                                <span>Einrichtung löschen</span>
                             </v-tooltip>
                         </td>
                     </tr>

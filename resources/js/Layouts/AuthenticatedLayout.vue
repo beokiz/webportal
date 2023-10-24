@@ -22,18 +22,16 @@ let menuItemsList = ref({});
 let menuGroupsList = ref({});
 
 onMounted(() => {
-    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager) {
+    if (currentUser.is_super_admin || currentUser.is_admin) {
         menuItemsList.value['users.index'] = 'Benutzer';
         menuGroupsList.value['users.index'] = 'users.*';
-    }
 
-    if (currentUser.is_super_admin || currentUser.is_admin) {
         menuItemsList.value['domains.index'] = 'Meilensteinliste';
         menuGroupsList.value['domains.index'] = 'domains.*';
     }
 
     if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager) {
-        menuItemsList.value['kitas.index'] = 'Kitas';
+        menuItemsList.value['kitas.index'] = 'Einrichtungen';
         menuGroupsList.value['kitas.index'] = 'kitas.*';
     }
 

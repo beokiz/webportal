@@ -9,6 +9,7 @@ namespace App\Services\Items;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * User Item Service
@@ -105,9 +106,13 @@ class UserItemService extends BaseItemService
         if (!empty($attributes['email'])) {
             $user = User::where('email', $attributes['email'])->first();
 
-            return $user
-                ? $this->update($user->id, $attributes)
-                : $this->create($attributes);
+            if ($user) {
+                return $this->update($user->id, $attributes);
+            } else {
+                return $this->create(array_merge($attributes, [
+                    'password' => Str::random(20),
+                ]));
+            }
         } else {
             return null;
         }

@@ -101,7 +101,7 @@ return [
     */
 
     'connected_to_kitas' => [
-        'subject'     => "Mit Kitas verbunden",
+        'subject'     => "Mit Einrichtungen verbunden",
         'greeting'    => "Hallo :name,",
         'first_line'  => "sie wurden soeben im BeoKiz-Ampel-Portal einer weiteren Einrichtung zugeordnet. Sie sind nun folgenden Einrichtungen zugeordnet: \n :kitas",
         'second_line' => "Ihre Zugangsdaten haben sich hierdurch nicht verändert.",

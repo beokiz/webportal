@@ -62,7 +62,8 @@ class UsersController extends BaseController
      */
     public function index(Request $request)
     {
-        $this->authorize('authorizeAccessToUsers', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToUsers', User::class);
 
         $currentUser = $request->user()->loadMissing(['kitas']);
         $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'full_name', 'email']);
@@ -97,7 +98,8 @@ class UsersController extends BaseController
      */
     public function show(Request $request, User $user)
     {
-        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         return Inertia::render('Users/Partials/ManageUser', [
             'user' => $user,
@@ -112,7 +114,8 @@ class UsersController extends BaseController
      */
     public function edit(Request $request, User $user)
     {
-        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 
@@ -143,7 +146,8 @@ class UsersController extends BaseController
      */
     public function store(CreateUserRequest $request)
     {
-        $this->authorize('authorizeAccessToUsers', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToUsers', User::class);
 
         $attributes = $request->validated();
         $result     = $this->userItemService->create(array_merge($attributes, [
@@ -179,7 +183,8 @@ class UsersController extends BaseController
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 
@@ -207,7 +212,8 @@ class UsersController extends BaseController
      */
     public function destroy(Request $request, User $user)
     {
-        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 
@@ -241,7 +247,8 @@ class UsersController extends BaseController
      */
     public function restore(Request $request, User $user)
     {
-        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
         $currentUser = $request->user();
 
