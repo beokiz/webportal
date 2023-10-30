@@ -44,6 +44,24 @@ const loading = ref(false);
 onMounted(() => {
     generatedUUID.value = uuidv4();
     manageForm.uuid = generatedUUID.value;
+
+    // Prepare evaluation data
+    let ratingsData = [];
+
+    props.domains.forEach(function(item1, index1) {
+        ratingsData[index1] = {
+            domain: item1.id,
+            milestones: [],
+        }
+
+        item1.subdomains.forEach(function(item2, index2) {
+            item2.milestones.forEach(function(item3, index3) {
+                ratingsData[index1].milestones.push({ id: item3.id, value: null });
+            });
+        });
+    });
+
+    manageForm.ratings = ratingsData;
 });
 
 
@@ -151,7 +169,7 @@ const manageEvaluation = async () => {
 
                 <v-row>
                     <div class="domains-list-container"
-                         v-for="domain in domains"
+                         v-for="(domain, domainIndex) in domains"
                          :key="domain.id">
                         <!--                                                green yellow-->
                         <h3>{{domain.name}}</h3>
@@ -176,7 +194,7 @@ const manageEvaluation = async () => {
                             </div>
 
                             <div class="milestone-list-container"
-                                 v-for="milestone in subdomain.milestones"
+                                 v-for="(milestone, milestoneIndex) in subdomain.milestones"
                                  :key="milestone.id">
                                 <h5>{{milestone.abbreviation}}</h5>
                                 <div class="milestone-list-text">
@@ -184,8 +202,9 @@ const manageEvaluation = async () => {
                                     <p>{{milestone.text}}</p>
                                 </div>
 
-                                <fieldset>
+                                <fieldset :class="{ error: errors[`ratings.${domainIndex}.milestones.${milestoneIndex}.value`] }">
                                     <div class="radio-wrap radio-content">
+                                        {{``}}
                                         <input type="radio" :name="milestone.id + 'check-radio'" value="1" @click="updateRatingData(domain.id, milestone.id, 1)"/>
                                     </div>
                                     <div class="radio-wrap radio-content">

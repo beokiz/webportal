@@ -142,6 +142,9 @@ div#stripe-cardElement {
     .milestone-list-container{
         display: flex;
         padding: 10px;
+        .error{
+            background-color: #ff000014;
+        }
         h5{
             width: 15%;
         }
