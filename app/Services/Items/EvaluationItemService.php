@@ -43,7 +43,7 @@ class EvaluationItemService extends BaseItemService
          * Filter & order query
          */
         $query = Evaluation::query()->filter($filters)
-            ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc');
+            ->customOrderBy($params->order_by ?? 'id', $params->sort === 'desc');
 
         /*
          * Return results

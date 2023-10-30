@@ -22,7 +22,6 @@ const props = defineProps({
     sort: String,
     filters: Object,
     errors: Object,
-    domains: Array,
 });
 
 /*
