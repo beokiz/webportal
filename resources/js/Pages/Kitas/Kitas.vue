@@ -31,7 +31,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Kita/Kita' && newProps) {
+    if (pageType === 'Kitas/Kitas' && newProps) {
         currentPage.value = newProps.currentPage;
         perPage.value = newProps.perPage;
         orderBy.value = newProps.orderBy;
@@ -41,6 +41,7 @@ Inertia.on('success', (event) => {
         searchFilter.value = newProps.filters.search ?? null;
     }
 });
+
 /*
  * Main data
  */
@@ -101,6 +102,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
         searchFilter.value = null;
     }
+
     if (
         (page === currentPage.value && clearFilters) ||
         allFiltersEmpty ||

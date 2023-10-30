@@ -108,7 +108,7 @@ onMounted(() => {
     Sortable.create(document.querySelector('.v-data-table tbody'), options);
 });
 
-//Watch
+// Watch
 watch(dialog, (val) => {
     if (!val) {
         close();
@@ -120,6 +120,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
         searchFilter.value = null;
     }
+
     if (
         (page === currentPage.value && clearFilters) ||
         allFiltersEmpty ||

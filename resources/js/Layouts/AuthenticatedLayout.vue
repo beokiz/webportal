@@ -22,6 +22,11 @@ let menuItemsList = ref({});
 let menuGroupsList = ref({});
 
 onMounted(() => {
+    if (currentUser.is_super_admin || currentUser.is_manager || currentUser.is_employer) {
+        menuItemsList.value['evaluations.index'] = 'Einschätzen';
+        menuGroupsList.value['evaluations.index'] = 'evaluations.*';
+    }
+
     if (currentUser.is_super_admin || currentUser.is_admin) {
         menuItemsList.value['users.index'] = 'Benutzer';
         menuGroupsList.value['users.index'] = 'users.*';

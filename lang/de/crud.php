@@ -132,4 +132,29 @@ return [
         'reorder_error'       => "Fehler! Beim Neuanordnen der Einrichtungen ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Evaluation CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'evaluations' => [
+        'create_success'      => "Die Bewertung wurde erfolgreich erstellt.",
+        'create_error'        => "Fehler! Etwas ist beim Erstellen einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
+        'update_success'      => "Die Bewertung wurde erfolgreich aktualisiert.",
+        'update_error'        => "Fehler! Etwas ist beim Aktualisieren einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
+        'update_denied'       => "Fehler! Die ausgewählte Bewertung kann nicht aktualisiert werden.",
+        'save_success'        => "Die Bewertung wurde erfolgreich gespeichert.",
+        'save_error'          => "Fehler! Etwas ist beim Speichern einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
+        'save_denied'         => "Fehler! Die ausgewählte Bewertung kann nicht gespeichert werden.",
+        'delete_success'      => "Die Bewertung wurde erfolgreich gelöscht.",
+        'delete_error'        => "Fehler! Etwas ist beim Löschen einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
+        'delete_denied'       => "Fehler! Die ausgewählte Bewertung kann nicht gelöscht werden.",
+        'delete_users_denied' => "Fehler! Die ausgewählte Bewertung hat zugehörige Benutzer und kann daher nicht gelöscht werden.",
+        'restore_success'     => "Die Bewertung wurde erfolgreich wiederhergestellt.",
+        'restore_error'       => "Fehler! Etwas ist beim Wiederherstellen einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
+        'restore_denied'      => "Fehler! Die ausgewählte Bewertung kann nicht wiederhergestellt werden.",
+    ]
+    ,
+
 ];

@@ -65,7 +65,7 @@ class KitaController extends BaseController
             'paginated' => true,
         ]));
 
-        return Inertia::render('Kita/Kita', $this->prepareItemsCollection($result, [
+        return Inertia::render('Kitas/Kitas', $this->prepareItemsCollection($result, [
             'filters' => $request->only(['search']),
         ]));
     }
@@ -83,7 +83,7 @@ class KitaController extends BaseController
         $roleItemService = app(RoleItemService::class);
         $userItemService = app(UserItemService::class);
 
-        return Inertia::render('Kita/Partials/ManageKita', [
+        return Inertia::render('Kitas/Partials/ManageKita', [
             'kita'  => $kita->loadMissing(['users']),
             'roles' => $roleItemService->collection(['only_name' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
             'users' => $userItemService->collection(['with_roles' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),

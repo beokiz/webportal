@@ -42,4 +42,22 @@ class DomainFilter extends BaseFilter
         return $this->where('name', 'LIKE', '%' . trim($value) . '%')
             ->orWhere('abbreviation', 'LIKE', '%' . trim($value) . '%');
     }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function only($values) : ModelFilter
+    {
+        return $this->whereIn('id', (array) $values);
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function exclude($values) : ModelFilter
+    {
+        return $this->whereNotIn('id', (array) $values);
+    }
 }

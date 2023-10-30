@@ -26,7 +26,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Kita/Partials/ManageKita' && newProps) {
+    if (pageType === 'Kitas/Partials/ManageKita' && newProps) {
         editedKita.value = newProps.kita;
     }
 });
@@ -206,7 +206,7 @@ const manageConnectKitaUser = async () => {
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Einrichtung</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Einrichtung {{ kita.name }}</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">

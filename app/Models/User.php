@@ -21,6 +21,7 @@ use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -337,8 +338,19 @@ class User extends Authenticatable
     | Define Model Relations
     |--------------------------------------------------------------------------
     */
+    /**
+     * @return BelongsToMany
+     */
     public function kitas() : BelongsToMany
     {
         return $this->BelongsToMany(Kita::class, 'kita_has_users', 'user_id', 'kita_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function evaluations() : HasMany
+    {
+        return $this->hasMany(Subdomain::class, 'user_id', 'id');
     }
 }

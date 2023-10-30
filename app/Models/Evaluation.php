@@ -6,22 +6,22 @@
 
 namespace App\Models;
 
-use App\ModelFilters\KitaFilter;
+use App\ModelFilters\EvaluationFilter;
+use App\ModelFilters\MilestoneFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Kita Model
+ * Evaluation Model
  *
  * @mixin \Eloquent
  * @package \App\Models
  */
-class Kita extends Model
+class Evaluation extends Model
 {
     use HasFactory, Filterable, HasOrderScope, CanGetTableNameStatically;
 
@@ -30,7 +30,7 @@ class Kita extends Model
     /**
      * @var string
      */
-    protected $table = 'kitas';
+    protected $table = 'evaluations';
 
     /**
      * The attributes that are mass assignable.
@@ -38,10 +38,13 @@ class Kita extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'name',
-        'order',
-        'zip_code',
-        'deleted_at',
+        'uuid',
+        'user_id',
+        'kita_id',
+        'age',
+        'is_daz',
+        'data',
+        'finished_at',
     ];
 
     /**
@@ -50,7 +53,8 @@ class Kita extends Model
      * @var array
      */
     protected $casts = [
-        'order' => 'integer',
+        'is_daz' => 'boolean',
+        'data'   => 'array',
     ];
 
     /**
@@ -58,7 +62,7 @@ class Kita extends Model
      */
     public function modelFilter() : ?string
     {
-        return $this->provideFilter(KitaFilter::class);
+        return $this->provideFilter(EvaluationFilter::class);
     }
 
     /*
@@ -67,18 +71,18 @@ class Kita extends Model
     |--------------------------------------------------------------------------
     */
     /**
-     * @return BelongsToMany
+     * @return BelongsTo
      */
-    public function users() : BelongsToMany
+    public function user() : BelongsTo
     {
-        return $this->BelongsToMany(User::class, 'kita_has_users', 'kita_id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function evaluations() : HasMany
+    public function kita() : BelongsTo
     {
-        return $this->hasMany(Subdomain::class, 'user_id', 'id');
+        return $this->belongsTo(Kita::class, 'kita_id', 'id');
     }
 }

@@ -99,7 +99,7 @@ const someFiltersNotEmpty = computed(() => {
 });
 
 
-//Watch
+// Watch
 watch(dialog, (val) => {
     if (!val) {
         close();
@@ -112,6 +112,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         fullNameFilter.value = null;
         emailFilter.value = null;
     }
+
     if (
         (page === currentPage.value && clearFilters) ||
         allFiltersEmpty ||
