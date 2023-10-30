@@ -12,6 +12,7 @@ use App\Http\Requests\Evaluations\UpdateEvaluationRequest;
 use App\Models\Evaluation;
 use App\Models\User;
 use App\Services\Items\DomainItemService;
+use App\Services\Items\EvaluationItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -29,7 +30,7 @@ class EvaluationController extends BaseController
     protected $evaluationItemService;
 
     /**
-     * KitaController constructor.
+     * EvaluationController constructor.
      *
      * @param EvaluationItemService $evaluationItemService
      * @return void
