@@ -245,6 +245,9 @@ const manageEvaluation = async () => {
 <!--                    </v-card-actions>-->
 <!--                </v-card>-->
 <!--            </v-dialog>-->
+
+<!--            <a :href="route('evaluations.pdf', { id: 11 })">downloadContractdownloadContract</a>-->
+            {{items}}
         </template>
 
 <!--        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">-->

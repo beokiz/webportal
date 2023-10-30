@@ -38,6 +38,7 @@ Inertia.on('success', (event) => {
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
 const generatedUUID = ref(null);
+const errors = ref(props.errors || {});
 const loading = ref(false);
 
 // onMounted
@@ -163,13 +164,16 @@ const manageEvaluation = async () => {
                         ></v-select>
                     </v-col>
                     <v-col cols="12" sm="2">
-                        <v-checkbox label="Ist Daz"></v-checkbox>
+                        <v-checkbox
+                            v-model="manageForm.is_daz"
+                            label="Ist Daz"
+                        ></v-checkbox>
                     </v-col>
                 </v-row>
 
                 <v-row>
                     <div class="domains-list-container"
-                         v-for="(domain, domainIndex) in domains"
+                         v-for="domain in domains"
                          :key="domain.id">
                         <!--                                                green yellow-->
                         <h3>{{domain.name}}</h3>
@@ -194,7 +198,7 @@ const manageEvaluation = async () => {
                             </div>
 
                             <div class="milestone-list-container"
-                                 v-for="(milestone, milestoneIndex) in subdomain.milestones"
+                                 v-for="milestone in subdomain.milestones"
                                  :key="milestone.id">
                                 <h5>{{milestone.abbreviation}}</h5>
                                 <div class="milestone-list-text">
@@ -202,9 +206,8 @@ const manageEvaluation = async () => {
                                     <p>{{milestone.text}}</p>
                                 </div>
 
-                                <fieldset :class="{ error: errors[`ratings.${domainIndex}.milestones.${milestoneIndex}.value`] }">
+                                <fieldset :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
                                     <div class="radio-wrap radio-content">
-                                        {{``}}
                                         <input type="radio" :name="milestone.id + 'check-radio'" value="1" @click="updateRatingData(domain.id, milestone.id, 1)"/>
                                     </div>
                                     <div class="radio-wrap radio-content">

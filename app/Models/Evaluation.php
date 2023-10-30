@@ -11,9 +11,11 @@ use App\ModelFilters\MilestoneFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Evaluation Model
@@ -53,9 +55,32 @@ class Evaluation extends Model
      * @var array
      */
     protected $casts = [
-        'is_daz' => 'boolean',
-        'data'   => 'array',
+        'is_daz'      => 'boolean',
+        'data'        => 'array',
+        'finished_at' => 'datetime',
+        'editable'    => 'boolean',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<string>
+     */
+    protected $appends = [
+        'editable',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function editable() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => !is_null($this->finished_at)
+                ? Carbon::now()->diffInMinutes($this->finished_at, false) < 15
+                : false,
+        );
+    }
 
     /**
      * @return string|null

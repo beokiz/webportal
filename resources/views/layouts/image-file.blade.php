@@ -3,11 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    {{--    <link href="{{ resource_path('css/reports.css') }}" rel="stylesheet">--}}
-    {{--    <link href="{{ asset('css/reports.css') }}" rel="stylesheet">--}}
+    {{--    <link href="{{ resource_path('css/image.css') }}" rel="stylesheet">--}}
+    {{--    <link href="{{ asset('css/image.css') }}" rel="stylesheet">--}}
 
     <style type="text/css">
-        {!! file_get_contents(resource_path('css/reports.css')) !!}
+        {!! file_get_contents(resource_path('css/images.css')) !!}
     </style>
 </head>
 <body>

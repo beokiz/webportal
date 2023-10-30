@@ -66,8 +66,8 @@ const manageForm = useForm({
     first_name: editedUser.value.first_name,
     last_name: editedUser.value.last_name,
     email: editedUser.value.email,
-    // password: null,
-    // password_confirmation: null,
+    password: null,
+    password_confirmation: null,
     role: editedUser.value.primary_role_id,
     two_factor_auth_enabled: editedUser.value.two_factor_auth_enabled,
 });

@@ -17,6 +17,19 @@ use Illuminate\Validation\Rule;
 class CreateEvaluationRequest extends BaseFormRequest
 {
     /**
+     * @return void
+     */
+    protected function prepareForValidation() : void
+    {
+        /*
+         * Prepare boolean fields
+         */
+        $this->prepareBooleanFieldsForValidation([
+            'is_daz',
+        ]);
+    }
+
+    /**
      * @return array
      */
     public function rules() : array
@@ -30,8 +43,8 @@ class CreateEvaluationRequest extends BaseFormRequest
             'ratings'                      => ['required', 'array'],
             'ratings.*.domain'             => ['required', $this->domainExistRule()],
             'ratings.*.milestones'         => ['required', 'array'],
-            'ratings.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
-            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(), ['required']),
+//            'ratings.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
+//            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(), ['required']),
         ];
     }
 

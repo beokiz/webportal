@@ -17,6 +17,14 @@ use Illuminate\Validation\Rule;
 class SaveEvaluationRequest extends CreateEvaluationRequest
 {
     /**
+     * @return void
+     */
+    protected function prepareForValidation() : void
+    {
+        parent::prepareForValidation();
+    }
+
+    /**
      * @return array
      */
     public function rules() : array

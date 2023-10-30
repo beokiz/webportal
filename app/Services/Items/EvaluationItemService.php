@@ -6,8 +6,10 @@
 
 namespace App\Services\Items;
 
+use App\Interfaces\FileGenerators\PdfGeneratorServiceInterface;
 use App\Models\Evaluation;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
@@ -77,6 +79,40 @@ class EvaluationItemService extends BaseItemService
     }
 
     /**
+     * @param int $id
+     * @return mixed
+     */
+    public function exportInPdf(int $id)
+    {
+        $pdfGeneratorService = app(PdfGeneratorServiceInterface::class);
+
+        $item = $this->find($id, true);
+
+        $pdfHeaderFooterData = [
+            'header' => [
+                'current_time' => Carbon::now()->format('M j Y h:i A'),
+            ],
+            'footer' => [
+                'display_document_meta' => true,
+            ],
+        ];
+
+        return $pdfGeneratorService->createFromBlade(
+            'file-templates.pdf.evaluation',
+            $item,
+            [
+                'margin-top'    => 25,
+                'margin-right'  => 10,
+                'margin-bottom' => 25,
+                'margin-left'   => 10,
+                'header-html'   => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
+                'footer-html'   => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
+            ],
+            false
+        );
+    }
+
+    /**
      * @param array $attributes
      * @return ?Evaluation
      */
@@ -124,13 +160,9 @@ class EvaluationItemService extends BaseItemService
         if (!empty($attributes['id'])) {
             $item = $this->find($attributes['id']);
 
-            if ($item) {
-                return $this->update($item->id, $attributes);
-            } else {
-                return $this->create($attributes);
-            }
+            return $this->update($item->id, $attributes);
         } else {
-            return null;
+            return $this->create($attributes);
         }
     }
 
@@ -171,7 +203,7 @@ class EvaluationItemService extends BaseItemService
         }
 
         if (!empty($attributes['ratings'])) {
-            $attributes['ratings'] = $this->calculateRating(
+            $attributes['data'] = $this->calculateRating(
                 $attributes['ratings'],
                 (!empty($attributes['age']) && $attributes['age'] === '4.5'),
                 !empty($attributes['is_daz'])
@@ -201,7 +233,7 @@ class EvaluationItemService extends BaseItemService
 
         $domainsArr = array_column($data, 'milestones', 'domain');
 
-        if (!empty($domains)) {
+        if (!empty($domainsArr)) {
             $domainItemService = app(DomainItemService::class);
 
             $domains = $domainItemService->collection(['only' => array_keys($domainsArr)], [

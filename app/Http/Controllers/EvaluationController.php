@@ -14,8 +14,11 @@ use App\Models\User;
 use App\Services\Items\DomainItemService;
 use App\Services\Items\EvaluationItemService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Evaluation Controller
@@ -91,6 +94,24 @@ class EvaluationController extends BaseController
     }
 
     /**
+     * @param Request    $request
+     * @param Evaluation $evaluation
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function pdf(Request $request, Evaluation $evaluation) : BinaryFileResponse
+    {
+        $this->authorize('authorizeAccessToEvaluations', User::class);
+        $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
+
+        $data = $this->evaluationItemService->exportInPdf($evaluation->id);
+
+        return Response::download($data, basename($data), [
+            'Content-Type'        => mime_content_type($data),
+            'Content-Disposition' => 'attachment; filename="' . basename($data) . '"',
+        ]);
+    }
+
+    /**
      * @param Request $request
      * @return \Inertia\Response
      */
@@ -102,13 +123,30 @@ class EvaluationController extends BaseController
 
         $domainItemService = app(DomainItemService::class);
 
+        $domains = $domainItemService->collection([], [
+            'subdomains' => function ($query) {
+                $query->orderBy('order')->with(['milestones']);
+            },
+        ])->transform(function ($domain, $domainIndex) {
+            $milestoneIndex = 0;
+
+            $domain->subdomains = $domain->subdomains->transform(function ($subdomain) use ($domainIndex, &$milestoneIndex) {
+                $subdomain->milestones = $subdomain->milestones->transform(function ($milestone) use ($domainIndex, &$milestoneIndex) {
+                    $milestone->index        = $milestoneIndex++;
+                    $milestone->domain_index = $domainIndex;
+
+                    return $milestone;
+                });
+
+                return $subdomain;
+            });
+
+            return $domain;
+        });
+
         return Inertia::render('Evaluations/Partials/CreateEvaluation', [
             'kitas'   => $currentUser->kitas,
-            'domains' => $domainItemService->collection([], [
-                'subdomains' => function ($query) {
-                    $query->orderBy('order')->with(['milestones']);
-                },
-            ]),
+            'domains' => $domains,
         ]);
     }
 
@@ -121,7 +159,9 @@ class EvaluationController extends BaseController
         $this->authorize('authorizeAccessToEvaluations', User::class);
 
         $attributes = $request->validated();
-        $result     = $this->evaluationItemService->create($attributes);
+        $result     = $this->evaluationItemService->create(array_merge($attributes, [
+            'finished_at' => Carbon::now(),
+        ]));
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.evaluations.create_success'))

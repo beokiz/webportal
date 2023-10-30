@@ -1,0 +1,59 @@
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
+ */
+
+.domains-list-container {
+    width: 100%;
+}
+.domains-list-container > h3 {
+    margin-bottom: 0 !important;
+    background-color: #cdcdcd;
+    padding: 15px;
+}
+.domains-list-container > h3.green {
+    background-color: #1b914e;
+}
+.domains-list-container > h3.yellow {
+    background-color: #e7bf0c;
+}
+.domains-list-container .subdomains-list-head {
+    display: flex;
+    align-items: center;
+    background-color: #efefef;
+    padding: 10px;
+}
+.domains-list-container .subdomains-list-head h4 {
+    font-style: italic;
+    width: 60%;
+}
+.domains-list-container .subdomains-list-head .radio-wrap {
+    width: 10%;
+    font-size: 13px;
+    text-align: center;
+}
+.domains-list-container .milestone-list-container {
+    display: flex;
+    padding: 10px;
+}
+.domains-list-container .milestone-list-container .error {
+    background-color: rgba(255, 0, 0, 0.0784313725);
+}
+.domains-list-container .milestone-list-container h5 {
+    width: 15%;
+}
+.domains-list-container .milestone-list-container .milestone-list-text {
+    width: 45%;
+    font-size: 15px;
+}
+.domains-list-container .milestone-list-container .milestone-list-text span {
+    font-weight: 600;
+}
+.domains-list-container .milestone-list-container fieldset {
+    width: 40%;
+    display: flex;
+}
+.domains-list-container .milestone-list-container fieldset .radio-content {
+    width: 25%;
+    text-align: center;
+}

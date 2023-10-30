@@ -197,9 +197,10 @@ Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' =>
     Route::get('/', [EvaluationController::class, 'index'])->name('index');
     Route::get('/create', [EvaluationController::class, 'create'])->name('create');
     Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
+    Route::get('/{evaluation}/pdf', [EvaluationController::class, 'pdf'])->name('pdf');
     Route::post('/', [EvaluationController::class, 'store'])->name('store');
     Route::put('/{evaluation}', [EvaluationController::class, 'update'])->name('update');
-    Route::post('/{evaluation}/save', [EvaluationController::class, 'save'])->name('save');
+    Route::post('/save', [EvaluationController::class, 'save'])->name('save');
     Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
 //    Route::post('/{domain}/restore', [EvaluationController::class, 'restore'])->name('restore');
 });
