@@ -47,6 +47,8 @@ class EvaluationController extends BaseController
     {
         $this->authorize('authorizeAccessToEvaluations', User::class);
 
+        $domainItemService = app(DomainItemService::class);
+
         $currentUser = $request->user();
 
         $args = $request->only(['page', 'per_page', 'sort', 'order_by']);
@@ -61,6 +63,11 @@ class EvaluationController extends BaseController
 
         return Inertia::render('Evaluations/Evaluations', $this->prepareItemsCollection($result, [
             'filters' => $request->only([]),
+            'domains'    => $domainItemService->collection([], [
+                'subdomains' => function ($query) {
+                    $query->orderBy('order')->with(['milestones']);
+                },
+            ]),
         ]));
     }
 
