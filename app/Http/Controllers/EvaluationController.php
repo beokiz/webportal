@@ -75,10 +75,13 @@ class EvaluationController extends BaseController
         $this->authorize('authorizeAccessToEvaluations', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
+        $currentUser = $request->user()->loadMissing(['kitas']);
+
         $domainItemService = app(DomainItemService::class);
 
         return Inertia::render('Evaluations/Partials/ManageEvaluation', [
             'evaluation' => $evaluation->loadMissing(['user', 'kita']),
+            'kitas'      => $currentUser->kitas,
             'domains'    => $domainItemService->collection([], [
                 'subdomains' => function ($query) {
                     $query->orderBy('order')->with(['milestones']);
@@ -95,9 +98,12 @@ class EvaluationController extends BaseController
     {
         $this->authorize('authorizeAccessToEvaluations', User::class);
 
+        $currentUser = $request->user()->loadMissing(['kitas']);
+
         $domainItemService = app(DomainItemService::class);
 
         return Inertia::render('Evaluations/Partials/CreateEvaluation', [
+            'kitas'   => $currentUser->kitas,
             'domains' => $domainItemService->collection([], [
                 'subdomains' => function ($query) {
                     $query->orderBy('order')->with(['milestones']);

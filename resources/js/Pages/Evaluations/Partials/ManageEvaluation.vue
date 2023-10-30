@@ -12,8 +12,9 @@ import Sortable from "sortablejs";
 
 const props = defineProps({
     evaluation: Object,
-    errors: Object,
+    kitas: Array,
     domains: Array,
+    errors: Object,
 });
 
 
@@ -36,7 +37,7 @@ Inertia.on('success', (event) => {
 //  */
 // const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 //
-// const editedEvaluation = ref(props.kita);
+// const editedEvaluation = ref(props.evaluation);
 // const errors = ref(props.errors || {});
 // const loading = ref(false);
 // const draggableItem = ref(null);

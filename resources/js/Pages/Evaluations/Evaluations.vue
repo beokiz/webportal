@@ -8,6 +8,8 @@ import {computed, onMounted, ref, watch} from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const props = defineProps({
     items: Array,
@@ -20,6 +22,7 @@ const props = defineProps({
     sort: String,
     filters: Object,
     errors: Object,
+    domains: Array,
 });
 
 /*
@@ -58,13 +61,14 @@ const loading = ref(false);
 const dialog = ref(false);
 const dialogDeleteEvaluation = ref(false);
 const deletingItemName = ref(null);
+const generatedUUID = ref(null);
+import { ages } from "@/Composables/common"
 
 const headers = [
     { title: 'Name', key: 'name', width: '70%', sortable: false},
     { title: 'Postleitzahl', key: 'zip_code', width: '20%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
-
 
 // Computed
 const modifiedItems = computed(() => {
@@ -151,9 +155,42 @@ const clear = () => {
     manageForm.clearErrors();
 };
 
+const generateUUID = () => {
+    generatedUUID.value = uuidv4();
+    manageForm.uuid = generatedUUID.value;
+};
+
+const updateRatingData = (domainId, milestoneId, value) => {
+    let domainIndex = manageForm.ratings.findIndex(function(obj) {
+        return obj.domain === domainId;
+    });
+
+    if (domainIndex !== -1) {
+        let milestoneIndex = manageForm.ratings[domainIndex].milestones.findIndex(function(obj) {
+            return obj.id === milestoneId;
+        });
+
+        if (milestoneIndex !== -1) {
+            manageForm.ratings[domainIndex].milestones[milestoneIndex].value = value;
+        } else {
+            manageForm.ratings[domainIndex].milestones.push({ id: milestoneId, value: value });
+        }
+    } else {
+        manageForm.ratings.push({
+            domain: domainId,
+            milestones: [
+                { id: milestoneId, value: value },
+            ],
+        });
+    }
+};
+
 
 const manageForm = useForm({
-    //
+    age: null,
+    uuid: null,
+    is_daz: false,
+    ratings: []
 });
 
 const manageEvaluation = async () => {
@@ -180,49 +217,11 @@ const manageEvaluation = async () => {
         <template #header>
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Evaluationen</h2>
 
-<!--            <div class="tw-flex tw-items-center tw-justify-end">-->
-<!--                <v-hover v-if="!$page.props.auth.user.is_manager" v-slot:default="{ isHovering, props }">-->
-<!--                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>-->
-<!--                        Anlegen-->
-
-<!--                        <v-dialog v-model="dialog" activator="parent" width="80vw">-->
-<!--                            <v-card height="80vh">-->
-<!--                                <v-card-title>-->
-<!--                                    <span class="tw-text-h5">Verwalte Einrichtung</span>-->
-<!--                                </v-card-title>-->
-
-<!--                                <v-card-text>-->
-<!--                                    <v-container>-->
-<!--                                        <v-row>-->
-<!--                                            <v-col cols="12" sm="9">-->
-<!--                                                <v-text-field v-model="manageForm.name" :error-messages="errors.name"-->
-<!--                                                              label="Name der Einrichtung / Einrichtung*" required></v-text-field>-->
-<!--                                            </v-col>-->
-<!--                                            <v-col cols="12" sm="3">-->
-<!--                                                <v-text-field v-model="manageForm.zip_code" :error-messages="errors.zip_code"-->
-<!--                                                              label="Postleitzahl*" type="number" required></v-text-field>-->
-<!--                                            </v-col>-->
-<!--                                        </v-row>-->
-<!--                                    </v-container>-->
-<!--                                </v-card-text>-->
-
-<!--                                <v-card-actions>-->
-<!--                                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>-->
-<!--                                    </v-hover>-->
-<!--                                    <v-spacer></v-spacer>-->
-<!--                                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>-->
-<!--                                    </v-hover>-->
-<!--                                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                                        <v-btn-primary @click="manageEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>-->
-<!--                                    </v-hover>-->
-<!--                                </v-card-actions>-->
-<!--                            </v-card>-->
-<!--                        </v-dialog>-->
-<!--                    </v-btn>-->
-<!--                </v-hover>-->
-<!--            </div>-->
+            <div class="tw-flex tw-items-center tw-justify-end">
+                <Link :href="route('evaluations.create')">
+                    Anlegen
+                </Link>
+            </div>
 
 <!--            <v-dialog v-model="dialogDeleteEvaluation" width="20vw">-->
 <!--                <v-card height="30vh">-->

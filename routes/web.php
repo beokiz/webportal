@@ -195,10 +195,11 @@ Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'v
  */
 Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [EvaluationController::class, 'index'])->name('index');
-    Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
     Route::get('/create', [EvaluationController::class, 'create'])->name('create');
+    Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
     Route::post('/', [EvaluationController::class, 'store'])->name('store');
     Route::put('/{evaluation}', [EvaluationController::class, 'update'])->name('update');
+    Route::post('/{evaluation}/save', [EvaluationController::class, 'save'])->name('save');
     Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
 //    Route::post('/{domain}/restore', [EvaluationController::class, 'restore'])->name('restore');
 });
