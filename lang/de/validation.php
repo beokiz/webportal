@@ -214,6 +214,8 @@ return [
         'evaluation'  => "Evaluation",
         'evaluations' => "Evaluationen",
 
+        'id'                         => "ID",
+        'uuid'                       => "UUID",
         'email'                      => "Email",
         'password'                   => "Passwort",
         'token'                      => "Zeichen",
@@ -240,6 +242,7 @@ return [
         'zip_code'                   => "Postleitzahl",
         'data'                       => "Daten",
         'value'                      => "Wert",
+        'ratings'                    => "Bewertungen",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

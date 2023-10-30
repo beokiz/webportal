@@ -214,6 +214,7 @@ return [
         'evaluation'  => "Evaluation",
         'evaluations' => "Evaluations",
 
+        'id'                         => "ID",
         'uuid'                       => "UUID",
         'email'                      => "Email",
         'password'                   => "Password",
@@ -241,6 +242,7 @@ return [
         'zip_code'                   => "ZIP code",
         'data'                       => "Data",
         'value'                      => "Value",
+        'ratings'                    => "Ratings",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

@@ -169,9 +169,9 @@ class EvaluationItemService extends BaseItemService
             unset($attributes['kita']);
         }
 
-        if (!empty($attributes['data'])) {
-            $attributes['data'] = $this->calculateRating(
-                $attributes['data'],
+        if (!empty($attributes['ratings'])) {
+            $attributes['ratings'] = $this->calculateRating(
+                $attributes['ratings'],
                 (!empty($attributes['age']) && $attributes['age'] === '4.5'),
                 !empty($attributes['is_daz'])
             );

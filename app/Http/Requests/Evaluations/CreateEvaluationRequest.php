@@ -22,16 +22,16 @@ class CreateEvaluationRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'uuid'                      => ['required', 'uuid'],
-            'user_id'                   => ['required', $this->userExistRule()],
-            'kita_id'                   => ['required', $this->kitaExistRule()],
-            'age'                       => ['required', Rule::in(['2.5', '4.5'])],
-            'is_daz'                    => ['required', 'boolean'],
-            'data'                      => ['required', 'array'],
-            'data.*.domain'             => ['required', $this->domainExistRule()],
-            'data.*.milestones'         => ['required', 'array'],
-            'data.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
-            'data.*.milestones.*.value' => array_merge($this->tinyIntegerRules(), ['required']),
+            'uuid'                         => ['required', 'uuid'],
+            'user_id'                      => ['required', $this->userExistRule()],
+            'kita_id'                      => ['required', $this->kitaExistRule()],
+            'age'                          => ['required', Rule::in(['2.5', '4.5'])],
+            'is_daz'                       => ['required', 'boolean'],
+            'ratings'                      => ['required', 'array'],
+            'ratings.*.domain'             => ['required', $this->domainExistRule()],
+            'ratings.*.milestones'         => ['required', 'array'],
+            'ratings.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
+            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(), ['required']),
         ];
     }
 
@@ -41,8 +41,10 @@ class CreateEvaluationRequest extends BaseFormRequest
     public function attributes() : array
     {
         return [
-            'data.*.milestone' => __('validation.attributes.milestone'),
-            'data.*.value'     => __('validation.attributes.value'),
+            'ratings.*.domain'           => __('validation.attributes.domain'),
+            'ratings.*.milestones'       => __('validation.attributes.milestones'),
+            'ratings.*.milestones.id'    => __('validation.attributes.milestone') . ' ' . __('validation.attributes.id'),
+            'ratings.*.milestones.value' => __('validation.attributes.milestone') . ' ' . __('validation.attributes.value'),
         ];
     }
 }

@@ -28,15 +28,15 @@ class SaveEvaluationRequest extends CreateEvaluationRequest
             'kita_id' => ['nullable', $this->kitaExistRule()],
             'age'     => ['nullable', Rule::in(['2.5', '4.5'])],
             'is_daz'  => ['nullable', 'boolean'],
-            'data'    => ['nullable', 'array'],
+            'ratings' => ['nullable', 'array'],
         ];
 
-        if ($this->input('data')) {
+        if ($this->input('ratings')) {
             array_overwrite($rules, [
-                'data.*.domain'             => ['nullable', $this->domainExistRule()],
-                'data.*.milestones'         => ['nullable', 'array'],
-                'data.*.milestones.*.id'    => ['nullable', $this->milestoneExistRule()],
-                'data.*.milestones.*.value' => array_merge($this->tinyIntegerRules(true , true), ['nullable']),
+                'ratings.*.domain'             => ['nullable', $this->domainExistRule()],
+                'ratings.*.milestones'         => ['nullable', 'array'],
+                'ratings.*.milestones.*.id'    => ['nullable', $this->milestoneExistRule()],
+                'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(true, true), ['nullable']),
             ]);
         }
 
