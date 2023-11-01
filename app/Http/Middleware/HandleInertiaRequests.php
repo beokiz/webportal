@@ -43,9 +43,14 @@ class HandleInertiaRequests extends Middleware
         $user = optional($request->user());
 
         $successes = session()->get('successes') ?? [];
+        $data      = session()->get('data') ?? [];
 
         if (!is_array($successes)) {
             $successes = [$successes];
+        }
+
+        if (!is_array($data)) {
+            $data = [$data];
         }
 
         return array_merge(parent::share($request), [
@@ -54,6 +59,7 @@ class HandleInertiaRequests extends Middleware
                 'canRegister' => Route::has('auth.register'),
                 'user'        => $user->toArray(),
             ],
+            'data'      => $data,
             'successes' => $successes,
             'ziggy'     => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

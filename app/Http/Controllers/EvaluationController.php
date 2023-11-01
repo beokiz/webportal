@@ -162,7 +162,9 @@ class EvaluationController extends BaseController
         ]));
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.evaluations.create_success'))
+            ? Redirect::back()
+                ->withSuccesses(__('crud.evaluations.create_success'))
+                ->withData(['item' => $result])
             : Redirect::back()->withErrors(__('crud.evaluations.create_error'));
     }
 

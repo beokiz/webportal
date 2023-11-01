@@ -250,9 +250,10 @@ class EvaluationItemService extends BaseItemService
                 $milestonesArr    = array_column($domainMilestones, 'value', 'id');
 
                 $domainResult = [
-                    'domain' => $domain->id,
-                    'rating' => 0,
-                    'color'  => null,
+                    'domain'     => $domain->id,
+                    'rating'     => 0,
+                    'color'      => null,
+                    'milestones' => $domainsArr[$domain->id],
                 ];
 
                 /*
