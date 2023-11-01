@@ -147,6 +147,8 @@ return [
         'save_success'        => "Evaluation has been saved successfully.",
         'save_error'          => "Error! Something went wrong while saving a evaluation. Please try again later.",
         'save_denied'         => "Error! Selected evaluation cannot be saved.",
+        'check_success'       => "Evaluation has been checked successfully.",
+        'check_error'         => "Error! Something went wrong while checking a evaluation. Please try again later.",
         'delete_success'      => "Evaluation has been deleted successfully.",
         'delete_error'        => "Error! Something went wrong while deleting a evaluation. Please try again later.",
         'delete_denied'       => "Error! Selected evaluation cannot be deleted.",

@@ -75,7 +75,6 @@ class EvaluationController extends BaseController
      */
     public function show(Request $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToEvaluations', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $currentUser = $request->user()->loadMissing(['kitas']);
@@ -100,7 +99,6 @@ class EvaluationController extends BaseController
      */
     public function pdf(Request $request, Evaluation $evaluation) : BinaryFileResponse
     {
-        $this->authorize('authorizeAccessToEvaluations', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $data = $this->evaluationItemService->exportInPdf($evaluation->id);
@@ -117,7 +115,7 @@ class EvaluationController extends BaseController
      */
     public function create(Request $request)
     {
-        $this->authorize('authorizeAccessToEvaluations', User::class);
+        $this->authorize('authorizeAccessToManageEvaluation', User::class);
 
         $currentUser = $request->user()->loadMissing(['kitas']);
 
@@ -156,7 +154,7 @@ class EvaluationController extends BaseController
      */
     public function store(CreateEvaluationRequest $request)
     {
-        $this->authorize('authorizeAccessToEvaluations', User::class);
+        $this->authorize('authorizeAccessToManageEvaluation', User::class);
 
         $attributes = $request->validated();
         $result     = $this->evaluationItemService->create(array_merge($attributes, [
@@ -175,7 +173,11 @@ class EvaluationController extends BaseController
      */
     public function update(UpdateEvaluationRequest $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
+        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
+
+        if (!$evaluation->editable) {
+            return Redirect::back()->withErrors(__('crud.evaluations.update_denied'));
+        }
 
         $attributes = $request->validated();
         $result     = $this->evaluationItemService->update($evaluation->id, $attributes);
@@ -192,9 +194,9 @@ class EvaluationController extends BaseController
     public function save(SaveEvaluationRequest $request)
     {
         if ($request->input('id')) {
-            $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $request->input('id')]);
+            $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $request->input('id')]);
         } else {
-            $this->authorize('authorizeAccessToEvaluations', User::class);
+            $this->authorize('authorizeAccessToManageEvaluation', User::class);
         }
 
         $attributes = $request->validated();
@@ -212,7 +214,7 @@ class EvaluationController extends BaseController
      */
     public function destroy(Request $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
+        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
 
         $result = $this->evaluationItemService->delete($evaluation->id);
 
@@ -228,7 +230,7 @@ class EvaluationController extends BaseController
      */
     public function restore(Request $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
+        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
 
         $result = $this->evaluationItemService->update($evaluation->id, [
             'deleted_at' => null,

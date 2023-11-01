@@ -45,8 +45,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     private function defineSuperAdmin()
     {
-        Gate::before(function ($user, $ability) {
-            return $user->hasRole(config('permission.project_roles.super_admin')) ? true : null;
-        });
+//        Gate::before(function ($user, $ability) {
+//            return $user->hasRole(config('permission.project_roles.super_admin')) ? true : null;
+//        });
     }
 }

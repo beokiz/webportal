@@ -147,6 +147,8 @@ return [
         'save_success'        => "Die Bewertung wurde erfolgreich gespeichert.",
         'save_error'          => "Fehler! Etwas ist beim Speichern einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
         'save_denied'         => "Fehler! Die ausgewählte Bewertung kann nicht gespeichert werden.",
+        'check_success'       => "Die Auswertung wurde erfolgreich geprüft.",
+        'check_error'         => "Fehler! Beim Überprüfen einer Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
         'delete_success'      => "Die Bewertung wurde erfolgreich gelöscht.",
         'delete_error'        => "Fehler! Etwas ist beim Löschen einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
         'delete_denied'       => "Fehler! Die ausgewählte Bewertung kann nicht gelöscht werden.",
@@ -154,7 +156,6 @@ return [
         'restore_success'     => "Die Bewertung wurde erfolgreich wiederhergestellt.",
         'restore_error'       => "Fehler! Etwas ist beim Wiederherstellen einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
         'restore_denied'      => "Fehler! Die ausgewählte Bewertung kann nicht wiederhergestellt werden.",
-    ]
-    ,
+    ],
 
 ];

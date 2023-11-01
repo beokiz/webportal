@@ -201,4 +201,31 @@ class UserRolePolicy extends BasePolicy
 
         return false;
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToManageEvaluation(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['manager'], $roles['employer']]);
+    }
+
+    /**
+     * @param User $user
+     * @param int  $evaluationId
+     * @return bool
+     */
+    public function authorizeAccessToManageSingleEvaluation(User $user, int $evaluationId) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        if ($this->authorizeRoleAccess($user, [$roles['manager'], $roles['employer']])) {
+            return $user->evaluations->contains('id', $evaluationId);
+        }
+
+        return false;
+    }
 }
