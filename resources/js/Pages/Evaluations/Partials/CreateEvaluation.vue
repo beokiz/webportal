@@ -4,13 +4,14 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, onBeforeMount, ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {Head, useForm, usePage, router, Link} from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ages } from "@/Composables/common"
 import {v4 as uuidv4} from "uuid";
 
+const evaluationResultState = ref(false);
 
 const props = defineProps({
     errors: Object,
@@ -41,19 +42,27 @@ const generatedUUID = ref(null);
 const errors = ref(props.errors || {});
 const loading = ref(false);
 
+const evaluationResult = ref(null);
+
 // onMounted
+onBeforeMount(() => {
+    // Prepare evaluation data
+    setInitialRatingData();
+});
+
 onMounted(() => {
     generatedUUID.value = uuidv4();
     manageForm.uuid = generatedUUID.value;
+});
 
-    // Prepare evaluation data
+const setInitialRatingData = () => {
     let ratingsData = [];
 
     props.domains.forEach(function(item1, index1) {
         ratingsData[index1] = {
             domain: item1.id,
             milestones: [],
-        }
+        };
 
         item1.subdomains.forEach(function(item2, index2) {
             item2.milestones.forEach(function(item3, index3) {
@@ -63,32 +72,6 @@ onMounted(() => {
     });
 
     manageForm.ratings = ratingsData;
-});
-
-
-const updateRatingData = (domainId, milestoneId, value) => {
-    let domainIndex = manageForm.ratings.findIndex(function(obj) {
-        return obj.domain === domainId;
-    });
-
-    if (domainIndex !== -1) {
-        let milestoneIndex = manageForm.ratings[domainIndex].milestones.findIndex(function(obj) {
-            return obj.id === milestoneId;
-        });
-
-        if (milestoneIndex !== -1) {
-            manageForm.ratings[domainIndex].milestones[milestoneIndex].value = value;
-        } else {
-            manageForm.ratings[domainIndex].milestones.push({ id: milestoneId, value: value });
-        }
-    } else {
-        manageForm.ratings.push({
-            domain: domainId,
-            milestones: [
-                { id: milestoneId, value: value },
-            ],
-        });
-    }
 };
 
 
@@ -98,15 +81,23 @@ const manageForm = useForm({
     is_daz: false,
     user_id: currentUser.id,
     kita_id: null,
-    ratings: []
+    ratings: [],
 });
 
 const manageEvaluation = async () => {
     manageForm.processing = true;
 
     manageForm.post(route('evaluations.store'), {
+        // preserveState: false,
         onSuccess: (page) => {
-            close();
+            manageForm.reset();
+            manageForm.clearErrors();
+
+            setInitialRatingData();
+            evaluationResultState.value = true;
+
+            evaluationResult.value = page.props.data;
+            console.log(evaluationResult.value)
         },
         onError: (err) => {
             errors.value = err;
@@ -200,24 +191,26 @@ const manageEvaluation = async () => {
                             <div class="milestone-list-container"
                                  v-for="milestone in subdomain.milestones"
                                  :key="milestone.id">
-                                <h5>{{milestone.abbreviation}}</h5>
-                                <div class="milestone-list-text">
+
+                                <h5 :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">{{milestone.abbreviation}}</h5>
+                                <div class="milestone-list-text"
+                                     :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
                                     <span>{{milestone.title}}</span>
                                     <p>{{milestone.text}}</p>
                                 </div>
 
                                 <fieldset :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
                                     <div class="radio-wrap radio-content">
-                                        <input type="radio" :name="milestone.id + 'check-radio'" value="1" @click="updateRatingData(domain.id, milestone.id, 1)"/>
+                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="1"/>
                                     </div>
                                     <div class="radio-wrap radio-content">
-                                        <input type="radio" :name="milestone.id + 'check-radio'" value="2" @click="updateRatingData(domain.id, milestone.id, 2)"/>
+                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="2"/>
                                     </div>
                                     <div class="radio-wrap radio-content">
-                                        <input type="radio" :name="milestone.id + 'check-radio'" value="3" @click="updateRatingData(domain.id, milestone.id, 3)"/>
+                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="3"/>
                                     </div>
                                     <div class="radio-wrap radio-content">
-                                        <input type="radio" :name="milestone.id + 'check-radio'" value="4" @click="updateRatingData(domain.id, milestone.id, 4)"/>
+                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="4"/>
                                     </div>
                                 </fieldset>
                             </div>
@@ -247,5 +240,33 @@ const manageEvaluation = async () => {
                 </v-row>
             </v-container>
         </div>
+
+
+        <v-dialog v-model="evaluationResultState" width="95vw">
+            <v-card height="95vh">
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12">
+                                <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>
+                            </v-col>
+                            <v-col cols="12">
+                                {{evaluationResult}}
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
+                    </v-hover>
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn-primary @click="deleteEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                    </v-hover>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </AuthenticatedLayout>
 </template>

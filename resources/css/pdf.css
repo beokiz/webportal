@@ -36,7 +36,8 @@
     display: flex;
     padding: 10px;
 }
-.domains-list-container .milestone-list-container .error {
+.domains-list-container .milestone-list-container .error,
+.domains-list-container .milestone-list-container .error + .milestone-list-text{
     background-color: rgba(255, 0, 0, 0.0784313725);
 }
 .domains-list-container .milestone-list-container h5 {

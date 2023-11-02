@@ -9,6 +9,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { v4 as uuidv4 } from 'uuid';
+import { formatDate, formatDateTime } from "@/Composables/common"
 
 
 const props = defineProps({
@@ -64,8 +65,10 @@ const generatedUUID = ref(null);
 import { ages } from "@/Composables/common"
 
 const headers = [
-    { title: 'Name', key: 'name', width: '70%', sortable: false},
-    { title: 'Postleitzahl', key: 'zip_code', width: '20%', sortable: false },
+    { title: 'UUID', key: 'uuid', width: '40%', sortable: false},
+    { title: 'Zullet bearbeitet', key: 'updated_at', width: '15%', sortable: false },
+    { title: 'Abgegeben am', key: 'created_at', width: '15%', sortable: false },
+    { title: 'Bearbetungszeit endet', key: 'finished_at', width: '20%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 
@@ -112,7 +115,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 };
 
 const openDeleteEvaluationDialog = (item) => {
-    deletingItemName.value = item.name
+    deletingItemName.value = item.uuid
     deleteForm.id = item.id;
     dialogDeleteEvaluation.value = true
 };
@@ -222,118 +225,100 @@ const manageEvaluation = async () => {
                 </Link>
             </div>
 
-<!--            <v-dialog v-model="dialogDeleteEvaluation" width="20vw">-->
-<!--                <v-card height="30vh">-->
-<!--                    <v-card-text>-->
-<!--                        <v-container>-->
-<!--                            <v-row>-->
-<!--                                <v-col cols="12">-->
-<!--                                    <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>-->
-<!--                                </v-col>-->
-<!--                            </v-row>-->
-<!--                        </v-container>-->
-<!--                    </v-card-text>-->
+            <v-dialog v-model="dialogDeleteEvaluation" width="20vw">
+                <v-card height="30vh">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12">
+                                    <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
 
-<!--                    <v-card-actions>-->
-<!--                        <v-spacer></v-spacer>-->
-<!--                        <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>-->
-<!--                        </v-hover>-->
-<!--                        <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                            <v-btn-primary @click="deleteEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>-->
-<!--                        </v-hover>-->
-<!--                    </v-card-actions>-->
-<!--                </v-card>-->
-<!--            </v-dialog>-->
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
+                        </v-hover>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="deleteEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                        </v-hover>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
 
 <!--            <a :href="route('evaluations.pdf', { id: 11 })">downloadContractdownloadContract</a>-->
         </template>
 
-<!--        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">-->
-<!--            <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">-->
-<!--                <div class="tw-w-full">-->
-<!--                    <v-row>-->
-<!--                        <v-col cols="12" sm="5">-->
-<!--                            <v-text-field v-model="searchFilter" label="Name"></v-text-field>-->
-<!--                        </v-col>-->
-<!--                    </v-row>-->
-<!--                </div>-->
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+            <v-data-table-server
+                v-model:items-per-page="perPage"
+                :items-per-page-options="[
+                  {value: 10, title: '10'},
+                  {value: 25, title: '25'},
+                  {value: 50, title: '50'},
+                  {value: 100, title: '100'},
+                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}
+                ]"
+                :items-per-page-text="'Objekte pro Seite:'"
+                :headers="headers"
+                :page="currentPage"
+                :items-length="totalItems"
+                :items="modifiedItems"
+                :search="search"
+                v-sortable-data-table
+                :loading="loading"
+                class="data-table-container elevation-1"
+                item-value="name"
+                @update:options="goToPage"
+            >
 
-<!--                <div class="tw-ml-6">-->
-<!--                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                        <v-btn-->
-<!--                            class="tw-mt-2"-->
-<!--                            v-bind="props"-->
-<!--                            :color="isHovering ? 'accent' : 'primary'"-->
-<!--                            @click="search = String(Date.now())"-->
-<!--                            dark-->
-<!--                        >Suche</v-btn>-->
-<!--                    </v-hover>-->
-<!--                </div>-->
-<!--            </div>-->
+                <template v-slot:item="{ item }">
+                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
+                        <td>{{item.selectable.uuid}}</td>
 
-<!--            <v-data-table-server-->
-<!--                v-model:items-per-page="perPage"-->
-<!--                :items-per-page-options="[-->
-<!--                  {value: 10, title: '10'},-->
-<!--                  {value: 25, title: '25'},-->
-<!--                  {value: 50, title: '50'},-->
-<!--                  {value: 100, title: '100'},-->
-<!--                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}-->
-<!--                ]"-->
-<!--                :items-per-page-text="'Objekte pro Seite:'"-->
-<!--                :headers="headers"-->
-<!--                :page="currentPage"-->
-<!--                :items-length="totalItems"-->
-<!--                :items="modifiedItems"-->
-<!--                :search="search"-->
-<!--                v-sortable-data-table-->
-<!--                :loading="loading"-->
-<!--                class="data-table-container elevation-1"-->
-<!--                item-value="name"-->
-<!--                @update:options="goToPage"-->
-<!--            >-->
+                        <td>{{formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
 
-<!--                <template v-slot:item="{ item }">-->
-<!--                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">-->
-<!--                        <td>{{item.selectable.name}}</td>-->
+                        <td>{{formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
 
-<!--                        <td>{{item.selectable.zip_code}}</td>-->
+                        <td>{{formatDateTime(item.selectable.finished_at, 'sv-SE')}}</td>
 
-<!--                        <td>-->
-<!--                            <v-tooltip location="top">-->
-<!--                                <template v-slot:activator="{ props }">-->
-<!--                                    <Link :href="route('evaluations.show', { id: item.selectable.id })">-->
-<!--                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>-->
-<!--                                    </Link>-->
-<!--                                </template>-->
-<!--                                <span>Einrichtung bearbeiten</span>-->
-<!--                            </v-tooltip>-->
+                        <td align="center">
+                            <v-tooltip v-if="item.selectable.editable" location="top">
+                                <template v-slot:activator="{ props }">
+                                    <Link :href="route('evaluations.show', { id: item.selectable.id })">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
+                                    </Link>
+                                </template>
+                                <span>Einrichtung bearbeiten</span>
+                            </v-tooltip>
 
-<!--                            <v-tooltip v-if="!$page.props.auth.user.is_manager" location="top">-->
-<!--                                <template v-slot:activator="{ props }">-->
-<!--                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>-->
-<!--                                </template>-->
-<!--                                <span>Einrichtung löschen</span>-->
-<!--                            </v-tooltip>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                </template>-->
+                            <v-tooltip location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
+                                </template>
+                                <span>Einrichtung löschen</span>
+                            </v-tooltip>
+                        </td>
+                    </tr>
+                </template>
 
-<!--                <template v-slot:no-data>-->
-<!--                    <div class="tw-py-6">-->
-<!--                        <template v-if="allFiltersEmpty">-->
-<!--                            <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>-->
-<!--                        </template>-->
-<!--                        <template v-else>-->
-<!--                            <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>-->
+                <template v-slot:no-data>
+                    <div class="tw-py-6">
+                        <template v-if="allFiltersEmpty">
+                            <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
+                        </template>
+                        <template v-else>
+                            <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>
 
 <!--                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>-->
-<!--                        </template>-->
-<!--                    </div>-->
-<!--                </template>-->
+                        </template>
+                    </div>
+                </template>
 
-<!--            </v-data-table-server>-->
-<!--        </div>-->
+            </v-data-table-server>
+        </div>
     </AuthenticatedLayout>
 </template>
