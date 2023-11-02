@@ -58,7 +58,7 @@ class CheckEvaluationController extends BaseController
      */
     public function index(Request $request)
     {
-        $this->authorize('authorizeAccessToEvaluations', User::class);
+        $this->authorize('authorizeAccessToManageEvaluation', User::class);
 
         return Inertia::render('Evaluations/Evaluations', [
             'domains' => $this->domainItemService->collection(),
@@ -72,7 +72,7 @@ class CheckEvaluationController extends BaseController
      */
     public function show(Request $request, Domain $domain)
     {
-        $this->authorize('authorizeAccessToEvaluations', User::class);
+        $this->authorize('authorizeAccessToManageEvaluation', User::class);
 
         return Inertia::render('Evaluations/Evaluations', [
             'domain' => $domain->loadMissing([

@@ -25,6 +25,9 @@ onMounted(() => {
     if (currentUser.is_super_admin || currentUser.is_manager || currentUser.is_employer) {
         menuItemsList.value['evaluations.index'] = 'Einschätzen';
         menuGroupsList.value['evaluations.index'] = 'evaluations.*';
+
+        menuItemsList.value['check.index'] = 'Prüfen';
+        menuGroupsList.value['check.index'] = 'check.*';
     }
 
     if (currentUser.is_super_admin || currentUser.is_admin) {
