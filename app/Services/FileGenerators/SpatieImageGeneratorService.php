@@ -6,6 +6,8 @@
 
 namespace App\Services\FileGenerators;
 
+use App;
+use App\Exceptions\Custom\FileGeneratorException;
 use App\Interfaces\FileGenerators\ImageGeneratorServiceInterface;
 use Spatie\Browsershot\Browsershot;
 
@@ -69,6 +71,10 @@ class SpatieImageGeneratorService extends BaseFileGeneratorService implements Im
 
             return $path;
         } catch (\Exception $exception) {
+            if (!App::environment('production')) {
+                throw new FileGeneratorException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+
             return false;
         }
     }

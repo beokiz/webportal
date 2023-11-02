@@ -6,6 +6,8 @@
 
 namespace App\Services\FileGenerators;
 
+use App;
+use App\Exceptions\Custom\FileGeneratorException;
 use App\Interfaces\FileGenerators\CsvGeneratorServiceInterface;
 
 /**
@@ -52,6 +54,10 @@ class CsvGeneratorService extends BaseFileGeneratorService implements CsvGenerat
 
             return $path;
         } catch (\Exception $exception) {
+            if (!App::environment('production')) {
+                throw new FileGeneratorException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+
             return false;
         }
     }

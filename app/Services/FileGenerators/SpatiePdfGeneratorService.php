@@ -6,6 +6,8 @@
 
 namespace App\Services\FileGenerators;
 
+use App;
+use App\Exceptions\Custom\FileGeneratorException;
 use App\Interfaces\FileGenerators\PdfGeneratorServiceInterface;
 use Spatie\Browsershot\Browsershot;
 
@@ -83,6 +85,10 @@ class SpatiePdfGeneratorService extends BaseFileGeneratorService implements PdfG
 
             return $path;
         } catch (\Exception $exception) {
+            if (!App::environment('production')) {
+                throw new FileGeneratorException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+
             return false;
         }
     }
