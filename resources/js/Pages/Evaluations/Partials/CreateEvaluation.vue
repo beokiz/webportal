@@ -4,14 +4,13 @@
   -->
 
 <script setup>
-import {computed, onMounted, onBeforeMount, ref, watch} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {Head, useForm, usePage, router, Link} from '@inertiajs/vue3';
+import { onMounted, onBeforeMount, ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { v4 as uuidv4 } from 'uuid';
+import { ages } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ages } from "@/Composables/common"
-import {v4 as uuidv4} from "uuid";
-
-const evaluationResultState = ref(false);
+import EvaluationDomainsList from '@/Components/EvaluationDomainsList.vue';
 
 const props = defineProps({
     errors: Object,
@@ -42,7 +41,8 @@ const generatedUUID = ref(null);
 const errors = ref(props.errors || {});
 const loading = ref(false);
 
-const evaluationResult = ref(null);
+const evaluationResultState = ref(false);
+const evaluationResultData = ref(null);
 
 // onMounted
 onBeforeMount(() => {
@@ -51,9 +51,13 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
+    generateEvaluationUuid();
+});
+
+const generateEvaluationUuid = () => {
     generatedUUID.value = uuidv4();
     manageForm.uuid = generatedUUID.value;
-});
+};
 
 const setInitialRatingData = () => {
     let ratingsData = [];
@@ -74,6 +78,10 @@ const setInitialRatingData = () => {
     manageForm.ratings = ratingsData;
 };
 
+const updateRatingData = (newRatings) => {
+    manageForm.ratings = newRatings;
+};
+
 
 const manageForm = useForm({
     age: null,
@@ -88,16 +96,18 @@ const manageEvaluation = async () => {
     manageForm.processing = true;
 
     manageForm.post(route('evaluations.store'), {
-        // preserveState: false,
         onSuccess: (page) => {
+            // Clear errors & reset form data
             manageForm.reset();
             manageForm.clearErrors();
+            generateEvaluationUuid();
+            errors.value = {};
 
+            // Open Evaluation pop-up & set Evaluation data
             setInitialRatingData();
             evaluationResultState.value = true;
 
-            evaluationResult.value = page.props.data;
-            console.log(evaluationResult.value)
+            evaluationResultData.value = page.props.data;
         },
         onError: (err) => {
             errors.value = err;
@@ -110,11 +120,11 @@ const manageEvaluation = async () => {
 </script>
 
 <template>
-    <Head :title="`Create`"/>
+    <Head title="Auswertung erstellen"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">{{ `Create` }}</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Auswertung erstellen</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -163,59 +173,11 @@ const manageEvaluation = async () => {
                 </v-row>
 
                 <v-row>
-                    <div class="domains-list-container"
-                         v-for="domain in domains"
-                         :key="domain.id">
-                        <!--                                                green yellow-->
-                        <h3>{{domain.name}}</h3>
-
-                        <div class="subdomains-list-container"
-                             v-for="subdomain in domain.subdomains"
-                             :key="subdomain.id">
-                            <div class="subdomains-list-head">
-                                <h4>{{subdomain.name}}</h4>
-                                <div class="radio-wrap radio-head">
-                                    <span>Noch Nicht</span>
-                                </div>
-                                <div class="radio-wrap radio-head">
-                                    <span>Ansatzweise</span>
-                                </div>
-                                <div class="radio-wrap radio-head">
-                                    <span>Weitgehend</span>
-                                </div>
-                                <div class="radio-wrap radio-head">
-                                    <span>Zuverlassig</span>
-                                </div>
-                            </div>
-
-                            <div class="milestone-list-container"
-                                 v-for="milestone in subdomain.milestones"
-                                 :key="milestone.id">
-
-                                <h5 :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">{{milestone.abbreviation}}</h5>
-                                <div class="milestone-list-text"
-                                     :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
-                                    <span>{{milestone.title}}</span>
-                                    <p>{{milestone.text}}</p>
-                                </div>
-
-                                <fieldset :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
-                                    <div class="radio-wrap radio-content">
-                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="1"/>
-                                    </div>
-                                    <div class="radio-wrap radio-content">
-                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="2"/>
-                                    </div>
-                                    <div class="radio-wrap radio-content">
-                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="3"/>
-                                    </div>
-                                    <div class="radio-wrap radio-content">
-                                        <input type="radio" v-model="manageForm.ratings[milestone.domain_index].milestones[milestone.index].value" :name="milestone.id + 'check-radio'" value="4"/>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </div>
+                    <EvaluationDomainsList
+                        @updateRatingData="updateRatingData"
+                        :ratings="manageForm.ratings"
+                        :domains="domains"
+                        :errors="errors"/>
                 </v-row>
             </v-container>
 
@@ -247,11 +209,37 @@ const manageEvaluation = async () => {
                 <v-card-text>
                     <v-container>
                         <v-row>
-                            <v-col cols="12">
-                                <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>
+                            <v-col cols="8" offset="2">
+                                <div class="tw-text-center">
+                                    <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
+                                        Screening wurde eingereicht
+                                    </h1>
+
+                                    <p class="tw-mb-8">
+                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, so klicken Sie auf das ‘X oben rechts und dann auf den entsprechenden Button in der Detailansicht des Screenings. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
+                                    </p>
+
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
+                                            Screening als PDF downloaden
+                                        </v-btn>
+                                    </v-hover>
+                                </div>
                             </v-col>
+
                             <v-col cols="12">
-                                {{evaluationResult}}
+                                <p>
+                                    <span class="tw-font-black">Bezeichner des Screenings</span>:
+                                    {{evaluationResultData.item.uuid}}
+                                </p>
+                            </v-col>
+
+                            <v-col cols="12">
+                                <EvaluationDomainsList
+                                    @updateRatingData="updateRatingData"
+                                    :ratings="evaluationResultData.item.data"
+                                    :domains="domains"
+                                    :disabled="true"/>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -260,10 +248,7 @@ const manageEvaluation = async () => {
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-hover v-slot:default="{ isHovering, props }">
-                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
-                    </v-hover>
-                    <v-hover v-slot:default="{ isHovering, props }">
-                        <v-btn-primary @click="deleteEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                        <v-btn-primary @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn-primary>
                     </v-hover>
                 </v-card-actions>
             </v-card>

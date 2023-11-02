@@ -4,11 +4,11 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {Head, useForm, usePage, router, Link} from '@inertiajs/vue3';
+import { computed, onMounted, ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, useForm, usePage, Link } from '@inertiajs/vue3';
+import Sortable from 'sortablejs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Sortable from "sortablejs";
 
 const props = defineProps({
     domain: Object,

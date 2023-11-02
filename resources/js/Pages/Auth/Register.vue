@@ -4,12 +4,8 @@
   -->
 
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 const form = useForm({
     first_name: '',
@@ -29,7 +25,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Registrieren" />
+        <Head title="Registrieren"/>
 
         <form @submit.prevent="submit">
             <div>

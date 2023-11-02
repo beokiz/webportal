@@ -4,12 +4,12 @@
   -->
 
 <script setup>
+import { computed, ref } from 'vue';
+import { Head, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-// import DeleteUserForm from './Partials/DeleteUserForm.vue';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import {Head, usePage} from '@inertiajs/vue3';
-import {computed, ref} from "vue";
+// import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
+import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
+import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
 
 const props = defineProps({
     mustVerifyEmail: Boolean,

@@ -4,8 +4,8 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import { computed, ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 

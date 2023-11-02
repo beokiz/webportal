@@ -4,11 +4,11 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import { computed, onMounted, ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Sortable from 'sortablejs';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
     items: Array,
@@ -271,7 +271,7 @@ const saveNewOrder = (event) => {
 </script>
 
 <template>
-    <Head title="Domänen" />
+    <Head title="Domänen"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>

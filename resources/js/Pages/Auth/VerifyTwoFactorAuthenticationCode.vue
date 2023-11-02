@@ -6,10 +6,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
     request: Object,
@@ -29,7 +25,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Zwei-Faktor-Authentifizierung" />
+        <Head title="Zwei-Faktor-Authentifizierung"/>
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
             Sie haben eine E-Mail erhalten, die einen 2FA-Verifizierungscode enthält. Wenn Sie sie nicht erhalten haben, drücken Sie

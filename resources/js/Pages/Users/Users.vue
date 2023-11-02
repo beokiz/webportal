@@ -4,11 +4,11 @@
   -->
 
 <script setup>
-import { computed, ref, watch } from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import { computed, ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
+import { formatDate, formatDateTime } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { formatDate, formatDateTime } from "@/Composables/common"
 
 const props = defineProps({
     items: Array,

@@ -4,12 +4,12 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import { computed, ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { v4 as uuidv4 } from 'uuid';
-import { formatDate, formatDateTime } from "@/Composables/common"
+import { formatDateTime } from '@/Composables/common';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 
 const props = defineProps({
@@ -213,7 +213,7 @@ const manageEvaluation = async () => {
 </script>
 
 <template>
-    <Head title="Evaluationen" />
+    <Head title="Evaluationen"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
@@ -307,10 +307,7 @@ const manageEvaluation = async () => {
 
                 <template v-slot:no-data>
                     <div class="tw-py-6">
-                        <template v-if="allFiltersEmpty">
-                            <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
-                        </template>
-                        <template v-else>
+                        <template>
                             <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>
 
 <!--                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>-->

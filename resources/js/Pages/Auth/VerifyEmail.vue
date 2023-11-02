@@ -5,9 +5,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 const props = defineProps({
     status: String,
@@ -24,7 +23,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 
 <template>
     <GuestLayout>
-        <Head title="E-Mail-Verifizierung" />
+        <Head title="E-Mail-Verifizierung"/>
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
             Vielen Dank für Ihre Anmeldung! Bevor Sie beginnen können, würden Sie bitte Ihre E-Mail-Adresse bestätigen,
