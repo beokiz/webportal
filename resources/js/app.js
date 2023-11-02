@@ -100,6 +100,9 @@ const vuetify = createVuetify({
         VSelect:{
             variant: 'underlined',
         },
+        VAutocomplete:{
+            variant: 'underlined',
+        },
         VCheckbox:{
             color: 'primary',
         },

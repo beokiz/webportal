@@ -46,9 +46,27 @@ class RoleFilter extends BaseFilter
      * @param array|int $values
      * @return ModelFilter
      */
+    public function only($values) : ModelFilter
+    {
+        return $this->whereIn('id', (array) $values);
+    }
+
+    /**
+     * @param array|int $values
+     * @return ModelFilter
+     */
     public function excludeName($values) : ModelFilter
     {
         return $this->whereNotIn('name', (array) $values);
+    }
+
+    /**
+     * @param array|int $values
+     * @return ModelFilter
+     */
+    public function onlyName($values) : ModelFilter
+    {
+        return $this->whereIn('name', (array) $values);
     }
 
     /**

@@ -98,4 +98,15 @@ class UserFilter extends BaseFilter
             $query->whereNotIn('name', (array) $values);
         });
     }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withKitas($values) : ModelFilter
+    {
+        return $this->whereHas('kitas', function ($query) use ($values) {
+            $query->whereIn('id', (array) $values);
+        });
+    }
 }

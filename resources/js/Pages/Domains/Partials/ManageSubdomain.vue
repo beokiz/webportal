@@ -127,7 +127,6 @@ const saveNewOrder = (event) => {
     reorderForm.post(route('milestones.reorder'), {
         preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             //
         },
@@ -177,9 +176,7 @@ const manageSubdomain = async () => {
     manageForm.processing = true;
 
     let formOptions = {
-        // preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -205,13 +202,10 @@ const manageCreateMilestoneForm = useForm({
     age: null,
 });
 
-const manageCreateSubdomain = async () => {
+const manageCreateMilestone = async () => {
     manageCreateMilestoneForm.processing = true;
 
     manageCreateMilestoneForm.post(route('milestones.store'), {
-        // preserveScroll: true,
-        preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -341,7 +335,7 @@ const manageCreateSubdomain = async () => {
                                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                                                 </v-hover>
                                                 <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="manageCreateSubdomain" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                                    <v-btn-primary @click="manageCreateMilestone" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                                                 </v-hover>
                                             </v-card-actions>
                                         </v-card>

@@ -71,4 +71,12 @@ trait ExistValidationRules
     {
         return $this->existByColumnRule('milestones');
     }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function kitaExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('kitas');
+    }
 }

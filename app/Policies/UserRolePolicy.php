@@ -15,13 +15,28 @@ use App\Models\User;
  */
 class UserRolePolicy extends BasePolicy
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Base methods
+    |--------------------------------------------------------------------------
+    */
+    /**
+     * @param User                             $user
+     * @param array|Collection|int|Role|string $roles
+     * @return bool
+     */
+    public function authorizeRoleAccess(User $user, $roles) : bool
+    {
+        return $user->hasAnyRole($roles);
+    }
+
     /**
      * @param User $user
      * @return bool
      */
     public function authorizeSuperAdminAccess(User $user) : bool
     {
-        return $user->hasRole(config('permission.project_roles.super_admin'));
+        return $this->authorizeRoleAccess($user, config('permission.project_roles.super_admin'));
     }
 
     /**
@@ -30,7 +45,9 @@ class UserRolePolicy extends BasePolicy
      */
     public function authorizeAdminAccess(User $user) : bool
     {
-        return $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')]);
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
     }
 
     /**
@@ -39,7 +56,7 @@ class UserRolePolicy extends BasePolicy
      */
     public function authorizeMonitorAccess(User $user) : bool
     {
-        return $user->hasRole(config('permission.project_roles.monitor'));
+        return $this->authorizeRoleAccess($user, config('permission.project_roles.monitor'));
     }
 
     /**
@@ -48,7 +65,7 @@ class UserRolePolicy extends BasePolicy
      */
     public function authorizeMonitorOeAccess(User $user) : bool
     {
-        return $user->hasRole(config('permission.project_roles.monitor_oe'));
+        return $this->authorizeRoleAccess($user, config('permission.project_roles.monitor_oe'));
     }
 
     /**
@@ -57,7 +74,7 @@ class UserRolePolicy extends BasePolicy
      */
     public function authorizeManagerAccess(User $user) : bool
     {
-        return $user->hasRole(config('permission.project_roles.manager'));
+        return $this->authorizeRoleAccess($user, config('permission.project_roles.manager'));
     }
 
     /**
@@ -66,7 +83,7 @@ class UserRolePolicy extends BasePolicy
      */
     public function authorizeUserMultiplierAccess(User $user) : bool
     {
-        return $user->hasRole(config('permission.project_roles.user_multiplier'));
+        return $this->authorizeRoleAccess($user, config('permission.project_roles.user_multiplier'));
     }
 
     /**
@@ -75,6 +92,82 @@ class UserRolePolicy extends BasePolicy
      */
     public function authorizeEmployerAccess(User $user) : bool
     {
-        return $user->hasRole(config('permission.project_roles.employer'));
+        return $this->authorizeRoleAccess($user, config('permission.project_roles.employer'));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Special methods
+    |--------------------------------------------------------------------------
+    */
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToUsers(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['manager']]);
+    }
+
+    /**
+     * @param User $user
+     * @param int  $userId
+     * @return bool
+     */
+    public function authorizeAccessToSingleUser(User $user, int $userId) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        if ($this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']])) {
+            return true;
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
+            $canAccess = false;
+
+            $user->kitas->each(function ($kita) use(&$canAccess, $userId) {
+                if ($kita->users->contains('id', $userId)) {
+                    $canAccess = true;
+                    return $canAccess;
+                }
+            });
+
+            return $canAccess;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToKitas(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['manager']]);
+    }
+
+    /**
+     * @param User $user
+     * @param int  $kitaId
+     * @return bool
+     */
+    public function authorizeAccessToSingleKita(User $user, int $kitaId) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        if ($this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']])) {
+            return true;
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
+            return $user->kitas->contains('id', $kitaId);
+        }
+
+        return false;
     }
 }

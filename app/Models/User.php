@@ -10,6 +10,7 @@ namespace App\Models;
 use App\ModelFilters\UserFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
+use App\Notifications\ConnectedToKitasNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TwoFactorVerificationNotification;
@@ -19,6 +20,7 @@ use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -319,9 +321,24 @@ class User extends Authenticatable
         $this->notify(new PasswordChangedNotification());
     }
 
+    /**
+     * @param array|null $kitas
+     * @return void
+     */
+    public function sendConnectedToKitasNotification(?array $kitas) : void
+    {
+        if (!empty($kitas)) {
+            $this->notify(new ConnectedToKitasNotification($kitas));
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Define Model Relations
     |--------------------------------------------------------------------------
     */
+    public function kitas() : BelongsToMany
+    {
+        return $this->BelongsToMany(Kita::class, 'kita_has_users', 'user_id', 'kita_id');
+    }
 }

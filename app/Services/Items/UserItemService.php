@@ -9,6 +9,7 @@ namespace App\Services\Items;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * User Item Service
@@ -97,6 +98,27 @@ class UserItemService extends BaseItemService
     }
 
     /**
+     * @param array $attributes
+     * @return mixed
+     */
+    public function createFromKita(array $attributes)
+    {
+        if (!empty($attributes['email'])) {
+            $user = User::where('email', $attributes['email'])->first();
+
+            if ($user) {
+                return $this->update($user->id, $attributes);
+            } else {
+                return $this->create(array_merge($attributes, [
+                    'password' => Str::random(20),
+                ]));
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * @param int   $id
      * @param array $attributes
      * @return bool
@@ -164,6 +186,46 @@ class UserItemService extends BaseItemService
 
             if (!empty($roleIds)) {
                 $item->syncRoles($roleIds);
+            }
+        }
+
+        /*
+         * Update 'kitas' relation
+         */
+        if (!empty($attributes['kitas'])) {
+//            $currentKitas = $item->kitas->pluck('id');
+//            $newKitas     = collect($attributes['kitas']);
+//
+//            $newKitasIds = $currentKitas->diff($newKitas)->merge($newKitas->diff($currentKitas));
+//
+//            $item->kitas()->attach($newKitasIds);
+//
+//            $item->sendConnectedToKitasNotification(
+//                $item->kitas()
+//                    ->whereIn('id', $newKitasIds)
+//                    ->pluck('name')
+//                    ->toArray()
+//            );
+//
+            $userKitas = $item->kitas->pluck('id');
+
+            foreach ($attributes['kitas'] as $kitaId) {
+                $kitaId = (int) $kitaId;
+
+                if (!$userKitas->contains($kitaId)) {
+                    $userKitas->add($kitaId);
+                }
+            }
+
+            if (!empty($userKitas)) {
+                $item->kitas()->sync($userKitas);
+
+                $item->sendConnectedToKitasNotification(
+                    $item->kitas()
+                        ->whereIn('id', $userKitas)
+                        ->pluck('name')
+                        ->toArray()
+                );
             }
         }
     }

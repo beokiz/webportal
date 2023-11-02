@@ -13,6 +13,7 @@ const props = defineProps({
     user: Object,
     errors: Object,
     roles: Array,
+    from: String,
 });
 
 
@@ -38,6 +39,19 @@ const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 const editedUser = ref(props.user);
 const errors = ref(props.errors || {});
 const loading = ref(false);
+
+// Computed
+const backRoute = computed(() => {
+    if (props.from) {
+        const routeParams = props.from.split(';');
+
+        if (routeParams.length === 2) {
+            return route(routeParams[0], { kita: routeParams[1] })
+        }
+    }
+
+    return route('users.index');
+});
 
 // Methods
 const close = () => {
@@ -70,9 +84,7 @@ const manageUser = async () => {
     // }
 
     manageForm.put(route('users.update', { user: manageForm.id }), {
-        // preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -147,7 +159,7 @@ const manageUser = async () => {
                     <v-col cols="12" md="3" sm="4">
                         <div class="tw-flex tw-justify-between">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <Link :href="route('users.index')">
+                                <Link :href="backRoute">
                                     <v-btn v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurück</v-btn>
                                 </Link>
                             </v-hover>

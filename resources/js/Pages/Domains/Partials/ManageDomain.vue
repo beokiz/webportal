@@ -134,7 +134,6 @@ const saveNewOrder = (event) => {
     reorderForm.post(route('subdomains.reorder'), {
         preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             //
         },
@@ -201,9 +200,7 @@ const manageDomain = async () => {
     }
 
     let formOptions = {
-        // preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -228,9 +225,6 @@ const manageCreateSubdomain = async () => {
     manageCreateSubdomainForm.processing = true;
 
     manageCreateSubdomainForm.post(route('subdomains.store'), {
-        // preserveScroll: true,
-        preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },

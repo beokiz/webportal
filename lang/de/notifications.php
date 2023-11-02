@@ -94,4 +94,18 @@ return [
         'fourth_line' => "Vielen Dank, dass Sie BeoKiz verwenden!",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Connected To Kitas Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'connected_to_kitas' => [
+        'subject'     => "Mit Einrichtungen verbunden",
+        'greeting'    => "Hallo :name,",
+        'first_line'  => "sie wurden soeben im BeoKiz-Ampel-Portal einer weiteren Einrichtung zugeordnet. Sie sind nun folgenden Einrichtungen zugeordnet: \n :kitas",
+        'second_line' => "Ihre Zugangsdaten haben sich hierdurch nicht verändert.",
+        'third_line'  => "Falls Diese Zuordnung Ihrer Meinung nach ein Fehler ist, kontaktieren Sie bitte unseren Support unter <:support_email>",
+    ],
+
 ];

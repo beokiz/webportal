@@ -109,4 +109,27 @@ return [
         'reorder_error'   => "Error! Something went wrong while reordering milestones. Please try again later.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Kitas CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'kitas' => [
+        'create_success'      => "Kita has been created successfully.",
+        'create_error'        => "Error! Something went wrong while creating a kita. Please try again later.",
+        'update_success'      => "Kita has been updated successfully.",
+        'update_error'        => "Error! Something went wrong while updating a kita. Please try again later.",
+        'update_denied'       => "Error! Selected kita cannot be updated.",
+        'delete_success'      => "Kita has been deleted successfully.",
+        'delete_error'        => "Error! Something went wrong while deleting a kita. Please try again later.",
+        'delete_denied'       => "Error! Selected kita cannot be deleted.",
+        'delete_users_denied' => "Error! The selected kita has associated users, so it cannot be deleted.",
+        'restore_success'     => "Kita has been restored successfully.",
+        'restore_error'       => "Error! Something went wrong while restoring a kita. Please try again later.",
+        'restore_denied'      => "Error! Selected kita cannot be restored.",
+        'reorder_success'     => "Kitas has been reordered successfully.",
+        'reorder_error'       => "Error! Something went wrong while reordering kitas. Please try again later.",
+    ],
+
 ];

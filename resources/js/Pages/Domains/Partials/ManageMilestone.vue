@@ -74,9 +74,7 @@ const manageMilestone = async () => {
     manageForm.processing = true;
 
     manageForm.put(route('milestones.update', { milestone: manageForm.id }), {
-        // preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },

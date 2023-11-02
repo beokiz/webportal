@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubdomainsController;
@@ -121,6 +122,7 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
 //    Route::get('/{user}', [UsersController::class, 'show'])->name('show');
     Route::get('/{user}', [UsersController::class, 'edit'])->name('edit');
     Route::post('/', [UsersController::class, 'store'])->name('store');
+    Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
 //    Route::post('/{user}/restore', [UsersController::class, 'restore'])->name('restore');
@@ -156,7 +158,7 @@ Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.', 'middleware' => [
 
 
 /*
- * Subdomains routes
+ * Milestones routes
  */
 Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => ['auth', 'verified_2fa']], function () {
 //    Route::get('/', [MilestonesController::class, 'index'])->name('index');
@@ -166,4 +168,22 @@ Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => [
     Route::delete('/{milestone}', [MilestonesController::class, 'destroy'])->name('destroy');
 //    Route::post('/{milestone}/restore', [MilestonesController::class, 'restore'])->name('restore');
     Route::post('/reorder', [MilestonesController::class, 'reorder'])->name('reorder');
+});
+
+
+/*
+ * Kita routes
+ */
+Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [KitaController::class, 'index'])->name('index');
+    Route::get('/{kita}', [KitaController::class, 'show'])->name('show');
+    Route::post('/', [KitaController::class, 'store'])->name('store');
+    Route::put('/{kita}', [KitaController::class, 'update'])->name('update');
+    Route::post('/{kita}/connect-user', [KitaController::class, 'connectUser'])->name('connect_user');
+    Route::post('/{kita}/connect-users', [KitaController::class, 'connectUsers'])->name('connect_users');
+    Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');
+    Route::post('/{kita}/disconnect-users', [KitaController::class, 'disconnectUsers'])->name('disconnect_users');
+    Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
+//    Route::post('/{domain}/restore', [KitaController::class, 'restore'])->name('restore');
+    Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');
 });

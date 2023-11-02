@@ -199,6 +199,19 @@ return [
     */
 
     'attributes' => [
+        'user'       => "User",
+        'users'      => "Users",
+        'role'       => "Role",
+        'roles'      => "Roles",
+        'domain'     => "Domain",
+        'domains'    => "Domains",
+        'subdomain'  => "Subdomain",
+        'subdomains' => "Subdomains",
+        'kita'       => "Kita",
+        'kitas'      => "Kitas",
+        'milestone'  => "Milestone",
+        'milestones' => "Milestones",
+
         'email'                      => "Email",
         'password'                   => "Password",
         'token'                      => "Token",
@@ -206,6 +219,7 @@ return [
         'last_name'                  => "Last name",
         'two_factor_code'            => "2FA verification code",
         'current_password'           => "Current password",
+        'two_factor_auth_enabled'    => "2FA Enabled",
         'name'                       => "Name",
         'abbreviation'               => "Abbreviation",
         'order'                      => "Order",
@@ -217,8 +231,11 @@ return [
         'age_4_red_threshold_daz'    => "Age 4 Red Threshold Daz",
         'age_4_yellow_threshold'     => "Age 4 Yellow Threshold",
         'age_4_yellow_threshold_daz' => "Age 4 Yellow Threshold Daz",
-        'role'                       => "Role",
-        'two_factor_auth_enabled'    => "2FA Enabled",
+        'title'                      => "Title",
+        'emphasis'                   => "Emphasis",
+        'emphasis_daz'               => "Emphasis with Daz",
+        'age'                        => "Age",
+        'zip_code'                   => "ZIP code",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

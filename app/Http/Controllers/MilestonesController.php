@@ -10,6 +10,7 @@ use App\Http\Requests\Milestones\CreateMilestoneRequest;
 use App\Http\Requests\Milestones\ReorderMilestonesRequest;
 use App\Http\Requests\Milestones\UpdateMilestoneRequest;
 use App\Models\Milestone;
+use App\Models\User;
 use App\Services\Items\MilestoneItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -44,7 +45,7 @@ class MilestonesController extends BaseController
      */
     public function index(Request $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
 
@@ -58,13 +59,13 @@ class MilestonesController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Milestone $milestone
      * @return \Inertia\Response
      */
     public function show(Request $request, Milestone $milestone)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         return Inertia::render('Domains/Partials/ManageMilestone', [
             'milestone' => $milestone,
@@ -77,10 +78,10 @@ class MilestonesController extends BaseController
      */
     public function store(CreateMilestoneRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->milestoneItemService->create($attributes);
+        $result     = $this->milestoneItemService->create($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.milestones.create_success'))
@@ -89,15 +90,15 @@ class MilestonesController extends BaseController
 
     /**
      * @param UpdateMilestoneRequest $request
-     * @param Milestone $milestone
+     * @param Milestone              $milestone
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateMilestoneRequest $request, Milestone $milestone)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->milestoneItemService->update($milestone->id, $attributes);
+        $result     = $this->milestoneItemService->update($milestone->id, $attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.milestones.update_success'))
@@ -105,13 +106,13 @@ class MilestonesController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Milestone $milestone
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request, Milestone $milestone)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $result = $this->milestoneItemService->delete($milestone->id);
 
@@ -121,13 +122,13 @@ class MilestonesController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Milestone $milestone
      * @return \Illuminate\Http\RedirectResponse
      */
     public function restore(Request $request, Milestone $milestone)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $result = $this->milestoneItemService->update($milestone->id, [
             'deleted_at' => null,
@@ -144,10 +145,10 @@ class MilestonesController extends BaseController
      */
     public function reorder(ReorderMilestonesRequest $request)
     {
-//        $this->authorize('authorizeAdminAccess', User::class);
+        $this->authorize('authorizeAdminAccess', User::class);
 
         $attributes = $request->validated();
-        $result = $this->milestoneItemService->reorder($attributes);
+        $result     = $this->milestoneItemService->reorder($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.milestones.reorder_success'))

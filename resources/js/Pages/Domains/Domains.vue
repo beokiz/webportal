@@ -216,9 +216,6 @@ const manageDomain = async () => {
     }
 
     manageForm.post(route('domains.store'), {
-        // preserveScroll: true,
-        // preserveState: true,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             close();
         },
@@ -259,7 +256,6 @@ const saveNewOrder = (event) => {
     reorderForm.post(route('domains.reorder'), {
         preserveScroll: true,
         preserveState: false,
-        // resetOnSuccess: false,
         onSuccess: (page) => {
             //
         },
@@ -274,11 +270,11 @@ const saveNewOrder = (event) => {
 </script>
 
 <template>
-    <Head title="Domains" />
+    <Head title="Domänen" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Domäne</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Domänen</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-slot:default="{ isHovering, props }">

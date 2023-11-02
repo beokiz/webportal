@@ -94,4 +94,18 @@ return [
         'fourth_line' => "Thank you for using Beokiz!",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Connected To Kitas Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'connected_to_kitas' => [
+        'subject'     => "Connected to Kitas",
+        'greeting'    => "Hello :name,",
+        'first_line'  => "you have just been assigned to another facility in the BeoKiz traffic light portal. You are now assigned to the following facilities: \n :kitas",
+        'second_line' => "Your access data has not changed as a result.",
+        'third_line'  => "If you believe this assignment is an error, please contact our support at <:support_email>",
+    ],
+
 ];
