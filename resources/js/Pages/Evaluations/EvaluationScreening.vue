@@ -4,12 +4,10 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
+import { computed, ref } from "vue";
 import { Inertia } from "@inertiajs/inertia";
-import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
+import { Head, usePage, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { v4 as uuidv4 } from 'uuid';
-import { formatDate, formatDateTime } from "@/Composables/common"
 
 
 const props = defineProps({
@@ -25,8 +23,8 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Evaluations/Check/Check' && newProps) {
-    //
+    if (pageType === 'Evaluations/EvaluationDomains' && newProps) {
+        //
     }
 });
 
@@ -56,17 +54,14 @@ const modifiedItems = computed(() => {
         return modifiedItem;
     });
 });
-
-
-// Methods
 </script>
 
 <template>
-    <Head title="Evaluationen" />
+    <Head title="Screening-kategorie für prüfung auswählen" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Evaluationen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Screening-kategorie für prüfung auswählen</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -86,7 +81,7 @@ const modifiedItems = computed(() => {
                         <td align="center">
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('evaluations.show', { id: item.selectable.id })">
+                                    <Link :href="route('screening.show', { id: item.selectable.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-arrow-right-bold</v-icon>
                                     </Link>
                                 </template>
@@ -98,14 +93,7 @@ const modifiedItems = computed(() => {
 
                 <template v-slot:no-data>
                     <div class="tw-py-6">
-                        <template v-if="allFiltersEmpty">
-                            <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
-                        </template>
-                        <template v-else>
-                            <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>
-
-                            <!--                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>-->
-                        </template>
+                        <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
                     </div>
                 </template>
 

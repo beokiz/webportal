@@ -39,7 +39,6 @@ const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 const editedKita = ref(props.kita);
 const errors = ref(props.errors || {});
 const loading = ref(false);
-const draggableItem = ref(null);
 const deletingItemName = ref(null);
 const dialog = ref(false);
 const connectUserDialog = ref(false);
@@ -175,7 +174,6 @@ const manageCreateKitaUser = async () => {
         },
     });
 };
-
 
 
 const manageConnectKitaUserForm = useForm({

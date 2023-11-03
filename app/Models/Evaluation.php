@@ -77,8 +77,8 @@ class Evaluation extends Model
     {
         return Attribute::make(
             get: fn($value, $attributes) => !is_null($this->finished_at)
-                ? Carbon::now()->diffInMinutes($this->finished_at, false) < 15
-                : false,
+                ? Carbon::now()->diffInMinutes($this->finished_at, false) > -15
+                : true,
         );
     }
 

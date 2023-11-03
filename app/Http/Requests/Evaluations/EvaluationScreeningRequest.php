@@ -11,11 +11,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 /**
- * Check Evaluation Request
+ * Screening Evaluation Request
  *
  * @package \App\Http\Requests\Evaluations
  */
-class CheckEvaluationRequest extends CreateEvaluationRequest
+class EvaluationScreeningRequest extends CreateEvaluationRequest
 {
     /**
      * @return void

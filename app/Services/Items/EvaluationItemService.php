@@ -134,9 +134,9 @@ class EvaluationItemService extends BaseItemService
     /**
      * @param int   $id
      * @param array $attributes
-     * @return bool
+     * @return bool|Evaluation
      */
-    public function update(int $id, array $attributes) : bool
+    public function update(int $id, array $attributes)
     {
         $item = $this->find($id, true);
 
@@ -145,7 +145,7 @@ class EvaluationItemService extends BaseItemService
         if ($item->update($attributes)) {
             $this->updateRelations($item, $attributes);
 
-            return true;
+            return $item;
         } else {
             return false;
         }

@@ -7,10 +7,8 @@
 import { computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
-import { v4 as uuidv4 } from 'uuid';
 import { formatDateTime } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-
 
 const props = defineProps({
     items: Array,
@@ -61,8 +59,6 @@ const loading = ref(false);
 const dialog = ref(false);
 const dialogDeleteEvaluation = ref(false);
 const deletingItemName = ref(null);
-const generatedUUID = ref(null);
-import { ages } from "@/Composables/common"
 
 const headers = [
     { title: 'UUID', key: 'uuid', width: '40%', sortable: false},
@@ -95,7 +91,9 @@ watch(dialog, (val) => {
 // Methods
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (
-        (page === currentPage.value && clearFilters)
+        page !== currentPage.value ||
+        page === currentPage.value && clearFilters ||
+        [page, itemsPerPage, sortBy] !== [currentPage.value, perPage.value, orderBy.value]
     ) {
         loading.value = true;
 
@@ -120,6 +118,13 @@ const openDeleteEvaluationDialog = (item) => {
     dialogDeleteEvaluation.value = true
 };
 
+const close = () => {
+    dialog.value = false;
+    dialogDeleteEvaluation.value = false;
+
+    errors.value = {};
+};
+
 const deleteForm = useForm({
     id: null,
 });
@@ -141,74 +146,6 @@ const deleteEvaluation = async () => {
     };
 
     deleteForm.delete(route('evaluations.destroy', { id: deleteForm.id }), formOptions);
-};
-
-const close = () => {
-    dialog.value = false;
-    dialogDeleteEvaluation.value = false;
-    manageForm.reset();
-    manageForm.clearErrors();
-
-    errors.value = {};
-};
-
-const clear = () => {
-    manageForm.reset();
-    manageForm.clearErrors();
-};
-
-const generateUUID = () => {
-    generatedUUID.value = uuidv4();
-    manageForm.uuid = generatedUUID.value;
-};
-
-const updateRatingData = (domainId, milestoneId, value) => {
-    let domainIndex = manageForm.ratings.findIndex(function(obj) {
-        return obj.domain === domainId;
-    });
-
-    if (domainIndex !== -1) {
-        let milestoneIndex = manageForm.ratings[domainIndex].milestones.findIndex(function(obj) {
-            return obj.id === milestoneId;
-        });
-
-        if (milestoneIndex !== -1) {
-            manageForm.ratings[domainIndex].milestones[milestoneIndex].value = value;
-        } else {
-            manageForm.ratings[domainIndex].milestones.push({ id: milestoneId, value: value });
-        }
-    } else {
-        manageForm.ratings.push({
-            domain: domainId,
-            milestones: [
-                { id: milestoneId, value: value },
-            ],
-        });
-    }
-};
-
-
-const manageForm = useForm({
-    age: null,
-    uuid: null,
-    is_daz: false,
-    ratings: []
-});
-
-const manageEvaluation = async () => {
-    manageForm.processing = true;
-
-    manageForm.post(route('evaluations.store'), {
-        onSuccess: (page) => {
-            close();
-        },
-        onError: (err) => {
-            errors.value = err;
-        },
-        onFinish: () => {
-            manageForm.processing = false;
-        },
-    });
 };
 </script>
 
@@ -248,8 +185,6 @@ const manageEvaluation = async () => {
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-
-<!--            <a :href="route('evaluations.pdf', { id: 11 })">downloadContractdownloadContract</a>-->
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -288,7 +223,7 @@ const manageEvaluation = async () => {
                         <td align="center">
                             <v-tooltip v-if="item.selectable.editable" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('evaluations.show', { id: item.selectable.id })">
+                                    <Link :href="route('evaluations.edit', { id: item.selectable.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -307,11 +242,7 @@ const manageEvaluation = async () => {
 
                 <template v-slot:no-data>
                     <div class="tw-py-6">
-                        <template>
-                            <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>
-
-<!--                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>-->
-                        </template>
+                        <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
                     </div>
                 </template>
 

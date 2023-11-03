@@ -11,13 +11,13 @@
     background-color: #cdcdcd;
     padding: 15px;
 }
-.domains-list-container > h3.green {
+.result-evaluation-domains .domains-list-container > h3.green {
     background-color: #1b914e;
 }
-.domains-list-container > h3.yellow {
+.result-evaluation-domains .domains-list-container > h3.yellow {
     background-color: #e7bf0c;
 }
-.domains-list-container > h3.red {
+.result-evaluation-domains .domains-list-container > h3.red {
     background-color: #dc2626;
 }
 .domains-list-container .subdomains-list-head {

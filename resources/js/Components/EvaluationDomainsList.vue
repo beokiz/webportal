@@ -59,7 +59,7 @@ const updateValue = (newRatings) => {
                         <div class="radio-wrap radio-content">
                             <input type="radio"
                                    v-model="ratings[milestone.domain_index].milestones[milestone.index].value"
-                                   :name="milestone.id + 'check-radio'"
+                                   :name="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio'"
                                    :value="rating"
                                    :disabled="disabled"
                                    @input="updateValue(ratings)"/>

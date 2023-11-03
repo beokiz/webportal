@@ -43,4 +43,15 @@ class EvaluationFilter extends BaseFilter
             $query->whereIn('id', (array) $values);
         });
     }
+
+    /**
+     * @param array $period
+     * @return ModelFilter|void
+     */
+    public function finishedBetween(array $period)
+    {
+        if (!empty($period['from']) && !empty($period['to'])) {
+            return $this->whereBetween('finished_at', [$period['from'], $period['to']]);
+        }
+    }
 }

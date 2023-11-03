@@ -4,18 +4,20 @@
   -->
 
 <script setup>
-import { onMounted, onBeforeMount, ref } from 'vue';
+import {onBeforeMount, ref} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { v4 as uuidv4 } from 'uuid';
-import { ages } from '@/Composables/common';
+import { ages, prepareInitialRatingData } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import EvaluationDomainsList from '@/Components/EvaluationDomainsList.vue';
 
 const props = defineProps({
-    errors: Object,
-    kitas: Array,
     domains: Array,
+    dazDependent: {
+        type: Boolean,
+        default: false,
+    },
+    errors: Object,
 });
 
 /*
@@ -26,7 +28,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Evaluations/Partials/CreateEvaluation' && newProps) {
+    if (pageType === 'Evaluations/Partials/MakeEvaluationScreening' && newProps) {
         //
     }
 });
@@ -37,7 +39,6 @@ Inertia.on('success', (event) => {
  */
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
-const generatedUUID = ref(null);
 const errors = ref(props.errors || {});
 const loading = ref(false);
 
@@ -50,81 +51,63 @@ onBeforeMount(() => {
     setInitialRatingData();
 });
 
-onMounted(() => {
-    generateEvaluationUuid();
-});
-
-const generateEvaluationUuid = () => {
-    generatedUUID.value = uuidv4();
-    manageForm.uuid = generatedUUID.value;
+const updateRatingData = (newRatings) => {
+    screeningForm.ratings = newRatings;
 };
 
 const setInitialRatingData = () => {
-    let ratingsData = [];
-
-    props.domains.forEach(function(item1, index1) {
-        ratingsData[index1] = {
-            domain: item1.id,
-            milestones: [],
-        };
-
-        item1.subdomains.forEach(function(item2, index2) {
-            item2.milestones.forEach(function(item3, index3) {
-                ratingsData[index1].milestones.push({ id: item3.id, value: null });
-            });
-        });
-    });
-
-    manageForm.ratings = ratingsData;
+    screeningForm.ratings = prepareInitialRatingData(props.domains);
 };
 
-const updateRatingData = (newRatings) => {
-    manageForm.ratings = newRatings;
+const close = () => {
+    errors.value = {};
+
+    evaluationResultState.value = false;
 };
 
+const clear = () => {
+    screeningForm.reset();
+    screeningForm.clearErrors();
+    errors.value = {};
 
-const manageForm = useForm({
+    screeningForm.ratings = prepareInitialRatingData(props.domains);
+};
+
+const screeningForm = useForm({
     age: null,
-    uuid: null,
     is_daz: false,
-    user_id: currentUser.id,
-    kita_id: null,
     ratings: [],
 });
 
-const manageEvaluation = async () => {
-    manageForm.processing = true;
+const screeningEvaluation = async () => {
+    screeningForm.processing = true;
 
-    manageForm.post(route('evaluations.store'), {
+    screeningForm.post(route('screening.make'), {
         onSuccess: (page) => {
             // Clear errors & reset form data
-            manageForm.reset();
-            manageForm.clearErrors();
-            generateEvaluationUuid();
+            screeningForm.clearErrors();
             errors.value = {};
 
             // Open Evaluation pop-up & set Evaluation data
-            setInitialRatingData();
             evaluationResultState.value = true;
-
             evaluationResultData.value = page.props.data;
         },
         onError: (err) => {
             errors.value = err;
         },
         onFinish: () => {
-            manageForm.processing = false;
+            screeningForm.processing = false;
         },
     });
 };
 </script>
 
 <template>
-    <Head title="Auswertung erstellen"/>
+    <Head title="Screening-prüfung"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Auswertung erstellen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Screening-prüfung</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -138,14 +121,9 @@ const manageEvaluation = async () => {
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="4">
-                        <v-text-field v-model="manageForm.uuid" :error-messages="errors.uuid"
-                                      readonly
-                                      label="Bezeichner der Einschatzung" required></v-text-field>
-                    </v-col>
                     <v-col cols="12" sm="3">
                         <v-select
-                            v-model="manageForm.age"
+                            v-model="screeningForm.age"
                             :items="ages"
                             :error-messages="errors.age"
                             item-title="age_name"
@@ -154,28 +132,18 @@ const manageEvaluation = async () => {
                         ></v-select>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
-                        <v-select
-                            v-model="manageForm.kita_id"
-                            :items="kitas"
-                            :error-messages="errors.kita_id"
-                            item-title="name"
-                            item-value="id"
-                            label="Kita"
-                        ></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="2">
+                    <v-col v-if="dazDependent" cols="12" sm="2">
                         <v-checkbox
-                            v-model="manageForm.is_daz"
+                            v-model="screeningForm.is_daz"
                             label="Ist Daz"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
 
-                <v-row>
+                <v-row class="manage-evaluation-domains">
                     <EvaluationDomainsList
                         @updateRatingData="updateRatingData"
-                        :ratings="manageForm.ratings"
+                        :ratings="screeningForm.ratings"
                         :domains="domains"
                         :errors="errors"/>
                 </v-row>
@@ -185,16 +153,15 @@ const manageEvaluation = async () => {
                 <v-row>
                     <v-col cols="12" sm="6">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Back</v-btn>
+                            <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">
+                                Zurücksetzen
+                            </v-btn>
                         </v-hover>
                     </v-col>
                     <v-col cols="12" sm="6" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Save</v-btn>
-                        </v-hover>
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="manageEvaluation" v-bind="props"
-                                           :color="isHovering ? 'accent' : 'primary'">Big save
+                            <v-btn-primary @click="screeningEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                                Ampel-Bewertung
                             </v-btn-primary>
                         </v-hover>
                     </v-col>
@@ -203,41 +170,22 @@ const manageEvaluation = async () => {
             </v-container>
         </div>
 
-
         <v-dialog v-model="evaluationResultState" width="95vw">
             <v-card height="95vh">
                 <v-card-text>
                     <v-container>
-                        <v-row>
+                        <v-row class="result-evaluation-domains">
                             <v-col cols="8" offset="2">
                                 <div class="tw-text-center">
                                     <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
                                         Screening wurde eingereicht
                                     </h1>
-
-                                    <p class="tw-mb-8">
-                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, so klicken Sie auf das ‘X oben rechts und dann auf den entsprechenden Button in der Detailansicht des Screenings. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
-                                    </p>
-
-                                    <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
-                                            Screening als PDF downloaden
-                                        </v-btn>
-                                    </v-hover>
                                 </div>
                             </v-col>
 
                             <v-col cols="12">
-                                <p>
-                                    <span class="tw-font-black">Bezeichner des Screenings</span>:
-                                    {{evaluationResultData.item.uuid}}
-                                </p>
-                            </v-col>
-
-                            <v-col cols="12">
                                 <EvaluationDomainsList
-                                    @updateRatingData="updateRatingData"
-                                    :ratings="evaluationResultData.item.data"
+                                    :ratings="evaluationResultData"
                                     :domains="domains"
                                     :disabled="true"/>
                             </v-col>
