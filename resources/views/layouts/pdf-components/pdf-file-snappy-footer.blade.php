@@ -26,16 +26,19 @@
         }
     </script>
 </head>
+
 <body onload="parseSnappyPdfVariables()">
 <div id="report-pdf-image-footer">
-
     <div class="first-row">
-        <div>
-            <img src="{{ resource_path('images/logo-pdf.jpg') }}"/>
-        </div>
+
         <div>
 
         </div>
+
+        <div>
+
+        </div>
+
         <div>
 
         </div>
@@ -45,9 +48,11 @@
         <div>
             <p>@lang('files.common.copyright')</p>
         </div>
+
         <div>
 
         </div>
+
         <div>
             @if(!empty($footerData['display_document_meta']))
                 <p>@lang('files.pdf.page_info', ['current' => '<span class="page"></span>', 'total' => '<span class="topage"></span>'])</p>
@@ -60,7 +65,6 @@
             @endif
         </div>
     </div>
-
 </div>
 </body>
 </html>

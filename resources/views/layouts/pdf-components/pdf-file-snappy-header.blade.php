@@ -26,15 +26,17 @@
         }
     </script>
 </head>
+
 <body onload="parseSnappyPdfVariables()">
 <div id="report-pdf-image-header">
-
     <div>
         <img src="{{ resource_path('images/logo-pdf.jpg') }}"/>
     </div>
+
     <div>
 
     </div>
+
     <div>
         <ul>
             @if(!empty($headerData['report_date']))
@@ -43,7 +45,6 @@
             <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
         </ul>
     </div>
-
 </div>
 </body>
 </html>

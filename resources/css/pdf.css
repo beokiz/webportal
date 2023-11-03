@@ -57,7 +57,18 @@
     width: 40%;
     display: flex;
 }
+.result-evaluation-container .domains-list-container .milestone-list-container fieldset {
+    width: 40%;
+    display: block;
+    border: none;
+}
 .domains-list-container .milestone-list-container fieldset .radio-content {
+    width: 25%;
+    text-align: center;
+}
+.result-evaluation-container .domains-list-container .milestone-list-container fieldset .radio-content {
+    display: inline-block;
+    float: left;
     width: 25%;
     text-align: center;
 }

@@ -65,7 +65,8 @@ class SpatieImageGeneratorService extends BaseFileGeneratorService implements Im
                 return $image->base64Screenshot();
             }
 
-            $path = $basePath . $ds . uniqid($fileName . '_') . '.png';
+//            $path = $basePath . $ds . uniqid($fileName . '_') . '.png';
+            $path = $basePath . $ds . $fileName . '.png';
 
             $image->save($path);
 
@@ -89,6 +90,12 @@ class SpatieImageGeneratorService extends BaseFileGeneratorService implements Im
     public function createFromBlade(string $templateName, $data, array $options = [], bool $returnAsBase64 = false)
     {
         $html = $this->getHtmlFromBlade($templateName, $data);
+
+        if (!empty($options['file_name'])) {
+            $templateName = $options['file_name'];
+
+            unset($options['file_name']);
+        }
 
         return $this->createFromHtml($templateName, $html, $options, $returnAsBase64);
     }

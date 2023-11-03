@@ -45,7 +45,7 @@
 
         #report-pdf-image-header > div:nth-of-type(1) img {
             position: relative;
-            top: -.125cm;
+            /*top: -.125cm;*/
             max-height: .56cm;
         }
 
@@ -64,15 +64,17 @@
         }
     </style>
 </head>
+
 <body>
 <div id="report-pdf-image-header">
-
     <div>
         <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.jpg')) }}"/>
     </div>
+
     <div>
 
     </div>
+
     <div>
         <ul>
             @if(!empty($headerData['report_date']))
@@ -81,7 +83,6 @@
             <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
         </ul>
     </div>
-
 </div>
 </body>
 </html>

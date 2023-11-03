@@ -49,7 +49,8 @@ class SnappyImageGeneratorService extends BaseFileGeneratorService implements Im
             $ds       = DIRECTORY_SEPARATOR;
             $basePath = !empty($options['base_path']) ? $options['base_path'] : config('filesystems.disks.local_tmp.root');
 
-            $path = $basePath . $ds . uniqid($fileName . '_') . '.png';
+//            $path = $basePath . $ds . uniqid($fileName . '_') . '.png';
+            $path = $basePath . $ds . $fileName . '.png';
 
             SnappyImage::loadHTML($html)
                 ->setOptions(array_merge($this->options, Arr::except($options, ['base_path'])))
@@ -79,6 +80,12 @@ class SnappyImageGeneratorService extends BaseFileGeneratorService implements Im
     public function createFromBlade(string $templateName, $data, array $options = [], bool $returnAsBase64 = false)
     {
         $html = $this->getHtmlFromBlade($templateName, $data);
+
+        if (!empty($options['file_name'])) {
+            $templateName = $options['file_name'];
+
+            unset($options['file_name']);
+        }
 
         return $this->createFromHtml($templateName, $html, $options, $returnAsBase64);
     }

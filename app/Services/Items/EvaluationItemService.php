@@ -85,28 +85,35 @@ class EvaluationItemService extends BaseItemService
     public function exportInPdf(int $id)
     {
         $pdfGeneratorService = app(PdfGeneratorServiceInterface::class);
+        $domainItemService   = app(DomainItemService::class);
 
         $item = $this->find($id, true);
 
         $pdfHeaderFooterData = [
             'header' => [
-                'current_time' => Carbon::now()->format('M j Y h:i A'),
+                'current_time' => Carbon::now()->format('Y-m-d H:i e'),
             ],
             'footer' => [
                 'display_document_meta' => true,
             ],
         ];
 
+        $domainsArr = array_column($item->data, 'milestones', 'domain');
+
         return $pdfGeneratorService->createFromBlade(
             'file-templates.pdf.evaluation',
-            $item,
             [
-                'margin-top'    => 25,
-                'margin-right'  => 10,
-                'margin-bottom' => 25,
-                'margin-left'   => 10,
-                'header-html'   => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
-                'footer-html'   => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
+                'item'    => $item,
+                'domains' => $domainItemService->collection(['only' => array_keys($domainsArr)], [
+                    'subdomains' => function ($query) {
+                        $query->orderBy('order')->with(['milestones']);
+                    },
+                ]),
+            ],
+            [
+                'file_name'   => "evaluation_{$item->uuid}",
+                'header-html' => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
+                'footer-html' => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
             ],
             false
         );

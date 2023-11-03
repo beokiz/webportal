@@ -50,7 +50,7 @@ class SpatiePdfGeneratorService extends BaseFileGeneratorService implements PdfG
 
             $pdf = Browsershot::html($html)
                 ->showBackground()
-                ->margins(30, 10, 30, 10);
+                ->margins(15, 10, 15, 10);
 
             if (isset($options['header-html']) || isset($options['footer-html'])) {
                 $pdf->waitUntilNetworkIdle()
@@ -79,7 +79,8 @@ class SpatiePdfGeneratorService extends BaseFileGeneratorService implements PdfG
                 return $pdf->base64pdf();
             }
 
-            $path = $basePath . $ds . uniqid($fileName . '_') . '.pdf';
+//            $path = $basePath . $ds . uniqid($fileName . '_') . '.pdf';
+            $path = $basePath . $ds . $fileName . '.pdf';
 
             $pdf->save($path);
 
@@ -103,6 +104,12 @@ class SpatiePdfGeneratorService extends BaseFileGeneratorService implements PdfG
     public function createFromBlade(string $templateName, $data, array $options = [], bool $returnAsBase64 = false)
     {
         $html = $this->getHtmlFromBlade($templateName, $data);
+
+        if (!empty($options['file_name'])) {
+            $templateName = $options['file_name'];
+
+            unset($options['file_name']);
+        }
 
         return $this->createFromHtml($templateName, $html, $options, $returnAsBase64);
     }
