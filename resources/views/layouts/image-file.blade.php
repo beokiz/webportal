@@ -22,10 +22,10 @@
         </div>
         <div>
             <ul>
-                <li>@lang('reports.common.tenant_line', ['id' => $headerData['tenant_id']])</li>
-                <li>@lang('reports.common.report_type_line', ['type' => $headerData['report_type']])</li>
-                <li>@lang('reports.common.report_period_line', ['from' => $headerData['from_time'], 'to' => $headerData['to_time']])</li>
-                <li>@lang('reports.common.created_date_line', ['date' => $headerData['current_time']])</li>
+                <li>@lang('files.common.tenant_line', ['id' => $headerData['tenant_id']])</li>
+                <li>@lang('files.common.report_type_line', ['type' => $headerData['report_type']])</li>
+                <li>@lang('files.common.report_period_line', ['from' => $headerData['from_time'], 'to' => $headerData['to_time']])</li>
+                <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
             </ul>
         </div>
 
@@ -55,7 +55,7 @@
 
         <div class="second-row">
             <div>
-                <p>@lang('reports.common.copyright')</p>
+                <p>@lang('files.common.copyright')</p>
             </div>
             <div>
 

@@ -31,7 +31,7 @@
 
     <div class="first-row">
         <div>
-            <img src="{{ resource_path('images/logo-pdf.png') }}"/>
+            <img src="{{ resource_path('images/logo-pdf.jpg') }}"/>
         </div>
         <div>
 
@@ -43,14 +43,14 @@
 
     <div class="second-row">
         <div>
-            <p>@lang('reports.common.copyright')</p>
+            <p>@lang('files.common.copyright')</p>
         </div>
         <div>
 
         </div>
         <div>
             @if(!empty($footerData['display_document_meta']))
-                <p>@lang('reports.pdf.page_info', ['current' => '<span class="page"></span>', 'total' => '<span class="topage"></span>'])</p>
+                <p>@lang('files.pdf.page_info', ['current' => '<span class="page"></span>', 'total' => '<span class="topage"></span>'])</p>
             @endif
 
             @if(!empty($footerData['contact_email']))

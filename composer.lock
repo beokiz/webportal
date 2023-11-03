@@ -5671,21 +5671,21 @@
         },
         {
             "name": "spatie/browsershot",
-            "version": "3.57.7",
+            "version": "3.59.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/browsershot.git",
-                "reference": "83332d0821bd3d61c03873d76d5dfff6e31985b7"
+                "reference": "1b74e71fdd1c30fa1de45465bacc1cf5dc852881"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/browsershot/zipball/83332d0821bd3d61c03873d76d5dfff6e31985b7",
-                "reference": "83332d0821bd3d61c03873d76d5dfff6e31985b7",
+                "url": "https://api.github.com/repos/spatie/browsershot/zipball/1b74e71fdd1c30fa1de45465bacc1cf5dc852881",
+                "reference": "1b74e71fdd1c30fa1de45465bacc1cf5dc852881",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "^7.4|^8.0",
+                "php": "^8.0",
                 "spatie/image": "^1.5.3|^2.0",
                 "spatie/temporary-directory": "^1.1|^2.0",
                 "symfony/process": "^4.2|^5.0|^6.0"
@@ -5725,7 +5725,7 @@
                 "webpage"
             ],
             "support": {
-                "source": "https://github.com/spatie/browsershot/tree/3.57.7"
+                "source": "https://github.com/spatie/browsershot/tree/3.59.0"
             },
             "funding": [
                 {
@@ -5733,7 +5733,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-08T18:27:05+00:00"
+            "time": "2023-10-09T12:59:37+00:00"
         },
         {
             "name": "spatie/db-dumper",
