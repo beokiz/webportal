@@ -198,6 +198,7 @@ Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' =>
     Route::get('/', [EvaluationController::class, 'index'])->name('index');
     Route::get('/create', [EvaluationController::class, 'create'])->name('create');
     Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
+    Route::post('/{evaluation}/popup', [EvaluationController::class, 'showPopup'])->name('show_popup');
     Route::get('/{evaluation}/pdf', [EvaluationController::class, 'pdf'])->name('pdf');
     Route::get('/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('edit');
     Route::post('/', [EvaluationController::class, 'store'])->name('store');

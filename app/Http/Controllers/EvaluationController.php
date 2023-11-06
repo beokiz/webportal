@@ -107,9 +107,33 @@ class EvaluationController extends BaseController
     /**
      * @param Request    $request
      * @param Evaluation $evaluation
-     * @return mixed
+     * @return \Inertia\Response
      */
     public function show(Request $request, Evaluation $evaluation)
+    {
+        $this->authorize('authorizeAccessToManageEvaluation', User::class);
+        $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
+
+        $domainItemService = app(DomainItemService::class);
+
+        $domains = $this->prepareDomainsData($domainItemService->collection([], [
+            'subdomains' => function ($query) {
+                $query->orderBy('order')->with(['milestones']);
+            },
+        ]));
+
+        return Inertia::render('Evaluations/Partials/ManageEvaluation', [
+            'evaluation' => $evaluation->loadMissing(['user', 'kita']),
+            'domains'    => $domains,
+        ]);
+    }
+
+    /**
+     * @param Request    $request
+     * @param Evaluation $evaluation
+     * @return mixed
+     */
+    public function showPopup(Request $request, Evaluation $evaluation)
     {
         $this->authorize('authorizeAccessToManageEvaluation', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
