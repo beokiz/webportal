@@ -107,7 +107,7 @@ class EvaluationController extends BaseController
     /**
      * @param Request    $request
      * @param Evaluation $evaluation
-     * @return \Inertia\Response
+     * @return mixed
      */
     public function show(Request $request, Evaluation $evaluation)
     {
@@ -122,10 +122,11 @@ class EvaluationController extends BaseController
             },
         ]));
 
-        return Inertia::render('Evaluations/Partials/ManageEvaluation', [
-            'evaluation' => $evaluation->loadMissing(['user', 'kita']),
-            'domains'    => $domains,
-        ]);
+        return Redirect::back()
+            ->withData([
+                'item'    => $evaluation->loadMissing(['user', 'kita']),
+                'domains' => $domains,
+            ]);
     }
 
     /**
