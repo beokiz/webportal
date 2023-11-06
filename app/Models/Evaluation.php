@@ -59,6 +59,7 @@ class Evaluation extends Model
         'data'        => 'array',
         'finished_at' => 'datetime',
         'editable'    => 'boolean',
+        'finished'    => 'boolean',
     ];
 
     /**
@@ -68,6 +69,7 @@ class Evaluation extends Model
      */
     protected $appends = [
         'editable',
+        'finished',
     ];
 
     /**
@@ -79,6 +81,16 @@ class Evaluation extends Model
             get: fn($value, $attributes) => !is_null($this->finished_at)
                 ? Carbon::now()->diffInMinutes($this->finished_at, false) > -15
                 : true,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function finished() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => !is_null($this->finished_at),
         );
     }
 
