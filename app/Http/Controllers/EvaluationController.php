@@ -114,8 +114,6 @@ class EvaluationController extends BaseController
         $this->authorize('authorizeAccessToManageEvaluation', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
-        $currentUser = $request->user()->loadMissing(['kitas']);
-
         $domainItemService = app(DomainItemService::class);
 
         $domains = $this->prepareDomainsData($domainItemService->collection([], [
@@ -126,7 +124,6 @@ class EvaluationController extends BaseController
 
         return Inertia::render('Evaluations/Partials/ManageEvaluation', [
             'evaluation' => $evaluation->loadMissing(['user', 'kita']),
-            'kitas'      => $currentUser->kitas,
             'domains'    => $domains,
         ]);
     }
