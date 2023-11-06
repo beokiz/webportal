@@ -9,6 +9,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import { formatDateTime } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import EvaluationDomainsList from "@/Components/EvaluationDomainsList.vue";
 
 const props = defineProps({
     items: Array,
@@ -59,6 +60,9 @@ const loading = ref(false);
 const dialog = ref(false);
 const dialogDeleteEvaluation = ref(false);
 const deletingItemName = ref(null);
+const evaluationResultState = ref(false);
+const evaluationResultItem = ref(null);
+const evaluationResultDomains = ref(null);
 
 const headers = [
     { title: 'UUID', key: 'uuid', width: '40%', sortable: false},
@@ -118,9 +122,38 @@ const openDeleteEvaluationDialog = (item) => {
     dialogDeleteEvaluation.value = true
 };
 
+const manageEvaluationInfoForm = useForm({
+    id: null,
+});
+
+const openEvaluationInfo = async (item) => {
+    manageEvaluationInfoForm.id = item.id
+
+    manageEvaluationInfoForm.processing = true;
+
+    manageEvaluationInfoForm.post(route('evaluations.show_popup', { id: manageEvaluationInfoForm.id }), {
+        onSuccess: (page) => {
+            // Clear errors & reset form data
+            manageEvaluationInfoForm.clearErrors();
+            errors.value = {};
+            evaluationResultState.value = true
+
+            evaluationResultItem.value = page.props.data.item;
+            evaluationResultDomains.value = page.props.data.domains;
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            manageEvaluationInfoForm.processing = false;
+        },
+    });
+};
+
 const close = () => {
     dialog.value = false;
     dialogDeleteEvaluation.value = false;
+    evaluationResultState.value = false;
 
     errors.value = {};
 };
@@ -156,9 +189,13 @@ const deleteEvaluation = async () => {
         <template #header>
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Evaluationen</h2>
 
-            <div class="tw-flex tw-items-center tw-justify-end">
+            <div v-if="$page.props.auth.user.is_manager" class="tw-flex tw-items-center tw-justify-end">
                 <Link :href="route('evaluations.create')">
-                    Anlegen
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn-primary v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                            Anlegen
+                        </v-btn-primary>
+                    </v-hover>
                 </Link>
             </div>
 
@@ -230,6 +267,14 @@ const deleteEvaluation = async () => {
                                 <span>Einrichtung bearbeiten</span>
                             </v-tooltip>
 
+                            <v-tooltip v-if="item.selectable.finished" location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-icon v-bind="props" size="small" class="tw-me-2"
+                                            @click="openEvaluationInfo(item.raw)">mdi-eye</v-icon>
+                                </template>
+                                <span>Sicht</span>
+                            </v-tooltip>
+
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
@@ -248,5 +293,54 @@ const deleteEvaluation = async () => {
 
             </v-data-table-server>
         </div>
+
+        <v-dialog v-model="evaluationResultState" width="95vw">
+            <v-card height="95vh">
+                <v-card-text>
+                    <v-container>
+                        <v-row class="result-evaluation-domains">
+                            <v-col cols="8" offset="2">
+                                <div class="tw-text-center">
+                                    <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
+                                        Screening wurde eingereicht
+                                    </h1>
+
+                                    <p class="tw-mb-8">
+                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, so klicken Sie auf das ‘X oben rechts und dann auf den entsprechenden Button in der Detailansicht des Screenings. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
+                                    </p>
+
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn :href="route('evaluations.pdf', { id: evaluationResultItem.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
+                                            Screening als PDF downloaden
+                                        </v-btn>
+                                    </v-hover>
+                                </div>
+                            </v-col>
+
+                            <v-col cols="12">
+                                <p>
+                                    <span class="tw-font-black">Bezeichner des Screenings</span>:
+                                    {{evaluationResultItem.uuid}}
+                                </p>
+                            </v-col>
+
+                            <v-col cols="12">
+                                <EvaluationDomainsList
+                                    :ratings="evaluationResultItem.data"
+                                    :domains="evaluationResultDomains"
+                                    :disabled="true"/>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn-primary @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn-primary>
+                    </v-hover>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </AuthenticatedLayout>
 </template>
