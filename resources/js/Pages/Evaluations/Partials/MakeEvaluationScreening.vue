@@ -44,6 +44,7 @@ const loading = ref(false);
 
 const evaluationResultState = ref(false);
 const evaluationResultData = ref(null);
+const evaluationResultDomainName = ref(null);
 
 // onMounted
 onBeforeMount(() => {
@@ -90,7 +91,8 @@ const screeningEvaluation = async () => {
 
             // Open Evaluation pop-up & set Evaluation data
             evaluationResultState.value = true;
-            evaluationResultData.value = page.props.data;
+            evaluationResultData.value = page.props.data.evaluation;
+            evaluationResultDomainName.value = page.props.data.domain.name;
         },
         onError: (err) => {
             errors.value = err;
@@ -178,7 +180,7 @@ const screeningEvaluation = async () => {
                             <v-col cols="8" offset="2">
                                 <div class="tw-text-center">
                                     <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
-                                        Screening wurde eingereicht
+                                        Ampelergebnis der {{evaluationResultDomainName}}
                                     </h1>
                                 </div>
                             </v-col>

@@ -183,13 +183,13 @@ const deleteEvaluation = async () => {
 </script>
 
 <template>
-    <Head title="Evaluationen"/>
+    <Head title="Einschätzungen"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Evaluationen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Einschätzungen</h2>
 
-            <div v-if="$page.props.auth.user.is_manager" class="tw-flex tw-items-center tw-justify-end">
+            <div v-if="$page.props.auth.user.is_manager || $page.props.auth.user.is_employer" class="tw-flex tw-items-center tw-justify-end">
                 <Link :href="route('evaluations.create')">
                     <v-hover v-slot:default="{ isHovering, props }">
                         <v-btn-primary v-bind="props" :color="isHovering ? 'accent' : 'primary'">
@@ -264,7 +264,7 @@ const deleteEvaluation = async () => {
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
-                                <span>Einrichtung bearbeiten</span>
+                                <span>Einrichtung</span>
                             </v-tooltip>
 
                             <v-tooltip v-if="item.selectable.finished" location="top">
@@ -279,7 +279,7 @@ const deleteEvaluation = async () => {
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
-                                <span>Einrichtung löschen</span>
+                                <span>Einschätzung</span>
                             </v-tooltip>
                         </td>
                     </tr>

@@ -66,6 +66,15 @@
     width: 25%;
     text-align: center;
 }
+.domains-list-container .milestone-list-container fieldset .radio-content label{
+    width: 100%;
+    display: block;
+    height: 100%;
+    cursor: pointer;
+}
+.domains-list-container .milestone-list-container fieldset .radio-content input{
+    cursor: pointer;
+}
 .result-evaluation-container .domains-list-container .milestone-list-container fieldset .radio-content {
     display: inline-block;
     float: left;
