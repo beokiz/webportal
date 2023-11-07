@@ -108,7 +108,7 @@ class EvaluationScreeningController extends BaseController
         return $result
             ? Redirect::back()
                 ->withSuccesses(__('crud.evaluations.check_success'))
-                ->withData($result)
+                ->withData(['evaluation' => $result, 'domain' => $this->domainItemService->find(array_column($attributes['ratings'], 'domain')[0])])
             : Redirect::back()->withErrors(__('crud.evaluations.check_error'));
     }
 }
