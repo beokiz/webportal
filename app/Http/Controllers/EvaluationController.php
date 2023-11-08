@@ -272,7 +272,7 @@ class EvaluationController extends BaseController
      */
     public function destroy(Request $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
+        $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $result = $this->evaluationItemService->delete($evaluation->id);
 
