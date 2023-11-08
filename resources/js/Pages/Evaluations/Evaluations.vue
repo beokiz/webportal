@@ -264,7 +264,7 @@ const deleteEvaluation = async () => {
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
-                                <span>Einrichtung</span>
+                                <span>Einschätzung bearbeiten</span>
                             </v-tooltip>
 
                             <v-tooltip v-if="item.selectable.finished" location="top">
@@ -272,14 +272,14 @@ const deleteEvaluation = async () => {
                                     <v-icon v-bind="props" size="small" class="tw-me-2"
                                             @click="openEvaluationInfo(item.raw)">mdi-eye</v-icon>
                                 </template>
-                                <span>Sicht</span>
+                                <span>Einschätzung ansehen</span>
                             </v-tooltip>
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
-                                <span>Einschätzung</span>
+                                <span>Einschätzung löschen</span>
                             </v-tooltip>
                         </td>
                     </tr>

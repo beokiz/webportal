@@ -499,7 +499,7 @@ const saveNewOrder = (event) => {
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
                                     </Link>
                                 </template>
-                                <span>Domäne anzeigen</span>
+                                <span>Domäne ansehen</span>
                             </v-tooltip>
 
                             <v-tooltip location="top">
