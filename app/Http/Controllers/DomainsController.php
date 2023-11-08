@@ -124,24 +124,6 @@ class DomainsController extends BaseController
     }
 
     /**
-     * @param Request $request
-     * @param Domain  $domain
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function restore(Request $request, Domain $domain)
-    {
-        $this->authorize('authorizeAdminAccess', User::class);
-
-        $result = $this->domainItemService->update($domain->id, [
-            'deleted_at' => null,
-        ]);
-
-        return $result
-            ? Redirect::back()->withSuccesses(__('crud.domains.restore_success'))
-            : Redirect::back()->withErrors(__('crud.domains.restore_error'));
-    }
-
-    /**
      * @param ReorderDomainsRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */

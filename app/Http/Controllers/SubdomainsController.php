@@ -127,24 +127,6 @@ class SubdomainsController extends BaseController
     }
 
     /**
-     * @param Request   $request
-     * @param Subdomain $subdomain
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function restore(Request $request, Subdomain $subdomain)
-    {
-        $this->authorize('authorizeAdminAccess', User::class);
-
-        $result = $this->subdomainItemService->update($subdomain->id, [
-            'deleted_at' => null,
-        ]);
-
-        return $result
-            ? Redirect::back()->withSuccesses(__('crud.subdomains.restore_success'))
-            : Redirect::back()->withErrors(__('crud.subdomains.restore_error'));
-    }
-
-    /**
      * @param ReorderSubdomainsRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
