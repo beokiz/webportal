@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import {onBeforeMount, ref} from 'vue';
+import {onBeforeMount, ref, watch} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { ages, prepareInitialRatingData } from '@/Composables/common';
@@ -80,6 +80,13 @@ const screeningForm = useForm({
     ratings: [],
 });
 
+watch(
+    () => screeningForm.age, // use a getter like this
+    (age) => {
+        screeningForm.ratings = prepareInitialRatingData(props.domains);
+    }
+);
+
 const screeningEvaluation = async () => {
     screeningForm.processing = true;
 
@@ -144,10 +151,12 @@ const screeningEvaluation = async () => {
 
                 <v-row class="manage-evaluation-domains">
                     <EvaluationDomainsList
-                        @updateRatingData="updateRatingData"
+                        v-if="!!screeningForm.age"
                         :ratings="screeningForm.ratings"
+                        :age="screeningForm.age"
                         :domains="domains"
-                        :errors="errors"/>
+                        :errors="errors"
+                        @updateRatingData="updateRatingData"/>
                 </v-row>
             </v-container>
 
@@ -160,14 +169,14 @@ const screeningEvaluation = async () => {
                             </v-btn>
                         </v-hover>
                     </v-col>
+
                     <v-col cols="12" sm="6" align="right">
-                        <v-hover v-slot:default="{ isHovering, props }">
+                        <v-hover v-if="!!screeningForm.age" v-slot:default="{ isHovering, props }">
                             <v-btn-primary @click="screeningEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
                                 Ampel-Bewertung
                             </v-btn-primary>
                         </v-hover>
                     </v-col>
-
                 </v-row>
             </v-container>
         </div>
@@ -188,6 +197,7 @@ const screeningEvaluation = async () => {
                             <v-col cols="12">
                                 <EvaluationDomainsList
                                     :ratings="evaluationResultData"
+                                    :age="screeningForm.age"
                                     :domains="domains"
                                     :disabled="true"/>
                             </v-col>

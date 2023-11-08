@@ -30,9 +30,15 @@ class EvaluationScreeningRequest extends CreateEvaluationRequest
      */
     public function rules() : array
     {
-        return array_merge(Arr::except(parent::rules(), ['uuid', 'user_id', 'kita_id']), [
-            //
-        ]);
+        return [
+            'age'                          => ['required', Rule::in(['2.5', '4.5'])],
+            'is_daz'                       => ['required', 'boolean'],
+            'ratings'                      => ['required', 'array'],
+            'ratings.*.domain'             => ['required', $this->domainExistRule()],
+            'ratings.*.milestones'         => ['required', 'array'],
+            'ratings.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
+            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(), ['nullable']),
+        ];
     }
 
     /**

@@ -96,7 +96,6 @@ const modifiedItems = computed(() => {
                         <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
                     </div>
                 </template>
-
             </v-data-table-server>
         </div>
     </AuthenticatedLayout>

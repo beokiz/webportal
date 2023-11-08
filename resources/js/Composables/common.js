@@ -43,6 +43,7 @@ export const prepareInitialRatingData = (domains) => {
     domains.forEach(function(item1, index1) {
         ratingsData[index1] = {
             domain: item1.id,
+            rating: 0,
             color: null,
             milestones: [],
         };

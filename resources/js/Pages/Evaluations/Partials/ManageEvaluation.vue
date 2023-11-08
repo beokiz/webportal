@@ -207,10 +207,10 @@ const saveEvaluation = async () => {
 
                 <v-row class="manage-evaluation-domains">
                     <EvaluationDomainsList
-                        @updateRatingData="updateRatingData"
                         :ratings="manageForm.ratings"
                         :domains="domains"
-                        :errors="errors"/>
+                        :errors="errors"
+                        @updateRatingData="updateRatingData"/>
                 </v-row>
             </v-container>
 
