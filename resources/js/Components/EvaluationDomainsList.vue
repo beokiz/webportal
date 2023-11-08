@@ -55,14 +55,18 @@ const updateValue = (newRatings) => {
                 </div>
 
                 <fieldset :class="{ error: !disabled && errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
-                    <template v-for="rating in [1, 2, 3, 4]">
+                    <template v-for="(rating, index) in [1, 2, 3, 4]">
                         <div class="radio-wrap radio-content">
-                            <input type="radio"
-                                   v-model="ratings[milestone.domain_index].milestones[milestone.index].value"
-                                   :name="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio'"
-                                   :value="rating"
-                                   :disabled="disabled"
-                                   @input="updateValue(ratings)"/>
+                            <label :for="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio' + index">
+                                <input type="radio"
+                                       :id="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio' + index"
+                                       v-model="ratings[milestone.domain_index].milestones[milestone.index].value"
+                                       :name="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio'"
+                                       :value="rating"
+                                       :disabled="disabled"
+                                       @input="updateValue(ratings)"/>
+                            </label>
+
                         </div>
                     </template>
                 </fieldset>

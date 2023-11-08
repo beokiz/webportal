@@ -57,11 +57,11 @@ const modifiedItems = computed(() => {
 </script>
 
 <template>
-    <Head title="Screening-kategorie für prüfung auswählen" />
+    <Head title="Domäne für Prüfung auswählen" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Screening-kategorie für prüfung auswählen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Domäne für Prüfung auswählen</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -85,7 +85,7 @@ const modifiedItems = computed(() => {
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-arrow-right-bold</v-icon>
                                     </Link>
                                 </template>
-                                <span>Einrichtung bearbeiten</span>
+                                <span>Domäne prüfen</span>
                             </v-tooltip>
                         </td>
                     </tr>
