@@ -122,24 +122,6 @@ class MilestonesController extends BaseController
     }
 
     /**
-     * @param Request   $request
-     * @param Milestone $milestone
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function restore(Request $request, Milestone $milestone)
-    {
-        $this->authorize('authorizeAdminAccess', User::class);
-
-        $result = $this->milestoneItemService->update($milestone->id, [
-            'deleted_at' => null,
-        ]);
-
-        return $result
-            ? Redirect::back()->withSuccesses(__('crud.milestones.restore_success'))
-            : Redirect::back()->withErrors(__('crud.milestones.restore_error'));
-    }
-
-    /**
      * @param ReorderMilestonesRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */

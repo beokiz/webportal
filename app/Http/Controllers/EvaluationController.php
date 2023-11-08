@@ -111,7 +111,7 @@ class EvaluationController extends BaseController
      */
     public function show(Request $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToManageEvaluation', User::class);
+//        $this->authorize('authorizeAccessToManageEvaluation', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $domainItemService = app(DomainItemService::class);
@@ -135,7 +135,7 @@ class EvaluationController extends BaseController
      */
     public function showPopup(Request $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToManageEvaluation', User::class);
+//        $this->authorize('authorizeAccessToManageEvaluation', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $domainItemService = app(DomainItemService::class);
@@ -160,6 +160,7 @@ class EvaluationController extends BaseController
      */
     public function pdf(Request $request, Evaluation $evaluation)
     {
+//        $this->authorize('authorizeAccessToManageEvaluation', User::class);
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $data = $this->evaluationItemService->exportInPdf($evaluation->id);
@@ -271,30 +272,12 @@ class EvaluationController extends BaseController
      */
     public function destroy(Request $request, Evaluation $evaluation)
     {
-        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
+        $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $result = $this->evaluationItemService->delete($evaluation->id);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.evaluations.delete_success'))
             : Redirect::back()->withErrors(__('crud.evaluations.delete_error'));
-    }
-
-    /**
-     * @param Request    $request
-     * @param Evaluation $evaluation
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function restore(Request $request, Evaluation $evaluation)
-    {
-        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
-
-        $result = $this->evaluationItemService->update($evaluation->id, [
-            'deleted_at' => null,
-        ]);
-
-        return $result
-            ? Redirect::back()->withSuccesses(__('crud.evaluations.restore_success'))
-            : Redirect::back()->withErrors(__('crud.evaluations.restore_error'));
     }
 }

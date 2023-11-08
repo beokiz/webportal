@@ -127,7 +127,6 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
     Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
-//    Route::post('/{user}/restore', [UsersController::class, 'restore'])->name('restore');
 });
 
 
@@ -140,7 +139,6 @@ Route::group(['prefix' => 'domains', 'as' => 'domains.', 'middleware' => ['auth'
     Route::post('/', [DomainsController::class, 'store'])->name('store');
     Route::put('/{domain}', [DomainsController::class, 'update'])->name('update');
     Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
-//    Route::post('/{domain}/restore', [DomainsController::class, 'restore'])->name('restore');
     Route::post('/reorder', [DomainsController::class, 'reorder'])->name('reorder');
 });
 
@@ -154,7 +152,6 @@ Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.', 'middleware' => [
     Route::post('/', [SubdomainsController::class, 'store'])->name('store');
     Route::put('/{subdomain}', [SubdomainsController::class, 'update'])->name('update');
     Route::delete('/{subdomain}', [SubdomainsController::class, 'destroy'])->name('destroy');
-//    Route::post('/{subdomain}/restore', [SubdomainsController::class, 'restore'])->name('restore');
     Route::post('/reorder', [SubdomainsController::class, 'reorder'])->name('reorder');
 });
 
@@ -168,7 +165,6 @@ Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => [
     Route::post('/', [MilestonesController::class, 'store'])->name('store');
     Route::put('/{milestone}', [MilestonesController::class, 'update'])->name('update');
     Route::delete('/{milestone}', [MilestonesController::class, 'destroy'])->name('destroy');
-//    Route::post('/{milestone}/restore', [MilestonesController::class, 'restore'])->name('restore');
     Route::post('/reorder', [MilestonesController::class, 'reorder'])->name('reorder');
 });
 
@@ -186,7 +182,6 @@ Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'v
     Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');
     Route::post('/{kita}/disconnect-users', [KitaController::class, 'disconnectUsers'])->name('disconnect_users');
     Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
-//    Route::post('/{domain}/restore', [KitaController::class, 'restore'])->name('restore');
     Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');
 });
 
@@ -205,7 +200,6 @@ Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' =>
     Route::put('/{evaluation}', [EvaluationController::class, 'update'])->name('update');
     Route::post('/save', [EvaluationController::class, 'save'])->name('save');
     Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
-//    Route::post('/{domain}/restore', [EvaluationController::class, 'restore'])->name('restore');
 });
 
 

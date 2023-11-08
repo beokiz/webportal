@@ -238,34 +238,4 @@ class UsersController extends BaseController
             return Redirect::back()->withErrors(__('crud.users.delete_denied'));
         }
     }
-
-    /**
-     * @param Request $request
-     * @param User    $user
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function restore(Request $request, User $user)
-    {
-        $this->authorize('authorizeAdminAccess', User::class);
-//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
-
-        $currentUser = $request->user();
-
-        if (
-            $currentUser->hasRole(config('permission.project_roles.admin')) &&
-            $currentUser->id !== $user->id &&
-            $user->hasAnyRole([config('permission.project_roles.super_admin'), config('permission.project_roles.admin')])
-        ) {
-            return $this->accessDeniedResponse();
-        }
-
-        $result = $this->userItemService->update($user->id, [
-            'deleted_at' => null,
-        ]);
-
-        return $result
-            ? Redirect::back()->withSuccesses(__('crud.users.restore_success'))
-            : Redirect::back()->withErrors(__('crud.users.restore_error'));
-    }
 }

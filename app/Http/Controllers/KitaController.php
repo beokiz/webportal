@@ -212,24 +212,6 @@ class KitaController extends BaseController
     }
 
     /**
-     * @param Request $request
-     * @param Kita    $kita
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function restore(Request $request, Kita $kita)
-    {
-        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
-
-        $result = $this->kitaItemService->update($kita->id, [
-            'deleted_at' => null,
-        ]);
-
-        return $result
-            ? Redirect::back()->withSuccesses(__('crud.kitas.restore_success'))
-            : Redirect::back()->withErrors(__('crud.kitas.restore_error'));
-    }
-
-    /**
      * @param ReorderKitasRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
