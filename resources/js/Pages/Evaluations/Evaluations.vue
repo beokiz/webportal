@@ -258,7 +258,7 @@ const deleteEvaluation = async () => {
                         <td>{{formatDateTime(item.selectable.finished_at, 'sv-SE')}}</td>
 
                         <td align="center">
-                            <v-tooltip v-if="item.selectable.editable" location="top">
+                            <v-tooltip v-if="item.selectable.editable && ($page.props.auth.user.is_manager || $page.props.auth.user.is_employer)" location="top">
                                 <template v-slot:activator="{ props }">
                                     <Link :href="route('evaluations.edit', { id: item.selectable.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
