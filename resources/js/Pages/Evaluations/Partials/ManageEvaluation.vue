@@ -40,7 +40,7 @@ const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
 const generatedUUID = ref(null);
 const errors = ref(props.errors || {});
-const loading = ref(false);
+const loader = ref(false);
 
 const evaluationResultState = ref(false);
 const evaluationResultData = ref(null);
@@ -107,6 +107,7 @@ const manageForm = useForm({
 
 const manageEvaluation = async () => {
     manageForm.processing = true;
+    loader.value = true;
 
     manageForm.post(route('evaluations.store'), {
         onSuccess: (page) => {
@@ -126,12 +127,14 @@ const manageEvaluation = async () => {
         },
         onFinish: () => {
             manageForm.processing = false;
+            loader.value = false;
         },
     });
 };
 
 const saveEvaluation = async () => {
     manageForm.processing = true;
+    loader.value = true;
 
     manageForm.post(route('evaluations.save'), {
         preserveState: false,
@@ -145,6 +148,7 @@ const saveEvaluation = async () => {
         },
         onFinish: () => {
             manageForm.processing = false;
+            loader.value = false;
         },
     });
 };
@@ -169,7 +173,7 @@ const saveEvaluation = async () => {
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="4">
+                    <v-col cols="12" sm="3">
                         <v-text-field v-model="manageForm.uuid" :error-messages="errors.uuid"
                                       readonly
                                       label="Bezeichner der Einschatzung" required></v-text-field>
@@ -197,10 +201,10 @@ const saveEvaluation = async () => {
                         ></v-select>
                     </v-col>
 
-                    <v-col cols="12" sm="2">
+                    <v-col cols="12" sm="3">
                         <v-checkbox
                             v-model="manageForm.is_daz"
-                            label="Ist Daz"
+                            label="Deutsch ist nicht Muttersprache"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
@@ -214,8 +218,16 @@ const saveEvaluation = async () => {
                 </v-row>
             </v-container>
 
+
             <v-container>
-                <v-row>
+
+                <template v-if="loader">
+                    <div class="tw-flex justify-center items-center tw-bg-white">
+                        <v-progress-circular indeterminate :size="40"></v-progress-circular>
+                    </div>
+                </template>
+
+                <v-row v-else>
                     <v-col cols="12" sm="6">
                         <v-hover v-slot:default="{ isHovering, props }">
                             <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">

@@ -40,7 +40,7 @@ Inertia.on('success', (event) => {
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
 const errors = ref(props.errors || {});
-const loading = ref(false);
+const loader = ref(false);
 
 const evaluationResultState = ref(false);
 const evaluationResultData = ref(null);
@@ -89,6 +89,7 @@ watch(
 
 const screeningEvaluation = async () => {
     screeningForm.processing = true;
+    loader.value = true;
 
     screeningForm.post(route('screening.make'), {
         onSuccess: (page) => {
@@ -106,6 +107,7 @@ const screeningEvaluation = async () => {
         },
         onFinish: () => {
             screeningForm.processing = false;
+            loader.value = false;
         },
     });
 };
@@ -141,10 +143,10 @@ const screeningEvaluation = async () => {
                         ></v-select>
                     </v-col>
 
-                    <v-col v-if="dazDependent" cols="12" sm="2">
+                    <v-col v-if="dazDependent" cols="12" sm="3">
                         <v-checkbox
                             v-model="screeningForm.is_daz"
-                            label="Ist Daz"
+                            label="Deutsch ist nicht Muttersprache"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
@@ -161,7 +163,13 @@ const screeningEvaluation = async () => {
             </v-container>
 
             <v-container>
-                <v-row>
+                <template v-if="loader">
+                    <div class="tw-flex justify-center items-center tw-bg-white">
+                        <v-progress-circular indeterminate :size="40"></v-progress-circular>
+                    </div>
+                </template>
+
+                <v-row v-else>
                     <v-col cols="12" sm="6">
                         <v-hover v-slot:default="{ isHovering, props }">
                             <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">
@@ -189,7 +197,7 @@ const screeningEvaluation = async () => {
                             <v-col cols="8" offset="2">
                                 <div class="tw-text-center">
                                     <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
-                                        Ampelergebnis der {{evaluationResultDomainName}}
+                                        Ampelergebnis im Bereich {{evaluationResultDomainName}}
                                     </h1>
                                 </div>
                             </v-col>
