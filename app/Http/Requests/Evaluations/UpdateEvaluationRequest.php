@@ -38,7 +38,7 @@ class UpdateEvaluationRequest extends CreateEvaluationRequest
             'ratings.*.domain'             => ['required', $this->domainExistRule()],
             'ratings.*.milestones'         => ['required', 'array'],
             'ratings.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
-            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(), ['required']),
+            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(true, true), ['required']),
         ];
     }
 

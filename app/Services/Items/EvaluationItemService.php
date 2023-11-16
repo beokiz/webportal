@@ -89,6 +89,8 @@ class EvaluationItemService extends BaseItemService
 
         $item = $this->find($id, true);
 
+        $item->loadMissing(['kita']);
+
         $pdfHeaderFooterData = [
             'header' => [
                 'current_time' => Carbon::now()->format('Y-m-d H:i e'),
@@ -104,6 +106,7 @@ class EvaluationItemService extends BaseItemService
             'file-templates.pdf.evaluation',
             [
                 'item'    => $item,
+                'kita'    => $item->kita,
                 'domains' => $domainItemService->collection(['only' => array_keys($domainsArr)], [
                     'subdomains' => function ($query) {
                         $query->orderBy('order')->with(['milestones']);
@@ -111,7 +114,7 @@ class EvaluationItemService extends BaseItemService
                 ]),
             ],
             [
-                'file_name'   => "evaluation_{$item->uuid}",
+                'file_name'   => 'evaluation_' . Str::slug($item->kita->name) . '_' .  $item->uuid,
                 'header-html' => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
                 'footer-html' => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
             ],

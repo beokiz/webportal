@@ -55,6 +55,7 @@ class Evaluation extends Model
      * @var array
      */
     protected $casts = [
+        'age'         => 'float',
         'is_daz'      => 'boolean',
         'data'        => 'array',
         'finished_at' => 'datetime',

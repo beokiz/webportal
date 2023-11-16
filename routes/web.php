@@ -198,6 +198,7 @@ Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' =>
     Route::get('/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('edit');
     Route::post('/', [EvaluationController::class, 'store'])->name('store');
     Route::put('/{evaluation}', [EvaluationController::class, 'update'])->name('update');
+    Route::post('/{evaluation}/unfinished', [EvaluationController::class, 'unfinished'])->name('unfinished');
     Route::post('/save', [EvaluationController::class, 'save'])->name('save');
     Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
 });

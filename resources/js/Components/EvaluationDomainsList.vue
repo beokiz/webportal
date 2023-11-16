@@ -29,21 +29,26 @@ const ageData = computed(() => {
 
 const preparedDomains = computed(() => {
     if (ageData.value) {
-        return props.domains.map(domain => ({
+        let localPreparedDomains = props.domains.map(domain => ({
             ...domain,
             subdomains: domain.subdomains.map(subdomain => ({
                 ...subdomain,
                 milestones: subdomain.milestones.filter(milestone => {
-                    return parseFloat(milestone.age) === ageData.value;
+                    return parseFloat(milestone.age) === parseFloat(ageData.value);
                 }),
             })).filter(subdomain => subdomain.milestones.length > 0),
         })).filter(domain => domain.subdomains.length > 0);
+
+        emit('updateDomainsData', localPreparedDomains);
+
+        return localPreparedDomains;
     } else {
         return props.domains;
     }
 });
 
 const updateValue = (newRatings) => {
+    emit('updateDomainsData', preparedDomains);
     emit('updateRatingData', newRatings);
 };
 </script>
@@ -72,28 +77,30 @@ const updateValue = (newRatings) => {
                      v-for="milestone in subdomain.milestones"
                      :key="milestone.id">
 
-                    <h5 :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">{{milestone.abbreviation}}</h5>
-                    <div class="milestone-list-text"
-                         :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
-                        <span>{{milestone.title}}</span>
-                        <p>{{milestone.text}}</p>
-                    </div>
+                    <template v-if="ratings[milestone.domain_index] && ratings[milestone.domain_index].milestones[milestone.index]">
+                        <h5 :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">{{milestone.abbreviation}}</h5>
+                        <div class="milestone-list-text"
+                             :class="{ error: errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
+                            <span>{{milestone.title}}</span>
+                            <p>{{milestone.text}}</p>
+                        </div>
 
-                    <fieldset :class="{ error: !disabled && errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
-                        <template v-for="(rating, index) in [1, 2, 3, 4]">
-                            <div class="radio-wrap radio-content">
-                                <label :for="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio' + index">
-                                    <input type="radio"
-                                           :id="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio' + index"
-                                           v-model="ratings[milestone.domain_index].milestones[milestone.index].value"
-                                           :name="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio'"
-                                           :value="rating"
-                                           :disabled="disabled"
-                                           @input="updateValue(ratings)"/>
-                                </label>
-                            </div>
-                        </template>
-                    </fieldset>
+                        <fieldset :class="{ error: !disabled && errors[`ratings.${milestone.domain_index}.milestones.${milestone.index}.value`] }">
+                            <template v-for="(rating, index) in [1, 2, 3, 4]">
+                                <div class="radio-wrap radio-content">
+                                    <label :for="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio' + index">
+                                        <input type="radio"
+                                               :id="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio' + index"
+                                               v-model="ratings[milestone.domain_index].milestones[milestone.index].value"
+                                               :name="disabled ? milestone.id + '-check-radio-disabled' : milestone.id + '-check-radio'"
+                                               :value="rating"
+                                               :disabled="disabled"
+                                               @input="updateValue(ratings)"/>
+                                    </label>
+                                </div>
+                            </template>
+                        </fieldset>
+                    </template>
                 </div>
             </div>
         </template>

@@ -54,4 +54,16 @@ class EvaluationFilter extends BaseFilter
             return $this->whereBetween('finished_at', [$period['from'], $period['to']]);
         }
     }
+
+    /**
+     * @param array $period
+     * @return ModelFilter|void
+     */
+    public function FinishedBetweenOrNull(array $period)
+    {
+        if (!empty($period['from']) && !empty($period['to'])) {
+            return $this->whereBetween('finished_at', [$period['from'], $period['to']])
+                ->orWhere('finished_at', null);
+        }
+    }
 }

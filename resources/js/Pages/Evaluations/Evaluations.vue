@@ -180,6 +180,30 @@ const deleteEvaluation = async () => {
 
     deleteForm.delete(route('evaluations.destroy', { id: deleteForm.id }), formOptions);
 };
+
+const unfinishedForm = useForm({
+  //
+});
+
+const unfinishedEvaluation = async (id) => {
+  unfinishedForm.processing = true;
+
+  unfinishedForm.post(route('evaluations.unfinished', { id: id }), {
+    preserveState: false,
+    onSuccess: (page) => {
+      // Clear errors & reset form data
+      unfinishedForm.clearErrors();
+      errors.value = {};
+      close();
+    },
+    onError: (err) => {
+      errors.value = err;
+    },
+    onFinish: () => {
+      unfinishedForm.processing = false;
+    },
+  });
+};
 </script>
 
 <template>
@@ -306,12 +330,18 @@ const deleteEvaluation = async () => {
                                     </h1>
 
                                     <p class="tw-mb-8">
-                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, so klicken Sie auf das ‘X oben rechts und dann auf den entsprechenden Button in der Detailansicht des Screenings. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
+                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, klicke Sie auf 'Abgabe zurückziehen. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
                                     </p>
 
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn :href="route('evaluations.pdf', { id: evaluationResultItem.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
-                                            Screening als PDF downloaden
+                                        <v-btn :href="route('evaluations.pdf', { id: evaluationResultItem.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-mr-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
+                                          Screening als PDF downloaden
+                                        </v-btn>
+                                    </v-hover>
+
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn @click="unfinishedEvaluation(evaluationResultItem.id)" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'accent' : 'primary'">
+                                          Abgabe zurückziehen
                                         </v-btn>
                                     </v-hover>
                                 </div>

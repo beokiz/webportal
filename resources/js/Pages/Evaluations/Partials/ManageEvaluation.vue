@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import { onMounted, onBeforeMount, ref, computed } from 'vue';
+import { onMounted, onBeforeMount, ref, computed, watch, isRef } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,6 +42,8 @@ const generatedUUID = ref(null);
 const errors = ref(props.errors || {});
 const loader = ref(false);
 
+const preparedDomains = ref([]);
+
 const evaluationResultState = ref(false);
 const evaluationResultData = ref(null);
 
@@ -63,10 +65,6 @@ onMounted(() => {
         generateEvaluationUuid();
     }
 });
-
-const updateRatingData = (newRatings) => {
-    manageForm.ratings = newRatings;
-};
 
 const generateEvaluationUuid = () => {
     generatedUUID.value = uuidv4();
@@ -96,7 +94,6 @@ const clear = () => {
 };
 
 const manageForm = useForm({
-    id: isEditMode.value ? props.evaluation.id : null,
     uuid: isEditMode.value ? props.evaluation.uuid : null,
     user_id: isEditMode.value ? props.evaluation.user_id : currentUser.id,
     kita_id: isEditMode.value ? props.evaluation.kita_id : null,
@@ -105,11 +102,56 @@ const manageForm = useForm({
     ratings: isEditMode.value ? props.evaluation.data : [],
 });
 
+watch(
+    () => manageForm.age,
+    (age) => {
+        manageForm.ratings = prepareInitialRatingData(props.domains);
+    }
+);
+
+const updateDomainsData = (evaluationDomains) => {
+    preparedDomains.value = isRef(evaluationDomains)
+        ? evaluationDomains.value
+        : evaluationDomains;
+};
+
+const updateRatingData = (newRatings) => {
+    manageForm.ratings = newRatings;
+};
+
 const manageEvaluation = async () => {
     manageForm.processing = true;
     loader.value = true;
 
-    manageForm.post(route('evaluations.store'), {
+    let presentedMilestones = [];
+
+    preparedDomains.value.map(domain => {
+        domain.subdomains.map(subdomain => {
+            subdomain.milestones.map(milestone => {
+                presentedMilestones.push(parseInt(milestone.id));
+
+                return milestone;
+            });
+
+            return subdomain;
+        });
+
+        return domain;
+    });
+
+    manageForm.ratings = manageForm.ratings.map(domain => {
+        domain.milestones.map(milestone => {
+            if (!presentedMilestones.includes(parseInt(milestone.id))) {
+                milestone.value = 0;
+            }
+
+            return milestone;
+        });
+
+        return domain;
+    });
+
+    let routeOptions = {
         onSuccess: (page) => {
             // Clear errors & reset form data
             // manageForm.reset();
@@ -129,7 +171,13 @@ const manageEvaluation = async () => {
             manageForm.processing = false;
             loader.value = false;
         },
-    });
+    };
+
+    if (isEditMode.value) {
+        manageForm.put(route('evaluations.update', { evaluation: props.evaluation.id }), routeOptions);
+    } else {
+        manageForm.post(route('evaluations.store'), routeOptions);
+    }
 };
 
 const saveEvaluation = async () => {
@@ -148,6 +196,31 @@ const saveEvaluation = async () => {
         },
         onFinish: () => {
             manageForm.processing = false;
+            loader.value = false;
+        },
+    });
+};
+
+const unfinishedForm = useForm({
+    //
+});
+
+const unfinishedEvaluation = async (id) => {
+    unfinishedForm.processing = true;
+
+    unfinishedForm.post(route('evaluations.unfinished', { id: id }), {
+        preserveState: false,
+        onSuccess: (page) => {
+            // Clear errors & reset form data
+            unfinishedForm.clearErrors();
+            errors.value = {};
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            unfinishedForm.processing = false;
             loader.value = false;
         },
     });
@@ -211,16 +284,18 @@ const saveEvaluation = async () => {
 
                 <v-row class="manage-evaluation-domains">
                     <EvaluationDomainsList
+                        v-if="!!manageForm.age"
                         :ratings="manageForm.ratings"
+                        :age="manageForm.age"
                         :domains="domains"
                         :errors="errors"
+                        @updateDomainsData="updateDomainsData"
                         @updateRatingData="updateRatingData"/>
                 </v-row>
             </v-container>
 
 
             <v-container>
-
                 <template v-if="loader">
                     <div class="tw-flex justify-center items-center tw-bg-white">
                         <v-progress-circular indeterminate :size="40"></v-progress-circular>
@@ -241,7 +316,7 @@ const saveEvaluation = async () => {
                                 Speichern
                             </v-btn>
                         </v-hover>
-                        <v-hover v-slot:default="{ isHovering, props }">
+                        <v-hover v-if="!!manageForm.age" v-slot:default="{ isHovering, props }">
                             <v-btn-primary @click="manageEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
                                 Prüfen und Einreichen
                             </v-btn-primary>
@@ -264,12 +339,18 @@ const saveEvaluation = async () => {
                                     </h1>
 
                                     <p class="tw-mb-8">
-                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, so klicken Sie auf das ‘X oben rechts und dann auf den entsprechenden Button in der Detailansicht des Screenings. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
+                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, klicke Sie auf 'Abgabe zurückziehen. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
                                     </p>
 
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
+                                        <v-btn :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-mr-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
                                             Screening als PDF downloaden
+                                        </v-btn>
+                                    </v-hover>
+
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn @click="unfinishedEvaluation(evaluationResultData.item.id)" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'accent' : 'primary'">
+                                            Abgabe zurückziehen
                                         </v-btn>
                                     </v-hover>
                                 </div>
@@ -285,6 +366,7 @@ const saveEvaluation = async () => {
                             <v-col cols="12">
                                 <EvaluationDomainsList
                                     :ratings="evaluationResultData.item.data"
+                                    :age="manageForm.age"
                                     :domains="domains"
                                     :disabled="true"/>
                             </v-col>

@@ -65,7 +65,7 @@ class EvaluationController extends BaseController
         if ($currentUser->is_employer) {
             $now = Carbon::now();
 
-            $args['finished_between'] = [
+            $args['finished_between_or_null'] = [
                 'from' => $now->copy()->subMinutes(15),
                 'to'   => $now,
             ];
@@ -164,7 +164,7 @@ class EvaluationController extends BaseController
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $data = $this->evaluationItemService->exportInPdf($evaluation->id);
-
+        debug_log($data);
         return $data ?
             Response::download($data, basename($data), [
                 'Content-Type'        => mime_content_type($data),
@@ -238,6 +238,26 @@ class EvaluationController extends BaseController
 
         $attributes = $request->validated();
         $result     = $this->evaluationItemService->update($evaluation->id, $attributes);
+
+        return $result
+            ? Redirect::back()
+                ->withSuccesses(__('crud.evaluations.update_success'))
+                ->withData(['item' => $result])
+            : Redirect::back()->withErrors(__('crud.evaluations.update_error'));
+    }
+
+    /**
+     * @param Request    $request
+     * @param Evaluation $evaluation
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function unfinished(Request $request, Evaluation $evaluation)
+    {
+        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
+
+        $result = $this->evaluationItemService->update($evaluation->id, [
+            'finished_at' => null,
+        ]);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.evaluations.update_success'))

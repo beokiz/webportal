@@ -9,7 +9,7 @@ return [
     */
 
     'common' => [
-        'created_date_line' => "Hergestellt in: :date",
+        'created_date_line' => "Eingereicht am: :date",
         'copyright'         => "&#169; Alle Rechte vorbehalten",
     ],
 

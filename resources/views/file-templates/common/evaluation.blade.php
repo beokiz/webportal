@@ -1,5 +1,6 @@
 @php
     $item = $data['item'];
+    $kita = $data['kita'];
     $domains = $data['domains']->keyBy('id');
 
     $ratingData = [];
@@ -32,7 +33,7 @@
         <div class="result-evaluation-col result-evaluation-col-title">
             <p>
                 <span class="tw-font-black">Bezeichner des Screenings</span>:
-                {{$item->uuid}}
+                {{$kita->name}} {{$item->uuid}}
             </p>
         </div>
 
