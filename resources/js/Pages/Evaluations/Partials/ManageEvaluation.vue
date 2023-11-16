@@ -332,6 +332,18 @@ const unfinishedEvaluation = async (id) => {
                 <v-card-text>
                     <v-container>
                         <v-row class="result-evaluation-domains">
+                            <v-col cols="12">
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <div class="tw-text-right">
+                                        <a :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" @click="close" title="Fenster schließen">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2" @click="">mdi-close</v-icon>
+                                        </a>
+                                    </div>
+                                </v-hover>
+                            </v-col>
+                        </v-row>
+
+                        <v-row class="result-evaluation-domains">
                             <v-col cols="8" offset="2">
                                 <div class="tw-text-center">
                                     <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">

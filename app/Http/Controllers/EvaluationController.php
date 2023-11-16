@@ -164,7 +164,7 @@ class EvaluationController extends BaseController
         $this->authorize('authorizeAccessToSingleEvaluation', [User::class, $evaluation->id]);
 
         $data = $this->evaluationItemService->exportInPdf($evaluation->id);
-        debug_log($data);
+
         return $data ?
             Response::download($data, basename($data), [
                 'Content-Type'        => mime_content_type($data),

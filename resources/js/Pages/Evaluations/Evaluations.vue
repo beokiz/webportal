@@ -65,10 +65,10 @@ const evaluationResultItem = ref(null);
 const evaluationResultDomains = ref(null);
 
 const headers = [
-    { title: 'UUID', key: 'uuid', width: '40%', sortable: false},
+    { title: 'ID', key: 'id', width: '40%', sortable: false},
     { title: 'Zullet bearbeitet', key: 'updated_at', width: '15%', sortable: false },
-    { title: 'Abgegeben am', key: 'created_at', width: '15%', sortable: false },
-    { title: 'Bearbetungszeit endet', key: 'finished_at', width: '20%', sortable: false },
+    { title: 'Abgegeben am', key: 'finished_at', width: '15%', sortable: false },
+    { title: 'Bearbetungszeit endet', key: 'not_editable_at', width: '20%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 
@@ -273,13 +273,13 @@ const unfinishedEvaluation = async (id) => {
 
                 <template v-slot:item="{ item }">
                     <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.uuid}}</td>
+                        <td>{{`${item.selectable.kita.formatted_name}_${item.selectable.uuid}`}}</td>
 
                         <td>{{formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
 
-                        <td>{{formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
-
                         <td>{{formatDateTime(item.selectable.finished_at, 'sv-SE')}}</td>
+
+                        <td>{{formatDateTime(item.selectable.not_editable_at, 'sv-SE')}}</td>
 
                         <td align="center">
                             <v-tooltip v-if="item.selectable.editable && ($page.props.auth.user.is_manager || $page.props.auth.user.is_employer)" location="top">
@@ -322,6 +322,18 @@ const unfinishedEvaluation = async (id) => {
             <v-card height="95vh">
                 <v-card-text>
                     <v-container>
+                        <v-row class="result-evaluation-domains">
+                            <v-col cols="12">
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <div class="tw-text-right">
+                                        <a :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" @click="close" title="Fenster schließen">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2" @click="">mdi-close</v-icon>
+                                        </a>
+                                    </div>
+                                </v-hover>
+                            </v-col>
+                        </v-row>
+
                         <v-row class="result-evaluation-domains">
                             <v-col cols="8" offset="2">
                                 <div class="tw-text-center">

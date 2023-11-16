@@ -55,12 +55,13 @@ class Evaluation extends Model
      * @var array
      */
     protected $casts = [
-        'age'         => 'float',
-        'is_daz'      => 'boolean',
-        'data'        => 'array',
-        'finished_at' => 'datetime',
-        'editable'    => 'boolean',
-        'finished'    => 'boolean',
+        'age'             => 'float',
+        'is_daz'          => 'boolean',
+        'data'            => 'array',
+        'finished_at'     => 'datetime',
+        'not_editable_at' => 'datetime',
+        'editable'        => 'boolean',
+        'finished'        => 'boolean',
     ];
 
     /**
@@ -71,7 +72,20 @@ class Evaluation extends Model
     protected $appends = [
         'editable',
         'finished',
+        'not_editable_at',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function notEditableAt() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => !is_null($this->finished_at)
+                ? $this->finished_at->addMinutes(15)
+                : null,
+        );
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
