@@ -71,7 +71,7 @@ class Kita extends Model
     public function formattedName() : Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => Str::slug($this->name),
+            get: fn($value, $attributes) => Str::slug($this->name, '_'),
         );
     }
 
