@@ -326,7 +326,7 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="12">
                                 <v-hover v-slot:default="{ isHovering, props }">
                                     <div class="tw-text-right">
-                                        <a :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" @click="close" title="Fenster schließen">
+                                        <a :href="route('evaluations.pdf', { id: evaluationResultItem.id })" @click="close" title="Fenster schließen">
                                             <v-icon v-bind="props" size="small" class="tw-me-2" @click="">mdi-close</v-icon>
                                         </a>
                                     </div>
@@ -362,7 +362,7 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="12">
                                 <p>
                                     <span class="tw-font-black">Bezeichner des Screenings</span>:
-                                    {{evaluationResultItem.uuid}}
+                                    {{`${evaluationResultItem.kita.formatted_name}_${evaluationResultItem.uuid}`}}
                                 </p>
                             </v-col>
 

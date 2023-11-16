@@ -189,7 +189,7 @@ class EvaluationController extends BaseController
         return $result
             ? Redirect::route('evaluations.edit', ['evaluation' => $result->id])
                 ->withSuccesses(__('crud.evaluations.create_success'))
-                ->withData(['item' => $result])
+                ->withData(['item' => $result->loadMissing(['kita'])])
             : Redirect::back()->withErrors(__('crud.evaluations.create_error'));
     }
 
@@ -237,12 +237,14 @@ class EvaluationController extends BaseController
         }
 
         $attributes = $request->validated();
-        $result     = $this->evaluationItemService->update($evaluation->id, $attributes);
+        $result     = $this->evaluationItemService->update($evaluation->id, array_merge($attributes, [
+            'finished_at' => Carbon::now(),
+        ]));
 
         return $result
             ? Redirect::back()
                 ->withSuccesses(__('crud.evaluations.update_success'))
-                ->withData(['item' => $result])
+                ->withData(['item' => $result->loadMissing(['kita'])])
             : Redirect::back()->withErrors(__('crud.evaluations.update_error'));
     }
 
