@@ -66,9 +66,9 @@ const evaluationResultDomains = ref(null);
 
 const headers = [
     { title: 'ID', key: 'id', width: '40%', sortable: false},
-    { title: 'Zullet bearbeitet', key: 'updated_at', width: '15%', sortable: false },
+    { title: 'Zuletzt bearbeitet', key: 'updated_at', width: '15%', sortable: false },
     { title: 'Abgegeben am', key: 'finished_at', width: '15%', sortable: false },
-    { title: 'Bearbetungszeit endet', key: 'not_editable_at', width: '20%', sortable: false },
+    { title: 'Bearbeitungszeit endet', key: 'not_editable_at', width: '20%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 

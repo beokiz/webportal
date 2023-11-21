@@ -71,6 +71,11 @@ class EvaluationController extends BaseController
             ];
         }
 
+        if (empty($args['order_by'])) {
+            $args['order_by'] = 'updated_at';
+            $args['sort'] = 'desc';
+        }
+
         $result = $this->evaluationItemService->collection(array_merge($args, [
             'paginated' => true,
         ]));
@@ -201,6 +206,7 @@ class EvaluationController extends BaseController
     public function edit(Request $request, Evaluation $evaluation)
     {
         $this->authorize('authorizeAccessToManageEvaluation', User::class);
+        $this->authorize('authorizeAccessToManageSingleEvaluation', [User::class, $evaluation->id]);
 
         if (!$evaluation->editable) {
             return Redirect::back()->withErrors(__('crud.evaluations.update_denied'));

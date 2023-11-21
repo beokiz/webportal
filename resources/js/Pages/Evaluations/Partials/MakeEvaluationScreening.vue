@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import {onBeforeMount, ref, watch} from 'vue';
+import {isRef, onBeforeMount, ref, watch} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { ages, prepareInitialRatingData } from '@/Composables/common';
@@ -42,6 +42,8 @@ const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 const errors = ref(props.errors || {});
 const loader = ref(false);
 
+const preparedDomains = ref([]);
+
 const evaluationResultState = ref(false);
 const evaluationResultData = ref(null);
 const evaluationResultDomainName = ref(null);
@@ -53,7 +55,15 @@ onBeforeMount(() => {
 });
 
 const updateRatingData = (newRatings) => {
+    console.log('qqqqq')
     screeningForm.ratings = newRatings;
+};
+
+const updateDomainsData = (evaluationDomains) => {
+    console.log('ascas')
+    preparedDomains.value = isRef(evaluationDomains)
+        ? evaluationDomains.value
+        : evaluationDomains;
 };
 
 const setInitialRatingData = () => {
@@ -158,7 +168,8 @@ const screeningEvaluation = async () => {
                         :age="screeningForm.age"
                         :domains="domains"
                         :errors="errors"
-                        @updateRatingData="updateRatingData"/>
+                        @updateRatingData="updateRatingData"
+                        @updateDomainsData="updateDomainsData"/>
                 </v-row>
             </v-container>
 
@@ -179,7 +190,7 @@ const screeningEvaluation = async () => {
                     </v-col>
 
                     <v-col cols="12" sm="6" align="right">
-                        <v-hover v-if="!!screeningForm.age" v-slot:default="{ isHovering, props }">
+                        <v-hover v-if="!!screeningForm.age && preparedDomains.length > 0" v-slot:default="{ isHovering, props }">
                             <v-btn-primary @click="screeningEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
                                 Ampel-Bewertung
                             </v-btn-primary>

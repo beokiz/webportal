@@ -94,7 +94,7 @@
 
     <div class="second-row">
         <div>
-            <p>@lang('files.common.copyright')</p>
+{{--            <p>@lang('files.common.copyright')</p>--}}
         </div>
 
         <div>

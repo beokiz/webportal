@@ -109,14 +109,14 @@ watch(
     }
 );
 
+const updateRatingData = (newRatings) => {
+    manageForm.ratings = newRatings;
+};
+
 const updateDomainsData = (evaluationDomains) => {
     preparedDomains.value = isRef(evaluationDomains)
         ? evaluationDomains.value
         : evaluationDomains;
-};
-
-const updateRatingData = (newRatings) => {
-    manageForm.ratings = newRatings;
 };
 
 const manageEvaluation = async () => {
@@ -289,8 +289,8 @@ const unfinishedEvaluation = async (id) => {
                         :age="manageForm.age"
                         :domains="domains"
                         :errors="errors"
-                        @updateDomainsData="updateDomainsData"
-                        @updateRatingData="updateRatingData"/>
+                        @updateRatingData="updateRatingData"
+                        @updateDomainsData="updateDomainsData"/>
                 </v-row>
             </v-container>
 
@@ -316,7 +316,7 @@ const unfinishedEvaluation = async (id) => {
                                 Speichern
                             </v-btn>
                         </v-hover>
-                        <v-hover v-if="!!manageForm.age" v-slot:default="{ isHovering, props }">
+                        <v-hover v-if="!!manageForm.age && preparedDomains.length > 0" v-slot:default="{ isHovering, props }">
                             <v-btn-primary @click="manageEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
                                 Prüfen und Einreichen
                             </v-btn-primary>

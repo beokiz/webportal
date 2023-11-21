@@ -40,7 +40,7 @@ class EvaluationFilter extends BaseFilter
     public function withUsers($values) : ModelFilter
     {
         return $this->whereHas('user', function ($query) use ($values) {
-            $query->whereIn('id', (array) $values);
+            return $query->whereIn('id', (array) $values);
         });
     }
 
@@ -59,11 +59,13 @@ class EvaluationFilter extends BaseFilter
      * @param array $period
      * @return ModelFilter|void
      */
-    public function FinishedBetweenOrNull(array $period)
+    public function finishedBetweenOrNull(array $period)
     {
         if (!empty($period['from']) && !empty($period['to'])) {
-            return $this->whereBetween('finished_at', [$period['from'], $period['to']])
-                ->orWhere('finished_at', null);
+            return $this->where(function ($query) use ($period) {
+                return $query->whereBetween('finished_at', [$period['from'], $period['to']])
+                    ->orWhere('finished_at', null);
+            });
         }
     }
 }
