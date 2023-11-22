@@ -228,4 +228,15 @@ class UserRolePolicy extends BasePolicy
 
         return false;
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToExport(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['monitor'], $roles['monitor_oe']]);
+    }
 }

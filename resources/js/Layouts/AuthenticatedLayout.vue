@@ -45,6 +45,11 @@ onMounted(() => {
         menuGroupsList.value['kitas.index'] = 'kitas.*';
     }
 
+    if (currentUser.is_super_admin || currentUser.is_monitor || currentUser.is_monitor_oe) {
+        menuItemsList.value['export.index'] = 'Export';
+        menuGroupsList.value['export.index'] = 'export.*';
+    }
+
     menuItemsList.value['profile.edit'] = 'Profil';
     menuGroupsList.value['profile.edit'] = 'profile.*';
 });

@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\EvaluationScreeningController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\DomainsController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\KitaController;
@@ -211,4 +212,13 @@ Route::group(['prefix' => 'screening', 'as' => 'screening.', 'middleware' => ['a
     Route::get('/', [EvaluationScreeningController::class, 'index'])->name('index');
     Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
     Route::post('/make', [EvaluationScreeningController::class, 'make'])->name('make');
+});
+
+
+/*
+ * Screening Export routes
+ */
+Route::group(['prefix' => 'export', 'as' => 'export.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [ExportController::class, 'index'])->name('index');
+    Route::post('/', [ExportController::class, 'make'])->name('make');
 });

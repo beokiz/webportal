@@ -157,6 +157,7 @@ return [
         'restore_error'       => "Error! Something went wrong while restoring a evaluation. Please try again later.",
         'restore_denied'      => "Error! Selected evaluation cannot be restored.",
         'pdf_error'           => "Error! Something went wrong while creating the file, please try again later.",
+        'export_error'        => "Error! Something went wrong while creating the file, please try again later.",
     ],
 
 ];
