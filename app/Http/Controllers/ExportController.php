@@ -8,12 +8,12 @@ namespace App\Http\Controllers;
 
 use App\Exports\EvaluationsExport;
 use App\Models\User;
-use App\Services\Items\KitaItemService;
+use App\Services\Items\DomainItemService;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Excel;
 
 /**
  * Export Controller
@@ -23,19 +23,13 @@ use Excel;
 class ExportController extends BaseController
 {
     /**
-     * @var KitaItemService
-     */
-    protected $kitaItemService;
-
-    /**
      * ExportController constructor.
      *
-     * @param KitaItemService $kitaItemService
      * @return void
      */
-    public function __construct(KitaItemService $kitaItemService)
+    public function __construct()
     {
-        $this->kitaItemService = $kitaItemService;
+        //
     }
 
     /**
@@ -46,7 +40,11 @@ class ExportController extends BaseController
     {
         $this->authorize('authorizeAccessToExport', User::class);
 
-        return Inertia::render('Export/Export');
+        $domainItemService = app(DomainItemService::class);
+
+        return Inertia::render('Export/Export', [
+            'domains' => $domainItemService->collection(),
+        ]);
     }
 
     /**
@@ -57,17 +55,17 @@ class ExportController extends BaseController
     {
         $this->authorize('authorizeAccessToExport', User::class);
 
-//        $attributes = $request->validated();
-//        $result     = $this->kitaItemService->create($attributes);
-//
-//        return $result
-//            ? Redirect::back()->withSuccesses(__('crud.kitas.create_success'))
-//            : Redirect::back()->withErrors(__('crud.kitas.create_error'));
-
         try {
             $uuid = Str::uuid();
 
-            return Excel::download(new EvaluationsExport, "evaluations-{$uuid}.xlsx");
+            return Excel::download(new EvaluationsExport([
+                'user'            => $request->user(),
+                'finished_after'  => $request->input('finished_after'),
+                'finished_before' => $request->input('finished_before'),
+                'age'             => $request->input('age'),
+                'zip_code'        => $request->input('zip_code'),
+                'domains'         => $request->input('domains'),
+            ]), "evaluations-{$uuid}.xlsx");
         } catch (\Exception $exception) {
             return Redirect::back()
                 ->withErrors(__('evaluations.kitas.export_error'));

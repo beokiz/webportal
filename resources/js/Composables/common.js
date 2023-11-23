@@ -43,14 +43,16 @@ export const prepareInitialRatingData = (domains) => {
     domains.forEach(function(item1, index1) {
         ratingsData[index1] = {
             domain: item1.id,
-            rating: 0,
-            color: null,
             milestones: [],
         };
 
         item1.subdomains.forEach(function(item2, index2) {
             item2.milestones.forEach(function(item3, index3) {
-                ratingsData[index1].milestones.push({ id: item3.id, value: null });
+                ratingsData[index1].milestones.push({
+                    id: item3.id,
+                    abbreviation: item3.abbreviation,
+                    value: null
+                });
             });
         });
     });

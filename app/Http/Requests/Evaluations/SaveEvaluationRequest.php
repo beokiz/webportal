@@ -6,7 +6,6 @@
 
 namespace App\Http\Requests\Evaluations;
 
-use App\Http\Requests\BaseFormRequest;
 use Illuminate\Validation\Rule;
 
 /**
@@ -41,10 +40,11 @@ class SaveEvaluationRequest extends CreateEvaluationRequest
 
         if ($this->input('ratings')) {
             array_overwrite($rules, [
-                'ratings.*.domain'             => ['nullable', $this->domainExistRule()],
-                'ratings.*.milestones'         => ['nullable', 'array'],
-                'ratings.*.milestones.*.id'    => ['nullable', $this->milestoneExistRule()],
-                'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(true, true), ['nullable']),
+                'ratings.*.domain'                    => ['nullable', $this->domainExistRule()],
+                'ratings.*.milestones'                => ['nullable', 'array'],
+                'ratings.*.milestones.*.id'           => ['nullable', $this->milestoneExistRule()],
+                'ratings.*.milestones.*.abbreviation' => ['nullable', 'string'],
+                'ratings.*.milestones.*.value'        => array_merge($this->tinyIntegerRules(true, true), ['nullable']),
             ]);
         }
 

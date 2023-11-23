@@ -9,7 +9,6 @@ namespace App\Providers;
 use App\Models\User;
 use App\Policies\UserRolePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 /**
  * Auth Service Provider

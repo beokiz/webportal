@@ -80,7 +80,7 @@ class AppServiceProvider extends ServiceProvider
             // @see Illuminate\View\Compilers\Concerns\CompilesTranslations.php::compileLang()
             if (is_null($expression)) {
                 return '<?php $__env->startTranslation(); ?>';
-            } elseif ($expression[1] === '[') {
+            } else if ($expression[1] === '[') {
                 return "<?php \$__env->startTranslation{$expression}; ?>";
             }
 

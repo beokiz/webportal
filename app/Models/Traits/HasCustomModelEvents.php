@@ -44,6 +44,6 @@ trait HasCustomModelEvents
     {
         return array_key_exists($event, $this->eventData)
             ? $this->eventData[$event]
-            : NULL;
+            : null;
     }
 }

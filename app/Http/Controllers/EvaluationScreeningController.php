@@ -7,22 +7,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Evaluations\EvaluationScreeningRequest;
-use App\Http\Requests\Evaluations\CreateEvaluationRequest;
-use App\Http\Requests\Evaluations\SaveEvaluationRequest;
-use App\Http\Requests\Evaluations\UpdateEvaluationRequest;
 use App\Http\Traits\ControllerTrait;
 use App\Models\Domain;
-use App\Models\Evaluation;
 use App\Models\User;
 use App\Services\Items\DomainItemService;
 use App\Services\Items\EvaluationItemService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Evaluation Screening Controller
@@ -85,7 +78,7 @@ class EvaluationScreeningController extends BaseController
         ])]);
 
         return Inertia::render('Evaluations/Partials/MakeEvaluationScreening', [
-            'domains' => $this->prepareDomainsData($domains),
+            'domains'      => $this->prepareDomainsData($domains),
             'dazDependent' => $domain->daz_dependent,
         ]);
     }

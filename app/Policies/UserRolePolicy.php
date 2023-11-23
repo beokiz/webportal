@@ -127,7 +127,7 @@ class UserRolePolicy extends BasePolicy
         if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
             $canAccess = false;
 
-            $user->kitas->each(function ($kita) use(&$canAccess, $userId) {
+            $user->kitas->each(function ($kita) use (&$canAccess, $userId) {
                 if ($kita->users->contains('id', $userId)) {
                     $canAccess = true;
                     return $canAccess;

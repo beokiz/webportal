@@ -115,7 +115,7 @@ class EvaluationItemService extends BaseItemService
                 ]),
             ],
             [
-                'file_name'   => 'evaluation_' . Str::slug($item->kita->name, '_') . '_' .  $item->uuid,
+                'file_name'   => 'evaluation_' . Str::slug($item->kita->name, '_') . '_' . $item->uuid,
                 'header-html' => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
                 'footer-html' => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
             ],
@@ -261,10 +261,11 @@ class EvaluationItemService extends BaseItemService
                 $milestonesArr    = array_column($domainMilestones, 'value', 'id');
 
                 $domainResult = [
-                    'domain'     => $domain->id,
-                    'rating'     => 0,
-                    'color'      => null,
-                    'milestones' => $domainsArr[$domain->id],
+                    'domain'       => $domain->id,
+                    'rating'       => 0,
+                    'color'        => null,
+                    'abbreviation' => $domain->abbreviation,
+                    'milestones'   => $domainsArr[$domain->id],
                 ];
 
                 /*

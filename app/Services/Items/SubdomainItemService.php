@@ -36,8 +36,8 @@ class SubdomainItemService extends BaseItemService
         /*
          * Define params
          */
-        $params = $this->prepareCollectionParams($args);
-        $filters = Arr::except($args, array_keys((array)$params));
+        $params  = $this->prepareCollectionParams($args);
+        $filters = Arr::except($args, array_keys((array) $params));
 
         /*
          * Filter & order query
@@ -48,7 +48,7 @@ class SubdomainItemService extends BaseItemService
                 'domain',
                 'milestones' => function ($query) {
                     $query->orderBy('order');
-                }
+                },
             ]);
 
         /*
@@ -71,11 +71,11 @@ class SubdomainItemService extends BaseItemService
     }
 
     /**
-     * @param int $id
+     * @param int  $id
      * @param bool $throwExceptionIfFail
      * @return Subdomain|null
      */
-    public function find(int $id, bool $throwExceptionIfFail = true): ?Subdomain
+    public function find(int $id, bool $throwExceptionIfFail = true) : ?Subdomain
     {
         return $throwExceptionIfFail
             ? Subdomain::findOrFail($id)
@@ -86,7 +86,7 @@ class SubdomainItemService extends BaseItemService
      * @param array $attributes
      * @return ?Subdomain
      */
-    public function create(array $attributes): ?Subdomain
+    public function create(array $attributes) : ?Subdomain
     {
         if (empty($attributes['order'])) {
             $attributes['order'] = Subdomain::max('order') + 1;
@@ -108,11 +108,11 @@ class SubdomainItemService extends BaseItemService
     }
 
     /**
-     * @param int $id
+     * @param int   $id
      * @param array $attributes
      * @return bool
      */
-    public function update(int $id, array $attributes): bool
+    public function update(int $id, array $attributes) : bool
     {
         $item = $this->find($id, true);
 
@@ -131,7 +131,7 @@ class SubdomainItemService extends BaseItemService
      * @param int $id
      * @return bool|null
      */
-    public function delete(int $id): ?bool
+    public function delete(int $id) : ?bool
     {
         return $this->find($id)->delete();
     }
@@ -140,7 +140,7 @@ class SubdomainItemService extends BaseItemService
      * @param array $attributes
      * @return bool
      */
-    public function reorder(array $attributes): bool
+    public function reorder(array $attributes) : bool
     {
         if (!empty($attributes['items'])) {
             return Batch::update(new Subdomain, $attributes['items'], 'id');
@@ -158,7 +158,7 @@ class SubdomainItemService extends BaseItemService
      * @param array $attributes
      * @return void
      */
-    protected function prepareAttributes(array &$attributes): void
+    protected function prepareAttributes(array &$attributes) : void
     {
         if (!empty($attributes['domain'])) {
             $attributes['domain_id'] = $attributes['domain'];
@@ -169,10 +169,10 @@ class SubdomainItemService extends BaseItemService
 
     /**
      * @param Subdomain $item
-     * @param array $attributes
+     * @param array     $attributes
      * @return void
      */
-    protected function updateRelations(Subdomain $item, array $attributes): void
+    protected function updateRelations(Subdomain $item, array $attributes) : void
     {
         //
     }

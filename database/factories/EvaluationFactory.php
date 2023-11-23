@@ -7,9 +7,7 @@
 namespace Database\Factories;
 
 use App\Models\Kita;
-use App\Models\Subdomain;
 use App\Models\User;
-use Illuminate\Support\Str;
 
 /**
  * Evaluation Factory

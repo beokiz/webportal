@@ -35,16 +35,17 @@ class CreateEvaluationRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'uuid'                         => ['required', 'uuid'],
-            'user_id'                      => ['required', $this->userExistRule()],
-            'kita_id'                      => ['required', $this->kitaExistRule()],
-            'age'                          => ['required', Rule::in(['2.5', '4.5'])],
-            'is_daz'                       => ['required', 'boolean'],
-            'ratings'                      => ['required', 'array'],
-            'ratings.*.domain'             => ['required', $this->domainExistRule()],
-            'ratings.*.milestones'         => ['required', 'array'],
-            'ratings.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
-            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(true, true), ['required']),
+            'uuid'                                => ['required', 'uuid'],
+            'user_id'                             => ['required', $this->userExistRule()],
+            'kita_id'                             => ['required', $this->kitaExistRule()],
+            'age'                                 => ['required', Rule::in(['2.5', '4.5'])],
+            'is_daz'                              => ['required', 'boolean'],
+            'ratings'                             => ['required', 'array'],
+            'ratings.*.domain'                    => ['required', $this->domainExistRule()],
+            'ratings.*.milestones'                => ['required', 'array'],
+            'ratings.*.milestones.*.id'           => ['required', $this->milestoneExistRule()],
+            'ratings.*.milestones.*.abbreviation' => ['required', 'string'],
+            'ratings.*.milestones.*.value'        => array_merge($this->tinyIntegerRules(true, true), ['required']),
         ];
     }
 

@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -14,7 +14,7 @@ import { ages } from '@/Composables/common';
 
 
 const props = defineProps({
-    token: String,
+    domains: Object,
     errors: Object,
 });
 
@@ -27,7 +27,7 @@ Inertia.on('success', (event) => {
     let pageType = event.detail.page.component;
 
     if (pageType === 'Export/Export' && newProps) {
-        // searchFilter.value = newProps.filters.search ?? null;
+        //
     }
 });
 
@@ -38,23 +38,14 @@ Inertia.on('success', (event) => {
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
 const errors = ref(props.errors || {});
-// const searchFilter = ref(props.filters.search ?? null);
-const deliveredFrom = ref();
-const deliveredTo = ref();
-const age = ref(null);
+const fileInProgress = ref(false);
+const finishedAfter = ref();
+const finishedBefore = ref();
+const age = ref('2.5');
 const zipCode = ref(null);
 const domain = ref(null);
 const isMenuOpen = ref(false)
 const isMenu2Open = ref(false)
-
-
-
-const domains = [
-    {domain_name: 'Fitsy', domain_id: 1},
-    {domain_name: 'Second', domain_id: 2},
-    {domain_name: 'Test', domain_id: 3},
-    {domain_name: 'Tst2', domain_id: 4},
-];
 
 // Methods
 const exportForm = useForm({
@@ -63,9 +54,16 @@ const exportForm = useForm({
 
 const makeExport = async () => {
     NProgress.start();
+    fileInProgress.value = true;
 
     try {
-        const response = await axios.post(route('export.make'), {}, { responseType: 'blob' });
+        const response = await axios.post(route('export.make'), {
+            finished_after: finishedAfter.value,
+            finished_before: finishedBefore.value,
+            age: age.value,
+            zip_code: zipCode.value,
+            domains: domain.value,
+        }, { responseType: 'blob' });
 
         const contentDisposition = response.headers['content-disposition'];
         const filenameIndex = contentDisposition.indexOf('filename=');
@@ -90,6 +88,7 @@ const makeExport = async () => {
     }
 
     NProgress.done();
+    fileInProgress.value = false;
 };
 </script>
 
@@ -107,36 +106,38 @@ const makeExport = async () => {
                     <v-row>
                         <v-col cols="12" sm="6">
                             <v-menu v-model="isMenuOpen"
-                                    :return-value.sync="deliveredFrom"
+                                    :return-value.sync="finishedAfter"
                                     :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
                                     <v-text-field
                                         label="Abgegeben ab"
                                         class="tw-cursor-pointer"
-                                        :model-value="deliveredFrom"
+                                        :model-value="finishedAfter"
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
+                                        :disabled="fileInProgress"
                                     ></v-text-field>
                                 </template>
-                                <v-date-picker @update:modelValue="isMenuOpen = false" v-model="deliveredFrom"></v-date-picker>
+                                <v-date-picker @update:modelValue="isMenuOpen = false" v-model="finishedAfter"></v-date-picker>
                             </v-menu>
                         </v-col>
                         <v-col cols="12" sm="6">
                             <v-menu v-model="isMenu2Open"
-                                    :return-value.sync="deliveredTo"
+                                    :return-value.sync="finishedBefore"
                                     :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
                                     <v-text-field
                                         label="Abgegeben bis"
                                         class="tw-cursor-pointer"
-                                        :model-value="deliveredTo"
+                                        :model-value="finishedBefore"
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
+                                        :disabled="fileInProgress"
                                     ></v-text-field>
                                 </template>
-                                <v-date-picker @update:modelValue="isMenu2Open = false" v-model="deliveredTo"></v-date-picker>
+                                <v-date-picker @update:modelValue="isMenu2Open = false" v-model="finishedBefore"></v-date-picker>
                             </v-menu>
                         </v-col>
                     </v-row>
@@ -147,9 +148,10 @@ const makeExport = async () => {
                                 v-model="domain"
                                 :items="domains"
                                 :error-messages="errors.domain"
-                                item-title="domain_name"
-                                item-value="domain_id"
+                                item-title="name"
+                                item-value="id"
                                 label="Domanen"
+                                :disabled="fileInProgress"
                             ></v-select>
                         </v-col>
                         <v-col cols="12" sm="4">
@@ -160,14 +162,16 @@ const makeExport = async () => {
                                 item-title="age_name"
                                 item-value="age_number"
                                 label="Altersgruppe"
+                                :disabled="fileInProgress"
                             ></v-select>
                         </v-col>
                         <v-col cols="12" sm="4">
                             <v-text-field v-model="zipCode"
                                           type="number"
                                           :error-messages="errors.zipCode"
-                                          label="Postleitzahl">
-                            </v-text-field>
+                                          label="Postleitzahl"
+                                          :disabled="fileInProgress"
+                            ></v-text-field>
                         </v-col>
                     </v-row>
                 </div>
@@ -180,7 +184,8 @@ const makeExport = async () => {
                             :color="isHovering ? 'accent' : 'primary'"
                             @click="makeExport"
                             dark
-                        >Suche</v-btn>
+                            :disabled="fileInProgress"
+                        >Exporte</v-btn>
                     </v-hover>
                 </div>
             </div>
