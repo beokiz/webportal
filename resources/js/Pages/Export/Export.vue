@@ -143,7 +143,7 @@ const makeExport = async () => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" sm="4">
+                        <v-col v-if="$page.props.auth.user.is_monitor_oe || $page.props.auth.user.is_super_admin" cols="12" sm="4">
                             <v-select
                                 v-model="domain"
                                 :items="domains"
