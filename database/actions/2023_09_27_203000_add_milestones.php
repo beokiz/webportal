@@ -447,7 +447,7 @@ return new class () extends Action {
             array_merge($commonOptions, [
                 'subdomain_id' => 25,
                 'abbreviation' => 'D.03',
-                'title'        => '„Als-ob-Spiele“',
+                'title'        => 'Als-ob-Spiele',
                 'text'         => 'Kind weist Gegenständen (nicht Personen!) im Spiel eine Bedeutung zu, die nicht zu ihrem Aussehen und/oder zu ihrer normalen Funktion passen (Zweckentfremdung). Es spielt Als-ob-Spiele (z.B. Besen als Pferd, Kiste als Boot).',
                 'order'        => 41,
                 'emphasis'     => 2,
@@ -506,16 +506,6 @@ return new class () extends Action {
             ]),
             array_merge($commonOptions, [
                 'subdomain_id' => 30,
-                'abbreviation' => 'S1.08',
-                'title'        => 'Mindestens 50 unterschiedliche Wörter aktiv verwenden',
-                'text'         => 'Kind hat einen aktiven Wortschatz von mind. 50 verschiedenen Wörtern. Die gleiche Lautfolge wird in verschiedenen Situationen zur Beschreibung des gleichen Sachverhaltes verwendet. Machen Sie vor der Bewertung eine Liste der gesprochenen Worte (ein passendes Formular finden Sie auf Seite X im BeoTool (kulturspezifisch abfragen "arabisch für Hund).',
-                'order'        => 16,
-                'emphasis'     => 2,
-                'emphasis_daz' => 2,
-                'age'          => '2.5',
-            ]),
-            array_merge($commonOptions, [
-                'subdomain_id' => 31,
                 'abbreviation' => 'SV.03',
                 'title'        => 'Ein geschriebenes Wort erkennen',
                 'text'         => 'Kind erkennt seinen eigenen Namen oder ein anderes Wort mit mind. 3 Buchstaben am Schriftbild wieder.',
@@ -525,7 +515,7 @@ return new class () extends Action {
                 'age'          => '4.5',
             ]),
             array_merge($commonOptions, [
-                'subdomain_id' => 32,
+                'subdomain_id' => 31,
                 'abbreviation' => 'SV.17',
                 'title'        => 'Menge von drei Elementen einzeln abzählen',
                 'text'         => 'Kind zählt eine Menge von 3 Gegenständen ab (z.B. drei ei-gene Finger oder 3 Bonbons). Es zeigt auf jedes Objekt einmal und nennt dabei die passende Zahl.',
@@ -535,7 +525,7 @@ return new class () extends Action {
                 'age'          => '4.5',
             ]),
             array_merge($commonOptions, [
-                'subdomain_id' => 33,
+                'subdomain_id' => 32,
                 'abbreviation' => 'SV.20',
                 'title'        => 'Gefäße ineinander stapeln',
                 'text'         => 'Kind stapelt mind. 3 unterschiedlich große Gefäße ineinan-der (z.B. Plastiktöpfchen, Becher).',
@@ -543,6 +533,16 @@ return new class () extends Action {
                 'emphasis'     => 2,
                 'emphasis_daz' => 2,
                 'age'          => '4.5',
+            ]),
+            array_merge($commonOptions, [
+                'subdomain_id' => 33,
+                'abbreviation' => 'S1.08',
+                'title'        => 'Mindestens 50 unterschiedliche Wörter aktiv verwenden',
+                'text'         => 'Kind hat einen aktiven Wortschatz von mind. 50 verschiedenen Wörtern. Die gleiche Lautfolge wird in verschiedenen Situationen zur Beschreibung des gleichen Sachverhaltes verwendet. Machen Sie vor der Bewertung eine Liste der gesprochenen Worte (ein passendes Formular finden Sie auf Seite X im BeoTool (kulturspezifisch abfragen "arabisch für Hund).',
+                'order'        => 16,
+                'emphasis'     => 2,
+                'emphasis_daz' => 2,
+                'age'          => '2.5',
             ]),
             array_merge($commonOptions, [
                 'subdomain_id' => 34,
