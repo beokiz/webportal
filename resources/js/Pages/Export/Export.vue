@@ -81,8 +81,6 @@ watch(finishedBefore, (val) => {
 
 // Methods
 const prepareDate = (inputDateString) => {
-    console.log(inputDateString)
-
     const inputDate = new Date(inputDateString);
 
     const months = [
@@ -119,7 +117,7 @@ const makeExport = async () => {
             zip_code: zipCode.value,
             domains: domain.value,
         }, { responseType: 'blob' });
-        console.log(response.headers)
+
         const contentDisposition = response.headers['content-disposition'];
         const filenameIndex = contentDisposition.indexOf('filename=');
 
