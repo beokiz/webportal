@@ -132,4 +132,31 @@ return [
         'reorder_error'       => "Error! Something went wrong while reordering kitas. Please try again later.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Evaluation CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'evaluations' => [
+        'create_success'      => "Evaluation has been created successfully.",
+        'create_error'        => "Error! Something went wrong while creating a evaluation. Please try again later.",
+        'update_success'      => "Evaluation has been updated successfully.",
+        'update_error'        => "Error! Something went wrong while updating a evaluation. Please try again later.",
+        'update_denied'       => "Error! Selected evaluation cannot be updated.",
+        'save_success'        => "Evaluation has been saved successfully.",
+        'save_error'          => "Error! Something went wrong while saving a evaluation. Please try again later.",
+        'save_denied'         => "Error! Selected evaluation cannot be saved.",
+        'check_success'       => "Evaluation has been checked successfully.",
+        'check_error'         => "Error! Something went wrong while checking a evaluation. Please try again later.",
+        'delete_success'      => "Evaluation has been deleted successfully.",
+        'delete_error'        => "Error! Something went wrong while deleting a evaluation. Please try again later.",
+        'delete_denied'       => "Error! Selected evaluation cannot be deleted.",
+        'delete_users_denied' => "Error! The selected evaluation has associated users, so it cannot be deleted.",
+        'restore_success'     => "Evaluation has been restored successfully.",
+        'restore_error'       => "Error! Something went wrong while restoring a evaluation. Please try again later.",
+        'restore_denied'      => "Error! Selected evaluation cannot be restored.",
+        'pdf_error'           => "Error! Something went wrong while creating the file, please try again later.",
+    ],
+
 ];

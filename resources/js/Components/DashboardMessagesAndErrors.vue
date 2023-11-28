@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import { computed, defineEmits } from 'vue';
+import { computed, onMounted, defineEmits } from 'vue';
 
 const props = defineProps({
     errors: Object,
@@ -30,6 +30,29 @@ const emits = defineEmits(['clearErrorsAndSuccesses']);
 const hide = () => {
     emits('clearErrorsAndSuccesses');
 };
+
+const isMatchingPattern = (key) => /^ratings\.\d+\.milestones\.\d+\.value$/.test(key);
+
+const prepareErrors = (errors) => {
+    const processObject = (obj) => {
+        for (const key in obj) {
+            if (typeof obj[key] === 'object') {
+                processObject(obj[key]);
+            }
+            if (isMatchingPattern(key)) {
+                // delete obj[key];
+
+                if (typeof obj['ratings.milestones'] === 'undefined') {
+                    obj['ratings.milestones'] = "Für einige Meilensteine ​​gibt es keine Bewertung.";
+                }
+            }
+        }
+    };
+
+    processObject(errors);
+
+    return errors;
+};
 </script>
 
 <template>
@@ -39,7 +62,12 @@ const hide = () => {
             <div class="tw-font-medium tw-text-red-600">Whoops! Etwas ist schief gelaufen.</div>
 
             <ul class="tw-mt-3 tw-list-disc tw-list-inside tw-text-sm tw-text-red-600">
-                <li v-for="(error, key) in errors" :key="key">{{ error }}</li>
+                <template v-for="(error, key) in prepareErrors(errors)">
+                    <li :key="key"
+                        v-if="!isMatchingPattern(key)">
+                        {{ error }}
+                    </li>
+                </template>
             </ul>
         </div>
 

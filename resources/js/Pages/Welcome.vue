@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Willkommen" />
+    <Head title="Willkommen"/>
 
     <div
         class="tw-relative sm:tw-flex sm:tw-justify-center sm:tw-items-center tw-min-h-screen tw-bg-dots-darker tw-bg-center tw-bg-gray-100 dark:tw-bg-dots-lighter dark:tw-bg-gray-900 selection:tw-bg-red-500 selection:tw-text-white"

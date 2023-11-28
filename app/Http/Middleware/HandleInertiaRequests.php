@@ -40,19 +40,17 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request) : array
     {
-        $user = optional($request->user());
-
         $successes = session()->get('successes') ?? [];
 
         if (!is_array($successes)) {
             $successes = [$successes];
         }
 
-        return array_merge(parent::share($request), [
+        $shared = [
             'auth'      => [
                 'canLogin'    => Route::has('auth.login'),
                 'canRegister' => Route::has('auth.register'),
-                'user'        => $user->toArray(),
+                'user'        => optional($request->user())->toArray(),
             ],
             'successes' => $successes,
             'ziggy'     => function () use ($request) {
@@ -60,6 +58,14 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
-        ]);
+        ];
+
+        $data = session()->get('data');
+
+        if (!empty($data)) {
+            $shared['data'] = !is_array($data) ? [$data] : $data;
+        }
+
+        return array_merge(parent::share($request), $shared);
     }
 }

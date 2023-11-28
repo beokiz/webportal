@@ -4,14 +4,8 @@
   -->
 
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -34,7 +28,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Anmeldung" />
+        <Head title="Anmeldung"/>
 
 <!--        <BreezeValidationErrors class="tw-mb-4"/>-->
 

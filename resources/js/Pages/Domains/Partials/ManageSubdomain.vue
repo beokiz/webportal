@@ -4,12 +4,12 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {Head, useForm, usePage, router, Link} from '@inertiajs/vue3';
+import { computed, onMounted, ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, useForm, usePage, Link } from '@inertiajs/vue3';
+import { ages } from '@/Composables/common';
+import Sortable from 'sortablejs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Sortable from "sortablejs";
-import { ages } from "@/Composables/common"
 
 const props = defineProps({
     subdomain: Object,
@@ -50,10 +50,6 @@ const headers = [
     {title: 'Beschreibungstext', key: 'text', width: '60%', sortable: false},
     {title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
-// const ages = [
-//     {age_name: '2.5', age_number: 2.5},
-//     {age_name: '4.5', age_number: 4.5},
-// ];
 
 // Computed
 const modifiedItems = computed(() => {

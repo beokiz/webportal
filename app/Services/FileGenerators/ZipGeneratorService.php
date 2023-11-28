@@ -6,6 +6,7 @@
 
 namespace App\Services\FileGenerators;
 
+use App\Exceptions\Custom\FileGeneratorException;
 use App\Interfaces\FileGenerators\ArchiveGeneratorServiceInterface;
 use ZipArchive;
 
@@ -52,6 +53,10 @@ class ZipGeneratorService extends BaseFileGeneratorService implements ArchiveGen
 
             return $path;
         } catch (\Exception $exception) {
+            if (!App::environment('production')) {
+                throw new FileGeneratorException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+
             return false;
         }
     }

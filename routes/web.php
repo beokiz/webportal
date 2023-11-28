@@ -13,7 +13,9 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\EvaluationScreeningController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProfileController;
@@ -125,7 +127,6 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
     Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
-//    Route::post('/{user}/restore', [UsersController::class, 'restore'])->name('restore');
 });
 
 
@@ -138,7 +139,6 @@ Route::group(['prefix' => 'domains', 'as' => 'domains.', 'middleware' => ['auth'
     Route::post('/', [DomainsController::class, 'store'])->name('store');
     Route::put('/{domain}', [DomainsController::class, 'update'])->name('update');
     Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
-//    Route::post('/{domain}/restore', [DomainsController::class, 'restore'])->name('restore');
     Route::post('/reorder', [DomainsController::class, 'reorder'])->name('reorder');
 });
 
@@ -152,7 +152,6 @@ Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.', 'middleware' => [
     Route::post('/', [SubdomainsController::class, 'store'])->name('store');
     Route::put('/{subdomain}', [SubdomainsController::class, 'update'])->name('update');
     Route::delete('/{subdomain}', [SubdomainsController::class, 'destroy'])->name('destroy');
-//    Route::post('/{subdomain}/restore', [SubdomainsController::class, 'restore'])->name('restore');
     Route::post('/reorder', [SubdomainsController::class, 'reorder'])->name('reorder');
 });
 
@@ -166,7 +165,6 @@ Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => [
     Route::post('/', [MilestonesController::class, 'store'])->name('store');
     Route::put('/{milestone}', [MilestonesController::class, 'update'])->name('update');
     Route::delete('/{milestone}', [MilestonesController::class, 'destroy'])->name('destroy');
-//    Route::post('/{milestone}/restore', [MilestonesController::class, 'restore'])->name('restore');
     Route::post('/reorder', [MilestonesController::class, 'reorder'])->name('reorder');
 });
 
@@ -184,6 +182,33 @@ Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'v
     Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');
     Route::post('/{kita}/disconnect-users', [KitaController::class, 'disconnectUsers'])->name('disconnect_users');
     Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
-//    Route::post('/{domain}/restore', [KitaController::class, 'restore'])->name('restore');
     Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');
+});
+
+
+/*
+ * Evaluation routes
+ */
+Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [EvaluationController::class, 'index'])->name('index');
+    Route::get('/create', [EvaluationController::class, 'create'])->name('create');
+    Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
+    Route::post('/{evaluation}/popup', [EvaluationController::class, 'showPopup'])->name('show_popup');
+    Route::get('/{evaluation}/pdf', [EvaluationController::class, 'pdf'])->name('pdf');
+    Route::get('/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('edit');
+    Route::post('/', [EvaluationController::class, 'store'])->name('store');
+    Route::put('/{evaluation}', [EvaluationController::class, 'update'])->name('update');
+    Route::post('/{evaluation}/unfinished', [EvaluationController::class, 'unfinished'])->name('unfinished');
+    Route::post('/save', [EvaluationController::class, 'save'])->name('save');
+    Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
+});
+
+
+/*
+ * Check Evaluation routes
+ */
+Route::group(['prefix' => 'screening', 'as' => 'screening.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [EvaluationScreeningController::class, 'index'])->name('index');
+    Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
+    Route::post('/make', [EvaluationScreeningController::class, 'make'])->name('make');
 });

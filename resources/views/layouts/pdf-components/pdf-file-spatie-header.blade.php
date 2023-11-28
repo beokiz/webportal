@@ -40,11 +40,12 @@
 
         #report-pdf-image-header > div:nth-of-type(3) {
             width: 53%;
+            text-align: right;
         }
 
         #report-pdf-image-header > div:nth-of-type(1) img {
             position: relative;
-            top: -.125cm;
+            /*top: -.125cm;*/
             max-height: .56cm;
         }
 
@@ -63,24 +64,25 @@
         }
     </style>
 </head>
+
 <body>
 <div id="report-pdf-image-header">
+    <div>
+        <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.jpg')) }}"/>
+    </div>
 
     <div>
-        <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.png')) }}"/>
-    </div>
-    <div>
 
     </div>
+
     <div>
         <ul>
             @if(!empty($headerData['report_date']))
-                <li>@lang('reports.common.report_date_line', ['date' => $headerData['report_date']])</li>
+                <li>@lang('files.common.created_date_line', ['date' => $headerData['report_date']])</li>
             @endif
-            <li>@lang('reports.common.created_date_line', ['date' => $headerData['current_time']])</li>
+            <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
         </ul>
     </div>
-
 </div>
 </body>
 </html>

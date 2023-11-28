@@ -4,12 +4,8 @@
   -->
 
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 defineProps({
     status: String,
@@ -26,7 +22,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Password vergessen" />
+        <Head title="Password vergessen"/>
 
         <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
             Passwort vergessen? Kein Problem. Teilen Sie uns einfach Ihre E-Mail-Adresse mit und wir senden Ihnen einen

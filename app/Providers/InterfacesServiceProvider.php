@@ -53,12 +53,12 @@ class InterfacesServiceProvider extends ServiceProvider
 
         $this->app->bind(
             \App\Interfaces\FileGenerators\ImageGeneratorServiceInterface::class,
-            \App\Services\FileGenerators\SnappyImageGeneratorService::class
+            \App\Services\FileGenerators\SpatieImageGeneratorService::class
         );
 
         $this->app->bind(
             \App\Interfaces\FileGenerators\PdfGeneratorServiceInterface::class,
-            \App\Services\FileGenerators\SnappyPdfGeneratorService::class
+            \App\Services\FileGenerators\SpatiePdfGeneratorService::class
         );
     }
 

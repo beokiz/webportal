@@ -10,10 +10,13 @@ use App\ModelFilters\KitaFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
+use Transliterator;
 
 /**
  * Kita Model
@@ -54,6 +57,25 @@ class Kita extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<string>
+     */
+    protected $appends = [
+        'formatted_name',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function formattedName() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => Str::slug($this->name, '_'),
+        );
+    }
+
+    /**
      * @return string|null
      */
     public function modelFilter() : ?string
@@ -72,5 +94,13 @@ class Kita extends Model
     public function users() : BelongsToMany
     {
         return $this->BelongsToMany(User::class, 'kita_has_users', 'kita_id', 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function evaluations() : HasMany
+    {
+        return $this->hasMany(Subdomain::class, 'user_id', 'id');
     }
 }

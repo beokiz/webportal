@@ -75,16 +75,18 @@
         }
     </style>
 </head>
+
 <body>
 <div id="report-pdf-image-footer">
-
     <div class="first-row">
         <div>
-            <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.png')) }}"/>
+
         </div>
+
         <div>
 
         </div>
+
         <div>
 
         </div>
@@ -92,14 +94,16 @@
 
     <div class="second-row">
         <div>
-            <p>@lang('reports.common.copyright')</p>
+{{--            <p>@lang('files.common.copyright')</p>--}}
         </div>
+
         <div>
 
         </div>
+
         <div>
             @if(!empty($footerData['display_document_meta']))
-                <p>@lang('reports.pdf.page_info', ['current' => '<span class="pageNumber"></span>', 'total' => '<span class="totalPages"></span>'])</p>
+                <p>@lang('files.pdf.page_info', ['current' => '<span class="pageNumber"></span>', 'total' => '<span class="totalPages"></span>'])</p>
             @endif
 
             @if(!empty($footerData['contact_email']))
@@ -107,7 +111,6 @@
             @endif
         </div>
     </div>
-
 </div>
 </body>
 </html>

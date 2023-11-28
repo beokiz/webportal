@@ -4,11 +4,11 @@
   -->
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import { computed, onMounted, ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Sortable from 'sortablejs';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const props = defineProps({
     items: Array,
@@ -85,6 +85,7 @@ const modifiedItems = computed(() => {
         return modifiedItem;
     });
 });
+
 const checkDazInputState = computed(() => {
     return !manageForm.daz_dependent ? 6 : 3;
 });
@@ -108,7 +109,7 @@ onMounted(() => {
     Sortable.create(document.querySelector('.v-data-table tbody'), options);
 });
 
-//Watch
+// Watch
 watch(dialog, (val) => {
     if (!val) {
         close();
@@ -120,6 +121,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
         searchFilter.value = null;
     }
+
     if (
         (page === currentPage.value && clearFilters) ||
         allFiltersEmpty ||
@@ -270,7 +272,7 @@ const saveNewOrder = (event) => {
 </script>
 
 <template>
-    <Head title="Domänen" />
+    <Head title="Domänen"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
@@ -497,7 +499,7 @@ const saveNewOrder = (event) => {
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
                                     </Link>
                                 </template>
-                                <span>Domäne anzeigen</span>
+                                <span>Domäne ansehen</span>
                             </v-tooltip>
 
                             <v-tooltip location="top">

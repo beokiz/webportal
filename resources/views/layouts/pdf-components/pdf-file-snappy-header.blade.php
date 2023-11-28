@@ -3,11 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    {{--    <link href="{{ resource_path('css/reports.css') }}" rel="stylesheet">--}}
-    {{--    <link href="{{ asset('css/reports.css') }}" rel="stylesheet">--}}
+    {{--    <link href="{{ resource_path('css/pdf.css') }}" rel="stylesheet">--}}
+    {{--    <link href="{{ asset('css/pdf.css') }}" rel="stylesheet">--}}
 
     <style type="text/css">
-        {!! file_get_contents(resource_path('css/reports.css')) !!}
+        {!! file_get_contents(resource_path('css/pdf.css')) !!}
     </style>
 
     <script type="text/javascript">
@@ -26,24 +26,25 @@
         }
     </script>
 </head>
+
 <body onload="parseSnappyPdfVariables()">
 <div id="report-pdf-image-header">
+    <div>
+        <img src="{{ resource_path('images/logo-pdf.jpg') }}"/>
+    </div>
 
     <div>
-        <img src="{{ resource_path('images/logo-pdf.png') }}"/>
-    </div>
-    <div>
 
     </div>
+
     <div>
         <ul>
             @if(!empty($headerData['report_date']))
-                <li>@lang('reports.common.report_date_line', ['date' => $headerData['report_date']])</li>
+                <li>@lang('files.common.report_date_line', ['date' => $headerData['report_date']])</li>
             @endif
-            <li>@lang('reports.common.created_date_line', ['date' => $headerData['current_time']])</li>
+            <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
         </ul>
     </div>
-
 </div>
 </body>
 </html>

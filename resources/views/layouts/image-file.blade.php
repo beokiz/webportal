@@ -3,11 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    {{--    <link href="{{ resource_path('css/reports.css') }}" rel="stylesheet">--}}
-    {{--    <link href="{{ asset('css/reports.css') }}" rel="stylesheet">--}}
+    {{--    <link href="{{ resource_path('css/image.css') }}" rel="stylesheet">--}}
+    {{--    <link href="{{ asset('css/image.css') }}" rel="stylesheet">--}}
 
     <style type="text/css">
-        {!! file_get_contents(resource_path('css/reports.css')) !!}
+        {!! file_get_contents(resource_path('css/images.css')) !!}
     </style>
 </head>
 <body>
@@ -22,10 +22,10 @@
         </div>
         <div>
             <ul>
-                <li>@lang('reports.common.tenant_line', ['id' => $headerData['tenant_id']])</li>
-                <li>@lang('reports.common.report_type_line', ['type' => $headerData['report_type']])</li>
-                <li>@lang('reports.common.report_period_line', ['from' => $headerData['from_time'], 'to' => $headerData['to_time']])</li>
-                <li>@lang('reports.common.created_date_line', ['date' => $headerData['current_time']])</li>
+                <li>@lang('files.common.tenant_line', ['id' => $headerData['tenant_id']])</li>
+                <li>@lang('files.common.report_type_line', ['type' => $headerData['report_type']])</li>
+                <li>@lang('files.common.report_period_line', ['from' => $headerData['from_time'], 'to' => $headerData['to_time']])</li>
+                <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
             </ul>
         </div>
 
@@ -55,7 +55,7 @@
 
         <div class="second-row">
             <div>
-                <p>@lang('reports.common.copyright')</p>
+                <p>@lang('files.common.copyright')</p>
             </div>
             <div>
 

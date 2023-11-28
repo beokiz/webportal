@@ -4,11 +4,11 @@
   -->
 
 <script setup>
-import { computed, ref, watch } from "vue";
-import { Inertia } from "@inertiajs/inertia";
-import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, useForm, usePage, Link } from '@inertiajs/vue3';
+import { ages } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ages } from "@/Composables/common"
 
 const props = defineProps({
     milestone: Object,
@@ -89,7 +89,7 @@ const manageMilestone = async () => {
 </script>
 
 <template>
-    <Head title="Meilenstein verwalten" />
+    <Head title="Meilenstein verwalten"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>

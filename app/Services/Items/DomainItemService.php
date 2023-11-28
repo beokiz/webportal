@@ -30,9 +30,10 @@ class DomainItemService extends BaseItemService
 
     /**
      * @param array $args
+     * @param array $with
      * @return mixed
      */
-    public function collection(array $args = [])
+    public function collection(array $args = [], array $with = [])
     {
         /*
          * Define params
@@ -44,12 +45,17 @@ class DomainItemService extends BaseItemService
          * Filter & order query
          */
         $query = Domain::query()->filter($filters)
-            ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc')
-            ->with([
+            ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc');
+
+        if (!empty($with)) {
+            $query->with($with);
+        } else {
+            $query->with([
                 'subdomains' => function ($query) {
                     $query->orderBy('order');
                 }
             ]);
+        }
 
         /*
          * Return results
