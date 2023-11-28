@@ -8,6 +8,7 @@ namespace App\Exports;
 
 use App\Models\Evaluation;
 use App\Services\Items\DomainItemService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -139,11 +140,11 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
             ->orderBy('id');
 
         if (!empty($this->data['finished_after'])) {
-            $query->whereDate('finished_at', '>=', $this->data['finished_after']);
+            $query->whereDate('finished_at', '>=', Carbon::make($this->data['finished_after'])->startOfDay());
         }
 
         if (!empty($this->data['finished_before'])) {
-            $query->whereDate('finished_at', '<=', $this->data['finished_before']);
+            $query->whereDate('finished_at', '<=', Carbon::make($this->data['finished_after'])->endOfDay());
         }
 
         if (!empty($this->data['age']) && in_array($this->data['age'], ['2.5', '4.5'])) {
@@ -169,13 +170,14 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
             __('files.excel.finished_at_label'),
             __('files.excel.age_label'),
             __('files.excel.is_daz_label'),
-            __('files.excel.uuid_label'),
+//            __('files.excel.uuid_label'),
             __('files.excel.postal_label'),
+            __('files.excel.uuid_label'),
         ];
 
-        if (!empty($this->user) && ($this->user->is_super_admin || $this->user->is_monitor)) {
-            $headings[] = __('files.excel.kita_label');
-        }
+//        if (!empty($this->user) && ($this->user->is_super_admin || $this->user->is_monitor)) {
+//            $headings[] = __('files.excel.kita_label');
+//        }
 
         return array_merge($headings, $this->additionalCols);
     }
@@ -187,13 +189,15 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
     public function map($evaluation) : array
     {
         if (!empty($evaluation->kita)) {
-            $formattedId = Str::slug($evaluation->kita->name, '_') . "_" . $evaluation->uuid;
-            $postalCode  = $evaluation->kita->zip_code;
-            $kitaName    = $evaluation->kita->name;
+//            $formattedId = Str::slug($evaluation->kita->name, '_') . "_" . $evaluation->uuid;
+            $postalCode = $evaluation->kita->zip_code;
+            $kitaId     = $evaluation->kita->id;
+            $kitaName   = $evaluation->kita->name;
         } else {
-            $formattedId = $evaluation->uuid;
-            $postalCode  = null;
-            $kitaName    = null;
+//            $formattedId = $evaluation->uuid;
+            $postalCode = null;
+            $kitaId     = null;
+            $kitaName   = null;
         }
 
         $rowData = [
@@ -201,12 +205,14 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
             'finished_at' => $evaluation->finished_at,
             'age'         => $evaluation->age,
             'is_daz'      => $evaluation->is_daz ? 'yes' : 'no',
-            'uuid'        => $formattedId,
+//            'uuid'        => $formattedId,
             'postal'      => $postalCode,
         ];
 
         if (!empty($this->user) && ($this->user->is_super_admin || $this->user->is_monitor)) {
             $rowData['kita'] = $kitaName;
+        } else {
+            $rowData['kita'] = $kitaId;
         }
 
         /*

@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import { ref } from 'vue';
+import {computed, ref, watch} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -39,15 +39,64 @@ const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
 const errors = ref(props.errors || {});
 const fileInProgress = ref(false);
+const rawFinishedAfter = ref(null);
+const rawFinishedBefore = ref(null);
 const finishedAfter = ref();
 const finishedBefore = ref();
 const age = ref('2.5');
 const zipCode = ref(null);
 const domain = ref(null);
-const isMenuOpen = ref(false)
-const isMenu2Open = ref(false)
+const isMenuOpen = ref(false);
+const isMenu2Open = ref(false);
+
+// Computed
+const domainsList = computed(() => {
+    let list = [
+        {
+            id: null,
+            name: 'Alle',
+        },
+    ];
+
+    props.domains.map(item => {
+        list.push({
+            id: item.id,
+            name: item.name,
+        });
+
+        return item;
+    });
+
+    return list;
+});
+
+//Watch
+watch(finishedAfter, (val) => {
+    rawFinishedAfter.value = prepareDate(val);
+});
+
+watch(finishedBefore, (val) => {
+    rawFinishedBefore.value = prepareDate(val);
+});
 
 // Methods
+const prepareDate = (inputDateString) => {
+    console.log(inputDateString)
+
+    const inputDate = new Date(inputDateString);
+
+    const months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    const day = inputDate.getDate();
+    const month = months[inputDate.getMonth()];
+    const year = inputDate.getFullYear();
+
+    return `${inputDate.toDateString().slice(0, 3)}, ${day}. ${month} ${year}`;
+};
+
 const exportForm = useForm({
     //
 });
@@ -56,15 +105,21 @@ const makeExport = async () => {
     NProgress.start();
     fileInProgress.value = true;
 
+    let preparedFinishedAfter = new Date(finishedAfter.value);
+    let preparedFinishedBefore = new Date(finishedBefore.value);
+
+    preparedFinishedAfter.setHours(preparedFinishedAfter.getHours() + 12);
+    preparedFinishedBefore.setHours(preparedFinishedBefore.getHours() + 12);
+
     try {
         const response = await axios.post(route('export.make'), {
-            finished_after: finishedAfter.value,
-            finished_before: finishedBefore.value,
+            finished_after: preparedFinishedAfter,
+            finished_before: preparedFinishedBefore,
             age: age.value,
             zip_code: zipCode.value,
             domains: domain.value,
         }, { responseType: 'blob' });
-
+        console.log(response.headers)
         const contentDisposition = response.headers['content-disposition'];
         const filenameIndex = contentDisposition.indexOf('filename=');
 
@@ -93,11 +148,11 @@ const makeExport = async () => {
 </script>
 
 <template>
-    <Head title="Übersicht Screenings" />
+    <Head title="Screenings exportieren" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Übersicht Screenings</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Screenings exportieren</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -112,7 +167,7 @@ const makeExport = async () => {
                                     <v-text-field
                                         label="Abgegeben ab"
                                         class="tw-cursor-pointer"
-                                        :model-value="finishedAfter"
+                                        :model-value="rawFinishedAfter"
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
@@ -130,7 +185,7 @@ const makeExport = async () => {
                                     <v-text-field
                                         label="Abgegeben bis"
                                         class="tw-cursor-pointer"
-                                        :model-value="finishedBefore"
+                                        :model-value="rawFinishedBefore"
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
@@ -146,11 +201,11 @@ const makeExport = async () => {
                         <v-col cols="12" sm="4">
                             <v-select
                                 v-model="domain"
-                                :items="domains"
+                                :items="domainsList"
                                 :error-messages="errors.domain"
                                 item-title="name"
                                 item-value="id"
-                                label="Domanen"
+                                label="Domäne"
                                 :disabled="fileInProgress"
                             ></v-select>
                         </v-col>
@@ -185,7 +240,7 @@ const makeExport = async () => {
                             @click="makeExport"
                             dark
                             :disabled="fileInProgress"
-                        >Exporte</v-btn>
+                        >Exportieren</v-btn>
                     </v-hover>
                 </div>
             </div>

@@ -46,7 +46,7 @@ onMounted(() => {
     }
 
     if (currentUser.is_super_admin || currentUser.is_monitor || currentUser.is_monitor_oe) {
-        menuItemsList.value['export.index'] = 'Exporte';
+        menuItemsList.value['export.index'] = 'Exportieren';
         menuGroupsList.value['export.index'] = 'export.*';
     }
 
