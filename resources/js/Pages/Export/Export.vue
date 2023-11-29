@@ -83,16 +83,21 @@ watch(finishedBefore, (val) => {
 const prepareDate = (inputDateString) => {
     const inputDate = new Date(inputDateString);
 
-    const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    const germanMonths = [
+        'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+        'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+    ];
+
+    const germanDays = [
+        'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'
     ];
 
     const day = inputDate.getDate();
-    const month = months[inputDate.getMonth()];
+    const month = germanMonths[inputDate.getMonth()];
     const year = inputDate.getFullYear();
+    const dayOfWeek = germanDays[inputDate.getDay()];
 
-    return `${inputDate.toDateString().slice(0, 3)}, ${day}. ${month} ${year}`;
+    return `${dayOfWeek}, ${day}. ${month} ${year}`;
 };
 
 const exportForm = useForm({
@@ -158,40 +163,44 @@ const makeExport = async () => {
                 <div class="tw-w-full">
                     <v-row>
                         <v-col cols="12" sm="6">
-                            <v-menu v-model="isMenuOpen"
-                                    :return-value.sync="finishedAfter"
-                                    :close-on-content-click="false">
-                                <template v-slot:activator="{ props }">
-                                    <v-text-field
-                                        label="Abgegeben ab"
-                                        class="tw-cursor-pointer"
-                                        :model-value="rawFinishedAfter"
-                                        prepend-icon="mdi-calendar"
-                                        readonly
-                                        v-bind="props"
-                                        :disabled="fileInProgress"
-                                    ></v-text-field>
-                                </template>
-                                <v-date-picker @update:modelValue="isMenuOpen = false" v-model="finishedAfter"></v-date-picker>
-                            </v-menu>
+                            <v-locale-provider locale="de">
+                                <v-menu v-model="isMenuOpen"
+                                        :return-value.sync="finishedAfter"
+                                        :close-on-content-click="false">
+                                    <template v-slot:activator="{ props }">
+                                        <v-text-field
+                                            label="Abgegeben ab"
+                                            class="tw-cursor-pointer"
+                                            :model-value="rawFinishedAfter"
+                                            prepend-icon="mdi-calendar"
+                                            readonly
+                                            v-bind="props"
+                                            :disabled="fileInProgress"
+                                        ></v-text-field>
+                                    </template>
+                                        <v-date-picker @update:modelValue="isMenuOpen = false" v-model="finishedAfter"></v-date-picker>
+                                </v-menu>
+                            </v-locale-provider>
                         </v-col>
                         <v-col cols="12" sm="6">
-                            <v-menu v-model="isMenu2Open"
-                                    :return-value.sync="finishedBefore"
-                                    :close-on-content-click="false">
-                                <template v-slot:activator="{ props }">
-                                    <v-text-field
-                                        label="Abgegeben bis"
-                                        class="tw-cursor-pointer"
-                                        :model-value="rawFinishedBefore"
-                                        prepend-icon="mdi-calendar"
-                                        readonly
-                                        v-bind="props"
-                                        :disabled="fileInProgress"
-                                    ></v-text-field>
-                                </template>
-                                <v-date-picker @update:modelValue="isMenu2Open = false" v-model="finishedBefore"></v-date-picker>
-                            </v-menu>
+                            <v-locale-provider locale="de">
+                                <v-menu v-model="isMenu2Open"
+                                        :return-value.sync="finishedBefore"
+                                        :close-on-content-click="false">
+                                    <template v-slot:activator="{ props }">
+                                        <v-text-field
+                                            label="Abgegeben bis"
+                                            class="tw-cursor-pointer"
+                                            :model-value="rawFinishedBefore"
+                                            prepend-icon="mdi-calendar"
+                                            readonly
+                                            v-bind="props"
+                                            :disabled="fileInProgress"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker @update:modelValue="isMenu2Open = false" v-model="finishedBefore"></v-date-picker>
+                                </v-menu>
+                            </v-locale-provider>
                         </v-col>
                     </v-row>
 
