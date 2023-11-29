@@ -140,20 +140,28 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
             ->orderBy('id');
 
         if (!empty($this->data['finished_after'])) {
-            $query->whereDate('finished_at', '>=', Carbon::make($this->data['finished_after'])->startOfDay());
+            $query->where(function ($subQuery) {
+                return $subQuery->whereDate('finished_at', '>=', Carbon::make($this->data['finished_after'])->startOfDay());
+            });
         }
 
         if (!empty($this->data['finished_before'])) {
-            $query->whereDate('finished_at', '<=', Carbon::make($this->data['finished_after'])->endOfDay());
+            $query->where(function ($subQuery) {
+                $subQuery->whereDate('finished_at', '<=', Carbon::make($this->data['finished_before'])->endOfDay());
+            });
         }
 
         if (!empty($this->data['age']) && in_array($this->data['age'], ['2.5', '4.5'])) {
-            $query->where('age', $this->data['age']);
+            $query->where(function ($subQuery) {
+                $subQuery->where('age', $this->data['age']);
+            });
         }
 
         if (!empty($this->data['zip_code'])) {
-            $query->whereHas('kita', function ($subQuery) {
-                return $subQuery->where('zip_code', $this->data['zip_code']);
+            $query->where(function ($subQuery) {
+                $subQuery->whereHas('kita', function ($subQuery) {
+                    return $subQuery->where('zip_code', $this->data['zip_code']);
+                });
             });
         }
 

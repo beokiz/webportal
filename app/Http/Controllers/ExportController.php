@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\EvaluationsExport;
+use App\Models\Domain;
 use App\Models\User;
 use App\Services\Items\DomainItemService;
 use Excel;
@@ -76,7 +77,12 @@ class ExportController extends BaseController
             }
 
             if (!empty($domains)) {
-                $filename .= '_' . Carbon::make($finishedBefore)->format('Ymd');
+                $filename .= '_' . Str::slug(
+                        Domain::whereIn('id', (array) $domains)
+                            ->pluck('name')
+                            ->implode(','),
+                        '_'
+                    );
             } else {
                 $filename .= '_alle';
             }
