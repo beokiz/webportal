@@ -47,6 +47,18 @@ const preparedDomains = computed(() => {
     }
 });
 
+const domainColors = computed(() => {
+    let data = {};
+
+    props.ratings.map(function(item) {
+        data[`domain_${item.domain}`] = item.color ?? null;
+
+        return item;
+    });
+
+    return data;
+});
+
 const hasMilestones = computed(() => {
     return preparedDomains.value.length > 0;
 });
@@ -64,7 +76,7 @@ const updateValue = (newRatings) => {
              :key="domain.id">
 
             <template v-if="domain.subdomains && domain.subdomains.length > 0">
-                <h3 :class="{ 'green': ratings[index].color === 'green', 'yellow': ratings[index].color === 'yellow', 'red': ratings[index].color === 'red' }">
+                <h3 :class="{ 'green': domainColors[`domain_${domain.id}`] === 'green', 'yellow': domainColors[`domain_${domain.id}`] === 'yellow', 'red': domainColors[`domain_${domain.id}`] === 'red' }">
                     {{domain.name}}
                 </h3>
 
