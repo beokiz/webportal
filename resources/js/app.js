@@ -15,6 +15,9 @@ import * as labsComponents from 'vuetify/labs/components'
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import AOS from 'aos';
+import { en, de } from 'vuetify/locale';
+import { createI18n } from 'vue-i18n';
+
 
 // CSS
 import '../sass/app.scss';
@@ -39,6 +42,14 @@ AOS.init();
 /*
  * Setup Vuetify
  */
+const i18n = createI18n({
+    locale: 'de',
+    fallbackLocale: 'en',
+    messages: {
+        de, en,
+    },
+});
+
 const lightTheme = {
     dark: false,
     colors: {
@@ -62,7 +73,6 @@ const vuetify = createVuetify({
         VBtnSecondary: VBtn,
         VBtnDropdown: VBtn,
     },
-
     defaults: {
         VBtnPrimary: {
             color: 'primary',
@@ -107,7 +117,6 @@ const vuetify = createVuetify({
             color: 'primary',
         },
     },
-
     theme: {
         defaultTheme: 'lightTheme',
         themes: {
@@ -119,6 +128,7 @@ const vuetify = createVuetify({
     icons: {
         iconfont: 'mdiSvg',
     },
+    i18n,
 })
 
 /*

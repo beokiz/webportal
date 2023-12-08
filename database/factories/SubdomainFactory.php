@@ -28,7 +28,7 @@ class SubdomainFactory extends BaseFactory
         return [
             'domain_id' => Domain::inRandomOrder()->first()->id,
             'name'      => $name,
-            'order'     => $this->faker->numberBetween(1, 999)
+            'order'     => $this->faker->numberBetween(1, 999),
         ];
     }
 }

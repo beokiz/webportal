@@ -98,7 +98,7 @@ class Handler extends ExceptionHandler
                 case ($exception instanceof MethodNotAllowedHttpException):
                     $message = __('exceptions.http_405_msg', [
                         'method'  => $request->getMethod(),
-                        'methods' => $exception->getHeaders()['Allow']
+                        'methods' => $exception->getHeaders()['Allow'],
                     ]);
 
                     return $this->respondError($message, $exception->getStatusCode());

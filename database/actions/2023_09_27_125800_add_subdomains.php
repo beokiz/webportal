@@ -171,33 +171,33 @@ return new class () extends Action {
             ]),
             array_merge($commonOptions, [
                 'domain_id' => 6,
-                'name'      => "Worte",
-                'order'     => 1,
-            ]),
-            array_merge($commonOptions, [
-                'domain_id' => 7,
                 'name'      => "Lesen",
                 'order'     => 1,
             ]),
             array_merge($commonOptions, [
-                'domain_id' => 7,
+                'domain_id' => 6,
                 'name'      => "Zahlenreihe bilden und abzählen",
                 'order'     => 2,
             ]),
             array_merge($commonOptions, [
-                'domain_id' => 7,
+                'domain_id' => 6,
                 'name'      => "Ordnen, Messen, Vergleichen",
                 'order'     => 3,
             ]),
             array_merge($commonOptions, [
-                'domain_id' => 8,
-                'name'      => "Besondere Wörter",
+                'domain_id' => 7,
+                'name'      => "Worte",
                 'order'     => 1,
             ]),
             array_merge($commonOptions, [
                 'domain_id' => 8,
-                'name'      => "Sätze",
+                'name'      => "Besondere Wörter",
                 'order'     => 2,
+            ]),
+            array_merge($commonOptions, [
+                'domain_id' => 8,
+                'name'      => "Sätze",
+                'order'     => 3,
             ]),
             array_merge($commonOptions, [
                 'domain_id' => 9,

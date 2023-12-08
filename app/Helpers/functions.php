@@ -139,7 +139,7 @@ if (!function_exists('sort_multidimensional_array')) {
         usort($array, function ($a, $b) use ($attribute) {
             if ($a[$attribute] == $b[$attribute]) {
                 return 0;
-            } elseif ($a[$attribute] < $b[$attribute]) {
+            } else if ($a[$attribute] < $b[$attribute]) {
                 return -1;
             } else {
                 return 1;
@@ -313,7 +313,7 @@ if (!function_exists('domain_has_ssl')) {
     {
         try {
             $stream = stream_context_create([
-                'ssl' => ['capture_peer_cert' => true]
+                'ssl' => ['capture_peer_cert' => true],
             ]);
 
             $read    = fopen($url, 'rb', false, $stream);

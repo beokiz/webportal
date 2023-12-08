@@ -6,8 +6,6 @@
 
 namespace App\Http\Requests\Evaluations;
 
-use App\Http\Requests\BaseFormRequest;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 /**
@@ -31,13 +29,14 @@ class EvaluationScreeningRequest extends CreateEvaluationRequest
     public function rules() : array
     {
         return [
-            'age'                          => ['required', Rule::in(['2.5', '4.5'])],
-            'is_daz'                       => ['required', 'boolean'],
-            'ratings'                      => ['required', 'array'],
-            'ratings.*.domain'             => ['required', $this->domainExistRule()],
-            'ratings.*.milestones'         => ['required', 'array'],
-            'ratings.*.milestones.*.id'    => ['required', $this->milestoneExistRule()],
-            'ratings.*.milestones.*.value' => array_merge($this->tinyIntegerRules(), ['nullable']),
+            'age'                                 => ['required', Rule::in(['2.5', '4.5'])],
+            'is_daz'                              => ['required', 'boolean'],
+            'ratings'                             => ['required', 'array'],
+            'ratings.*.domain'                    => ['required', $this->domainExistRule()],
+            'ratings.*.milestones'                => ['required', 'array'],
+            'ratings.*.milestones.*.id'           => ['required', $this->milestoneExistRule()],
+            'ratings.*.milestones.*.abbreviation' => ['required', 'string'],
+            'ratings.*.milestones.*.value'        => array_merge($this->tinyIntegerRules(), ['nullable']),
         ];
     }
 

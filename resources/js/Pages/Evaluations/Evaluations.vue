@@ -85,6 +85,22 @@ const modifiedItems = computed(() => {
     });
 });
 
+const preparedEvaluationResultDomains = computed(() => {
+    if (evaluationResultItem.value.age) {
+        return evaluationResultDomains.value.map(domain => ({
+            ...domain,
+            subdomains: domain.subdomains.map(subdomain => ({
+                ...subdomain,
+                milestones: subdomain.milestones.filter(milestone => {
+                    return parseFloat(milestone.age) === parseFloat(evaluationResultItem.value.age);
+                }),
+            })).filter(subdomain => subdomain.milestones.length > 0),
+        })).filter(domain => domain.subdomains.length > 0);
+    } else {
+        return [];
+    }
+});
+
 // Watch
 watch(dialog, (val) => {
     if (!val) {
@@ -369,7 +385,7 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="12">
                                 <EvaluationDomainsList
                                     :ratings="evaluationResultItem.data"
-                                    :domains="evaluationResultDomains"
+                                    :domains="preparedEvaluationResultDomains"
                                     :disabled="true"/>
                             </v-col>
                         </v-row>

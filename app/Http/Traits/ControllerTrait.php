@@ -6,8 +6,6 @@
 
 namespace App\Http\Traits;
 
-use Illuminate\Validation\Rule;
-
 /**
  * Controller Trait
  *

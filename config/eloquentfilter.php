@@ -28,7 +28,7 @@ return [
     */
 
     'generator' => [
-        'stub' => app_path('stubs/model-filter.stub')
+        'stub' => app_path('stubs/model-filter.stub'),
     ],
 
     /*
@@ -40,6 +40,6 @@ return [
     |
     */
 
-    'paginate_limit' => env('PAGINATION_LIMIT_DEFAULT', 15)
+    'paginate_limit' => env('PAGINATION_LIMIT_DEFAULT', 15),
 
 ];

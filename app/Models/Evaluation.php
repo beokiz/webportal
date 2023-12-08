@@ -7,7 +7,6 @@
 namespace App\Models;
 
 use App\ModelFilters\EvaluationFilter;
-use App\ModelFilters\MilestoneFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;

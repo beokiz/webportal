@@ -248,7 +248,7 @@ trait ApiResponse
     {
         return $this->apiResponse([
             'success' => false,
-            'message' => $message ?? __('exceptions.http_204_msg')
+            'message' => $message ?? __('exceptions.http_204_msg'),
         ]);
     }
 

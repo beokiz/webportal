@@ -157,6 +157,7 @@ return [
         'restore_error'       => "Fehler! Etwas ist beim Wiederherstellen einer Bewertung schiefgegangen. Bitte versuchen Sie es später erneut.",
         'restore_denied'      => "Fehler! Die ausgewählte Bewertung kann nicht wiederhergestellt werden.",
         'pdf_error'           => "Fehler! Beim Erstellen der Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'export_error'        => "Fehler! Beim Erstellen der Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
     ],
 
 ];

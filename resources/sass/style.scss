@@ -104,3 +104,7 @@ div#stripe-cardElement {
 .mdi-circle.active{
     color: #1ef71e;
 }
+
+.v-picker__actions > div > button:nth-of-type(1){
+    display: none;
+}

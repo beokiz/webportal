@@ -55,12 +55,10 @@ onBeforeMount(() => {
 });
 
 const updateRatingData = (newRatings) => {
-    console.log('qqqqq')
     screeningForm.ratings = newRatings;
 };
 
 const updateDomainsData = (evaluationDomains) => {
-    console.log('ascas')
     preparedDomains.value = isRef(evaluationDomains)
         ? evaluationDomains.value
         : evaluationDomains;

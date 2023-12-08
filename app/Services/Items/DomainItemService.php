@@ -9,7 +9,6 @@ namespace App\Services\Items;
 use App\Models\Domain;
 use Batch;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 /**
  * Domain Item Service
@@ -53,7 +52,7 @@ class DomainItemService extends BaseItemService
             $query->with([
                 'subdomains' => function ($query) {
                     $query->orderBy('order');
-                }
+                },
             ]);
         }
 

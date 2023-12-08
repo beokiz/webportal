@@ -73,7 +73,7 @@ class EvaluationController extends BaseController
 
         if (empty($args['order_by'])) {
             $args['order_by'] = 'updated_at';
-            $args['sort'] = 'desc';
+            $args['sort']     = 'desc';
         }
 
         $result = $this->evaluationItemService->collection(array_merge($args, [
