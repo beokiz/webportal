@@ -1,0 +1,33 @@
+<?php
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych, Pavel Karpushevskiy
+ */
+
+namespace {{ NAMESPACE }};
+
+/**
+ * {{ CLASS_NAME }} Service
+ *
+ * @package {{ NAMESPACE }}
+ */
+class {{ CLASS_NAME }}
+{
+    /**
+     * SampleService constructor.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * @param mixed $param
+     * @return mixed
+     */
+    public function someMethod($param) {
+        //
+    }
+}

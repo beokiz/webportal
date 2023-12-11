@@ -1,0 +1,12 @@
+<?php
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych, Pavel Karpushevskiy
+ */
+
+namespace {{ namespace }};
+
+class {{ class }}
+{
+    //
+}

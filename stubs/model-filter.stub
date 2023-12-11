@@ -1,0 +1,30 @@
+<?php
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych, Pavel Karpushevskiy
+ */
+
+namespace {{namespace}};
+
+use EloquentFilter\ModelFilter;
+
+class {{class}} extends ModelFilter
+{
+    /**
+     * @var array
+     */
+    public $relations = [];
+
+    /**
+     * @var array
+     */
+    protected $blacklist = [];
+
+    /**
+     * @return void
+     */
+    public function setup()
+    {
+        //
+    }
+}

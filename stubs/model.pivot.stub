@@ -1,0 +1,14 @@
+<?php
+/*
+ * GorKa Team
+ * Copyright (c) 2023  Vlad Horpynych, Pavel Karpushevskiy
+ */
+
+namespace {{ namespace }};
+
+use Illuminate\Database\Eloquent\Relations\Pivot;
+
+class {{ class }} extends Pivot
+{
+    //
+}
