@@ -6,6 +6,7 @@
 ### 1. [Create](https://dashboard.render.com/new/database) a new PostgreSQL database on Render and copy the internal DB URL to use below.
 
 
+
 ### 2. [Create](https://dashboard.render.com/create?type=web) a new Web Service on Render, giving Render permission to access your repo from GitHub or GitLab connected account.
 
 
@@ -16,7 +17,8 @@
 | DB_CONNECTION | `pgsql`                                                           |
 | APP_KEY       | Copy the output of `php artisan key:generate --show`              |
 
-**Or you can copy the contents of the `.env.example` file, set the variables and add the contents through the "Add Secret File" button (the name of the added file is `.env`)**
+Or you can copy the contents of the `.env.example` file, set the variables and add the contents through the "Add Secret File" button (the name of the added file is `.env`)
+
 
 
 ### 4. Wait for the deployment process to complete and enjoy the result!
@@ -25,7 +27,54 @@
 ---
 ## Deploy on production
 
-### 1. Install php, Apache, Nginx (and setup for using it as reverse proxy), Supervisor and Composer on the host
+### 1. Install git, php, MySQL (MariaDB), Apache, Nginx (and setup for using it as reverse proxy), Supervisor and Composer on the host
+**Install main components**
+```bash
+apt install curl zip unzip apache2 net-tools git nginx mariadb-server mariadb-client supervisor
+apt install php php-fpm php-common php-mysql php-bcmath php-curl php-gd php-cli php-mbstring php-xml php-simplexml php-zip php-json
+```
+
+
+**Complete MariaDB installation**
+```bash
+mysql_secure_installation
+~ Set root password? [Y/n]: y
+~ Remove anonymous users? [Y/n]: y
+~ Disallow root login remotely? [Y/n]: y
+~ Remove test database and access to it? [Y/n]: Y
+~ Reload privilege tables now? [Y/n]: Y
+```
+
+
+**Setup UFW**
+```bash
+ufw allow 22
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw allow 8080/tcp
+ufw enable
+```
+
+
+**Install NVM (Node version manager)**
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+source ~/.bashrc
+nvm install v18.16.0
+nvm use 18.16.0
+```
+
+
+**Install Composer**
+```bash
+mkdir /tmp/composer
+cd /tmp/composer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+chmod +x /usr/local/bin/composer
+ln -s /usr/local/bin/composer /usr/bin/composer
+```
+
 
 
 ### 2. Create a MySQL DB and a user for the project
@@ -51,10 +100,21 @@ cd html
 ```
 
 
-### 4. Setting up Laravel
+### 4. Setting up Laravel environment
 **Copying the env file from the example**
 ```bash
 cp .env.example .env
+```
+
+**Generate app key**
+```bash
+php artisan key:generate
+```
+
+**Setting up common params**
+```env
+APP_URL=your-site.domain
+APP_SUPPORT_EMAIL=noreply@your-site.domain
 ```
 
 **Setting up data for working with the database**
@@ -65,6 +125,18 @@ DB_PORT=3306
 DB_DATABASE=beokiz
 DB_USERNAME=beokiz
 DB_PASSWORD=<password>
+```
+
+**Setting up email params**
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=<host>
+MAIL_PORT=<port>
+MAIL_USERNAME=<password>
+MAIL_PASSWORD="<password>"
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS="${APP_SUPPORT_EMAIL}"
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 
@@ -81,41 +153,23 @@ php artisan migrate:refresh && php artisan actions && php artisan optimize:clear
 ```
 
 
-### 7. Setting up Supervisor
-**Copying the configuration files for Supervisor**
-```bash
-cp ./etc/Supervisor/* /etc/supervisor/conf.d/
-```
 
-**Restart Supervisor to initialize new configs**
-```bash
-supervisorctl reread
-supervisorctl update
-supervisorctl status
-```
-
-
-### 8. Setting up cron
+### 7. Setting up cron
 **We execute the specified command and, after selecting the editor, paste the contents of the ./etc/Crontab/beokiz-cron file into it**
 ```bash
 crontab -u www-data -e
 ```
 
 
-### 9. Building the app
-```bash
-npm run production
-```
 
-
-### 10. Setting up Nginx and Apache
+### 8. Setting up Nginx and Apache
 **Copying configuration files**
 ```bash
 cp ./etc/Apache/beokiz.conf /etc/apache2/sites-available
 cp ./etc/Nginx/beokiz.conf /etc/nginx/sites-available
 ```
 
-**Customize if needed. For example, if several sites will be through the Nginx proxy, then we change the port from 8080 to some other one in the configs (for example, 8081). After that, add it to the /etc/apache2/ports.conf file**
+Customize if needed. For example, if several sites will be through the Nginx proxy, then we change the port from 8080 to some other one in the configs (for example, 8081). After that, add it to the /etc/apache2/ports.conf file.
 
 **Create a links to configuration files**
 ```bash
@@ -130,7 +184,7 @@ systemctl restart nginx
 ```
 
 
-### 11. Finishing app setup
+### 9. Finishing app setup
 ```bash
 php artisan optimize:clear
 php artisan gk:supervisor restart
@@ -138,7 +192,7 @@ chown -R www-data:www-data ./
 ```
 
 
-### 12. Trying to access the app
+### 10. Trying to access the app
 ```
-https://beokiz-webportal.onrender.com/
+https://beokiz.de
 ```

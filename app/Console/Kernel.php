@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         // Remove project temporary files
-        $schedule->command('gk:temp:files')->hourly();
+        $schedule->command('temp:files:clear')->hourly();
     }
 
     /**
