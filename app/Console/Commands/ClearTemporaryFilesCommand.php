@@ -19,13 +19,14 @@ class ClearTemporaryFilesCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'temp:files:clear {--f|force}';
+    protected $signature = 'temp:files:clear {--f|force} {--s|silent}';
 
     /**
      * @var string
      */
     protected $description = 'Remove the temporary project files
-                                    {--f|force : Forced remove all temporary files}';
+                                    {--f|force : Forced remove all temporary files}
+                                    {--s|silent : Silent mode, no output}';
 
     /**
      * ClearTemporaryFilesCommand constructor.
@@ -61,11 +62,11 @@ class ClearTemporaryFilesCommand extends Command
                 }
             }
 
-            $tmpStorage->delete($deletedFiles);
-
-            $this->info(__('artisan.gk_temp.clear_tmp_message', [
-                'count' => count($deletedFiles),
-            ]));
+            if (!$this->option('silent')) {
+                $this->info(__('artisan.gk_temp.clear_tmp_message', [
+                    'count' => count($deletedFiles),
+                ]));
+            }
         } catch (\Exception $exception) {
             $this->error(__('artisan.common.error'));
             $this->error(__('artisan.common.exception', ['exception' => $exception->getMessage()]));

@@ -38,6 +38,7 @@ auth.json
 *.log
 *.sql
 *.sqlite
+!initial_dump.sql
 
 # Compiled files
 *.com
