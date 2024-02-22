@@ -392,7 +392,6 @@ CREATE TABLE `password_resets` (
 
 LOCK TABLES `password_resets` WRITE;
 /*!40000 ALTER TABLE `password_resets` DISABLE KEYS */;
-INSERT INTO `password_resets` VALUES ('beokiznimda@gmail.com','$2y$10$8B8Cm9m4zCQZqvQ5Qgrypurnqd2kEC1BrTCsN9rmBBL4YX/7F8hgG','2024-02-13 13:27:18');
 /*!40000 ALTER TABLE `password_resets` ENABLE KEYS */;
 UNLOCK TABLES;
 

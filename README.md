@@ -38,7 +38,8 @@ apt install php php-fpm php-common php-mysql php-bcmath php-curl php-gd php-cli 
 **Complete MariaDB installation**
 ```bash
 mysql_secure_installation
-~ Set root password? [Y/n]: y
+~ Switch to unix_socket authentication [Y/n]: n
+~ Set root password / Change the root password? [Y/n]: y
 ~ Remove anonymous users? [Y/n]: y
 ~ Disallow root login remotely? [Y/n]: y
 ~ Remove test database and access to it? [Y/n]: Y
@@ -53,6 +54,7 @@ ufw allow 80/tcp
 ufw allow 443/tcp
 ufw allow 8080/tcp
 ufw enable
+~ Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
 ```
 
 
@@ -129,20 +131,28 @@ DB_PASSWORD=<password>
 
 **Setting up email params**
 ```env
-MAIL_MAILER=smtp
+MAIL_MAILER=<type>
 MAIL_HOST=<host>
 MAIL_PORT=<port>
-MAIL_USERNAME=<password>
+MAIL_USERNAME=<username>
 MAIL_PASSWORD="<password>"
-MAIL_ENCRYPTION=ssl
-MAIL_FROM_ADDRESS="${APP_SUPPORT_EMAIL}"
-MAIL_FROM_NAME="${APP_NAME}"
+MAIL_ENCRYPTION=<type>
 ```
+**MAIL_MAILER=\<type\>** - This parameter indicates which mail driver will be used for sending emails. Here, smtp means that SMTP (Simple Mail Transfer Protocol) will be used for email delivery (example: MAIL_MAILER=smtp)\
+**MAIL_HOST=\<host\>** - This requires specifying the SMTP server host that will be used for sending emails. It could be the address of an external email service, for example, smtp.gmail.com for Gmail (example: MAIL_HOST=smtp.gmail.com)\
+**MAIL_PORT=\<port\>** - This parameter sets the port that will be used to connect to the SMTP server. Commonly used ports include 587 (for secure TLS connection) and 465 (for SSL connection) (example: MAIL_PORT=465)\
+**MAIL_USERNAME=\<username\>** - Here you specify the username (or email address) used for authentication on the SMTP server. It should be a valid email provided by the email sending service (example: MAIL_USERNAME=your_email@gmail.com)\
+**MAIL_PASSWORD="\<password\>"** - The password for the account used for authentication on the SMTP server. It's important to keep this parameter secure and not share it (example: MAIL_PASSWORD="y0ur_p@s5w0rd")\
+**MAIL_ENCRYPTION=\<type\>** - This parameter defines the encryption method that will be used when sending emails. ssl and tls are the most commonly used options. The choice between ssl and tls depends on the requirements of the SMTP server (example: MAIL_ENCRYPTION=ssl
+)
+
+
 
 
 ### 5. Install Composer & NPM dependencies
 ```bash
 composer install
+~ Do not run Composer as root/super user! See https://getcomposer.org/root for details Continue as root/super user [yes]? yes
 npm install
 ```
 
@@ -187,7 +197,6 @@ systemctl restart nginx
 ### 9. Finishing app setup
 ```bash
 php artisan optimize:clear
-php artisan gk:supervisor restart
 chown -R www-data:www-data ./
 ```
 
