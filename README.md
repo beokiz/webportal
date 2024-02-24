@@ -32,6 +32,7 @@ Or you can copy the contents of the `.env.example` file, set the variables and a
 ```bash
 apt install curl zip unzip apache2 net-tools git nginx mariadb-server mariadb-client supervisor
 apt install php php-fpm php-common php-mysql php-bcmath php-curl php-gd php-cli php-mbstring php-xml php-simplexml php-zip php-json
+apt purge -y libapache2-mod-php libapache2-mod-php8.1
 ```
 
 
@@ -78,8 +79,170 @@ ln -s /usr/local/bin/composer /usr/bin/composer
 ```
 
 
+### 2. Setup Nginx as Apache reverse-proxy
+**Install the FastCGI Apache module from kernel.org**
+```bash
+mkdir ~/apache
+cd ~/apache
+wget https://mirrors.edge.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
+dpkg -i libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
+```
 
-### 2. Create a MySQL DB and a user for the project
+
+**Let's change the Apache port number to 8080 and configure it to work with PHP-FPM using the mod_fastcgi module**
+**Rename the standard file**
+```bash
+mv /etc/apache2/ports.conf /etc/apache2/ports.conf.default
+```
+
+
+**Create a new file ports.conf and set port 8080 in it**
+```bash
+echo "Listen 8080" | sudo tee /etc/apache2/ports.conf
+```
+
+
+**Создадим файл виртуального хоста для Apache**
+The <VirtualHost> directive of this file will be set to serve only sites on port 8080. Disable the default virtual host
+```bash
+a2dissite 000-default
+```
+
+
+**Create a new virtual host file using the existing default site**
+```bash
+cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/001-default.conf
+```
+
+
+**Change the new configuration file (change port 80 to 8080)**
+```bash
+echo "<VirtualHost *:8080>
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/html
+	ErrorLog \${APACHE_LOG_DIR}/error.log
+	CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>" | sudo tee /etc/apache2/sites-available/001-default.conf > /dev/null
+```
+
+
+**Activating the configuration**
+```bash
+a2ensite 001-default
+```
+
+
+**Configuring Apache to use mod_fastcgi**
+Add a configuration block for mod_fastcgi that depends on mod_action. By default mod_action is disabled and must be enabled first.
+```bash
+a2enmod actions
+```
+
+
+**Rename the existing FastCGI configuration file**
+```bash
+mv /etc/apache2/mods-available/fastcgi.conf /etc/apache2/mods-available/fastcgi.conf.default
+```
+
+
+**Create a new configuration file. Add the following directives to the file to transfer requests for .php files to the PHP-FPM UNIX socket**
+```bash
+echo "<IfModule mod_fastcgi.c>
+	AddHandler fastcgi-script .fcgi
+	FastCgiIpcDir /var/lib/apache2/fastcgi
+	AddType application/x-httpd-fastphp .php
+	Action application/x-httpd-fastphp /php-fcgi
+	Alias /php-fcgi /usr/lib/cgi-bin/php-fcgi
+	FastCgiExternalServer /usr/lib/cgi-bin/php-fcgi -socket /run/php/php8.1-fpm.sock -pass-header Authorization
+	
+	<Directory /usr/lib/cgi-bin>
+		Require all granted
+	</Directory>
+</IfModule>" | sudo tee /etc/apache2/mods-available/fastcgi.conf > /dev/null
+```
+
+
+**Activating the configuration**
+```bash
+a2enmod fastcgi
+```
+
+
+**Activate mod_rewrite**
+```bash
+a2enmod rewrite
+```
+
+
+**Removing the virtual host's default symlink connection since we won't be using it anymore**
+```bash
+rm /etc/nginx/sites-enabled/default
+```
+
+
+**Install the packages necessary to build mod_rpaf**
+```bash
+apt install -y unzip build-essential apache2-dev
+```
+
+
+**Download the latest stable version from GitHub**
+```bash
+mkdir ~/apache_mods
+cd ~/apache_mods
+wget https://github.com/gnif/mod_rpaf/archive/stable.zip
+unzip stable.zip
+cd mod_rpaf-stable
+```
+
+
+****Compile and install the module
+```bash
+make
+make install
+```
+
+
+**Then we create a file in the mods-available directory that will load the rpaf module**
+```bash
+echo "LoadModule rpaf_module /usr/lib/apache2/modules/mod_rpaf.so" | sudo tee /etc/apache2/mods-available/rpaf.load
+```
+
+
+**Create another file in this directory called rpaf.conf, which will contain configuration directives for mod_rpaf**
+```bash
+echo "<IfModule mod_rpaf.c>
+	RPAF_Enable             On
+	RPAF_Header             X-Real-Ip
+	RPAF_ProxyIPs           85.215.133.23
+	RPAF_SetHostName        On
+	RPAF_SetHTTPS           On
+	RPAF_SetPort            On
+</IfModule>" | sudo tee /etc/apache2/mods-available/rpaf.conf > /dev/null
+```
+
+
+**Activate the module**
+```bash
+a2enmod rpaf
+```
+
+
+**Blocking direct access to Apache 8080 port**
+```bash
+ufw allow from 127.0.0.1 to 127.0.0.1 port 8080 proto tcp
+ufw reload
+```
+
+
+**Restarting Nginx & Apache**
+```bash
+systemctl restart nginx apache2
+```
+
+
+
+### 3. Create a MySQL DB and a user for the project
 **Login to MySQL as a root**
 ```bash
 mysql -u root -p
@@ -94,7 +257,7 @@ FLUSH PRIVILEGES;
 ```
 
 
-### 3. Clone the project from the repository and go to the project folder
+### 4. Clone the project from the repository and go to the project folder
 ```bash
 cd /var/www/
 git clone git@github.com:beokiz/webportal.git html
@@ -102,10 +265,15 @@ cd html
 ```
 
 
-### 4. Setting up Laravel environment
-**Copying the env file from the example**
+### 5. Setting up Laravel environment
+**Copying the env file from the example (if it is production)**
 ```bash
 cp .env.example .env
+```
+
+**Copying the env file from the example (if it is dev)**
+```bash
+cp .env.dev.example .env
 ```
 
 **Generate app key**
@@ -149,7 +317,7 @@ MAIL_ENCRYPTION=<type>
 
 
 
-### 5. Install Composer & NPM dependencies
+### 6. Install Composer & NPM dependencies
 ```bash
 composer install
 ~ Do not run Composer as root/super user! See https://getcomposer.org/root for details Continue as root/super user [yes]? yes
@@ -157,14 +325,14 @@ npm install
 ```
 
 
-### 6. Execute DB migrations and actions
+### 7. Execute DB migrations and actions
 ```bash
 php artisan migrate:refresh && php artisan actions && php artisan optimize:clear
 ```
 
 
 
-### 7. Setting up cron
+### 8. Setting up cron
 **We execute the specified command and, after selecting the editor, paste the contents of the ./etc/Crontab/beokiz-cron file into it**
 ```bash
 crontab -u www-data -e
@@ -172,11 +340,18 @@ crontab -u www-data -e
 
 
 
-### 8. Setting up Nginx and Apache
-**Copying configuration files**
+### 9. Setting up Nginx and Apache
+**Copying configuration files (if it is production)**
 ```bash
 cp ./etc/Apache/beokiz.conf /etc/apache2/sites-available
 cp ./etc/Nginx/beokiz.conf /etc/nginx/sites-available
+```
+
+
+**Copying configuration files (if it is dev)**
+```bash
+cp ./etc/Apache/beokiz-dev.conf /etc/apache2/sites-available
+cp ./etc/Nginx/beokiz-dev.conf /etc/nginx/sites-available
 ```
 
 Customize if needed. For example, if several sites will be through the Nginx proxy, then we change the port from 8080 to some other one in the configs (for example, 8081). After that, add it to the /etc/apache2/ports.conf file.
@@ -194,14 +369,19 @@ systemctl restart nginx
 ```
 
 
-### 9. Finishing app setup
+### 10. Finishing app setup
 ```bash
 php artisan optimize:clear
 chown -R www-data:www-data ./
 ```
 
 
-### 10. Trying to access the app
+### 11. Trying to access the app
 ```
-https://beokiz.de
+https://portal.beokiz.de
+```
+
+**Or, if it is dev**
+```
+https://dev.beokiz.de
 ```
