@@ -21,6 +21,7 @@ use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubdomainsController;
+use App\Http\Controllers\SurveyTimePeriodController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -171,7 +172,7 @@ Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => [
 
 
 /*
- * Kita routes
+ * Kitas routes
  */
 Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [KitaController::class, 'index'])->name('index');
@@ -188,7 +189,7 @@ Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'v
 
 
 /*
- * Evaluation routes
+ * Evaluations routes
  */
 Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [EvaluationController::class, 'index'])->name('index');
@@ -221,4 +222,16 @@ Route::group(['prefix' => 'screening', 'as' => 'screening.', 'middleware' => ['a
 Route::group(['prefix' => 'export', 'as' => 'export.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [ExportController::class, 'index'])->name('index');
     Route::post('/', [ExportController::class, 'make'])->name('make');
+});
+
+
+/*
+ * Survey time periods routes
+ */
+Route::group(['prefix' => 'survey-time-periods', 'as' => 'survey_time_periods.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [SurveyTimePeriodController::class, 'index'])->name('index');
+    Route::get('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'show'])->name('show');
+    Route::post('/', [SurveyTimePeriodController::class, 'store'])->name('store');
+    Route::put('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'update'])->name('update');
+    Route::delete('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'destroy'])->name('destroy');
 });

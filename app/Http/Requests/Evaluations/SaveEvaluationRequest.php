@@ -33,7 +33,7 @@ class SaveEvaluationRequest extends CreateEvaluationRequest
             'uuid'    => ['required', 'uuid'],
             'user_id' => ['required', $this->userExistRule()],
             'kita_id' => ['nullable', $this->kitaExistRule()],
-            'age'     => ['nullable', Rule::in(['2.5', '4.5'])],
+            'age'     => array_merge($this->ageGroupRules(), ['nullable']),
             'is_daz'  => ['nullable', 'boolean'],
             'ratings' => ['nullable', 'array'],
         ];

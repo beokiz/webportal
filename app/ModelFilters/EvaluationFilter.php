@@ -9,7 +9,7 @@ namespace App\ModelFilters;
 use EloquentFilter\ModelFilter;
 
 /**
- * Milestone Model Filter
+ * Evaluation Model Filter
  *
  * @package \App\ModelFilters
  */

@@ -160,4 +160,25 @@ return [
         'export_error'        => "Fehler! Beim Erstellen der Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Survey Time Period CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'survey_time_period' => [
+        'create_success'      => "Rückmeldezeitraum wurde erfolgreich erstellt.",
+        'create_error'        => "Fehler! Beim Erstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'      => "Rückmeldezeitraum wurde erfolgreich aktualisiert.",
+        'update_error'        => "Fehler! Beim Aktualisieren eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'       => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht aktualisiert werden.",
+        'delete_success'      => "Rückmeldezeitraum wurde erfolgreich gelöscht.",
+        'delete_error'        => "Fehler! Beim Löschen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'       => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht gelöscht werden.",
+        'delete_users_denied' => "Fehler! Der ausgewählten Rückmeldezeitraum sind Benutzer zugeordnet, daher kann sie nicht gelöscht werden.",
+        'restore_success'     => "Rückmeldezeitraum wurde erfolgreich wiederhergestellt.",
+        'restore_error'       => "Fehler! Beim Wiederherstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'      => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht wiederhergestellt werden.",
+    ],
+
 ];

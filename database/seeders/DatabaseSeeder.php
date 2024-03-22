@@ -42,11 +42,18 @@ class DatabaseSeeder extends Seeder
          */
         \App\Models\Domain::factory()
             ->count(50)
-            ->hasSubdomain(rand(1, 5))
+            ->hasSubdomains(rand(1, 5))
             ->create();
 
         \App\Models\Milestone::factory()
             ->count(125)
+            ->create();
+
+        /*
+         * Seeder for "SurveyTimePeriod" and related models tables
+         */
+        \App\Models\SurveyTimePeriod::factory()
+            ->count(10)
             ->create();
     }
 }

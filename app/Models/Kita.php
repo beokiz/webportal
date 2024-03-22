@@ -65,7 +65,7 @@ class Kita extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function formattedName() : Attribute
     {

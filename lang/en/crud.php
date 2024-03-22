@@ -160,4 +160,25 @@ return [
         'export_error'        => "Error! Something went wrong while creating the file, please try again later.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Survey Time Period CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'survey_time_period' => [
+        'create_success'      => "Survey time period has been created successfully.",
+        'create_error'        => "Error! Something went wrong while creating a survey time period. Please try again later.",
+        'update_success'      => "Survey time period has been updated successfully.",
+        'update_error'        => "Error! Something went wrong while updating a survey time period. Please try again later.",
+        'update_denied'       => "Error! Selected survey time period cannot be updated.",
+        'delete_success'      => "Survey time period has been deleted successfully.",
+        'delete_error'        => "Error! Something went wrong while deleting a survey time period. Please try again later.",
+        'delete_denied'       => "Error! Selected survey time period cannot be deleted.",
+        'delete_users_denied' => "Error! The selected survey time period has associated users, so it cannot be deleted.",
+        'restore_success'     => "Survey time period has been restored successfully.",
+        'restore_error'       => "Error! Something went wrong while restoring a survey time period. Please try again later.",
+        'restore_denied'      => "Error! Selected survey time period cannot be restored.",
+    ],
+
 ];

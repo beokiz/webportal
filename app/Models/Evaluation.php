@@ -44,6 +44,10 @@ class Evaluation extends Model
         'kita_id',
         'age',
         'is_daz',
+        'child_duration_in_kita',
+        'integration_status',
+        'speech_therapy_status',
+        'is_daz',
         'data',
         'finished_at',
     ];
@@ -54,13 +58,15 @@ class Evaluation extends Model
      * @var array
      */
     protected $casts = [
-        'age'             => 'float',
-        'is_daz'          => 'boolean',
-        'data'            => 'array',
-        'finished_at'     => 'datetime',
-        'not_editable_at' => 'datetime',
-        'editable'        => 'boolean',
-        'finished'        => 'boolean',
+        'age'                   => 'float',
+        'is_daz'                => 'boolean',
+        'integration_status'    => 'boolean',
+        'speech_therapy_status' => 'boolean',
+        'data'                  => 'array',
+        'finished_at'           => 'datetime',
+        'not_editable_at'       => 'datetime',
+        'editable'              => 'boolean',
+        'finished'              => 'boolean',
     ];
 
     /**
@@ -75,7 +81,7 @@ class Evaluation extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function notEditableAt() : Attribute
     {
@@ -87,7 +93,7 @@ class Evaluation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function editable() : Attribute
     {
@@ -99,7 +105,7 @@ class Evaluation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function finished() : Attribute
     {
