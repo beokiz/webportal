@@ -60,15 +60,15 @@ const errors = ref(props.errors || {});
 
 const loading = ref(false);
 const dialog = ref(false);
-const dialogDeleteEinstellungen = ref(false);
+const dialogDeleteSettings = ref(false);
 const deletingItemName = ref(null);
 const isMenuOpen = ref(false);
 const isMenu2Open = ref(false);
 
-const rawErhebungsbeginn = ref(null);
-const rawErhebungsende = ref(null);
-const erhebungsbeginn = ref();
-const erhebungsende = ref();
+const rawSurveyStart = ref(null);
+const rawSurvayEnd = ref(null);
+const surveyStart = ref();
+const survayEnd = ref();
 
 const headers = [
     { title: 'Jahr', key: 'year', width: '10%', sortable: false},
@@ -107,12 +107,12 @@ watch(dialog, (val) => {
     }
 });
 
-watch(erhebungsbeginn, (val) => {
-    rawErhebungsbeginn.value = prepareDate(val);
+watch(surveyStart, (val) => {
+    rawSurveyStart.value = prepareDate(val);
 });
 
-watch(erhebungsende, (val) => {
-    rawErhebungsende.value = prepareDate(val);
+watch(survayEnd, (val) => {
+    rawSurvayEnd.value = prepareDate(val);
 });
 
 // Methods
@@ -146,17 +146,17 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     }
 };
 
-const openDeleteEinstellungenDialog = (item) => {
+const openDeleteSettingsDialog = (item) => {
     deletingItemName.value = item.year
     deleteForm.id = item.id;
-    dialogDeleteEinstellungen.value = true
+    dialogDeleteSettings.value = true
 };
 
 const deleteForm = useForm({
     id: null,
 });
 
-const deleteEinstellungen = async () => {
+const deleteSettings = async () => {
     deleteForm.processing = true;
 
     let formOptions = {
@@ -177,11 +177,11 @@ const deleteEinstellungen = async () => {
 
 const close = () => {
     dialog.value = false;
-    dialogDeleteEinstellungen.value = false;
+    dialogDeleteSettings.value = false;
     manageForm.reset();
     manageForm.clearErrors();
-    rawErhebungsbeginn.value = null;
-    rawErhebungsende.value = null;
+    rawSurveyStart.value = null;
+    rawSurvayEnd.value = null;
 
     errors.value = {};
 };
@@ -189,8 +189,8 @@ const close = () => {
 const clear = () => {
     manageForm.reset();
     manageForm.clearErrors();
-    rawErhebungsbeginn.value = null;
-    rawErhebungsende.value = null;
+    rawSurveyStart.value = null;
+    rawSurvayEnd.value = null;
 };
 
 
@@ -203,8 +203,8 @@ const manageForm = useForm({
 
 const manageTimePeriods = async () => {
     manageForm.processing = true;
-    manageForm.survey_start_date = new Date(erhebungsbeginn.value)
-    manageForm.survey_end_date = new Date(erhebungsende.value)
+    manageForm.survey_start_date = new Date(surveyStart.value)
+    manageForm.survey_end_date = new Date(survayEnd.value)
 
     manageForm.post(route('survey_time_periods.store'), {
         onSuccess: (page) => {
@@ -249,19 +249,19 @@ const manageTimePeriods = async () => {
                                             <v-col cols="12" sm="6">
                                                 <v-locale-provider locale="de">
                                                     <v-menu v-model="isMenuOpen"
-                                                            :return-value.sync="erhebungsbeginn"
+                                                            :return-value.sync="surveyStart"
                                                             :close-on-content-click="false">
                                                         <template v-slot:activator="{ props }">
                                                             <v-text-field
                                                                 label="Erhebungsbeginn*"
                                                                 class="tw-cursor-pointer"
-                                                                :model-value="rawErhebungsbeginn"
+                                                                :model-value="rawSurveyStart"
                                                                 prepend-icon="mdi-calendar"
                                                                 readonly
                                                                 v-bind="props"
                                                             ></v-text-field>
                                                         </template>
-                                                        <v-date-picker @update:modelValue="isMenuOpen = false" v-model="erhebungsbeginn"></v-date-picker>
+                                                        <v-date-picker @update:modelValue="isMenuOpen = false" v-model="surveyStart"></v-date-picker>
                                                     </v-menu>
                                                 </v-locale-provider>
                                             </v-col>
@@ -280,19 +280,19 @@ const manageTimePeriods = async () => {
                                             <v-col cols="12" sm="6">
                                                 <v-locale-provider locale="de">
                                                     <v-menu v-model="isMenu2Open"
-                                                            :return-value.sync="erhebungsende"
+                                                            :return-value.sync="survayEnd"
                                                             :close-on-content-click="false">
                                                         <template v-slot:activator="{ props }">
                                                             <v-text-field
                                                                 label="Erhebungsende*"
                                                                 class="tw-cursor-pointer"
-                                                                :model-value="rawErhebungsende"
+                                                                :model-value="rawSurvayEnd"
                                                                 prepend-icon="mdi-calendar"
                                                                 readonly
                                                                 v-bind="props"
                                                             ></v-text-field>
                                                         </template>
-                                                        <v-date-picker @update:modelValue="isMenu2Open = false" v-model="erhebungsende"></v-date-picker>
+                                                        <v-date-picker @update:modelValue="isMenu2Open = false" v-model="survayEnd"></v-date-picker>
                                                     </v-menu>
                                                 </v-locale-provider>
                                             </v-col>
@@ -318,7 +318,7 @@ const manageTimePeriods = async () => {
                 </v-hover>
             </div>
 
-            <v-dialog v-model="dialogDeleteEinstellungen" width="20vw">
+            <v-dialog v-model="dialogDeleteSettings" width="20vw">
                 <v-card height="30vh">
                     <v-card-text>
                         <v-container>
@@ -336,7 +336,7 @@ const manageTimePeriods = async () => {
                             <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                         </v-hover>
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="deleteEinstellungen" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                            <v-btn-primary @click="deleteSettings" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                         </v-hover>
                     </v-card-actions>
                 </v-card>
@@ -410,7 +410,7 @@ const manageTimePeriods = async () => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEinstellungenDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteSettingsDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
                                 <span>Einstellungen löschen</span>
                             </v-tooltip>

@@ -123,6 +123,9 @@ const vuetify = createVuetify({
             lightTheme,
         },
     },
+    date: {
+        adapter: VuetifyDateAdapter,
+    },
     components: { ...components, ...labsComponents },
     directives,
     icons: {
