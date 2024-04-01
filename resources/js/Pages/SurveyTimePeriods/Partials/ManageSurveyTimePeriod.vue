@@ -13,8 +13,6 @@ import { prepareDate, ages } from "@/Composables/common.js";
 const props = defineProps({
     surveyTimePeriod: Object,
     errors: Object,
-    roles: Array,
-    users: Array,
 });
 
 
@@ -47,19 +45,6 @@ const rawSurveyStart = ref(prepareDate(props.surveyTimePeriod.survey_start_date)
 const rawSurvayEnd = ref(prepareDate(props.surveyTimePeriod.survey_end_date));
 const surveyStart = ref(new Date(props.surveyTimePeriod.survey_start_date).toString());
 const survayEnd = ref(new Date(props.surveyTimePeriod.survey_end_date).toString());
-
-// Computed
-const modifiedItems = computed(() => {
-    return props.surveyTimePeriod.map(item => {
-        const modifiedItem = {...item};
-        for (const key in modifiedItem) {
-            if (modifiedItem[key] === null || modifiedItem[key] === undefined) {
-                modifiedItem[key] = '-';
-            }
-        }
-        return modifiedItem;
-    });
-});
 
 // Watch
 watch(surveyStart, (val) => {
@@ -104,11 +89,11 @@ const manageSurveyTimePeriod = async () => {
 </script>
 
 <template>
-    <Head :title="`Verwalte Einrichtung ${surveyTimePeriod.year}`"/>
+    <Head :title="`Verwalte Rückmeldezeitraum ${surveyTimePeriod.year}`"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Einrichtung {{ surveyTimePeriod.name }}</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Rückmeldezeitraum {{ surveyTimePeriod.year }}</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">

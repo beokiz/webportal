@@ -31,7 +31,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'SurveyTimePeriods/SurveyTimePeriods' && newProps) {
+    if (pageType === 'YearlyEvaluations/YearlyEvaluations' && newProps) {
         currentPage.value = newProps.currentPage;
         perPage.value = newProps.perPage;
         orderBy.value = newProps.orderBy;
@@ -171,7 +171,7 @@ const deleteSettings = async () => {
         },
     };
 
-    deleteForm.delete(route('survey_time_periods.destroy', { id: deleteForm.id }), formOptions);
+    deleteForm.delete(route('yearly_evaluations.destroy', { id: deleteForm.id }), formOptions);
 };
 
 const close = () => {
@@ -205,7 +205,7 @@ const manageTimePeriods = async () => {
     manageForm.survey_start_date = new Date(surveyStart.value)
     manageForm.survey_end_date = new Date(survayEnd.value)
 
-    manageForm.post(route('survey_time_periods.store'), {
+    manageForm.post(route('yearly_evaluations.store'), {
         onSuccess: (page) => {
             close();
         },
@@ -400,7 +400,7 @@ const manageTimePeriods = async () => {
                         <td align="center">
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('survey_time_periods.show', { id: item.selectable.id })">
+                                    <Link :href="route('yearly_evaluations.show', { id: item.selectable.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>

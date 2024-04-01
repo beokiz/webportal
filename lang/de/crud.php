@@ -167,18 +167,37 @@ return [
     */
 
     'survey_time_period' => [
-        'create_success'      => "Rückmeldezeitraum wurde erfolgreich erstellt.",
-        'create_error'        => "Fehler! Beim Erstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'update_success'      => "Rückmeldezeitraum wurde erfolgreich aktualisiert.",
-        'update_error'        => "Fehler! Beim Aktualisieren eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'update_denied'       => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht aktualisiert werden.",
-        'delete_success'      => "Rückmeldezeitraum wurde erfolgreich gelöscht.",
-        'delete_error'        => "Fehler! Beim Löschen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'delete_denied'       => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht gelöscht werden.",
-        'delete_users_denied' => "Fehler! Der ausgewählten Rückmeldezeitraum sind Benutzer zugeordnet, daher kann sie nicht gelöscht werden.",
-        'restore_success'     => "Rückmeldezeitraum wurde erfolgreich wiederhergestellt.",
-        'restore_error'       => "Fehler! Beim Wiederherstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'restore_denied'      => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht wiederhergestellt werden.",
+        'create_success'  => "Rückmeldezeitraum wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Beim Erstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Rückmeldezeitraum wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Beim Aktualisieren eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht aktualisiert werden.",
+        'delete_success'  => "Rückmeldezeitraum wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Beim Löschen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht gelöscht werden.",
+        'restore_success' => "Rückmeldezeitraum wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Beim Wiederherstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht wiederhergestellt werden.",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Yearly Evaluation CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'yearly_evaluations' => [
+        'create_success'  => "Jährliche Rückmeldung wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Beim Erstellen eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Jährliche Rückmeldung wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Beim Aktualisieren eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Ausgewählter Jährliche Rückmeldung kann nicht aktualisiert werden.",
+        'delete_success'  => "Jährliche Rückmeldung wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Beim Löschen eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Ausgewählter Jährliche Rückmeldung kann nicht gelöscht werden.",
+        'restore_success' => "Jährliche Rückmeldung wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Beim Wiederherstellen eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Ausgewählter Jährliche Rückmeldung kann nicht wiederhergestellt werden.",
     ],
 
 ];

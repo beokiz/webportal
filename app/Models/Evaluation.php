@@ -28,6 +28,35 @@ class Evaluation extends Model
 
     // use SoftDeletes;
 
+    const CHILD_AGE_GROUP_2 = '2.5';
+    const CHILD_AGE_GROUP_4 = '4.5';
+    const CHILD_AGE_GROUPS = [self::CHILD_AGE_GROUP_2, self::CHILD_AGE_GROUP_4];
+
+    const CHILD_DURATION_IN_KITA_1 = 'upToOneYear';
+    const CHILD_DURATION_IN_KITA_2 = 'upToTwoYears';
+    const CHILD_DURATION_IN_KITA_3 = 'upToThreeYears';
+    const CHILD_DURATION_IN_KITA_4 = 'moreThanThreeYears';
+
+    const CHILD_DURATION_IN_KITA_ALL_VARS = [
+        self::CHILD_DURATION_IN_KITA_1,
+        self::CHILD_DURATION_IN_KITA_2,
+        self::CHILD_DURATION_IN_KITA_3,
+        self::CHILD_DURATION_IN_KITA_4,
+    ];
+
+    const CHILD_DURATION_IN_KITA_2_VARS = [
+        self::CHILD_DURATION_IN_KITA_1,
+        self::CHILD_DURATION_IN_KITA_2,
+        self::CHILD_DURATION_IN_KITA_3,
+    ];
+
+    const CHILD_DURATION_IN_KITA_4_VARS = [
+        self::CHILD_DURATION_IN_KITA_1,
+        self::CHILD_DURATION_IN_KITA_2,
+        self::CHILD_DURATION_IN_KITA_3,
+        self::CHILD_DURATION_IN_KITA_4,
+    ];
+
     /**
      * @var string
      */

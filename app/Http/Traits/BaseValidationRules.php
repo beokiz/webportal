@@ -6,6 +6,7 @@
 
 namespace App\Http\Traits;
 
+use App\Models\Evaluation;
 use Illuminate\Validation\Rule;
 
 /**
@@ -243,6 +244,6 @@ trait BaseValidationRules
      */
     public function ageGroupRules() : array
     {
-        return [Rule::in(['2.5', '4.5'])];
+        return [Rule::in(Evaluation::CHILD_AGE_GROUPS)];
     }
 }

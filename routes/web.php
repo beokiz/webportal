@@ -23,6 +23,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubdomainsController;
 use App\Http\Controllers\SurveyTimePeriodController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\YearlyEvaluationsController;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\Auth\RegisteredUserController;
@@ -234,4 +235,16 @@ Route::group(['prefix' => 'survey-time-periods', 'as' => 'survey_time_periods.',
     Route::post('/', [SurveyTimePeriodController::class, 'store'])->name('store');
     Route::put('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'update'])->name('update');
     Route::delete('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'destroy'])->name('destroy');
+});
+
+
+/*
+ * Yearly evaluations routes
+ */
+Route::group(['prefix' => 'yearly-evaluations', 'as' => 'yearly_evaluations.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [YearlyEvaluationsController::class, 'index'])->name('index');
+    Route::get('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'show'])->name('show');
+    Route::post('/', [YearlyEvaluationsController::class, 'store'])->name('store');
+    Route::put('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'update'])->name('update');
+    Route::delete('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'destroy'])->name('destroy');
 });

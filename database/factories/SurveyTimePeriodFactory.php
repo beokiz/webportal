@@ -10,7 +10,7 @@ use App\Models\Kita;
 use App\Models\User;
 
 /**
- * Evaluation Factory
+ * SurveyTimePeriodFactory Factory
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SurveyTimePeriod>
  * @package Database\Factories

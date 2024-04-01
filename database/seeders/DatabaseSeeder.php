@@ -22,9 +22,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        /*
-         * Seeder for "User" and related models tables
-         */
         \App\Models\Permission::factory()
             ->count(50)
             ->create();
@@ -37,9 +34,6 @@ class DatabaseSeeder extends Seeder
             ->count(50)
             ->create();
 
-        /*
-         * Seeder for "Domain" and related models tables
-         */
         \App\Models\Domain::factory()
             ->count(50)
             ->hasSubdomains(rand(1, 5))
@@ -49,10 +43,15 @@ class DatabaseSeeder extends Seeder
             ->count(125)
             ->create();
 
-        /*
-         * Seeder for "SurveyTimePeriod" and related models tables
-         */
+        \App\Models\Kita::factory()
+            ->count(10)
+            ->create();
+
         \App\Models\SurveyTimePeriod::factory()
+            ->count(10)
+            ->create();
+
+        \App\Models\YearlyEvaluation::factory()
             ->count(10)
             ->create();
     }

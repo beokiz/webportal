@@ -41,8 +41,13 @@ class Kita extends Model
      */
     protected $fillable = [
         'name',
-        'order',
+        'city',
+        'number',
+        'street',
+        'house_number',
+        'additional_info',
         'zip_code',
+        'order',
         'deleted_at',
     ];
 
@@ -52,7 +57,8 @@ class Kita extends Model
      * @var array
      */
     protected $casts = [
-        'order' => 'integer',
+        'order'  => 'integer',
+        'number' => 'integer',
     ];
 
     /**

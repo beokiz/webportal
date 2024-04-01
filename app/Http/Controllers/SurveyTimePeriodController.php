@@ -82,8 +82,8 @@ class SurveyTimePeriodController extends BaseController
         $result     = $this->surveyTimePeriodItemService->create($attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.survey_time_period.create_success'))
-            : Redirect::back()->withErrors(__('crud.survey_time_period.create_error'));
+            ? Redirect::back()->withSuccesses(__('crud.survey_time_periods.create_success'))
+            : Redirect::back()->withErrors(__('crud.survey_time_periods.create_error'));
     }
 
     /**
@@ -99,8 +99,8 @@ class SurveyTimePeriodController extends BaseController
         $result     = $this->surveyTimePeriodItemService->update($surveyTimePeriod->id, $attributes);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.survey_time_period.update_success'))
-            : Redirect::back()->withErrors(__('crud.survey_time_period.update_error'));
+            ? Redirect::back()->withSuccesses(__('crud.survey_time_periods.update_success'))
+            : Redirect::back()->withErrors(__('crud.survey_time_periods.update_error'));
     }
 
     /**
@@ -115,7 +115,7 @@ class SurveyTimePeriodController extends BaseController
         $result = $this->surveyTimePeriodItemService->delete($surveyTimePeriod->id);
 
         return $result
-            ? Redirect::back()->withSuccesses(__('crud.survey_time_period.delete_success'))
-            : Redirect::back()->withErrors(__('crud.survey_time_period.delete_error'));
+            ? Redirect::back()->withSuccesses(__('crud.survey_time_periods.delete_success'))
+            : Redirect::back()->withErrors(__('crud.survey_time_periods.delete_error'));
     }
 }

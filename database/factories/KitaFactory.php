@@ -22,9 +22,15 @@ class KitaFactory extends BaseFactory
     public function definition() : array
     {
         return [
-            'name'     => $this->faker->unique()->domainWord,
-            'order'    => $this->faker->numberBetween(1, 999),
-            'zip_code' => $this->faker->postcode,
+            'name'                 => $this->faker->unique()->domainWord,
+            'provider_of_the_kita' => $this->faker->company,
+            'city'                 => $this->faker->city,
+            'number'               => $this->faker->randomNumber(),
+            'street'               => $this->faker->streetName,
+            'house_number'         => $this->faker->randomNumber(),
+            'additional_info'      => rand(0, 1) ? $this->faker->sentences : null,
+            'order'                => $this->faker->numberBetween(1, 999),
+            'zip_code'             => $this->faker->postcode,
         ];
     }
 }
