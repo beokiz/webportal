@@ -8,6 +8,7 @@ import { computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { ages, prepareDate, formatDate } from '@/Composables/common';
 
 const props = defineProps({
     items: Array,
@@ -59,12 +60,21 @@ const errors = ref(props.errors || {});
 
 const loading = ref(false);
 const dialog = ref(false);
-const dialogDeleteKita = ref(false);
+const dialogDeleteEinstellungen = ref(false);
 const deletingItemName = ref(null);
+const isMenuOpen = ref(false);
+const isMenu2Open = ref(false);
+
+const rawErhebungsbeginn = ref(null);
+const rawErhebungsende = ref(null);
+const erhebungsbeginn = ref();
+const erhebungsende = ref();
 
 const headers = [
-    { title: 'Name', key: 'name', width: '70%', sortable: false},
-    { title: 'Postleitzahl', key: 'zip_code', width: '20%', sortable: false },
+    { title: 'Jahr', key: 'year', width: '10%', sortable: false},
+    { title: 'Altersgruppe (Jahre)', key: 'age', width: '15%', sortable: false },
+    { title: 'Erhebungsbeginn', key: 'survey_start_date', width: '15%', sortable: false },
+    { title: 'Erhebungsende', key: 'survey_end_date', width: '50%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 
@@ -95,6 +105,14 @@ watch(dialog, (val) => {
     if (!val) {
         close();
     }
+});
+
+watch(erhebungsbeginn, (val) => {
+    rawErhebungsbeginn.value = prepareDate(val);
+});
+
+watch(erhebungsende, (val) => {
+    rawErhebungsende.value = prepareDate(val);
 });
 
 // Methods
@@ -128,17 +146,17 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     }
 };
 
-const openDeleteKitaDialog = (item) => {
-    deletingItemName.value = item.name
+const openDeleteEinstellungenDialog = (item) => {
+    deletingItemName.value = item.year
     deleteForm.id = item.id;
-    dialogDeleteKita.value = true
+    dialogDeleteEinstellungen.value = true
 };
 
 const deleteForm = useForm({
     id: null,
 });
 
-const deleteKita = async () => {
+const deleteEinstellungen = async () => {
     deleteForm.processing = true;
 
     let formOptions = {
@@ -154,14 +172,16 @@ const deleteKita = async () => {
         },
     };
 
-    deleteForm.delete(route('kitas.destroy', { id: deleteForm.id }), formOptions);
+    deleteForm.delete(route('survey_time_periods.destroy', { id: deleteForm.id }), formOptions);
 };
 
 const close = () => {
     dialog.value = false;
-    dialogDeleteKita.value = false;
+    dialogDeleteEinstellungen.value = false;
     manageForm.reset();
     manageForm.clearErrors();
+    rawErhebungsbeginn.value = null;
+    rawErhebungsende.value = null;
 
     errors.value = {};
 };
@@ -169,18 +189,24 @@ const close = () => {
 const clear = () => {
     manageForm.reset();
     manageForm.clearErrors();
+    rawErhebungsbeginn.value = null;
+    rawErhebungsende.value = null;
 };
 
 
 const manageForm = useForm({
-    name: null,
-    zip_code: null,
+    year: null,
+    age: null,
+    survey_start_date: null,
+    survey_end_date: null,
 });
 
-const manageKita = async () => {
+const manageTimePeriods = async () => {
     manageForm.processing = true;
+    manageForm.survey_start_date = new Date(erhebungsbeginn.value)
+    manageForm.survey_end_date = new Date(erhebungsende.value)
 
-    manageForm.post(route('kitas.store'), {
+    manageForm.post(route('survey_time_periods.store'), {
         onSuccess: (page) => {
             close();
         },
@@ -202,76 +228,122 @@ const manageKita = async () => {
         <template #header>
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Einstellungen</h2>
 
-<!--            <div class="tw-flex tw-items-center tw-justify-end">-->
-<!--                <v-hover v-if="!$page.props.auth.user.is_manager" v-slot:default="{ isHovering, props }">-->
-<!--                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>-->
-<!--                        Anlegen-->
+            <div class="tw-flex tw-items-center tw-justify-end">
+                <v-hover v-slot:default="{ isHovering, props }">
+                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
+                        ZEITRAUM HINZUFÜGEN
 
-<!--                        <v-dialog v-model="dialog" activator="parent" width="80vw">-->
-<!--                            <v-card height="80vh">-->
-<!--                                <v-card-title>-->
-<!--                                    <span class="tw-text-h5">Verwalte Einrichtung</span>-->
-<!--                                </v-card-title>-->
+                        <v-dialog v-model="dialog" activator="parent" width="80vw">
+                            <v-card height="80vh">
+                                <v-card-title>
+                                    <span class="tw-text-h5">Neuer Rückmeldezeitraum</span>
+                                </v-card-title>
 
-<!--                                <v-card-text>-->
-<!--                                    <v-container>-->
-<!--                                        <v-row>-->
-<!--                                            <v-col cols="12" sm="9">-->
-<!--                                                <v-text-field v-model="manageForm.name" :error-messages="errors.name"-->
-<!--                                                              label="Name der Einrichtung / Einrichtung*" required></v-text-field>-->
-<!--                                            </v-col>-->
-<!--                                            <v-col cols="12" sm="3">-->
-<!--                                                <v-text-field v-model="manageForm.zip_code" :error-messages="errors.zip_code"-->
-<!--                                                              label="Postleitzahl*" type="number" required></v-text-field>-->
-<!--                                            </v-col>-->
-<!--                                        </v-row>-->
-<!--                                    </v-container>-->
-<!--                                </v-card-text>-->
+                                <v-card-text>
+                                    <v-container>
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.year" :error-messages="errors.year"
+                                                              label="Jahr*" required></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-locale-provider locale="de">
+                                                    <v-menu v-model="isMenuOpen"
+                                                            :return-value.sync="erhebungsbeginn"
+                                                            :close-on-content-click="false">
+                                                        <template v-slot:activator="{ props }">
+                                                            <v-text-field
+                                                                label="Erhebungsbeginn*"
+                                                                class="tw-cursor-pointer"
+                                                                :model-value="rawErhebungsbeginn"
+                                                                prepend-icon="mdi-calendar"
+                                                                readonly
+                                                                v-bind="props"
+                                                            ></v-text-field>
+                                                        </template>
+                                                        <v-date-picker @update:modelValue="isMenuOpen = false" v-model="erhebungsbeginn"></v-date-picker>
+                                                    </v-menu>
+                                                </v-locale-provider>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
+                                                <v-select
+                                                    v-model="manageForm.age"
+                                                    :items="ages"
+                                                    :error-messages="errors.age"
+                                                    item-title="age_name"
+                                                    item-value="age_number"
+                                                    label="Altersgruppe (Jahre)*"
+                                                ></v-select>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-locale-provider locale="de">
+                                                    <v-menu v-model="isMenu2Open"
+                                                            :return-value.sync="erhebungsende"
+                                                            :close-on-content-click="false">
+                                                        <template v-slot:activator="{ props }">
+                                                            <v-text-field
+                                                                label="Erhebungsende*"
+                                                                class="tw-cursor-pointer"
+                                                                :model-value="rawErhebungsende"
+                                                                prepend-icon="mdi-calendar"
+                                                                readonly
+                                                                v-bind="props"
+                                                            ></v-text-field>
+                                                        </template>
+                                                        <v-date-picker @update:modelValue="isMenu2Open = false" v-model="erhebungsende"></v-date-picker>
+                                                    </v-menu>
+                                                </v-locale-provider>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-text>
 
-<!--                                <v-card-actions>-->
-<!--                                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>-->
-<!--                                    </v-hover>-->
-<!--                                    <v-spacer></v-spacer>-->
-<!--                                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>-->
-<!--                                    </v-hover>-->
-<!--                                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                                        <v-btn-primary @click="manageKita" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>-->
-<!--                                    </v-hover>-->
-<!--                                </v-card-actions>-->
-<!--                            </v-card>-->
-<!--                        </v-dialog>-->
-<!--                    </v-btn>-->
-<!--                </v-hover>-->
-<!--            </div>-->
+                                <v-card-actions>
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurücksetzen</v-btn-primary>
+                                    </v-hover>
+                                    <v-spacer></v-spacer>
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
+                                    </v-hover>
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn-primary @click="manageTimePeriods" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                    </v-hover>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </v-btn>
+                </v-hover>
+            </div>
 
-<!--            <v-dialog v-model="dialogDeleteKita" width="20vw">-->
-<!--                <v-card height="30vh">-->
-<!--                    <v-card-text>-->
-<!--                        <v-container>-->
-<!--                            <v-row>-->
-<!--                                <v-col cols="12">-->
-<!--                                    <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>-->
-<!--                                </v-col>-->
-<!--                            </v-row>-->
-<!--                        </v-container>-->
-<!--                    </v-card-text>-->
+            <v-dialog v-model="dialogDeleteEinstellungen" width="20vw">
+                <v-card height="30vh">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12">
+                                    <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
 
-<!--                    <v-card-actions>-->
-<!--                        <v-spacer></v-spacer>-->
-<!--                        <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>-->
-<!--                        </v-hover>-->
-<!--                        <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                            <v-btn-primary @click="deleteKita" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>-->
-<!--                        </v-hover>-->
-<!--                    </v-card-actions>-->
-<!--                </v-card>-->
-<!--            </v-dialog>-->
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
+                        </v-hover>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="deleteEinstellungen" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                        </v-hover>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </template>
 
-<!--        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">-->
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
 <!--            <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">-->
 <!--                <div class="tw-w-full">-->
 <!--                    <v-row>-->
@@ -294,71 +366,73 @@ const manageKita = async () => {
 <!--                </div>-->
 <!--            </div>-->
 
-<!--            <v-data-table-server-->
-<!--                v-model:items-per-page="perPage"-->
-<!--                :items-per-page-options="[-->
-<!--                  {value: 10, title: '10'},-->
-<!--                  {value: 25, title: '25'},-->
-<!--                  {value: 50, title: '50'},-->
-<!--                  {value: 100, title: '100'},-->
-<!--                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}-->
-<!--                ]"-->
-<!--                :items-per-page-text="'Objekte pro Seite:'"-->
-<!--                :headers="headers"-->
-<!--                :page="currentPage"-->
-<!--                :items-length="totalItems"-->
-<!--                :items="modifiedItems"-->
-<!--                :search="search"-->
-<!--                v-sortable-data-table-->
-<!--                :loading="loading"-->
-<!--                class="data-table-container elevation-1"-->
-<!--                item-value="name"-->
-<!--                @update:options="goToPage"-->
-<!--            >-->
+            <v-data-table-server
+                v-model:items-per-page="perPage"
+                :items-per-page-options="[
+                  {value: 10, title: '10'},
+                  {value: 25, title: '25'},
+                  {value: 50, title: '50'},
+                  {value: 100, title: '100'},
+                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}
+                ]"
+                :items-per-page-text="'Objekte pro Seite:'"
+                :headers="headers"
+                :page="currentPage"
+                :items-length="totalItems"
+                :items="modifiedItems"
+                :search="search"
+                v-sortable-data-table
+                :loading="loading"
+                class="data-table-container elevation-1"
+                item-value="name"
+                @update:options="goToPage"
+            >
 
-<!--                <template v-slot:item="{ item }">-->
-<!--                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">-->
-<!--                        <td>{{item.selectable.name}}</td>-->
+                <template v-slot:item="{ item }">
+                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
+                        <td>{{item.selectable.year}}</td>
 
-<!--                        <td>{{item.selectable.zip_code}}</td>-->
+                        <td>{{item.selectable.age}}</td>
 
-<!--                        <td>-->
-<!--                            <v-tooltip location="top">-->
-<!--                                <template v-slot:activator="{ props }">-->
-<!--                                    <Link :href="route('kitas.show', { id: item.selectable.id })">-->
-<!--                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>-->
-<!--                                    </Link>-->
-<!--                                </template>-->
-<!--                                <span>Einrichtung bearbeiten</span>-->
-<!--                            </v-tooltip>-->
+                        <td>{{ formatDate(item.selectable.survey_start_date, 'sv-SE') }}</td>
 
-<!--                            <v-tooltip v-if="!$page.props.auth.user.is_manager" location="top">-->
-<!--                                <template v-slot:activator="{ props }">-->
-<!--                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteKitaDialog(item.raw)">mdi-delete</v-icon>-->
-<!--                                </template>-->
-<!--                                <span>Einrichtung löschen</span>-->
-<!--                            </v-tooltip>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                </template>-->
+                        <td>{{ formatDate(item.selectable.survey_end_date, 'sv-SE') }}</td>
 
-<!--                <template v-slot:no-data>-->
-<!--                    <div class="tw-py-6">-->
-<!--                        <template v-if="allFiltersEmpty">-->
-<!--                            <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>-->
-<!--                        </template>-->
-<!--                        <template v-else>-->
-<!--                            <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>-->
+                        <td align="center">
+                            <v-tooltip location="top">
+                                <template v-slot:activator="{ props }">
+                                    <Link :href="route('survey_time_periods.show', { id: item.selectable.id })">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
+                                    </Link>
+                                </template>
+                                <span>Einstellungen bearbeiten</span>
+                            </v-tooltip>
 
-<!--                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>-->
-<!--                        </template>-->
-<!--                    </div>-->
-<!--                </template>-->
+                            <v-tooltip location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEinstellungenDialog(item.raw)">mdi-delete</v-icon>
+                                </template>
+                                <span>Einstellungen löschen</span>
+                            </v-tooltip>
+                        </td>
+                    </tr>
+                </template>
 
-<!--            </v-data-table-server>-->
-<!--        </div>-->
+                <template v-slot:no-data>
+                    <div class="tw-py-6">
+                        <template v-if="allFiltersEmpty">
+                            <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
+                        </template>
+                        <template v-else>
+                            <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>
 
-        {{items}}
+                            <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>
+                        </template>
+                    </div>
+                </template>
+
+            </v-data-table-server>
+        </div>
 
     </AuthenticatedLayout>
 </template>

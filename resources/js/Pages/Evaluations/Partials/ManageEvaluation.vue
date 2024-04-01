@@ -47,6 +47,13 @@ const preparedDomains = ref([]);
 const evaluationResultState = ref(false);
 const evaluationResultData = ref(null);
 
+
+const periods = ref([
+    { name: '1 - 12 Monate', id: 1 },
+    { name: '12 - 24 Monate', id: 2 },
+    { name: '24 - 36 Monate', id: 3 },
+])
+
 // Computed
 const isEditMode = computed(() => {
     return !!props.evaluation;
@@ -97,6 +104,7 @@ const manageForm = useForm({
     uuid: isEditMode.value ? props.evaluation.uuid : null,
     user_id: isEditMode.value ? props.evaluation.user_id : currentUser.id,
     kita_id: isEditMode.value ? props.evaluation.kita_id : null,
+    period_id: isEditMode.value ? props.evaluation.period_id : null,
     age: isEditMode.value ? props.evaluation.age : null,
     is_daz: isEditMode.value ? props.evaluation.is_daz : false,
     ratings: isEditMode.value ? props.evaluation.data : [],
@@ -106,6 +114,19 @@ watch(
     () => manageForm.age,
     (age) => {
         manageForm.ratings = prepareInitialRatingData(props.domains);
+        if(manageForm.age === 4.5){
+            periods.value.push({ name: 'Länger als 36 Monate', id: 4 })
+        } else{
+            const index = periods.value.findIndex(obj => obj.id === 4);
+            if (index !== -1) {
+                periods.value.splice(index, 1);
+            }
+        }
+
+        if(manageForm.age !== 4.5){
+            manageForm.period_id = null;
+        }
+
     }
 );
 
@@ -252,7 +273,7 @@ const unfinishedEvaluation = async (id) => {
                                       label="Bezeichner der Einschatzung" required></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="2">
                         <v-select
                             v-model="manageForm.age"
                             :items="ages"
@@ -263,7 +284,7 @@ const unfinishedEvaluation = async (id) => {
                         ></v-select>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="2">
                         <v-select
                             v-model="manageForm.kita_id"
                             :items="kitas"
@@ -274,10 +295,29 @@ const unfinishedEvaluation = async (id) => {
                         ></v-select>
                     </v-col>
 
+                    <v-col cols="12" sm="2">
+                        <v-select
+                            v-model="manageForm.period_id"
+                            :items="periods"
+                            :error-messages="errors.period_id"
+                            item-title="name"
+                            item-value="id"
+                            label="Zeitraum in der Kita"
+                        ></v-select>
+                    </v-col>
+
                     <v-col cols="12" sm="3">
                         <v-checkbox
                             v-model="manageForm.is_daz"
                             label="Deutsch ist nicht Muttersprache"
+                        ></v-checkbox>
+                        <v-checkbox
+                            v-model="manageForm.is_daz"
+                            label="Integrationsstatus"
+                        ></v-checkbox>
+                        <v-checkbox
+                            v-model="manageForm.is_daz"
+                            label="in logopädische Behandlung"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
