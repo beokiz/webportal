@@ -21,6 +21,11 @@ const props = defineProps({
     sort: String,
     filters: Object,
     errors: Object,
+    kitas: Array,
+    evaluationsWithDaz2TotalPerYear: Number,
+    evaluationsWithDaz4TotalPerYear: Number,
+    evaluationsWithoutDaz2TotalPerYear: Number,
+    evaluationsWithoutDaz4TotalPerYear: Number,
 });
 
 /*
@@ -179,11 +184,11 @@ const clear = () => {
 
 const manageForm = useForm({
     year: new Date().getFullYear().toString().padStart(4, '0'),
-    kita: null,
-    evaluations_without_daz_2_total_per_year: null,
-    evaluations_without_daz_4_total_per_year: null,
-    evaluations_with_daz_2_total_per_year: null,
-    evaluations_with_daz_4_total_per_year: null,
+    kita: props?.kitas.length > 0 ? props?.kitas[0].id : null,
+    evaluations_with_daz_2_total_per_year: props?.evaluationsWithDaz2TotalPerYear ?? 0,
+    evaluations_with_daz_4_total_per_year: props?.evaluationsWithDaz4TotalPerYear ?? 0,
+    evaluations_without_daz_2_total_per_year: props?.evaluationsWithoutDaz2TotalPerYear ?? 0,
+    evaluations_without_daz_4_total_per_year: props?.evaluationsWithoutDaz4TotalPerYear ?? 0,
     children_2_born_per_year: null,
     children_4_born_per_year: null,
     children_2_with_german_lang: null,
@@ -241,10 +246,10 @@ const manageTimePeriods = async () => {
                                             <v-col cols="12" sm="4">
                                                 <v-select
                                                     v-model="manageForm.kita"
-                                                    :items="ages"
+                                                    :items="kitas"
                                                     :error-messages="errors.kita"
-                                                    item-title="age_name"
-                                                    item-value="age_number"
+                                                    item-title="name"
+                                                    item-value="id"
                                                     label="Kita*"
                                                 ></v-select>
                                             </v-col>

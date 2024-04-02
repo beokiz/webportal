@@ -13,6 +13,7 @@ import { prepareDate, ages } from "@/Composables/common.js";
 const props = defineProps({
     yearlyEvaluation: Object,
     errors: Object,
+    kitas: Array,
 });
 
 

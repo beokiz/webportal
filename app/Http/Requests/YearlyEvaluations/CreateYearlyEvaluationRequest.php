@@ -28,10 +28,10 @@ class CreateYearlyEvaluationRequest extends BaseFormRequest
         return [
             'year'                                     => array_merge($this->yearRules(), ['required']),
             'kita'                                     => ['required', $this->kitaExistRule()],
-            'evaluations_without_daz_2_total_per_year' => array_merge($this->bigIntegerRules(), ['required']),
-            'evaluations_without_daz_4_total_per_year' => array_merge($this->bigIntegerRules(), ['required']),
             'evaluations_with_daz_2_total_per_year'    => array_merge($this->bigIntegerRules(), ['required']),
             'evaluations_with_daz_4_total_per_year'    => array_merge($this->bigIntegerRules(), ['required']),
+            'evaluations_without_daz_2_total_per_year' => array_merge($this->bigIntegerRules(), ['required']),
+            'evaluations_without_daz_4_total_per_year' => array_merge($this->bigIntegerRules(), ['required']),
             'children_2_born_per_year'                 => array_merge($this->bigIntegerRules(), ['required', 'in:' . $children2WithGermanLang + $children2WithForeignLang]),
             'children_4_born_per_year'                 => array_merge($this->bigIntegerRules(), ['required', 'in:' . $children4WithGermanLang + $children4WithForeignLang]),
             'children_2_with_german_lang'              => array_merge($this->bigIntegerRules(), ['required']),

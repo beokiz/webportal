@@ -41,6 +41,7 @@ class Kita extends Model
      */
     protected $fillable = [
         'name',
+        'provider_of_the_kita',
         'city',
         'number',
         'street',
