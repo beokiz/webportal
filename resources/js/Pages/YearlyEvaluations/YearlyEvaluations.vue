@@ -61,19 +61,15 @@ const loading = ref(false);
 const dialog = ref(false);
 const dialogDeleteSettings = ref(false);
 const deletingItemName = ref(null);
-const isMenuOpen = ref(false);
-const isMenu2Open = ref(false);
 
-const rawSurveyStart = ref(null);
-const rawSurvayEnd = ref(null);
-const surveyStart = ref();
-const survayEnd = ref();
 
 const headers = [
-    { title: 'Jahr', key: 'year', width: '10%', sortable: false},
-    { title: 'Altersgruppe (Jahre)', key: 'age', width: '15%', sortable: false },
-    { title: 'Erhebungsbeginn', key: 'survey_start_date', width: '15%', sortable: false },
-    { title: 'Erhebungsende', key: 'survey_end_date', width: '50%', sortable: false },
+    { title: 'Jahr', key: 'year', width: '7%', sortable: false},
+    { title: 'Kita', key: 'age', width: '11%', sortable: false },
+    { title: 'gemeldete Kinder  bis 2,5 Jahre', key: 'www', width: '18%', sortable: false },
+    { title: 'gemeldete Kinder  bis 4,5 Jahre', key: 'yyyy', width: '18%', sortable: false },
+    { title: 'Evaluationen für Kinder  bis 2,5 Jahre', key: 'wewew', width: '18%', sortable: false },
+    { title: 'Evaluationen für Kinder  bis 4,5 Jahre', key: 'asddas', width: '18%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 
@@ -104,14 +100,6 @@ watch(dialog, (val) => {
     if (!val) {
         close();
     }
-});
-
-watch(surveyStart, (val) => {
-    rawSurveyStart.value = prepareDate(val);
-});
-
-watch(survayEnd, (val) => {
-    rawSurvayEnd.value = prepareDate(val);
 });
 
 // Methods
@@ -179,8 +167,6 @@ const close = () => {
     dialogDeleteSettings.value = false;
     manageForm.reset();
     manageForm.clearErrors();
-    rawSurveyStart.value = null;
-    rawSurvayEnd.value = null;
 
     errors.value = {};
 };
@@ -188,22 +174,26 @@ const close = () => {
 const clear = () => {
     manageForm.reset();
     manageForm.clearErrors();
-    rawSurveyStart.value = null;
-    rawSurvayEnd.value = null;
 };
 
 
 const manageForm = useForm({
-    year: null,
-    age: null,
-    survey_start_date: null,
-    survey_end_date: null,
+    year: new Date().getFullYear().toString().padStart(4, '0'),
+    kita: null,
+    evaluations_without_daz_2_total_per_year: null,
+    evaluations_without_daz_4_total_per_year: null,
+    evaluations_with_daz_2_total_per_year: null,
+    evaluations_with_daz_4_total_per_year: null,
+    children_2_born_per_year: null,
+    children_4_born_per_year: null,
+    children_2_with_german_lang: null,
+    children_4_with_german_lang: null,
+    children_2_with_foreign_lang: null,
+    children_4_with_foreign_lang: null,
 });
 
 const manageTimePeriods = async () => {
     manageForm.processing = true;
-    manageForm.survey_start_date = new Date(surveyStart.value)
-    manageForm.survey_end_date = new Date(survayEnd.value)
 
     manageForm.post(route('yearly_evaluations.store'), {
         onSuccess: (page) => {
@@ -221,79 +211,106 @@ const manageTimePeriods = async () => {
 </script>
 
 <template>
-    <Head title="Einstellungen" />
+    <Head title="Jährliche Rückmeldung" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Einstellungen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Jährliche Rückmeldung</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-slot:default="{ isHovering, props }">
                     <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
-                        ZEITRAUM HINZUFÜGEN
+                        ANLEGEN
 
                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                             <v-card height="80vh">
                                 <v-card-title>
-                                    <span class="tw-text-h5">Neuer Rückmeldezeitraum</span>
+                                    <span class="tw-text-h5">Jährliche Rückmeldung erstellen</span>
                                 </v-card-title>
 
                                 <v-card-text>
                                     <v-container>
                                         <v-row>
-                                            <v-col cols="12" sm="6">
-                                                <v-text-field v-model="manageForm.year" :error-messages="errors.year"
-                                                              label="Jahr*" required></v-text-field>
+                                            <v-col cols="12" sm="12">
+                                                <h3>Rückmeldung betrifft</h3>
                                             </v-col>
-                                            <v-col cols="12" sm="6">
-                                                <v-locale-provider locale="de">
-                                                    <v-menu v-model="isMenuOpen"
-                                                            :return-value.sync="surveyStart"
-                                                            :close-on-content-click="false">
-                                                        <template v-slot:activator="{ props }">
-                                                            <v-text-field
-                                                                label="Erhebungsbeginn*"
-                                                                class="tw-cursor-pointer"
-                                                                :model-value="rawSurveyStart"
-                                                                prepend-icon="mdi-calendar"
-                                                                readonly
-                                                                v-bind="props"
-                                                            ></v-text-field>
-                                                        </template>
-                                                        <v-date-picker @update:modelValue="isMenuOpen = false" v-model="surveyStart"></v-date-picker>
-                                                    </v-menu>
-                                                </v-locale-provider>
+                                            <v-col cols="12" sm="4">
+                                                <v-text-field v-model="manageForm.year" :error-messages="errors.year"
+                                                              label="Jahr der Rückmeldung*" required></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="4">
+                                                <v-select
+                                                    v-model="manageForm.kita"
+                                                    :items="ages"
+                                                    :error-messages="errors.kita"
+                                                    item-title="age_name"
+                                                    item-value="age_number"
+                                                    label="Kita*"
+                                                ></v-select>
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col cols="12" sm="6">
-                                                <v-select
-                                                    v-model="manageForm.age"
-                                                    :items="ages"
-                                                    :error-messages="errors.age"
-                                                    item-title="age_name"
-                                                    item-value="age_number"
-                                                    label="Altersgruppe (Jahre)*"
-                                                ></v-select>
+                                            <v-col cols="12" sm="12">
+                                                <h3>Angaben zur Rückmeldung</h3>
                                             </v-col>
                                             <v-col cols="12" sm="6">
-                                                <v-locale-provider locale="de">
-                                                    <v-menu v-model="isMenu2Open"
-                                                            :return-value.sync="survayEnd"
-                                                            :close-on-content-click="false">
-                                                        <template v-slot:activator="{ props }">
-                                                            <v-text-field
-                                                                label="Erhebungsende*"
-                                                                class="tw-cursor-pointer"
-                                                                :model-value="rawSurvayEnd"
-                                                                prepend-icon="mdi-calendar"
-                                                                readonly
-                                                                v-bind="props"
-                                                            ></v-text-field>
-                                                        </template>
-                                                        <v-date-picker @update:modelValue="isMenu2Open = false" v-model="survayEnd"></v-date-picker>
-                                                    </v-menu>
-                                                </v-locale-provider>
+                                                <v-card class="tw-p-6">
+                                                    <h5>Kinder bis 2,5 Jahre</h5>
+                                                    <v-text-field v-model="manageForm.children_2_born_per_year" :error-messages="errors.children_2_born_per_year"
+                                                                  label="Gesamtzahl der im Zeitraum [Survey DateStart-2,5 years] - [Survey DateEnd-2,5 years] geborenen Kinder" type="number" required></v-text-field>
+
+                                                    <v-row>
+                                                        <v-col cols="12" sm="8">
+                                                            <v-text-field v-model="manageForm.children_2_with_german_lang" :error-messages="errors.children_2_with_german_lang"
+                                                                          label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="4">
+                                                            <v-text-field v-model="manageForm.evaluations_with_daz_2_total_per_year" :error-messages="errors.evaluations_with_daz_2_total_per_year"
+                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <v-row>
+                                                        <v-col cols="12" sm="8">
+                                                            <v-text-field v-model="manageForm.children_2_with_foreign_lang" :error-messages="errors.children_2_with_foreign_lang"
+                                                                          label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="4">
+                                                            <v-text-field v-model="manageForm.evaluations_without_daz_2_total_per_year" :error-messages="errors.evaluations_without_daz_2_total_per_year"
+                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-card class="tw-p-6">
+                                                    <h5>Kinder bis 4,5 Jahre</h5>
+                                                    <v-text-field v-model="manageForm.children_4_born_per_year" :error-messages="errors.children_4_born_per_year"
+                                                                  label="Gesamtzahl der im Zeitraum [Survey DateStart -4,5 years] - [Survey DateEnd-4,5 years] geborenen Kinder" type="number" required></v-text-field>
+
+
+                                                    <v-row>
+                                                        <v-col cols="12" sm="8">
+                                                            <v-text-field v-model="manageForm.children_4_with_german_lang" :error-messages="errors.children_4_with_german_lang"
+                                                                          label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="4">
+                                                            <v-text-field v-model="manageForm.evaluations_with_daz_4_total_per_year" :error-messages="errors.evaluations_with_daz_4_total_per_year"
+                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                    <v-row>
+                                                        <v-col cols="12" sm="8">
+                                                            <v-text-field v-model="manageForm.children_4_with_foreign_lang" :error-messages="errors.children_4_with_foreign_lang"
+                                                                          label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12" sm="4">
+                                                            <v-text-field v-model="manageForm.evaluations_without_daz_4_total_per_year" :error-messages="errors.evaluations_without_daz_4_total_per_year"
+                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card>
                                             </v-col>
                                         </v-row>
                                     </v-container>

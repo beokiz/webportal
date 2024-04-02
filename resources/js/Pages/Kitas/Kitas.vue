@@ -175,6 +175,12 @@ const clear = () => {
 const manageForm = useForm({
     name: null,
     zip_code: null,
+    number: null,
+    provider_of_the_kita: null,
+    street: null,
+    house_number: null,
+    additional_info: null,
+    city: null,
 });
 
 const manageKita = async () => {
@@ -216,13 +222,46 @@ const manageKita = async () => {
                                 <v-card-text>
                                     <v-container>
                                         <v-row>
-                                            <v-col cols="12" sm="9">
+                                            <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.name" :error-messages="errors.name"
                                                               label="Name der Einrichtung / Einrichtung*" required></v-text-field>
                                             </v-col>
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.number" :error-messages="errors.number"
+                                                              label="Kita Nummer*" type="number" required></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.provider_of_the_kita" :error-messages="errors.provider_of_the_kita"
+                                                              label="Träger der Einrichtung*" required></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.street" :error-messages="errors.street"
+                                                              label="Straße*" required></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.house_number" :error-messages="errors.house_number"
+                                                              label="Hausnummer*" required></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.additional_info" :error-messages="errors.additional_info"
+                                                              label="Sonstiges*" required></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.zip_code" :error-messages="errors.zip_code"
                                                               label="Postleitzahl*" type="number" required></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.city" :error-messages="errors.city"
+                                                              label="Stadt*" required></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>

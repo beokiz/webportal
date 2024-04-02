@@ -92,8 +92,14 @@ const clear = () => {
 
     manageForm.reset();
     manageForm.clearErrors();
-    manageForm.zip_code = false
+    manageForm.zip_code = null
     manageForm.name = null
+    manageForm.number = null
+    manageForm.provider_of_the_kita = null
+    manageForm.street = null
+    manageForm.house_number = null
+    manageForm.additional_info = null
+    manageForm.city = null
 };
 
 const openDeleteUserFromKitaDialog = (item) => {
@@ -128,6 +134,12 @@ const manageForm = useForm({
     id: editedKita.value.id,
     name: editedKita.value.name,
     zip_code: editedKita.value.zip_code,
+    number: editedKita.value.number,
+    provider_of_the_kita: editedKita.value.provider_of_the_kita,
+    street: editedKita.value.street,
+    house_number: editedKita.value.house_number,
+    additional_info: editedKita.value.additional_info,
+    city: editedKita.value.city,
 });
 
 const manageKita = async () => {
@@ -217,13 +229,46 @@ const manageConnectKitaUser = async () => {
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="9">
+                    <v-col cols="12" sm="6">
                         <v-text-field v-model="manageForm.name" :error-messages="errors.name"
                                       label="Name der Einrichtung / Einrichtung*" required></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="6">
+                        <v-text-field v-model="manageForm.number" :error-messages="errors.number"
+                                      label="Kita Nummer*" type="number" required></v-text-field>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col cols="12" sm="6">
+                        <v-text-field v-model="manageForm.provider_of_the_kita" :error-messages="errors.provider_of_the_kita"
+                                      label="Träger der Einrichtung*" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-text-field v-model="manageForm.street" :error-messages="errors.street"
+                                      label="Straße*" required></v-text-field>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col cols="12" sm="6">
+                        <v-text-field v-model="manageForm.house_number" :error-messages="errors.house_number"
+                                      label="Hausnummer*" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-text-field v-model="manageForm.additional_info" :error-messages="errors.additional_info"
+                                      label="Sonstiges*" required></v-text-field>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col cols="12" sm="6">
                         <v-text-field v-model="manageForm.zip_code" :error-messages="errors.zip_code"
                                       label="Postleitzahl*" type="number" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-text-field v-model="manageForm.city" :error-messages="errors.city"
+                                      label="Stadt*" required></v-text-field>
                     </v-col>
                 </v-row>
 

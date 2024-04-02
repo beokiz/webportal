@@ -52,8 +52,6 @@ watch(surveyStart, (val) => {
 });
 
 watch(survayEnd, (val) => {
-    // let test = val.setUTCHours(12, 0, 0)
-    console.log(val.setUTCHours(12, 0, 0))
     rawSurvayEnd.value = prepareDate(val);
 });
 
@@ -70,6 +68,12 @@ const manageSurveyTimePeriod = async () => {
     manageForm.processing = true;
     manageForm.survey_start_date = new Date(surveyStart.value)
     manageForm.survey_end_date = new Date(survayEnd.value)
+
+
+    // manageForm.survey_start_date = new Date(surveyStart.value).setUTCHours(24, 0, 0, 0);
+    // manageForm.survey_end_date = new Date(survayEnd.value).setUTCHours(24, 0, 0, 0);
+    // manageForm.survey_start_date = new Date(manageForm.survey_start_date).toISOString()
+    // manageForm.survey_end_date = new Date(manageForm.survey_end_date).toISOString()
 
     let formOptions = {
         preserveState: false,
