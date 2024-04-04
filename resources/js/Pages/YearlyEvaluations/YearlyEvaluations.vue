@@ -9,6 +9,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ages, prepareDate, formatDate } from '@/Composables/common';
+import WarningEvaluationTooltip from "@/Components/WarningEvaluationTooltip.vue";
 
 const props = defineProps({
     items: Array,
@@ -64,17 +65,21 @@ const errors = ref(props.errors || {});
 
 const loading = ref(false);
 const dialog = ref(false);
-const dialogDeleteSettings = ref(false);
+const dialogIssues = ref(false);
+const dialogDeleteEvaluation = ref(false);
 const deletingItemName = ref(null);
+const allowSaveState = ref(false);
+const canSave = ref(false);
+
 
 
 const headers = [
     { title: 'Jahr', key: 'year', width: '7%', sortable: false},
-    { title: 'Kita', key: 'age', width: '11%', sortable: false },
-    { title: 'gemeldete Kinder  bis 2,5 Jahre', key: 'www', width: '18%', sortable: false },
-    { title: 'gemeldete Kinder  bis 4,5 Jahre', key: 'yyyy', width: '18%', sortable: false },
-    { title: 'Evaluationen für Kinder  bis 2,5 Jahre', key: 'wewew', width: '18%', sortable: false },
-    { title: 'Evaluationen für Kinder  bis 4,5 Jahre', key: 'asddas', width: '18%', sortable: false },
+    { title: 'Kita', key: 'kita', width: '11%', sortable: false },
+    { title: 'gemeldete Kinder  bis 2,5 Jahre', key: 'children_2_born_per_year', width: '18%', sortable: false },
+    { title: 'gemeldete Kinder  bis 4,5 Jahre', key: 'children_4_born_per_year', width: '18%', sortable: false },
+    { title: 'Evaluationen für Kinder  bis 2,5 Jahre', key: 'evaluations_with_daz_2_total_per_year', width: '18%', sortable: false },
+    { title: 'Evaluationen für Kinder  bis 4,5 Jahre', key: 'evaluations_with_daz_4_total_per_year', width: '18%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 
@@ -138,17 +143,17 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     }
 };
 
-const openDeleteSettingsDialog = (item) => {
+const openDeleteEvaluationDialog = (item) => {
     deletingItemName.value = item.year
     deleteForm.id = item.id;
-    dialogDeleteSettings.value = true
+    dialogDeleteEvaluation.value = true
 };
 
 const deleteForm = useForm({
     id: null,
 });
 
-const deleteSettings = async () => {
+const deleteEvaluation = async () => {
     deleteForm.processing = true;
 
     let formOptions = {
@@ -167,9 +172,22 @@ const deleteSettings = async () => {
     deleteForm.delete(route('yearly_evaluations.destroy', { id: deleteForm.id }), formOptions);
 };
 
+
+const closeDialogIssues = () => {
+    dialogIssues.value = false;
+};
+
+const allowSave = () => {
+    canSave.value = true;
+    closeDialogIssues()
+};
+
 const close = () => {
     dialog.value = false;
-    dialogDeleteSettings.value = false;
+    dialogIssues.value = false;
+    dialogDeleteEvaluation.value = false;
+    allowSaveState.value = false;
+    canSave.value = false;
     manageForm.reset();
     manageForm.clearErrors();
 
@@ -184,7 +202,7 @@ const clear = () => {
 
 const manageForm = useForm({
     year: new Date().getFullYear().toString().padStart(4, '0'),
-    kita: props?.kitas.length > 0 ? props?.kitas[0].id : null,
+    kita_id: props?.kitas.length > 0 ? props?.kitas[0].id : null,
     evaluations_with_daz_2_total_per_year: props?.evaluationsWithDaz2TotalPerYear ?? 0,
     evaluations_with_daz_4_total_per_year: props?.evaluationsWithDaz4TotalPerYear ?? 0,
     evaluations_without_daz_2_total_per_year: props?.evaluationsWithoutDaz2TotalPerYear ?? 0,
@@ -197,7 +215,7 @@ const manageForm = useForm({
     children_4_with_foreign_lang: null,
 });
 
-const manageTimePeriods = async () => {
+const createYearlyEvaluation = async () => {
     manageForm.processing = true;
 
     manageForm.post(route('yearly_evaluations.store'), {
@@ -211,6 +229,26 @@ const manageTimePeriods = async () => {
             manageForm.processing = false;
         },
     });
+};
+
+const checkYears = (type) => {
+    if(type === '2_german'){
+        return parseInt(manageForm.evaluations_with_daz_2_total_per_year) !== parseInt(manageForm.children_2_with_german_lang)
+    } else if(type === '2_foreign') {
+        return parseInt(manageForm.evaluations_without_daz_2_total_per_year) !== parseInt(manageForm.children_2_with_foreign_lang)
+    } else if (type === '4_german'){
+        return parseInt(manageForm.evaluations_with_daz_4_total_per_year) !== parseInt(manageForm.children_4_with_german_lang)
+    } else if (type === '4_foreign'){
+        return parseInt(manageForm.evaluations_without_daz_4_total_per_year) !== parseInt(manageForm.children_4_with_foreign_lang)
+    }
+};
+
+const manageYearlyEvaluation = async () => {
+    if( (checkYears('2_german') || checkYears('2_foreign') || checkYears('4_german') || checkYears('4_foreign')) && !canSave.value ) {
+        dialogIssues.value = true
+    } else {
+        await createYearlyEvaluation()
+    }
 };
 
 </script>
@@ -245,9 +283,9 @@ const manageTimePeriods = async () => {
                                             </v-col>
                                             <v-col cols="12" sm="4">
                                                 <v-select
-                                                    v-model="manageForm.kita"
+                                                    v-model="manageForm.kita_id"
                                                     :items="kitas"
-                                                    :error-messages="errors.kita"
+                                                    :error-messages="errors.kita_id"
                                                     item-title="name"
                                                     item-value="id"
                                                     label="Kita*"
@@ -265,24 +303,34 @@ const manageTimePeriods = async () => {
                                                                   label="Gesamtzahl der im Zeitraum [Survey DateStart-2,5 years] - [Survey DateEnd-2,5 years] geborenen Kinder" type="number" required></v-text-field>
 
                                                     <v-row>
-                                                        <v-col cols="12" sm="8">
+                                                        <v-col cols="12" sm="7">
                                                             <v-text-field v-model="manageForm.children_2_with_german_lang" :error-messages="errors.children_2_with_german_lang"
                                                                           label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
-                                                        <v-col cols="12" sm="4">
-                                                            <v-text-field v-model="manageForm.evaluations_with_daz_2_total_per_year" :error-messages="errors.evaluations_with_daz_2_total_per_year"
-                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        <v-col cols="12" sm="5">
+                                                            <v-row>
+                                                                <WarningEvaluationTooltip v-if="checkYears('2_german')"/>
+                                                                <v-col cols="12" sm="10">
+                                                                    <v-text-field v-model="manageForm.evaluations_with_daz_2_total_per_year" :error-messages="errors.evaluations_with_daz_2_total_per_year"
+                                                                                  label="Bisher eingereichte Einschätzungen" type="number" disabled required>
+                                                                    </v-text-field>
+                                                                </v-col>
+                                                            </v-row>
                                                         </v-col>
                                                     </v-row>
-
                                                     <v-row>
-                                                        <v-col cols="12" sm="8">
+                                                        <v-col cols="12" sm="7">
                                                             <v-text-field v-model="manageForm.children_2_with_foreign_lang" :error-messages="errors.children_2_with_foreign_lang"
                                                                           label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
-                                                        <v-col cols="12" sm="4">
-                                                            <v-text-field v-model="manageForm.evaluations_without_daz_2_total_per_year" :error-messages="errors.evaluations_without_daz_2_total_per_year"
-                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        <v-col cols="12" sm="5">
+                                                            <v-row>
+                                                                <WarningEvaluationTooltip v-if="checkYears('2_foreign')"/>
+                                                                <v-col cols="12" sm="10">
+                                                                    <v-text-field v-model="manageForm.evaluations_without_daz_2_total_per_year" :error-messages="errors.evaluations_without_daz_2_total_per_year"
+                                                                                  label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
+                                                                </v-col>
+                                                            </v-row>
                                                         </v-col>
                                                     </v-row>
                                                 </v-card>
@@ -295,24 +343,34 @@ const manageTimePeriods = async () => {
 
 
                                                     <v-row>
-                                                        <v-col cols="12" sm="8">
+                                                        <v-col cols="12" sm="7">
                                                             <v-text-field v-model="manageForm.children_4_with_german_lang" :error-messages="errors.children_4_with_german_lang"
                                                                           label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
-                                                        <v-col cols="12" sm="4">
-                                                            <v-text-field v-model="manageForm.evaluations_with_daz_4_total_per_year" :error-messages="errors.evaluations_with_daz_4_total_per_year"
-                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        <v-col cols="12" sm="5">
+                                                            <v-row>
+                                                                <WarningEvaluationTooltip v-if="checkYears('4_german')"/>
+                                                                <v-col cols="12" sm="10">
+                                                                    <v-text-field v-model="manageForm.evaluations_with_daz_4_total_per_year" :error-messages="errors.evaluations_with_daz_4_total_per_year"
+                                                                                  label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
+                                                                </v-col>
+                                                            </v-row>
                                                         </v-col>
                                                     </v-row>
 
                                                     <v-row>
-                                                        <v-col cols="12" sm="8">
+                                                        <v-col cols="12" sm="7">
                                                             <v-text-field v-model="manageForm.children_4_with_foreign_lang" :error-messages="errors.children_4_with_foreign_lang"
                                                                           label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
-                                                        <v-col cols="12" sm="4">
-                                                            <v-text-field v-model="manageForm.evaluations_without_daz_4_total_per_year" :error-messages="errors.evaluations_without_daz_4_total_per_year"
-                                                                          label="Bisher eingereichte Einschätzungen" type="number" required></v-text-field>
+                                                        <v-col cols="12" sm="5">
+                                                            <v-row>
+                                                                <WarningEvaluationTooltip v-if="checkYears('4_foreign')"/>
+                                                                <v-col cols="12" sm="10">
+                                                                    <v-text-field v-model="manageForm.evaluations_without_daz_4_total_per_year" :error-messages="errors.evaluations_without_daz_4_total_per_year"
+                                                                                  label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
+                                                                </v-col>
+                                                            </v-row>
                                                         </v-col>
                                                     </v-row>
                                                 </v-card>
@@ -330,7 +388,7 @@ const manageTimePeriods = async () => {
                                         <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
                                     </v-hover>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn-primary @click="manageTimePeriods" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                        <v-btn-primary @click="manageYearlyEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                                     </v-hover>
                                 </v-card-actions>
                             </v-card>
@@ -339,13 +397,13 @@ const manageTimePeriods = async () => {
                 </v-hover>
             </div>
 
-            <v-dialog v-model="dialogDeleteSettings" width="20vw">
+            <v-dialog v-model="dialogDeleteEvaluation" width="20vw">
                 <v-card height="30vh">
                     <v-card-text>
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>
+                                    <p>Sind Sie sicher, dass Sie die Jährliche Rückmeldung {{deletingItemName}} löschen möchten?</p>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -357,7 +415,64 @@ const manageTimePeriods = async () => {
                             <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                         </v-hover>
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="deleteSettings" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                            <v-btn-primary @click="deleteEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                        </v-hover>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+
+            <v-dialog v-model="dialogIssues" width="80vw">
+                <v-card height="50vh">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12">
+                                    <h4>Wir haben eine Abweichung zwischen der Anzahl der von Ihnen gemeldeten Kinder und der Anzahl über die BeoKiz-Ampel erfassten Kindern festgestellt:</h4>
+
+
+                                    <div class="tw-flex tw-items-center tw-mt-2">
+                                        <v-icon v-bind="props" icon="mdi-alert" color="orange"></v-icon>
+                                        <ul style="list-style-type: disc; margin-left: 25px;">
+                                            <li v-if="checkYears('2_german')">
+                                                Die Anzahl der Kinder im Alter bis 2,5 Jahre welche Deutsch als Fremdsprache haben Sie mit
+                                                {{ manageForm.children_2_with_german_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
+                                                {{manageForm.evaluations_with_daz_2_total_per_year}}
+                                            </li>
+                                            <li v-if="checkYears('2_foreign')">
+                                                Die Anzahl der Kinder im Alter bis 2,5 Jahre welche Deutsch als Muttersprache haben Sie mit
+                                                {{ manageForm.children_2_with_foreign_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
+                                                {{ manageForm.evaluations_without_daz_2_total_per_year }}
+                                            </li>
+                                            <li v-if="checkYears('4_german')">
+                                                Die Anzahl der Kinder im Alter bis 4,5 Jahre welche Deutsch als Fremdsprache haben Sie mit
+                                                {{ manageForm.children_4_with_german_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
+                                                {{ manageForm.evaluations_with_daz_2_total_per_year }}
+                                            </li>
+                                            <li v-if="checkYears('4_foreign')">
+                                                Die Anzahl der Kinder im Alter bis 4,5 Jahre welche Deutsch als Muttersprache haben Sie mit
+                                                {{ manageForm.children_4_with_foreign_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
+                                                {{ manageForm.evaluations_without_daz_4_total_per_year }}
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <v-checkbox
+                                        v-model="allowSaveState"
+                                        label="Ich habe verstanden, dass es Unstimmigkeiten bei dem Abgelich der gemelden Zahlen gibt, Statusmeldung dennoch absenden."
+                                    ></v-checkbox>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn @click="closeDialogIssues" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
+                        </v-hover>
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary :disabled="!allowSaveState" @click="allowSave" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                         </v-hover>
                     </v-card-actions>
                 </v-card>
@@ -413,11 +528,16 @@ const manageTimePeriods = async () => {
                     <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
                         <td>{{item.selectable.year}}</td>
 
-                        <td>{{item.selectable.age}}</td>
+                        <td>{{item.selectable.kita}}</td>
 
-                        <td>{{ formatDate(item.selectable.survey_start_date, 'sv-SE') }}</td>
+                        <td>{{ item.selectable.children_2_born_per_year }}</td>
 
-                        <td>{{ formatDate(item.selectable.survey_end_date, 'sv-SE') }}</td>
+                        <td>{{ item.selectable.children_4_born_per_year }}</td>
+
+
+                        <td>{{ item.selectable.evaluations_with_daz_2_total_per_year + item.selectable.evaluations_without_daz_2_total_per_year }}</td>
+
+                        <td>{{ item.selectable.evaluations_with_daz_4_total_per_year + item.selectable.evaluations_without_daz_4_total_per_year }}</td>
 
                         <td align="center">
                             <v-tooltip location="top">
@@ -426,14 +546,14 @@ const manageTimePeriods = async () => {
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
-                                <span>Einstellungen bearbeiten</span>
+                                <span>Jährliche Rückmeldung bearbeiten</span>
                             </v-tooltip>
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteSettingsDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
-                                <span>Einstellungen löschen</span>
+                                <span>Jährliche Rückmeldung löschen</span>
                             </v-tooltip>
                         </td>
                     </tr>

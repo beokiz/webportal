@@ -66,14 +66,9 @@ const manageForm = useForm({
 
 const manageSurveyTimePeriod = async () => {
     manageForm.processing = true;
-    manageForm.survey_start_date = new Date(surveyStart.value)
-    manageForm.survey_end_date = new Date(survayEnd.value)
 
-
-    // manageForm.survey_start_date = new Date(surveyStart.value).setUTCHours(24, 0, 0, 0);
-    // manageForm.survey_end_date = new Date(survayEnd.value).setUTCHours(24, 0, 0, 0);
-    // manageForm.survey_start_date = new Date(manageForm.survey_start_date).toISOString()
-    // manageForm.survey_end_date = new Date(manageForm.survey_end_date).toISOString()
+    manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString()
+    manageForm.survey_end_date = new Date(survayEnd.value).toLocaleString()
 
     let formOptions = {
         preserveState: false,
@@ -169,7 +164,7 @@ const manageSurveyTimePeriod = async () => {
                 </v-row>
 
                 <v-row>
-                    <v-col cols="12" sm="6" align="right">
+                    <v-col cols="12" sm="12" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
                             <Link :href="route('survey_time_periods.index')">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>

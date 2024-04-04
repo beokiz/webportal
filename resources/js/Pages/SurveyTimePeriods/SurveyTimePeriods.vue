@@ -202,8 +202,9 @@ const manageForm = useForm({
 
 const manageTimePeriods = async () => {
     manageForm.processing = true;
-    manageForm.survey_start_date = new Date(surveyStart.value)
-    manageForm.survey_end_date = new Date(survayEnd.value)
+    manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString()
+    manageForm.survey_end_date = new Date(survayEnd.value).toLocaleString()
+
 
     manageForm.post(route('survey_time_periods.store'), {
         onSuccess: (page) => {
@@ -323,7 +324,7 @@ const manageTimePeriods = async () => {
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <p>Sind Sie sicher, dass Sie die Einrichtung {{deletingItemName}} löschen möchten?</p>
+                                    <p>Sind Sie sicher, dass Sie die Einstellungen {{deletingItemName}} löschen möchten?</p>
                                 </v-col>
                             </v-row>
                         </v-container>
