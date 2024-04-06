@@ -108,4 +108,19 @@ return [
         'third_line'  => "If you believe this assignment is an error, please contact our support at <:support_email>",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Yearly Evaluation Reminder Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'yearly_evaluation_reminder' => [
+        'subject'     => "Yearly Evaluation Reminder",
+        'greeting'    => "Dear facility manager,",
+        'first_line'  => "The annual feedback on the statistical evaluation of the language proficiency assessment for children in daycare centers and childcare (status survey) for the daycare year :evaluation_year must be provided by :survey_end_date.",
+        'second_line' => "We have not yet received a status report from your facility. We therefore ask you to submit this email by :survey_end_date. The corresponding function is available in your user account on <a href=':site'>:site</a>.",
+        'third_line'  => "Thanks and best regards",
+        'salutation'  => sprintf('Your %s Team', config('app.name')) . "\non behalf of the Senate Department for Education, Youth and Family",
+    ],
+
 ];

@@ -108,4 +108,19 @@ return [
         'third_line'  => "Falls Diese Zuordnung Ihrer Meinung nach ein Fehler ist, kontaktieren Sie bitte unseren Support unter <:support_email>",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Yearly Evaluation Reminder Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'yearly_evaluation_reminder' => [
+        'subject'     => "Jährliche Evaluierungserinnerung",
+        'greeting'    => "Sehr geehrte Einrichtungsleitung,",
+        'first_line'  => "die jährliche Rückmeldung zur Statistischen Auswertung des Sprachstandsfeststellung für Kinder in Kindertageseinrichtungen und Kindertagespflege (Statuserhebung) für das Kita-Jahr :evaluation_year  muss bis zum :survey_end_date erfolgen.",
+        'second_line' => "Bisher haben wir aus Ihrer Einrichtung noch keine Statuserhebung erhalten. Daher bitten wir Sie mit dieser Mail darum diese bis zum :survey_end_date einzureichen. Die entsprechende Funktion ist in ihrem Nutzer*innenkonto auf <a href=':site'>:site</a> verfügbar.",
+        'third_line'  => "Vielen Dank und beste Grüße",
+        'salutation'  => sprintf('Ihr %s-Team', config('app.name')) . "\nim Auftrag der Senatsverwaltung für Bildung, Jugend und Familie",
+    ],
+
 ];

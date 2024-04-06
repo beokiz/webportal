@@ -200,4 +200,16 @@ return [
         'restore_denied'  => "Error! Selected yearly evaluation cannot be restored.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Setting CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'settings' => [
+        'update_success' => "Setting has been updated successfully.",
+        'update_error'   => "Error! Something went wrong while updating a setting. Please try again later.",
+        'update_denied'  => "Error! Selected setting cannot be updated.",
+    ],
+
 ];

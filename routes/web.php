@@ -20,6 +20,7 @@ use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubdomainsController;
 use App\Http\Controllers\SurveyTimePeriodController;
 use App\Http\Controllers\UsersController;
@@ -247,4 +248,12 @@ Route::group(['prefix' => 'yearly-evaluations', 'as' => 'yearly_evaluations.', '
     Route::post('/', [YearlyEvaluationsController::class, 'store'])->name('store');
     Route::put('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'update'])->name('update');
     Route::delete('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'destroy'])->name('destroy');
+});
+
+
+/*
+ * Settings routes
+ */
+Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::post('/', [SettingsController::class, 'update'])->name('update');
 });

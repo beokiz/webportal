@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use App\ModelFilters\KitaFilter;
+use App\ModelFilters\YearlyEvaluationsFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 /**
@@ -58,8 +60,9 @@ class Kita extends Model
      * @var array
      */
     protected $casts = [
-        'order'  => 'integer',
-        'number' => 'integer',
+        'order'                                  => 'integer',
+        'number'                                 => 'integer',
+        'is_yearly_evaluation_reminder_ntf_sent' => 'boolean',
     ];
 
     /**
@@ -107,6 +110,14 @@ class Kita extends Model
      */
     public function evaluations() : HasMany
     {
-        return $this->hasMany(Subdomain::class, 'user_id', 'id');
+        return $this->hasMany(Subdomain::class, 'kita_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function yearlyEvaluations() : HasMany
+    {
+        return $this->hasMany(YearlyEvaluation::class, 'kita_id', 'id');
     }
 }

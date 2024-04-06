@@ -261,4 +261,15 @@ class UserRolePolicy extends BasePolicy
 
         return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['manager']]);
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToSettings(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
+    }
 }

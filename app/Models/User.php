@@ -16,6 +16,7 @@ use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TwoFactorVerificationNotification;
 use App\Notifications\VerifyEmailNotification;
 use App\Notifications\WelcomeNotification;
+use App\Notifications\YearlyEvaluationReminderNotification;
 use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -332,6 +333,15 @@ class User extends Authenticatable
         if (!empty($kitas)) {
             $this->notify(new ConnectedToKitasNotification($kitas));
         }
+    }
+
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendYearlyEvaluationReminderNotification(array $args) : void
+    {
+        $this->notify(new YearlyEvaluationReminderNotification($args));
     }
 
     /*

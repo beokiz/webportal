@@ -23,6 +23,7 @@ const props = defineProps({
     filters: Object,
     errors: Object,
     kitas: Array,
+    surveyTimePeriods: Array,
     evaluationsWithDaz2TotalPerYear: Number,
     evaluationsWithDaz4TotalPerYear: Number,
     evaluationsWithoutDaz2TotalPerYear: Number,
@@ -71,11 +72,9 @@ const deletingItemName = ref(null);
 const allowSaveState = ref(false);
 const canSave = ref(false);
 
-
-
 const headers = [
     { title: 'Jahr', key: 'year', width: '7%', sortable: false},
-    { title: 'Kita', key: 'kita', width: '11%', sortable: false },
+    { title: 'Kitas', key: 'kita_name', width: '11%', sortable: false },
     { title: 'gemeldete Kinder  bis 2,5 Jahre', key: 'children_2_born_per_year', width: '18%', sortable: false },
     { title: 'gemeldete Kinder  bis 4,5 Jahre', key: 'children_4_born_per_year', width: '18%', sortable: false },
     { title: 'Evaluationen für Kinder  bis 2,5 Jahre', key: 'evaluations_with_daz_2_total_per_year', width: '18%', sortable: false },
@@ -105,7 +104,15 @@ const someFiltersNotEmpty = computed(() => {
     return searchFilter.value !== null;
 });
 
-//Watch
+const childsTotal2Label = computed(() => {
+    return getChildsTotalLabel('2.5');
+});
+
+const childsTotal4Label = computed(() => {
+    return getChildsTotalLabel('4.5');
+});
+
+// Watch
 watch(dialog, (val) => {
     if (!val) {
         close();
@@ -251,6 +258,25 @@ const manageYearlyEvaluation = async () => {
     }
 };
 
+const getChildsTotalLabel = (age) => {
+    if (age === '2.5' || age === '4.5') {
+        let surveyTimePeriodForSelectedYear = props.surveyTimePeriods.find(obj => {
+            return obj.year === parseInt(manageForm.year) && obj.age === '4.5';
+        });
+
+        if (surveyTimePeriodForSelectedYear) {
+            let surveyStartDateObj = new Date(surveyTimePeriodForSelectedYear.survey_start_date);
+            let surveyEndDateObj = new Date(surveyTimePeriodForSelectedYear.survey_end_date);
+
+            let surveyStartDateStr = surveyStartDateObj.getFullYear() + '-' + ("0" + (surveyStartDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyStartDateObj.getDate()).slice(-2);
+            let surveyEndDateStr = surveyEndDateObj.getFullYear() + '-' + ("0" + (surveyEndDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyEndDateObj.getDate()).slice(-2);
+
+            return `Gesamtzahl der im Zeitraum ${surveyStartDateStr} - ${surveyEndDateStr} geborenen Kinder`;
+        }
+    }
+
+    return "Gesamtzahl der Kinder";
+};
 </script>
 
 <template>
@@ -300,7 +326,7 @@ const manageYearlyEvaluation = async () => {
                                                 <v-card class="tw-p-6">
                                                     <h5>Kinder bis 2,5 Jahre</h5>
                                                     <v-text-field v-model="manageForm.children_2_born_per_year" :error-messages="errors.children_2_born_per_year"
-                                                                  label="Gesamtzahl der im Zeitraum [Survey DateStart-2,5 years] - [Survey DateEnd-2,5 years] geborenen Kinder" type="number" required></v-text-field>
+                                                                  :label="childsTotal2Label" type="number" required></v-text-field>
 
                                                     <v-row>
                                                         <v-col cols="12" sm="7">
@@ -339,7 +365,7 @@ const manageYearlyEvaluation = async () => {
                                                 <v-card class="tw-p-6">
                                                     <h5>Kinder bis 4,5 Jahre</h5>
                                                     <v-text-field v-model="manageForm.children_4_born_per_year" :error-messages="errors.children_4_born_per_year"
-                                                                  label="Gesamtzahl der im Zeitraum [Survey DateStart -4,5 years] - [Survey DateEnd-4,5 years] geborenen Kinder" type="number" required></v-text-field>
+                                                                  :label="childsTotal4Label" type="number" required></v-text-field>
 
 
                                                     <v-row>
@@ -528,7 +554,7 @@ const manageYearlyEvaluation = async () => {
                     <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
                         <td>{{item.selectable.year}}</td>
 
-                        <td>{{item.selectable.kita}}</td>
+                        <td>{{item.selectable?.kita?.formatted_name}}</td>
 
                         <td>{{ item.selectable.children_2_born_per_year }}</td>
 

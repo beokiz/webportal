@@ -13,6 +13,7 @@ use App\Models\YearlyEvaluation;
 use App\Models\User;
 use App\Services\Items\EvaluationItemService;
 use App\Services\Items\KitaItemService;
+use App\Services\Items\SurveyTimePeriodItemService;
 use App\Services\Items\YearlyEvaluationItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -51,8 +52,9 @@ class YearlyEvaluationsController extends BaseController
 
         $currentUser = $request->user();
 
-        $kitaItemService       = app(KitaItemService::class);
-        $evaluationItemService = app(EvaluationItemService::class);
+        $kitaItemService             = app(KitaItemService::class);
+        $evaluationItemService       = app(EvaluationItemService::class);
+        $surveyTimePeriodItemService = app(SurveyTimePeriodItemService::class);
 
         $args   = $request->only(['page', 'per_page', 'sort', 'order_by']);
         $result = $this->yearlyEvaluationItemService->collection(array_merge($args, [
@@ -63,8 +65,9 @@ class YearlyEvaluationsController extends BaseController
         $allEvaluations = $evaluationItemService->collection();
 
         return Inertia::render('YearlyEvaluations/YearlyEvaluations', $this->prepareItemsCollection($result, [
-            'filters' => $request->only([]),
-            'kitas'   => $kitaItemService->collection($currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []),
+            'filters'                            => $request->only([]),
+            'kitas'                              => $kitaItemService->collection($currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []),
+            'surveyTimePeriods'                  => $surveyTimePeriodItemService->collection(),
             'evaluationsWithDaz2TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', true)->count(),
             'evaluationsWithDaz4TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)->where('is_daz', true)->count(),
             'evaluationsWithoutDaz2TotalPerYear' => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', false)->count(),
@@ -83,8 +86,9 @@ class YearlyEvaluationsController extends BaseController
 
         $currentUser = $request->user();
 
-        $kitaItemService       = app(KitaItemService::class);
-        $evaluationItemService = app(EvaluationItemService::class);
+        $kitaItemService             = app(KitaItemService::class);
+        $evaluationItemService       = app(EvaluationItemService::class);
+        $surveyTimePeriodItemService = app(SurveyTimePeriodItemService::class);
 
         // Get evaluations totals by criterias
         $allEvaluations = $evaluationItemService->collection();
@@ -92,6 +96,7 @@ class YearlyEvaluationsController extends BaseController
         return Inertia::render('YearlyEvaluations/Partials/ManageYearlyEvaluation', [
             'yearlyEvaluation'                   => $yearlyEvaluation,
             'kitas'                              => $kitaItemService->collection($currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []),
+            'surveyTimePeriods'                  => $surveyTimePeriodItemService->collection(),
             'evaluationsWithDaz2TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', true)->count(),
             'evaluationsWithDaz4TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)->where('is_daz', true)->count(),
             'evaluationsWithoutDaz2TotalPerYear' => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', false)->count(),

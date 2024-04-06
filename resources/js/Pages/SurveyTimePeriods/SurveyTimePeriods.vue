@@ -21,6 +21,7 @@ const props = defineProps({
     sort: String,
     filters: Object,
     errors: Object,
+    settings: Object,
 });
 
 /*
@@ -69,6 +70,10 @@ const rawSurvayEnd = ref(null);
 const surveyStart = ref();
 const survayEnd = ref();
 
+const settingsLabel = ref({
+    send_yearly_evaluation_reminder_ntf_before_days: "Anzahl der Tage vor Ende des Bewertungszeitraums für den Versand der Erinnerungsmails",
+});
+
 const headers = [
     { title: 'Jahr', key: 'year', width: '10%', sortable: false},
     { title: 'Altersgruppe (Jahre)', key: 'age', width: '15%', sortable: false },
@@ -99,7 +104,7 @@ const someFiltersNotEmpty = computed(() => {
     return searchFilter.value !== null;
 });
 
-//Watch
+// Watch
 watch(dialog, (val) => {
     if (!val) {
         close();
@@ -120,11 +125,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         searchFilter.value = null;
     }
 
-    if (
-        (page === currentPage.value && clearFilters) ||
-        allFiltersEmpty ||
-        someFiltersNotEmpty
-    ) {
+    if ((page === currentPage.value && clearFilters) || allFiltersEmpty || someFiltersNotEmpty) {
         loading.value = true;
 
         let options = { data: { page: page, per_page: itemsPerPage } };
@@ -205,7 +206,6 @@ const manageTimePeriods = async () => {
     manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString()
     manageForm.survey_end_date = new Date(survayEnd.value).toLocaleString()
 
-
     manageForm.post(route('survey_time_periods.store'), {
         onSuccess: (page) => {
             close();
@@ -219,6 +219,28 @@ const manageTimePeriods = async () => {
     });
 };
 
+const manageSettingsForm = useForm({
+    settings: props.settings,
+});
+
+const manageSettings = async () => {
+    manageSettingsForm.processing = true;
+
+    let formOptions = {
+        preserveState: true,
+        onSuccess: (page) => {
+
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            manageSettingsForm.processing = false;
+        },
+    };
+
+    manageSettingsForm.post(route('settings.update'), formOptions);
+};
 </script>
 
 <template>
@@ -344,28 +366,6 @@ const manageTimePeriods = async () => {
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
-<!--            <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">-->
-<!--                <div class="tw-w-full">-->
-<!--                    <v-row>-->
-<!--                        <v-col cols="12" sm="5">-->
-<!--                            <v-text-field v-model="searchFilter" label="Name"></v-text-field>-->
-<!--                        </v-col>-->
-<!--                    </v-row>-->
-<!--                </div>-->
-
-<!--                <div class="tw-ml-6">-->
-<!--                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                        <v-btn-->
-<!--                            class="tw-mt-2"-->
-<!--                            v-bind="props"-->
-<!--                            :color="isHovering ? 'accent' : 'primary'"-->
-<!--                            @click="search = String(Date.now())"-->
-<!--                            dark-->
-<!--                        >Suche</v-btn>-->
-<!--                    </v-hover>-->
-<!--                </div>-->
-<!--            </div>-->
-
             <v-data-table-server
                 v-model:items-per-page="perPage"
                 :items-per-page-options="[
@@ -432,6 +432,26 @@ const manageTimePeriods = async () => {
                 </template>
 
             </v-data-table-server>
+        </div>
+
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">E-Mail Einstellungen</h2>
+
+            <template v-for="(value, name) in settings">
+                <div class="tw-flex tw-items-center tw-justify-start">
+                    <v-text-field v-model="manageSettingsForm.settings[name]"
+                                  :error-messages="errors?.settings ? errors.settings[name] : false"
+                                  :label="`${settingsLabel[name]}*`" required></v-text-field>
+                </div>
+            </template>
+
+            <div class="tw-flex tw-items-center tw-justify-start">
+                <v-hover v-slot:default="{ isHovering, props }">
+                    <v-btn-primary @click="manageSettings" v-bind="props"
+                                   :color="isHovering ? 'accent' : 'primary'">Speichern
+                    </v-btn-primary>
+                </v-hover>
+            </div>
         </div>
 
     </AuthenticatedLayout>

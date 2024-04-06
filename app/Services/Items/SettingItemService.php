@@ -6,18 +6,18 @@
 
 namespace App\Services\Items;
 
-use App\Models\YearlyEvaluation;
+use App\Models\Setting;
 use Illuminate\Support\Arr;
 
 /**
- * Yearly Evaluation Item Service
+ * Setting Item Service
  *
  * @package \App\Services\Items
  */
-class YearlyEvaluationItemService extends BaseItemService
+class SettingItemService extends BaseItemService
 {
     /**
-     * YearlyEvaluationItemService constructor.
+     * SettingItemService constructor.
      *
      * @return void
      */
@@ -41,9 +41,8 @@ class YearlyEvaluationItemService extends BaseItemService
         /*
          * Filter & order query
          */
-        $query = YearlyEvaluation::query()->filter($filters)
-            ->customOrderBy($params->order_by ?? 'id', $params->sort === 'desc')
-            ->with(['kita']);
+        $query = Setting::query()->filter($filters)
+            ->customOrderBy($params->order_by ?? 'id', $params->sort === 'desc');
 
         /*
          * Return results
@@ -55,7 +54,7 @@ class YearlyEvaluationItemService extends BaseItemService
             $result->additionalMeta = [];
 
             if ($result->isEmpty()) {
-                $result->additionalMeta['is_totally_empty'] = !YearlyEvaluation::query()->exists();
+                $result->additionalMeta['is_totally_empty'] = !Setting::query()->exists();
             }
 
             return $result;
@@ -65,26 +64,51 @@ class YearlyEvaluationItemService extends BaseItemService
     }
 
     /**
+     * @param array $args
+     * @return mixed
+     */
+    public function list(array $args = [])
+    {
+        $settings = Setting::all()->toArray();
+
+        return array_column($settings, 'value', 'name');
+    }
+
+    /**
      * @param int  $id
      * @param bool $throwExceptionIfFail
-     * @return YearlyEvaluation|null
+     * @return Setting|null
      */
-    public function find(int $id, bool $throwExceptionIfFail = true) : ?YearlyEvaluation
+    public function find(int $id, bool $throwExceptionIfFail = true) : ?Setting
     {
         return $throwExceptionIfFail
-            ? YearlyEvaluation::findOrFail($id)
-            : YearlyEvaluation::find($id);
+            ? Setting::findOrFail($id)
+            : Setting::find($id);
+    }
+
+    /**
+     * @param string $name
+     * @param bool   $throwExceptionIfFail
+     * @return mixed
+     */
+    protected function findByName(string $name, bool $throwExceptionIfFail = false) : mixed
+    {
+        $query = Setting::where('name', $name);
+
+        return $throwExceptionIfFail
+            ? $query->firstOrFail()
+            : $query->first();
     }
 
     /**
      * @param array $attributes
-     * @return ?YearlyEvaluation
+     * @return ?Setting
      */
-    public function create(array $attributes) : ?YearlyEvaluation
+    public function create(array $attributes) : ?Setting
     {
         $this->prepareAttributes($attributes);
 
-        $item = YearlyEvaluation::create($attributes);
+        $item = Setting::create($attributes);
 
         if ($item->exists) {
             $this->updateRelations($item, $attributes);
@@ -106,13 +130,33 @@ class YearlyEvaluationItemService extends BaseItemService
 
         $this->prepareAttributes($attributes);
 
-        if ($item->update($attributes)) {
-            $this->updateRelations($item, $attributes);
+        return $item->update($attributes);
+    }
 
-            return true;
-        } else {
-            return false;
+    /**
+     * @param array $attributes
+     * @return bool
+     */
+    public function bulkUpdate(array $attributes) : bool
+    {
+        if (!empty($attributes['settings']) && is_array($attributes['settings'])) {
+            $settings = [];
+
+            foreach ($attributes['settings'] as $name => $value) {
+                $settings[] = [
+                    'name'  => $name,
+                    'value' => $value,
+                ];
+            }
+
+            if (!empty($settings)) {
+                Setting::upsert($settings, 'name');
+
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**
@@ -139,11 +183,11 @@ class YearlyEvaluationItemService extends BaseItemService
     }
 
     /**
-     * @param YearlyEvaluation $item
-     * @param array            $attributes
+     * @param Setting $item
+     * @param array   $attributes
      * @return void
      */
-    protected function updateRelations(YearlyEvaluation $item, array $attributes) : void
+    protected function updateRelations(Setting $item, array $attributes) : void
     {
         //
     }

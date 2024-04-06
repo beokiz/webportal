@@ -200,4 +200,16 @@ return [
         'restore_denied'  => "Fehler! Ausgewählter Jährliche Rückmeldung kann nicht wiederhergestellt werden.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Setting CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'settings' => [
+        'update_success' => "Die Einstellung wurde erfolgreich aktualisiert.",
+        'update_error'   => "Fehler! Beim Aktualisieren einer Einstellung ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        'update_denied'  => "Fehler! Die ausgewählte Einstellung kann nicht aktualisiert werden.",
+    ],
+
 ];

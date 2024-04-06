@@ -42,7 +42,7 @@ class RoleFactory extends BaseFactory
      */
     public function definition() : array
     {
-        $name = $this->faker->unique()->domainWord;
+        $name = $this->faker->unique()->word;
 
         return [
             'name'                => $name,

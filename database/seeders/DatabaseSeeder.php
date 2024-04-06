@@ -54,5 +54,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\YearlyEvaluation::factory()
             ->count(10)
             ->create();
+
+        \App\Models\Setting::factory()
+            ->count(30)
+            ->create();
     }
 }
