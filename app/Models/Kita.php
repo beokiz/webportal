@@ -7,7 +7,6 @@
 namespace App\Models;
 
 use App\ModelFilters\KitaFilter;
-use App\ModelFilters\YearlyEvaluationsFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;
@@ -16,7 +15,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 /**
@@ -85,6 +83,75 @@ class Kita extends Model
     }
 
     /**
+     * @return Attribute
+     */
+    public function evaluationsTotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithDaz2TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)
+                    ->where('is_daz', true)
+                    ->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithDaz4TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)
+                    ->where('is_daz', true)
+                    ->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithoutDaz2TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)
+                    ->where('is_daz', false)
+                    ->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithoutDaz4TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)
+                    ->where('is_daz', false)
+                    ->count()
+                : 0,
+            set: fn (string $value) => $value*100,
+        );
+    }
+
+    /**
      * @return string|null
      */
     public function modelFilter() : ?string
@@ -110,7 +177,7 @@ class Kita extends Model
      */
     public function evaluations() : HasMany
     {
-        return $this->hasMany(Subdomain::class, 'kita_id', 'id');
+        return $this->hasMany(Evaluation::class, 'kita_id', 'id');
     }
 
     /**

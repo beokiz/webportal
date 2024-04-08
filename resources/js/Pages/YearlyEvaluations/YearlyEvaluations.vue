@@ -24,10 +24,6 @@ const props = defineProps({
     errors: Object,
     kitas: Array,
     surveyTimePeriods: Array,
-    evaluationsWithDaz2TotalPerYear: Number,
-    evaluationsWithDaz4TotalPerYear: Number,
-    evaluationsWithoutDaz2TotalPerYear: Number,
-    evaluationsWithoutDaz4TotalPerYear: Number,
 });
 
 /*
@@ -112,11 +108,30 @@ const childsTotal4Label = computed(() => {
     return getChildsTotalLabel('4.5');
 });
 
+const selectedKita = computed(() => {
+    let selectedKita = props.kitas.find(kita => {
+        return manageForm.kita_id === parseInt(kita.id);
+    });
+
+    if (selectedKita) {
+        manageForm.evaluations_with_daz_2_total_per_year = selectedKita.evaluations_with_daz2_total_per_year_count;
+        manageForm.evaluations_with_daz_4_total_per_year = selectedKita.evaluations_with_daz4_total_per_year_count;
+        manageForm.evaluations_without_daz_2_total_per_year = selectedKita.evaluations_without_daz2_total_per_year_count;
+        manageForm.evaluations_without_daz_4_total_per_year = selectedKita.evaluations_without_daz4_total_per_year_count;
+    }
+
+    return selectedKita;
+});
+
 // Watch
 watch(dialog, (val) => {
     if (!val) {
         close();
     }
+});
+
+watch(dialogIssues, (val) => {
+    canSave.value = true;
 });
 
 // Methods
@@ -209,23 +224,24 @@ const clear = () => {
 
 const manageForm = useForm({
     year: new Date().getFullYear().toString().padStart(4, '0'),
-    kita_id: props?.kitas.length > 0 ? props?.kitas[0].id : null,
-    evaluations_with_daz_2_total_per_year: props?.evaluationsWithDaz2TotalPerYear ?? 0,
-    evaluations_with_daz_4_total_per_year: props?.evaluationsWithDaz4TotalPerYear ?? 0,
-    evaluations_without_daz_2_total_per_year: props?.evaluationsWithoutDaz2TotalPerYear ?? 0,
-    evaluations_without_daz_4_total_per_year: props?.evaluationsWithoutDaz4TotalPerYear ?? 0,
-    children_2_born_per_year: null,
-    children_4_born_per_year: null,
-    children_2_with_german_lang: null,
-    children_4_with_german_lang: null,
-    children_2_with_foreign_lang: null,
-    children_4_with_foreign_lang: null,
+    kita_id: props?.kitas.length > 0 ? props?.kitas[0]?.id : null,
+    evaluations_with_daz_2_total_per_year: props?.kitas.length > 0 ? props?.kitas[0]?.evaluations_with_daz2_total_per_year_count : 0,
+    evaluations_with_daz_4_total_per_year: props?.kitas.length > 0 ? props?.kitas[0]?.evaluations_with_daz4_total_per_year_count : 0,
+    evaluations_without_daz_2_total_per_year: props?.kitas.length > 0 ? props?.kitas[0]?.evaluations_without_daz2_total_per_year_count : 0,
+    evaluations_without_daz_4_total_per_year: props?.kitas.length > 0 ? props?.kitas[0]?.evaluations_without_daz4_total_per_year_count : 0,
+    children_2_born_per_year: 0,
+    children_4_born_per_year: 0,
+    children_2_with_german_lang: 0,
+    children_4_with_german_lang: 0,
+    children_2_with_foreign_lang: 0,
+    children_4_with_foreign_lang: 0,
 });
 
 const createYearlyEvaluation = async () => {
     manageForm.processing = true;
 
     manageForm.post(route('yearly_evaluations.store'), {
+        preserveState: true,
         onSuccess: (page) => {
             close();
         },
@@ -233,6 +249,7 @@ const createYearlyEvaluation = async () => {
             errors.value = err;
         },
         onFinish: () => {
+            closeDialogIssues();
             manageForm.processing = false;
         },
     });
@@ -304,7 +321,8 @@ const getChildsTotalLabel = (age) => {
                                                 <h3>Rückmeldung betrifft</h3>
                                             </v-col>
                                             <v-col cols="12" sm="4">
-                                                <v-text-field v-model="manageForm.year" :error-messages="errors.year"
+                                                <v-text-field v-model="manageForm.year"
+                                                              :error-messages="errors.year"
                                                               label="Jahr der Rückmeldung*" required></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="4">
@@ -325,19 +343,22 @@ const getChildsTotalLabel = (age) => {
                                             <v-col cols="12" sm="6">
                                                 <v-card class="tw-p-6">
                                                     <h5>Kinder bis 2,5 Jahre</h5>
-                                                    <v-text-field v-model="manageForm.children_2_born_per_year" :error-messages="errors.children_2_born_per_year"
+                                                    <v-text-field v-model="manageForm.children_2_born_per_year"
+                                                                  :error-messages="errors.children_2_born_per_year"
                                                                   :label="childsTotal2Label" type="number" required></v-text-field>
 
                                                     <v-row>
                                                         <v-col cols="12" sm="7">
-                                                            <v-text-field v-model="manageForm.children_2_with_german_lang" :error-messages="errors.children_2_with_german_lang"
+                                                            <v-text-field v-model="manageForm.children_2_with_german_lang"
+                                                                          :error-messages="errors.children_2_with_german_lang"
                                                                           label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
                                                         <v-col cols="12" sm="5">
                                                             <v-row>
                                                                 <WarningEvaluationTooltip v-if="checkYears('2_german')"/>
                                                                 <v-col cols="12" sm="10">
-                                                                    <v-text-field v-model="manageForm.evaluations_with_daz_2_total_per_year" :error-messages="errors.evaluations_with_daz_2_total_per_year"
+                                                                    <v-text-field v-model="manageForm.evaluations_with_daz_2_total_per_year"
+                                                                                  :error-messages="errors.evaluations_with_daz_2_total_per_year"
                                                                                   label="Bisher eingereichte Einschätzungen" type="number" disabled required>
                                                                     </v-text-field>
                                                                 </v-col>
@@ -346,14 +367,16 @@ const getChildsTotalLabel = (age) => {
                                                     </v-row>
                                                     <v-row>
                                                         <v-col cols="12" sm="7">
-                                                            <v-text-field v-model="manageForm.children_2_with_foreign_lang" :error-messages="errors.children_2_with_foreign_lang"
+                                                            <v-text-field v-model="manageForm.children_2_with_foreign_lang"
+                                                                          :error-messages="errors.children_2_with_foreign_lang"
                                                                           label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
                                                         <v-col cols="12" sm="5">
                                                             <v-row>
                                                                 <WarningEvaluationTooltip v-if="checkYears('2_foreign')"/>
                                                                 <v-col cols="12" sm="10">
-                                                                    <v-text-field v-model="manageForm.evaluations_without_daz_2_total_per_year" :error-messages="errors.evaluations_without_daz_2_total_per_year"
+                                                                    <v-text-field v-model="manageForm.evaluations_without_daz_2_total_per_year"
+                                                                                  :error-messages="errors.evaluations_without_daz_2_total_per_year"
                                                                                   label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
                                                                 </v-col>
                                                             </v-row>
@@ -364,20 +387,23 @@ const getChildsTotalLabel = (age) => {
                                             <v-col cols="12" sm="6">
                                                 <v-card class="tw-p-6">
                                                     <h5>Kinder bis 4,5 Jahre</h5>
-                                                    <v-text-field v-model="manageForm.children_4_born_per_year" :error-messages="errors.children_4_born_per_year"
+                                                    <v-text-field v-model="manageForm.children_4_born_per_year"
+                                                                  :error-messages="errors.children_4_born_per_year"
                                                                   :label="childsTotal4Label" type="number" required></v-text-field>
 
 
                                                     <v-row>
                                                         <v-col cols="12" sm="7">
-                                                            <v-text-field v-model="manageForm.children_4_with_german_lang" :error-messages="errors.children_4_with_german_lang"
+                                                            <v-text-field v-model="manageForm.children_4_with_german_lang"
+                                                                          :error-messages="errors.children_4_with_german_lang"
                                                                           label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
                                                         <v-col cols="12" sm="5">
                                                             <v-row>
                                                                 <WarningEvaluationTooltip v-if="checkYears('4_german')"/>
                                                                 <v-col cols="12" sm="10">
-                                                                    <v-text-field v-model="manageForm.evaluations_with_daz_4_total_per_year" :error-messages="errors.evaluations_with_daz_4_total_per_year"
+                                                                    <v-text-field v-model="manageForm.evaluations_with_daz_4_total_per_year"
+                                                                                  :error-messages="errors.evaluations_with_daz_4_total_per_year"
                                                                                   label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
                                                                 </v-col>
                                                             </v-row>
@@ -386,14 +412,16 @@ const getChildsTotalLabel = (age) => {
 
                                                     <v-row>
                                                         <v-col cols="12" sm="7">
-                                                            <v-text-field v-model="manageForm.children_4_with_foreign_lang" :error-messages="errors.children_4_with_foreign_lang"
+                                                            <v-text-field v-model="manageForm.children_4_with_foreign_lang"
+                                                                          :error-messages="errors.children_4_with_foreign_lang"
                                                                           label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
                                                         </v-col>
                                                         <v-col cols="12" sm="5">
                                                             <v-row>
                                                                 <WarningEvaluationTooltip v-if="checkYears('4_foreign')"/>
                                                                 <v-col cols="12" sm="10">
-                                                                    <v-text-field v-model="manageForm.evaluations_without_daz_4_total_per_year" :error-messages="errors.evaluations_without_daz_4_total_per_year"
+                                                                    <v-text-field v-model="manageForm.evaluations_without_daz_4_total_per_year"
+                                                                                  :error-messages="errors.evaluations_without_daz_4_total_per_year"
                                                                                   label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
                                                                 </v-col>
                                                             </v-row>
@@ -498,7 +526,7 @@ const getChildsTotalLabel = (age) => {
                             <v-btn @click="closeDialogIssues" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                         </v-hover>
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary :disabled="!allowSaveState" @click="allowSave" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                            <v-btn-primary :disabled="!allowSaveState" @click="manageYearlyEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                         </v-hover>
                     </v-card-actions>
                 </v-card>
@@ -506,27 +534,6 @@ const getChildsTotalLabel = (age) => {
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
-<!--            <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">-->
-<!--                <div class="tw-w-full">-->
-<!--                    <v-row>-->
-<!--                        <v-col cols="12" sm="5">-->
-<!--                            <v-text-field v-model="searchFilter" label="Name"></v-text-field>-->
-<!--                        </v-col>-->
-<!--                    </v-row>-->
-<!--                </div>-->
-
-<!--                <div class="tw-ml-6">-->
-<!--                    <v-hover v-slot:default="{ isHovering, props }">-->
-<!--                        <v-btn-->
-<!--                            class="tw-mt-2"-->
-<!--                            v-bind="props"-->
-<!--                            :color="isHovering ? 'accent' : 'primary'"-->
-<!--                            @click="search = String(Date.now())"-->
-<!--                            dark-->
-<!--                        >Suche</v-btn>-->
-<!--                    </v-hover>-->
-<!--                </div>-->
-<!--            </div>-->
 
             <v-data-table-server
                 v-model:items-per-page="perPage"

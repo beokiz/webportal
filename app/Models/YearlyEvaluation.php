@@ -39,6 +39,10 @@ class YearlyEvaluation extends Model
     protected $fillable = [
         'year',
         'kita_id',
+        'evaluations_without_daz_2_total_per_year',
+        'evaluations_without_daz_4_total_per_year',
+        'evaluations_with_daz_2_total_per_year',
+        'evaluations_with_daz_4_total_per_year',
         'children_2_born_per_year',
         'children_4_born_per_year',
         'children_2_with_german_lang',

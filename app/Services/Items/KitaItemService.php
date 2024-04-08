@@ -45,6 +45,10 @@ class KitaItemService extends BaseItemService
         $query = Kita::query()->filter($filters)
             ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc');
 
+        if (!empty($args['with'])) {
+            $query->with(['evaluations']);
+        }
+
         /*
          * Return results
          */

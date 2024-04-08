@@ -4,11 +4,10 @@
   -->
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { onMounted, computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { prepareDate, ages } from "@/Composables/common.js";
 import WarningEvaluationTooltip from "@/Components/WarningEvaluationTooltip.vue";
 
 const props = defineProps({
@@ -45,6 +44,23 @@ const dialogIssues = ref(false);
 const canSave = ref(false);
 const allowSaveState = ref(false);
 
+const manageForm = useForm({
+    id: editedYearlyEvaluation.value.id,
+    year: editedYearlyEvaluation.value.year,
+    kita_id: editedYearlyEvaluation.value.kita_id,
+    children_2_born_per_year: editedYearlyEvaluation.value.children_2_born_per_year,
+    children_2_with_german_lang: editedYearlyEvaluation.value.children_2_with_german_lang,
+    evaluations_with_daz_2_total_per_year: editedYearlyEvaluation.value.evaluations_with_daz_2_total_per_year,
+    children_2_with_foreign_lang: editedYearlyEvaluation.value.children_2_with_foreign_lang,
+    evaluations_without_daz_2_total_per_year: editedYearlyEvaluation.value.evaluations_without_daz_2_total_per_year,
+    children_4_born_per_year: editedYearlyEvaluation.value.children_4_born_per_year,
+    children_4_with_german_lang: editedYearlyEvaluation.value.children_4_with_german_lang,
+    evaluations_with_daz_4_total_per_year: editedYearlyEvaluation.value.evaluations_with_daz_4_total_per_year,
+    children_4_with_foreign_lang: editedYearlyEvaluation.value.children_4_with_foreign_lang,
+    evaluations_without_daz_4_total_per_year: editedYearlyEvaluation.value.evaluations_without_daz_4_total_per_year,
+});
+
+// Computed
 const modifiedItems = computed(() => {
     return props.yearlyEvaluation.map(item => {
         const modifiedItem = {...item};
@@ -65,24 +81,28 @@ const childsTotal4Label = computed(() => {
     return getChildsTotalLabel('4.5');
 });
 
-// Methods
-const manageForm = useForm({
-    id: editedYearlyEvaluation.value.id,
-    year: editedYearlyEvaluation.value.year,
-    kita_id: editedYearlyEvaluation.value.kita_id,
-    children_2_born_per_year: editedYearlyEvaluation.value.children_2_born_per_year,
-    children_2_with_german_lang: editedYearlyEvaluation.value.children_2_with_german_lang,
-    evaluations_with_daz_2_total_per_year: editedYearlyEvaluation.value.evaluations_with_daz_2_total_per_year,
-    children_2_with_foreign_lang: editedYearlyEvaluation.value.children_2_with_foreign_lang,
-    evaluations_without_daz_2_total_per_year: editedYearlyEvaluation.value.evaluations_without_daz_2_total_per_year,
-    children_4_born_per_year: editedYearlyEvaluation.value.children_4_born_per_year,
-    children_4_with_german_lang: editedYearlyEvaluation.value.children_4_with_german_lang,
-    evaluations_with_daz_4_total_per_year: editedYearlyEvaluation.value.evaluations_with_daz_4_total_per_year,
-    children_4_with_foreign_lang: editedYearlyEvaluation.value.children_4_with_foreign_lang,
-    evaluations_without_daz_4_total_per_year: editedYearlyEvaluation.value.evaluations_without_daz_4_total_per_year,
-
+// Watch
+watch(dialogIssues, (val) => {
+    canSave.value = true;
 });
 
+watch(
+    () => manageForm.kita_id, // use a getter like this
+    (val) => {
+        let selectedKita = props.kitas.find(kita => {
+            return val === parseInt(kita.id);
+        });
+
+        if (selectedKita) {
+            manageForm.evaluations_with_daz_2_total_per_year = selectedKita.evaluations_with_daz2_total_per_year_count;
+            manageForm.evaluations_with_daz_4_total_per_year = selectedKita.evaluations_with_daz4_total_per_year_count;
+            manageForm.evaluations_without_daz_2_total_per_year = selectedKita.evaluations_without_daz2_total_per_year_count;
+            manageForm.evaluations_without_daz_4_total_per_year = selectedKita.evaluations_without_daz4_total_per_year_count;
+        }
+    }
+);
+
+// Methods
 const closeDialogIssues = () => {
     dialogIssues.value = false;
 };
@@ -116,7 +136,7 @@ const updateYearlyEvaluation = async () => {
     manageForm.processing = true;
 
     let formOptions = {
-        preserveState: false,
+        preserveState: true,
         onSuccess: (page) => {
 
         },
@@ -124,6 +144,7 @@ const updateYearlyEvaluation = async () => {
             errors.value = err;
         },
         onFinish: () => {
+            closeDialogIssues();
             manageForm.processing = false;
         },
     };
@@ -334,7 +355,7 @@ const getChildsTotalLabel = (age) => {
                             <v-btn @click="closeDialogIssues" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                         </v-hover>
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary :disabled="!allowSaveState" @click="allowSave" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                            <v-btn-primary :disabled="!allowSaveState" @click="manageYearlyEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                         </v-hover>
                     </v-card-actions>
                 </v-card>

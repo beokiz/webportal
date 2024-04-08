@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\YearlyEvaluations\CreateYearlyEvaluationRequest;
 use App\Http\Requests\YearlyEvaluations\UpdateYearlyEvaluationRequest;
 use App\Models\Evaluation;
+use App\Models\Kita;
 use App\Models\YearlyEvaluation;
 use App\Models\User;
 use App\Services\Items\EvaluationItemService;
@@ -53,7 +54,6 @@ class YearlyEvaluationsController extends BaseController
         $currentUser = $request->user();
 
         $kitaItemService             = app(KitaItemService::class);
-        $evaluationItemService       = app(EvaluationItemService::class);
         $surveyTimePeriodItemService = app(SurveyTimePeriodItemService::class);
 
         $args   = $request->only(['page', 'per_page', 'sort', 'order_by']);
@@ -61,17 +61,25 @@ class YearlyEvaluationsController extends BaseController
             'paginated' => true,
         ]));
 
-        // Get evaluations totals by criterias
-        $allEvaluations = $evaluationItemService->collection();
+        // Get all kitas for select
+        $kitas = $kitaItemService->collection(array_merge([
+            'with' => 'evaluations',
+        ], $currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []))->transform(function (Kita $kita) {
+            $kita->append([
+                'evaluations_total_per_year_count',
+                'evaluations_with_daz2_total_per_year_count',
+                'evaluations_with_daz4_total_per_year_count',
+                'evaluations_without_daz2_total_per_year_count',
+                'evaluations_without_daz4_total_per_year_count',
+            ]);
+
+            return $kita;
+        });
 
         return Inertia::render('YearlyEvaluations/YearlyEvaluations', $this->prepareItemsCollection($result, [
-            'filters'                            => $request->only([]),
-            'kitas'                              => $kitaItemService->collection($currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []),
-            'surveyTimePeriods'                  => $surveyTimePeriodItemService->collection(),
-            'evaluationsWithDaz2TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', true)->count(),
-            'evaluationsWithDaz4TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)->where('is_daz', true)->count(),
-            'evaluationsWithoutDaz2TotalPerYear' => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', false)->count(),
-            'evaluationsWithoutDaz4TotalPerYear' => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)->where('is_daz', false)->count(),
+            'filters'           => $request->only([]),
+            'kitas'             => $kitas,
+            'surveyTimePeriods' => $surveyTimePeriodItemService->collection(),
         ]));
     }
 
@@ -87,20 +95,27 @@ class YearlyEvaluationsController extends BaseController
         $currentUser = $request->user();
 
         $kitaItemService             = app(KitaItemService::class);
-        $evaluationItemService       = app(EvaluationItemService::class);
         $surveyTimePeriodItemService = app(SurveyTimePeriodItemService::class);
 
-        // Get evaluations totals by criterias
-        $allEvaluations = $evaluationItemService->collection();
+        // Get all kitas for select
+        $kitas = $kitaItemService->collection(array_merge([
+            'with' => 'evaluations',
+        ], $currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []))->transform(function (Kita $kita) {
+            $kita->append([
+                'evaluations_total_per_year_count',
+                'evaluations_with_daz2_total_per_year_count',
+                'evaluations_with_daz4_total_per_year_count',
+                'evaluations_without_daz2_total_per_year_count',
+                'evaluations_without_daz4_total_per_year_count',
+            ]);
+
+            return $kita;
+        });
 
         return Inertia::render('YearlyEvaluations/Partials/ManageYearlyEvaluation', [
-            'yearlyEvaluation'                   => $yearlyEvaluation,
-            'kitas'                              => $kitaItemService->collection($currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []),
-            'surveyTimePeriods'                  => $surveyTimePeriodItemService->collection(),
-            'evaluationsWithDaz2TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', true)->count(),
-            'evaluationsWithDaz4TotalPerYear'    => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)->where('is_daz', true)->count(),
-            'evaluationsWithoutDaz2TotalPerYear' => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)->where('is_daz', false)->count(),
-            'evaluationsWithoutDaz4TotalPerYear' => $allEvaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)->where('is_daz', false)->count(),
+            'yearlyEvaluation'  => $yearlyEvaluation,
+            'kitas'             => $kitas,
+            'surveyTimePeriods' => $surveyTimePeriodItemService->collection(),
         ]);
     }
 
@@ -114,7 +129,6 @@ class YearlyEvaluationsController extends BaseController
 
         $attributes = $request->validated();
         $result     = $this->yearlyEvaluationItemService->create($attributes);
-
         return $result
             ? Redirect::back()->withSuccesses(__('crud.yearly_evaluations.create_success'))
             : Redirect::back()->withErrors(__('crud.yearly_evaluations.create_error'));
