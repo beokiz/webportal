@@ -66,7 +66,8 @@ const dialogIssues = ref(false);
 const dialogDeleteEvaluation = ref(false);
 const deletingItemName = ref(null);
 const allowSaveState = ref(false);
-const canSave = ref(false);
+const canSaveMainForm = ref(false);
+const canSavePopupForm = ref(false);
 
 const headers = [
     { title: 'Jahr', key: 'year', width: '7%', sortable: false},
@@ -113,13 +114,6 @@ const selectedKita = computed(() => {
         return manageForm.kita_id === parseInt(kita.id);
     });
 
-    if (selectedKita) {
-        manageForm.evaluations_with_daz_2_total_per_year = selectedKita.evaluations_with_daz2_total_per_year_count;
-        manageForm.evaluations_with_daz_4_total_per_year = selectedKita.evaluations_with_daz4_total_per_year_count;
-        manageForm.evaluations_without_daz_2_total_per_year = selectedKita.evaluations_without_daz2_total_per_year_count;
-        manageForm.evaluations_without_daz_4_total_per_year = selectedKita.evaluations_without_daz4_total_per_year_count;
-    }
-
     return selectedKita;
 });
 
@@ -131,7 +125,7 @@ watch(dialog, (val) => {
 });
 
 watch(dialogIssues, (val) => {
-    canSave.value = true;
+    canSavePopupForm.value = true;
 });
 
 // Methods
@@ -200,7 +194,7 @@ const closeDialogIssues = () => {
 };
 
 const allowSave = () => {
-    canSave.value = true;
+    canSavePopupForm.value = true;
     closeDialogIssues()
 };
 
@@ -209,7 +203,7 @@ const close = () => {
     dialogIssues.value = false;
     dialogDeleteEvaluation.value = false;
     allowSaveState.value = false;
-    canSave.value = false;
+    canSavePopupForm.value = false;
     manageForm.reset();
     manageForm.clearErrors();
 
@@ -221,7 +215,6 @@ const clear = () => {
     manageForm.clearErrors();
 };
 
-
 const manageForm = useForm({
     year: new Date().getFullYear().toString().padStart(4, '0'),
     kita_id: props?.kitas.length > 0 ? props?.kitas[0]?.id : null,
@@ -229,12 +222,45 @@ const manageForm = useForm({
     evaluations_with_daz_4_total_per_year: props?.kitas.length > 0 ? props?.kitas[0]?.evaluations_with_daz4_total_per_year_count : 0,
     evaluations_without_daz_2_total_per_year: props?.kitas.length > 0 ? props?.kitas[0]?.evaluations_without_daz2_total_per_year_count : 0,
     evaluations_without_daz_4_total_per_year: props?.kitas.length > 0 ? props?.kitas[0]?.evaluations_without_daz4_total_per_year_count : 0,
-    children_2_born_per_year: 0,
-    children_4_born_per_year: 0,
-    children_2_with_german_lang: 0,
-    children_4_with_german_lang: 0,
-    children_2_with_foreign_lang: 0,
-    children_4_with_foreign_lang: 0,
+    children_2_born_per_year: null,
+    children_4_born_per_year: null,
+    children_2_with_german_lang: null,
+    children_4_with_german_lang: null,
+    children_2_with_foreign_lang: null,
+    children_4_with_foreign_lang: null,
+});
+
+watch(() => manageForm.kita_id, (newValue, oldValue) => {
+    if (selectedKita.value) {
+        manageForm.evaluations_with_daz_2_total_per_year = selectedKita.value.evaluations_with_daz2_total_per_year_count;
+        manageForm.evaluations_with_daz_4_total_per_year = selectedKita.value.evaluations_with_daz4_total_per_year_count;
+        manageForm.evaluations_without_daz_2_total_per_year = selectedKita.value.evaluations_without_daz2_total_per_year_count;
+        manageForm.evaluations_without_daz_4_total_per_year = selectedKita.value.evaluations_without_daz4_total_per_year_count;
+    }
+});
+
+watch(() => manageForm.children_2_born_per_year, () => {
+    validateChildrensAmount('2.5');
+});
+
+watch(() => manageForm.children_2_with_german_lang, () => {
+    validateChildrensAmount('2.5');
+});
+
+watch(() => manageForm.children_2_with_foreign_lang, (newValue, oldValue) => {
+    validateChildrensAmount('2.5');
+});
+
+watch(() => manageForm.children_4_born_per_year, (newValue, oldValue) => {
+    validateChildrensAmount('4.5');
+});
+
+watch(() => manageForm.children_4_with_german_lang, (newValue, oldValue) => {
+    validateChildrensAmount('4.5');
+});
+
+watch(() => manageForm.children_4_with_foreign_lang, (newValue, oldValue) => {
+    validateChildrensAmount('4.5');
 });
 
 const createYearlyEvaluation = async () => {
@@ -257,18 +283,18 @@ const createYearlyEvaluation = async () => {
 
 const checkYears = (type) => {
     if(type === '2_german'){
-        return parseInt(manageForm.evaluations_with_daz_2_total_per_year) !== parseInt(manageForm.children_2_with_german_lang)
+        return parseInt(manageForm.evaluations_with_daz_2_total_per_year) !== parseInt(manageForm.children_2_with_german_lang ?? 0)
     } else if(type === '2_foreign') {
-        return parseInt(manageForm.evaluations_without_daz_2_total_per_year) !== parseInt(manageForm.children_2_with_foreign_lang)
+        return parseInt(manageForm.evaluations_without_daz_2_total_per_year) !== parseInt(manageForm.children_2_with_foreign_lang ?? 0)
     } else if (type === '4_german'){
-        return parseInt(manageForm.evaluations_with_daz_4_total_per_year) !== parseInt(manageForm.children_4_with_german_lang)
+        return parseInt(manageForm.evaluations_with_daz_4_total_per_year) !== parseInt(manageForm.children_4_with_german_lang ?? 0)
     } else if (type === '4_foreign'){
-        return parseInt(manageForm.evaluations_without_daz_4_total_per_year) !== parseInt(manageForm.children_4_with_foreign_lang)
+        return parseInt(manageForm.evaluations_without_daz_4_total_per_year) !== parseInt(manageForm.children_4_with_foreign_lang ?? 0)
     }
 };
 
 const manageYearlyEvaluation = async () => {
-    if( (checkYears('2_german') || checkYears('2_foreign') || checkYears('4_german') || checkYears('4_foreign')) && !canSave.value ) {
+    if( (checkYears('2_german') || checkYears('2_foreign') || checkYears('4_german') || checkYears('4_foreign')) && !canSavePopupForm.value ) {
         dialogIssues.value = true
     } else {
         await createYearlyEvaluation()
@@ -293,6 +319,45 @@ const getChildsTotalLabel = (age) => {
     }
 
     return "Gesamtzahl der Kinder";
+};
+
+const validateChildrensAmount = (age) => {
+    if (age === '2.5' || age === '4.5') {
+        let block2Valid = false;
+        let block4Valid = false;
+
+        if (
+            (manageForm.children_2_with_german_lang !== null && manageForm.children_2_with_german_lang !== undefined) &&
+            (manageForm.children_2_with_foreign_lang !== null && manageForm.children_2_with_foreign_lang !== undefined)
+        ) {
+            if (parseInt(manageForm.children_2_with_german_lang) + parseInt(manageForm.children_2_with_foreign_lang) !== parseInt(manageForm.children_2_born_per_year)) {
+                errors.value.children_2_born_per_year = 'Die ausgewählte "Anzahl der im ausgewählten Jahr geborenen Kinder" ist ungültig.';
+
+                block2Valid = false;
+            } else {
+                delete errors.value.children_2_born_per_year;
+
+                block2Valid = true;
+            }
+        }
+
+        if (
+            (manageForm.children_4_with_german_lang !== null && manageForm.children_4_with_german_lang !== undefined) &&
+            (manageForm.children_4_with_foreign_lang !== null && manageForm.children_4_with_foreign_lang !== undefined)
+        ) {
+            if (parseInt(manageForm.children_4_with_german_lang) + parseInt(manageForm.children_4_with_foreign_lang) !== parseInt(manageForm.children_4_born_per_year)) {
+                errors.value.children_4_born_per_year = 'Die ausgewählte "Anzahl der im ausgewählten Jahr geborenen Kinder" ist ungültig.';
+
+                block4Valid = false;
+            } else {
+                delete errors.value.children_4_born_per_year;
+
+                block4Valid = true;
+            }
+        }
+
+        canSaveMainForm.value = block2Valid && block4Valid;
+    }
 };
 </script>
 
@@ -442,7 +507,7 @@ const getChildsTotalLabel = (age) => {
                                         <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
                                     </v-hover>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn-primary @click="manageYearlyEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                        <v-btn-primary @click="manageYearlyEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="!canSaveMainForm">Speichern</v-btn-primary>
                                     </v-hover>
                                 </v-card-actions>
                             </v-card>

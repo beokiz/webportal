@@ -43,6 +43,7 @@ const loading = ref(false);
 const dialogIssues = ref(false);
 const canSave = ref(false);
 const allowSaveState = ref(false);
+const canSaveMainForm = ref(true);
 
 const manageForm = useForm({
     id: editedYearlyEvaluation.value.id,
@@ -101,6 +102,30 @@ watch(
         }
     }
 );
+
+watch(() => manageForm.children_2_born_per_year, () => {
+    validateChildrensAmount('2.5');
+});
+
+watch(() => manageForm.children_2_with_german_lang, () => {
+    validateChildrensAmount('2.5');
+});
+
+watch(() => manageForm.children_2_with_foreign_lang, (newValue, oldValue) => {
+    validateChildrensAmount('2.5');
+});
+
+watch(() => manageForm.children_4_born_per_year, (newValue, oldValue) => {
+    validateChildrensAmount('4.5');
+});
+
+watch(() => manageForm.children_4_with_german_lang, (newValue, oldValue) => {
+    validateChildrensAmount('4.5');
+});
+
+watch(() => manageForm.children_4_with_foreign_lang, (newValue, oldValue) => {
+    validateChildrensAmount('4.5');
+});
 
 // Methods
 const closeDialogIssues = () => {
@@ -170,6 +195,45 @@ const getChildsTotalLabel = (age) => {
     }
 
     return "Gesamtzahl der Kinder";
+};
+
+const validateChildrensAmount = (age) => {
+    if (age === '2.5' || age === '4.5') {
+        let block2Valid = false;
+        let block4Valid = false;
+
+        if (
+            (manageForm.children_2_with_german_lang !== null && manageForm.children_2_with_german_lang !== undefined) &&
+            (manageForm.children_2_with_foreign_lang !== null && manageForm.children_2_with_foreign_lang !== undefined)
+        ) {
+            if (parseInt(manageForm.children_2_with_german_lang) + parseInt(manageForm.children_2_with_foreign_lang) !== parseInt(manageForm.children_2_born_per_year)) {
+                errors.value.children_2_born_per_year = 'Die ausgewählte "Anzahl der im ausgewählten Jahr geborenen Kinder" ist ungültig.';
+
+                block2Valid = false;
+            } else {
+                delete errors.value.children_2_born_per_year;
+
+                block2Valid = true;
+            }
+        }
+
+        if (
+            (manageForm.children_4_with_german_lang !== null && manageForm.children_4_with_german_lang !== undefined) &&
+            (manageForm.children_4_with_foreign_lang !== null && manageForm.children_4_with_foreign_lang !== undefined)
+        ) {
+            if (parseInt(manageForm.children_4_with_german_lang) + parseInt(manageForm.children_4_with_foreign_lang) !== parseInt(manageForm.children_4_born_per_year)) {
+                errors.value.children_4_born_per_year = 'Die ausgewählte "Anzahl der im ausgewählten Jahr geborenen Kinder" ist ungültig.';
+
+                block4Valid = false;
+            } else {
+                delete errors.value.children_4_born_per_year;
+
+                block4Valid = true;
+            }
+        }
+
+        canSaveMainForm.value = block2Valid && block4Valid;
+    }
 };
 </script>
 
@@ -297,7 +361,10 @@ const getChildsTotalLabel = (age) => {
                         </v-hover>
                         <v-hover v-slot:default="{ isHovering, props }">
                             <v-btn-primary @click="manageYearlyEvaluation" v-bind="props"
-                                           :color="isHovering ? 'accent' : 'primary'">Speichern
+                                           :color="isHovering ? 'accent' : 'primary'"
+                                           :disabled="!canSaveMainForm"
+                            >
+                                Speichern
                             </v-btn-primary>
                         </v-hover>
                     </v-col>
