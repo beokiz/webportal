@@ -216,8 +216,6 @@ const saveEvaluation = async () => {
     manageForm.processing = true;
     loader.value = true;
 
-    console.log(manageForm.child_duration_in_kita)
-
     manageForm.post(route('evaluations.save'), {
         preserveState: false,
         onSuccess: (page) => {
