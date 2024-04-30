@@ -304,7 +304,7 @@ const manageYearlyEvaluation = async () => {
 const getChildsTotalLabel = (age) => {
     if (age === '2.5' || age === '4.5') {
         let surveyTimePeriodForSelectedYear = props.surveyTimePeriods.find(obj => {
-            return obj.year === parseInt(manageForm.year) && obj.age === '4.5';
+            return obj.year === parseInt(manageForm.year) && obj.age === age;
         });
 
         if (surveyTimePeriodForSelectedYear) {

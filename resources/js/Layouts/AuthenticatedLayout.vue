@@ -55,9 +55,9 @@ onMounted(() => {
         menuGroupsList.value['export.index'] = 'export.*';
     }
 
-    if (currentUser.is_super_admin || currentUser.is_monitor) {
+    if (currentUser.is_super_admin || currentUser.is_admin) {
         menuItemsList.value['survey_time_periods.index'] = 'Einstellungen';
-        menuGroupsList.value['survey_time_periods.index'] = 'export.*';
+        menuGroupsList.value['survey_time_periods.index'] = 'survey_time_periods.*';
     }
 
     menuItemsList.value['profile.edit'] = 'Profil';

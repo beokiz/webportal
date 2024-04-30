@@ -163,7 +163,9 @@ const updateYearlyEvaluation = async () => {
     let formOptions = {
         preserveState: true,
         onSuccess: (page) => {
-
+            manageForm.reset();
+            manageForm.clearErrors();
+            errors.value = {};
         },
         onError: (err) => {
             errors.value = err;

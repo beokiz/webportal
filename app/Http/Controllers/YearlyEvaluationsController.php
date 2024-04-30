@@ -17,6 +17,7 @@ use App\Services\Items\KitaItemService;
 use App\Services\Items\SurveyTimePeriodItemService;
 use App\Services\Items\YearlyEvaluationItemService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -56,11 +57,6 @@ class YearlyEvaluationsController extends BaseController
         $kitaItemService             = app(KitaItemService::class);
         $surveyTimePeriodItemService = app(SurveyTimePeriodItemService::class);
 
-        $args   = $request->only(['page', 'per_page', 'sort', 'order_by']);
-        $result = $this->yearlyEvaluationItemService->collection(array_merge($args, [
-            'paginated' => true,
-        ]));
-
         // Get all kitas for select
         $kitas = $kitaItemService->collection(array_merge([
             'with' => 'evaluations',
@@ -75,6 +71,20 @@ class YearlyEvaluationsController extends BaseController
 
             return $kita;
         });
+
+        if (!empty($kitas) && $kitas->isNotEmpty()) {
+            $args = $request->only(['page', 'per_page', 'sort', 'order_by']);
+
+            if ($currentUser->is_manager) {
+                $args['with_kitas'] = $kitas->pluck('id')->toArray();
+            }
+
+            $result = $this->yearlyEvaluationItemService->collection(array_merge($args, [
+                'paginated' => true,
+            ]));
+        } else {
+            $result = new LengthAwarePaginator(collect([]), 0, 1);
+        }
 
         return Inertia::render('YearlyEvaluations/YearlyEvaluations', $this->prepareItemsCollection($result, [
             'filters'           => $request->only([]),

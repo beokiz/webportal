@@ -6,6 +6,8 @@
 
 namespace App\Http\Requests\YearlyEvaluations;
 
+use Illuminate\Validation\Rule;
+
 /**
  * Update Survey Time Period Request
  *
@@ -24,7 +26,7 @@ class UpdateYearlyEvaluationRequest extends CreateYearlyEvaluationRequest
         $children4WithForeignLang = $this->input('children_4_with_foreign_lang', 0);
 
         return [
-            'year'                                     => array_merge($this->yearRules(), ['sometimes']),
+            'year'                                     => array_merge($this->yearRules(), ['sometimes', Rule::unique('yearly_evaluations')->ignore($this->id)]),
             'kita_id'                                  => ['sometimes', $this->kitaExistRule()],
             'evaluations_with_daz_2_total_per_year'    => array_merge($this->bigIntegerRules(true), ['sometimes']),
             'evaluations_with_daz_4_total_per_year'    => array_merge($this->bigIntegerRules(true), ['sometimes']),

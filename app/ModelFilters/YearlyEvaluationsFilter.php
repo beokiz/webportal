@@ -6,6 +6,8 @@
 
 namespace App\ModelFilters;
 
+use EloquentFilter\ModelFilter;
+
 /**
  * YearlyEvaluations Model Filter
  *
@@ -29,5 +31,16 @@ class YearlyEvaluationsFilter extends BaseFilter
     public function setup() : void
     {
         //
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withKitas($values) : ModelFilter
+    {
+        return $this->whereHas('kita', function ($query) use ($values) {
+            $query->whereIn('id', (array) $values);
+        });
     }
 }
