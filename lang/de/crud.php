@@ -166,7 +166,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'survey_time_period' => [
+    'survey_time_periods' => [
         'create_success'  => "Rückmeldezeitraum wurde erfolgreich erstellt.",
         'create_error'    => "Fehler! Beim Erstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'update_success'  => "Rückmeldezeitraum wurde erfolgreich aktualisiert.",

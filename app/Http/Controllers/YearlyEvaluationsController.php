@@ -100,7 +100,8 @@ class YearlyEvaluationsController extends BaseController
      */
     public function show(Request $request, YearlyEvaluation $yearlyEvaluation)
     {
-        $this->authorize('authorizeAccessToYearlyEvaluations', User::class);
+//        $this->authorize('authorizeAccessToYearlyEvaluations', User::class);
+        $this->authorize('authorizeAccessToSingleYearlyEvaluation', [User::class, $yearlyEvaluation->kita_id]);
 
         $currentUser = $request->user();
 

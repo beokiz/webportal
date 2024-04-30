@@ -264,6 +264,26 @@ class UserRolePolicy extends BasePolicy
 
     /**
      * @param User $user
+     * @param int  $kitaId
+     * @return bool
+     */
+    public function authorizeAccessToSingleYearlyEvaluation(User $user, int $kitaId) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        if ($this->authorizeRoleAccess($user, [$roles['super_admin']])) {
+            return true;
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
+            return $user->kitas->pluck('id')->contains($kitaId);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param User $user
      * @return bool
      */
     public function authorizeAccessToSettings(User $user) : bool
