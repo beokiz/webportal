@@ -331,8 +331,22 @@ php artisan migrate:refresh && php artisan actions && php artisan optimize:clear
 ```
 
 
+### 8. Setting up Supervisor
+**Copying the configuration files for Supervisor**
+```bash
+cp ./etc/Supervisor/* /etc/supervisor/conf.d/
+```
 
-### 8. Setting up cron
+**Restart Supervisor to initialize new configs**
+```bash
+supervisorctl reread
+supervisorctl update
+supervisorctl status
+```
+
+
+
+### 9. Setting up cron
 **We execute the specified command and, after selecting the editor, paste the contents of the ./etc/Crontab/beokiz-cron file into it**
 ```bash
 crontab -u www-data -e
@@ -340,7 +354,7 @@ crontab -u www-data -e
 
 
 
-### 9. Setting up Nginx and Apache
+### 10. Setting up Nginx and Apache
 **Copying configuration files (if it is production)**
 ```bash
 cp ./etc/Apache/beokiz.conf /etc/apache2/sites-available
@@ -369,14 +383,14 @@ systemctl restart nginx
 ```
 
 
-### 10. Finishing app setup
+### 11. Finishing app setup
 ```bash
 php artisan optimize:clear
 chown -R www-data:www-data ./
 ```
 
 
-### 11. Trying to access the app
+### 12. Trying to access the app
 ```
 https://portal.beokiz.de
 ```
