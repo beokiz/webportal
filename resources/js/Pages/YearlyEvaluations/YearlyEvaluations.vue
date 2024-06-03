@@ -303,19 +303,19 @@ const manageYearlyEvaluation = async () => {
 
 const getChildsTotalLabel = (age) => {
     if (age === '2.5' || age === '4.5') {
-        let surveyTimePeriodForSelectedYear = props.surveyTimePeriods.find(obj => {
-            return obj.year === parseInt(manageForm.year) && obj.age === age;
-        });
+        const currentYear = parseInt(manageForm.year);
 
-        if (surveyTimePeriodForSelectedYear) {
-            let surveyStartDateObj = new Date(surveyTimePeriodForSelectedYear.survey_start_date);
-            let surveyEndDateObj = new Date(surveyTimePeriodForSelectedYear.survey_end_date);
+        let startYear, endYear;
 
-            let surveyStartDateStr = surveyStartDateObj.getFullYear() + '-' + ("0" + (surveyStartDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyStartDateObj.getDate()).slice(-2);
-            let surveyEndDateStr = surveyEndDateObj.getFullYear() + '-' + ("0" + (surveyEndDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyEndDateObj.getDate()).slice(-2);
-
-            return `Gesamtzahl der im Zeitraum ${surveyStartDateStr} - ${surveyEndDateStr} geborenen Kinder`;
+        if (age === '4.5') {
+            startYear = currentYear - 6;
+            endYear = currentYear - 5;
+        } else {
+            startYear = currentYear - 4;
+            endYear = currentYear - 3;
         }
+
+        return `Gesamtzahl der im Zeitraum vom 01.10.${startYear} bis 30.09.${endYear} geborenen Kinder`;
     }
 
     return "Gesamtzahl der Kinder";
@@ -359,6 +359,10 @@ const validateChildrensAmount = (age) => {
         canSaveMainForm.value = block2Valid && block4Valid;
     }
 };
+
+const getWarningText = (age, childs_amount, evaluations_amount) => {
+    return `Die Anzahl der Kinder im Alter bis ${age} Jahre welche Deutsch als Fremdsprache haben Sie mit ${childs_amount} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt ${evaluations_amount}`;
+}
 </script>
 
 <template>
@@ -388,6 +392,7 @@ const validateChildrensAmount = (age) => {
                                             <v-col cols="12" sm="4">
                                                 <v-text-field v-model="manageForm.year"
                                                               :error-messages="errors.year"
+                                                              disabled
                                                               label="Jahr der Rückmeldung*" required></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="4">
@@ -554,24 +559,16 @@ const validateChildrensAmount = (age) => {
                                         <v-icon v-bind="props" icon="mdi-alert" color="orange"></v-icon>
                                         <ul style="list-style-type: disc; margin-left: 25px;">
                                             <li v-if="checkYears('2_german')">
-                                                Die Anzahl der Kinder im Alter bis 2,5 Jahre welche Deutsch als Fremdsprache haben Sie mit
-                                                {{ manageForm.children_2_with_german_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
-                                                {{manageForm.evaluations_with_daz_2_total_per_year}}
+                                                {{ getWarningText('2,5', manageForm.children_2_with_german_lang, manageForm.evaluations_with_daz_2_total_per_year) }}
                                             </li>
                                             <li v-if="checkYears('2_foreign')">
-                                                Die Anzahl der Kinder im Alter bis 2,5 Jahre welche Deutsch als Muttersprache haben Sie mit
-                                                {{ manageForm.children_2_with_foreign_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
-                                                {{ manageForm.evaluations_without_daz_2_total_per_year }}
+                                                {{ getWarningText('2,5', manageForm.children_2_with_foreign_lang, manageForm.evaluations_without_daz_2_total_per_year) }}
                                             </li>
                                             <li v-if="checkYears('4_german')">
-                                                Die Anzahl der Kinder im Alter bis 4,5 Jahre welche Deutsch als Fremdsprache haben Sie mit
-                                                {{ manageForm.children_4_with_german_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
-                                                {{ manageForm.evaluations_with_daz_2_total_per_year }}
+                                                {{ getWarningText('4,5', manageForm.children_4_with_german_lang, manageForm.evaluations_with_daz_4_total_per_year) }}
                                             </li>
                                             <li v-if="checkYears('4_foreign')">
-                                                Die Anzahl der Kinder im Alter bis 4,5 Jahre welche Deutsch als Muttersprache haben Sie mit
-                                                {{ manageForm.children_4_with_foreign_lang }} angegeben, die Anzahl der  über die BeoKiz-Ampel erfassten Kindern beträgt
-                                                {{ manageForm.evaluations_without_daz_4_total_per_year }}
+                                                {{ getWarningText('4,5', manageForm.children_4_with_foreign_lang, manageForm.evaluations_without_daz_4_total_per_year) }}
                                             </li>
                                         </ul>
                                     </div>

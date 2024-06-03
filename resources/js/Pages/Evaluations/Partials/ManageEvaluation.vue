@@ -320,7 +320,7 @@ const unfinishedEvaluation = async (id) => {
                     <v-col cols="12" sm="3">
                         <v-checkbox
                             v-model="manageForm.is_daz"
-                            label="Deutsch ist nicht Muttersprache"
+                            label="Deutsch ist nicht Erstsprache des Kindes"
                         ></v-checkbox>
                         <v-checkbox
                             v-model="manageForm.integration_status"

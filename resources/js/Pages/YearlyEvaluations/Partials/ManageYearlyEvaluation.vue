@@ -255,7 +255,9 @@ const validateChildrensAmount = (age) => {
                         <h3>Rückmeldung betrifft</h3>
                     </v-col>
                     <v-col cols="12" sm="4">
-                        <v-text-field v-model="manageForm.year" :error-messages="errors.year"
+                        <v-text-field v-model="manageForm.year"
+                                      :error-messages="errors.year"
+                                      disabled
                                       label="Jahr der Rückmeldung*" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">

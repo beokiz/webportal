@@ -214,7 +214,7 @@ echo "LoadModule rpaf_module /usr/lib/apache2/modules/mod_rpaf.so" | sudo tee /e
 echo "<IfModule mod_rpaf.c>
 	RPAF_Enable             On
 	RPAF_Header             X-Real-Ip
-	RPAF_ProxyIPs           85.215.133.23
+	RPAF_ProxyIPs           85.215.233.195
 	RPAF_SetHostName        On
 	RPAF_SetHTTPS           On
 	RPAF_SetPort            On

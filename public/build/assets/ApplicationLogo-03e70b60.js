@@ -1,0 +1,1 @@
+import{r,o as s,c as a}from"./app-67187393.js";const _=(t,c)=>{const o=t.__vccOpts||t;for(const[e,n]of c)o[e]=n;return o},p={};function i(t,c){const o=r("v-img");return s(),a(o,{src:"https://cdn.vuetifyjs.com/images/parallax/material.jpg"})}const l=_(p,[["render",i]]);export{l as A,_};
