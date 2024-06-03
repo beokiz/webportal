@@ -47,13 +47,14 @@ class HandleInertiaRequests extends Middleware
         }
 
         $shared = [
-            'auth'      => [
+            'auth'        => [
                 'canLogin'    => Route::has('auth.login'),
                 'canRegister' => Route::has('auth.register'),
                 'user'        => optional($request->user())->toArray(),
             ],
-            'successes' => $successes,
-            'ziggy'     => function () use ($request) {
+            'app_version' => config('app.version'),
+            'successes'   => $successes,
+            'ziggy'       => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
                 ]);

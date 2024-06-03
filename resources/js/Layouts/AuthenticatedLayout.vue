@@ -14,6 +14,7 @@ const props = defineProps({
     successes: Object,
 });
 
+const appVersion = usePage().props.app_version ?? '1.0.0';
 const currentUser = usePage().props.auth.user ?? {};
 
 const topBar = ref(null);
@@ -90,6 +91,9 @@ const clearErrorsAndSuccesses = () => {
 
                 <!--Bottom sidebar side-->
                 <template v-slot:append>
+                  <div class="my-1 text-center">
+                    <span>App Version: {{ appVersion }}</span>
+                  </div>
                     <div class="pa-2">
                        <Link :href="route('auth.logout')" method="post">
                            <v-btn-primary block>Abmelden</v-btn-primary>

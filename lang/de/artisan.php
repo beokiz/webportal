@@ -19,13 +19,6 @@ return [
         'exception' => "Fehlermeldung: :exception.",
     ],
 
-    'common' => [
-        'start'     => "Der Befehl wurde gestartet...",
-        'success'   => "Der Befehl erfolgreich ausgeführt!",
-        'error'     => "Fehler beim Ausführen des Befehls!",
-        'exception' => "Fehlermeldung: :exception.",
-    ],
-
     'database_export' => [
         'start_message'   => "Starte DB-Export...",
         'success_message' => "Erfolg! Pfad zur Datei: :path.",
@@ -37,6 +30,12 @@ return [
         'success_message'       => "Erfolg! Die ausgewählte Datei wurde erfolgreich importiert.",
         'missing_path_argument' => "Fehler! Die Option \"path\" ist erforderlich.",
         'error_message'         => "Fehler! Die ausgewählte Datei wurde nicht importiert.",
+    ],
+
+    'version_update' => [
+        'success_message'       => "Erfolg! Version der Anwendung aktualisiert auf: :version.",
+        'file_error_message'    => "Fehler! Datei :filepath nicht gefunden.",
+        'version_error_message' => "Fehler! Ungültiges Versionsformat",
     ],
 
     'gk_supervisor' => [
