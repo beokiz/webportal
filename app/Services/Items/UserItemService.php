@@ -193,20 +193,6 @@ class UserItemService extends BaseItemService
          * Update 'kitas' relation
          */
         if (!empty($attributes['kitas'])) {
-//            $currentKitas = $item->kitas->pluck('id');
-//            $newKitas     = collect($attributes['kitas']);
-//
-//            $newKitasIds = $currentKitas->diff($newKitas)->merge($newKitas->diff($currentKitas));
-//
-//            $item->kitas()->attach($newKitasIds);
-//
-//            $item->sendConnectedToKitasNotification(
-//                $item->kitas()
-//                    ->whereIn('id', $newKitasIds)
-//                    ->pluck('name')
-//                    ->toArray()
-//            );
-//
             $userKitas = $item->kitas->pluck('id');
 
             foreach ($attributes['kitas'] as $kitaId) {
