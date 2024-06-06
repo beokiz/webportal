@@ -45,6 +45,10 @@ class KitaItemService extends BaseItemService
         $query = Kita::query()->filter($filters)
             ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc');
 
+        if (!empty($args['with'])) {
+            $query->with(['evaluations']);
+        }
+
         /*
          * Return results
          */
@@ -134,19 +138,21 @@ class KitaItemService extends BaseItemService
                 $item->users()->detach($users);
             } else {
                 $kitaUsers = $item->users->pluck('id');
+                $kitaUsersNtf = collect([]);
 
                 foreach ($users as $userId) {
                     $userId = (int) $userId;
 
                     if (!$kitaUsers->contains($userId)) {
                         $kitaUsers->add($userId);
+                        $kitaUsersNtf->add($userId);
                     }
                 }
 
                 if (!empty($kitaUsers)) {
                     $item->users()->sync($kitaUsers);
 
-                    $item->users()->whereIn('id', $kitaUsers)->get()->map(function ($user) use ($item) {
+                    $item->users()->whereIn('id', $kitaUsersNtf)->get()->map(function ($user) use ($item) {
                         $user->sendConnectedToKitasNotification(
                             $user->kitas()
                                 ->pluck('name')

@@ -41,8 +41,14 @@ class Kita extends Model
      */
     protected $fillable = [
         'name',
-        'order',
+        'provider_of_the_kita',
+        'city',
+        'number',
+        'street',
+        'house_number',
+        'additional_info',
         'zip_code',
+        'order',
         'deleted_at',
     ];
 
@@ -52,7 +58,9 @@ class Kita extends Model
      * @var array
      */
     protected $casts = [
-        'order' => 'integer',
+        'order'                                  => 'integer',
+        'number'                                 => 'integer',
+        'is_yearly_evaluation_reminder_ntf_sent' => 'boolean',
     ];
 
     /**
@@ -65,12 +73,81 @@ class Kita extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function formattedName() : Attribute
     {
         return Attribute::make(
             get: fn($value, $attributes) => Str::slug($this->name, '_'),
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsTotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithDaz2TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)
+                    ->where('is_daz', true)
+                    ->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithDaz4TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)
+                    ->where('is_daz', true)
+                    ->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithoutDaz2TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_2)
+                    ->where('is_daz', false)
+                    ->count()
+                : 0,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function evaluationsWithoutDaz4TotalPerYearCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('evaluations')
+                ? $this->evaluations->where('age', Evaluation::CHILD_AGE_GROUP_4)
+                    ->where('is_daz', false)
+                    ->count()
+                : 0,
+            set: fn (string $value) => $value*100,
         );
     }
 
@@ -100,6 +177,14 @@ class Kita extends Model
      */
     public function evaluations() : HasMany
     {
-        return $this->hasMany(Subdomain::class, 'user_id', 'id');
+        return $this->hasMany(Evaluation::class, 'kita_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function yearlyEvaluations() : HasMany
+    {
+        return $this->hasMany(YearlyEvaluation::class, 'kita_id', 'id');
     }
 }

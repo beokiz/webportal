@@ -10,7 +10,7 @@ import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import NProgress from 'nprogress';
 import { v4 as uuidv4 } from 'uuid';
-import { ages } from '@/Composables/common';
+import { ages, prepareDate } from '@/Composables/common';
 
 
 const props = defineProps({
@@ -80,26 +80,6 @@ watch(finishedBefore, (val) => {
 });
 
 // Methods
-const prepareDate = (inputDateString) => {
-    const inputDate = new Date(inputDateString);
-
-    const germanMonths = [
-        'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-        'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
-    ];
-
-    const germanDays = [
-        'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'
-    ];
-
-    const day = inputDate.getDate();
-    const month = germanMonths[inputDate.getMonth()];
-    const year = inputDate.getFullYear();
-    const dayOfWeek = germanDays[inputDate.getDay()];
-
-    return `${dayOfWeek}, ${day}. ${month} ${year}`;
-};
-
 const exportForm = useForm({
     //
 });

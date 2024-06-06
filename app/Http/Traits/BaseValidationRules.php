@@ -6,6 +6,9 @@
 
 namespace App\Http\Traits;
 
+use App\Models\Evaluation;
+use Illuminate\Validation\Rule;
+
 /**
  * Trait for returning base validation rules
  *
@@ -226,5 +229,21 @@ trait BaseValidationRules
         }
 
         return $rules;
+    }
+
+    /**
+     * @return array
+     */
+    public function yearRules() : array
+    {
+        return ['integer', 'min:1900', 'max:' . date('Y')];
+    }
+
+    /**
+     * @return array
+     */
+    public function ageGroupRules() : array
+    {
+        return [Rule::in(Evaluation::CHILD_AGE_GROUPS)];
     }
 }

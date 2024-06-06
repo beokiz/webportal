@@ -29,7 +29,7 @@ class EvaluationScreeningRequest extends CreateEvaluationRequest
     public function rules() : array
     {
         return [
-            'age'                                 => ['required', Rule::in(['2.5', '4.5'])],
+            'age'                                 => array_merge($this->ageGroupRules(), ['required']),
             'is_daz'                              => ['required', 'boolean'],
             'ratings'                             => ['required', 'array'],
             'ratings.*.domain'                    => ['required', $this->domainExistRule()],

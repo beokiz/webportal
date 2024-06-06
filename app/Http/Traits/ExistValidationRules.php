@@ -79,4 +79,12 @@ trait ExistValidationRules
     {
         return $this->existByColumnRule('kitas');
     }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function settingExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('settings', 'name');
+    }
 }

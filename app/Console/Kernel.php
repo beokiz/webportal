@@ -6,6 +6,8 @@
 
 namespace App\Console;
 
+use App\Jobs\ResetKitasYearlyEvaluationReminder;
+use App\Jobs\SendYearlyEvaluationReminderNotification;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,6 +27,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        $schedule->job(new ResetKitasYearlyEvaluationReminder())->dailyAt('12:00');
+
+        $schedule->job(new SendYearlyEvaluationReminderNotification())->hourly();
 
         // Remove project temporary files
         $schedule->command('temp:files:clear')->hourly();

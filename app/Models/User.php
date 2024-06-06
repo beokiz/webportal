@@ -16,6 +16,7 @@ use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TwoFactorVerificationNotification;
 use App\Notifications\VerifyEmailNotification;
 use App\Notifications\WelcomeNotification;
+use App\Notifications\YearlyEvaluationReminderNotification;
 use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -53,6 +54,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'email_verified_at',
         'password',
         'two_factor_auth_enabled',
         'first_login_at',
@@ -111,7 +113,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function firstName() : Attribute
     {
@@ -121,7 +123,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function lastName() : Attribute
     {
@@ -131,7 +133,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function fullName() : Attribute
     {
@@ -141,7 +143,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function primaryRole() : Attribute
     {
@@ -151,7 +153,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function primaryRoleName() : Attribute
     {
@@ -161,7 +163,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function primaryRoleHumanName() : Attribute
     {
@@ -171,7 +173,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function primaryRoleId() : Attribute
     {
@@ -181,7 +183,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isOnline() : Attribute
     {
@@ -191,7 +193,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isSuperAdmin() : Attribute
     {
@@ -201,7 +203,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isAdmin() : Attribute
     {
@@ -211,7 +213,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isMonitor() : Attribute
     {
@@ -221,7 +223,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isMonitorOe() : Attribute
     {
@@ -231,7 +233,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isManager() : Attribute
     {
@@ -241,7 +243,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isUserMultiplier() : Attribute
     {
@@ -251,7 +253,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function isEmployer() : Attribute
     {
@@ -331,6 +333,15 @@ class User extends Authenticatable
         if (!empty($kitas)) {
             $this->notify(new ConnectedToKitasNotification($kitas));
         }
+    }
+
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendYearlyEvaluationReminderNotification(array $args) : void
+    {
+        $this->notify(new YearlyEvaluationReminderNotification($args));
     }
 
     /*

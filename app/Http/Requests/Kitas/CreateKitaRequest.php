@@ -21,9 +21,15 @@ class CreateKitaRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'name'     => array_merge($this->textRules(), ['required']),
-            'order'    => array_merge($this->integerRules(), ['nullable']),
-            'zip_code' => array_merge($this->textRules(10), ['required']),
+            'name'                 => array_merge($this->textRules(), ['required']),
+            'provider_of_the_kita' => array_merge($this->textRules(), ['required']),
+            'city'                 => array_merge($this->textRules(), ['required']),
+            'number'               => array_merge($this->bigIntegerRules(true), ['required']),
+            'street'               => array_merge($this->textRules(), ['required']),
+            'house_number'         => array_merge($this->textRules(true), ['required']),
+            'additional_info'      => array_merge($this->textRules(8096), ['nullable']),
+            'zip_code'             => array_merge($this->textRules(10), ['required']),
+            'order'                => array_merge($this->integerRules(), ['nullable']),
         ];
     }
 
@@ -33,7 +39,8 @@ class CreateKitaRequest extends BaseFormRequest
     public function attributes() : array
     {
         return [
-            //
+            'number'          => __('validation.attributes.kita_number'),
+            'additional_info' => __('validation.attributes.kita_additional_info'),
         ];
     }
 }

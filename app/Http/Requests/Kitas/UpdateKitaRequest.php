@@ -19,9 +19,15 @@ class UpdateKitaRequest extends CreateKitaRequest
     public function rules() : array
     {
         return [
-            'name'     => array_merge($this->textRules(), ['sometimes']),
-            'order'    => array_merge($this->integerRules(), ['nullable']),
-            'zip_code' => array_merge($this->textRules(10), ['sometimes']),
+            'name'                 => array_merge($this->textRules(), ['sometimes']),
+            'provider_of_the_kita' => array_merge($this->textRules(), ['sometimes']),
+            'city'                 => array_merge($this->textRules(), ['sometimes']),
+            'number'               => array_merge($this->bigIntegerRules(true), ['sometimes']),
+            'street'               => array_merge($this->textRules(), ['sometimes']),
+            'house_number'         => array_merge($this->textRules(true), ['sometimes']),
+            'additional_info'      => array_merge($this->textRules(8096), ['nullable']),
+            'zip_code'             => array_merge($this->textRules(10), ['sometimes']),
+            'order'                => array_merge($this->integerRules(), ['nullable']),
         ];
     }
 

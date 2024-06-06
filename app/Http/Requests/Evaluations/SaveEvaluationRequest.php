@@ -29,13 +29,16 @@ class SaveEvaluationRequest extends CreateEvaluationRequest
     public function rules() : array
     {
         $rules = [
-            'id'      => ['nullable', 'numeric'],
-            'uuid'    => ['required', 'uuid'],
-            'user_id' => ['required', $this->userExistRule()],
-            'kita_id' => ['nullable', $this->kitaExistRule()],
-            'age'     => ['nullable', Rule::in(['2.5', '4.5'])],
-            'is_daz'  => ['nullable', 'boolean'],
-            'ratings' => ['nullable', 'array'],
+            'id'                     => ['nullable', 'numeric'],
+            'uuid'                   => ['required', 'uuid'],
+            'user_id'                => ['required', $this->userExistRule()],
+            'kita_id'                => ['nullable', $this->kitaExistRule()],
+            'age'                    => array_merge($this->ageGroupRules(), ['nullable']),
+            'child_duration_in_kita' => array_merge($this->childDurationInKitaRules($this->input('age')), ['nullable']),
+            'is_daz'                 => ['nullable', 'boolean'],
+            'integration_status'     => ['nullable', 'boolean'],
+            'speech_therapy_status'  => ['nullable', 'boolean'],
+            'ratings'                => ['nullable', 'array'],
         ];
 
         if ($this->input('ratings')) {

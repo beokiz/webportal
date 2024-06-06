@@ -59,3 +59,23 @@ export const prepareInitialRatingData = (domains) => {
 
     return ratingsData;
 };
+
+export const prepareDate = (inputDateString) => {
+    const inputDate = new Date(inputDateString);
+
+    const germanMonths = [
+        'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+        'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+    ];
+
+    const germanDays = [
+        'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'
+    ];
+
+    const day = inputDate.getDate();
+    const month = germanMonths[inputDate.getMonth()];
+    const year = inputDate.getFullYear();
+    const dayOfWeek = germanDays[inputDate.getDay()];
+
+    return `${dayOfWeek}, ${day}. ${month} ${year}`;
+};

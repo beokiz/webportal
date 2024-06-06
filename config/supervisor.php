@@ -12,8 +12,8 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'programs_group_name' => 'laravel_sample_api_group',
+    'programs_group_name' => 'beokiz_group',
 
-    'programs' => ['laravel_vue_sample_app_websockets', 'laravel_vue_sample_app_worker'],
+    'programs' => ['beokiz_websockets', 'beokiz_worker'],
 
 ];

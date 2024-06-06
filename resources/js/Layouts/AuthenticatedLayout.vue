@@ -14,6 +14,7 @@ const props = defineProps({
     successes: Object,
 });
 
+const appVersion = usePage().props.app_version ?? '1.0.0';
 const currentUser = usePage().props.auth.user ?? {};
 
 const topBar = ref(null);
@@ -22,6 +23,11 @@ let menuItemsList = ref({});
 let menuGroupsList = ref({});
 
 onMounted(() => {
+    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager) {
+        menuItemsList.value['yearly_evaluations.index'] = 'Jährliche Rückmeldung';
+        menuGroupsList.value['yearly_evaluations.index'] = 'yearly_evaluations.*';
+    }
+
     if (currentUser.is_super_admin || currentUser.is_manager || currentUser.is_employer) {
         menuItemsList.value['evaluations.index'] = 'Einschätzen';
         menuGroupsList.value['evaluations.index'] = 'evaluations.*';
@@ -48,6 +54,11 @@ onMounted(() => {
     if (currentUser.is_super_admin || currentUser.is_monitor || currentUser.is_monitor_oe) {
         menuItemsList.value['export.index'] = 'Exportieren';
         menuGroupsList.value['export.index'] = 'export.*';
+    }
+
+    if (currentUser.is_super_admin || currentUser.is_admin) {
+        menuItemsList.value['survey_time_periods.index'] = 'Einstellungen';
+        menuGroupsList.value['survey_time_periods.index'] = 'survey_time_periods.*';
     }
 
     menuItemsList.value['profile.edit'] = 'Profil';
@@ -80,6 +91,9 @@ const clearErrorsAndSuccesses = () => {
 
                 <!--Bottom sidebar side-->
                 <template v-slot:append>
+                  <div class="my-1 text-center">
+                    <span>App Version: {{ appVersion }}</span>
+                  </div>
                     <div class="pa-2">
                        <Link :href="route('auth.logout')" method="post">
                            <v-btn-primary block>Abmelden</v-btn-primary>

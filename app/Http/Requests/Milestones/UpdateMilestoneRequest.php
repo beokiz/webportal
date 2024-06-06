@@ -28,7 +28,7 @@ class UpdateMilestoneRequest extends CreateMilestoneRequest
             'order'        => array_merge($this->integerRules(), ['sometimes']),
             'emphasis'     => array_merge($this->floatRules(), ['sometimes']),
             'emphasis_daz' => array_merge($this->floatRules(), ['sometimes']),
-            'age'          => ['sometimes', Rule::in(['2.5', '4.5'])],
+            'age'          => array_merge($this->ageGroupRules(), ['sometimes']),
         ];
     }
 

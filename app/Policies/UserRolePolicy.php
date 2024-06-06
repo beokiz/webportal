@@ -239,4 +239,57 @@ class UserRolePolicy extends BasePolicy
 
         return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['monitor'], $roles['monitor_oe']]);
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToSurveyTimePeriods(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToYearlyEvaluations(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['manager']]);
+    }
+
+    /**
+     * @param User $user
+     * @param int  $kitaId
+     * @return bool
+     */
+    public function authorizeAccessToSingleYearlyEvaluation(User $user, int $kitaId) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        if ($this->authorizeRoleAccess($user, [$roles['super_admin']])) {
+            return true;
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
+            return $user->kitas->pluck('id')->contains($kitaId);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToSettings(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
+    }
 }

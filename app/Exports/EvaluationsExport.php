@@ -178,9 +178,12 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
             __('files.excel.finished_at_label'),
             __('files.excel.age_label'),
             __('files.excel.is_daz_label'),
+            __('files.excel.integration_status'),
+            __('files.excel.speech_therapy_status'),
 //            __('files.excel.uuid_label'),
             __('files.excel.postal_label'),
             __('files.excel.uuid_label'),
+            __('files.excel.child_duration_in_kita_label'),
         ];
 
 //        if (!empty($this->user) && ($this->user->is_super_admin || $this->user->is_monitor)) {
@@ -209,12 +212,14 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
         }
 
         $rowData = [
-            'id'          => $evaluation->id,
-            'finished_at' => $evaluation->finished_at,
-            'age'         => $evaluation->age,
-            'is_daz'      => $evaluation->is_daz ? 'yes' : 'no',
-//            'uuid'        => $formattedId,
-            'postal'      => $postalCode,
+            'id'                    => $evaluation->id,
+            'finished_at'           => $evaluation->finished_at,
+            'age'                   => $evaluation->age,
+            'is_daz'                => $evaluation->is_daz ? 'yes' : 'no',
+            'integration_status'    => $evaluation->integration_status ? 'yes' : 'no',
+            'speech_therapy_status' => $evaluation->speech_therapy_status ? 'yes' : 'no',
+//            'uuid'                  => $formattedId,
+            'postal'                => $postalCode,
         ];
 
         if (!empty($this->user) && ($this->user->is_super_admin || $this->user->is_monitor)) {
@@ -222,6 +227,10 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
         } else {
             $rowData['kita'] = $kitaId;
         }
+
+        $childDurationInKitaSlug = Str::snake($evaluation->child_duration_in_kita);
+
+        $rowData['child_duration_in_kita'] = __("files.excel.{$childDurationInKitaSlug}_label");
 
         /*
          * Set domains & milestones data
@@ -266,6 +275,9 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
             'E' => NumberFormat::FORMAT_TEXT,
             'F' => NumberFormat::FORMAT_TEXT,
             'G' => NumberFormat::FORMAT_TEXT,
+            'H' => NumberFormat::FORMAT_TEXT,
+            'I' => NumberFormat::FORMAT_TEXT,
+            'J' => NumberFormat::FORMAT_TEXT,
         ];
     }
 
@@ -279,9 +291,12 @@ class EvaluationsExport implements FromCollection, WithColumnFormatting, WithMap
             'B' => 18,
             'C' => 15,
             'D' => 7,
-            'E' => 40,
-            'F' => 15,
-            'G' => 15,
+            'E' => 20,
+            'F' => 30,
+            'G' => 40,
+            'H' => 20,
+            'I' => 20,
+            'J' => 15,
         ];
     }
 

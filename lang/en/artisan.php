@@ -32,6 +32,12 @@ return [
         'error_message'         => "Error! The selected file was not imported.",
     ],
 
+    'version_update' => [
+        'success_message'       => "Success! Updated version app to: :version.",
+        'file_error_message'    => "Error! File :filepath not found.",
+        'version_error_message' => "Error! Invalid version format",
+    ],
+
     'gk_supervisor' => [
         'success_message'         => "Success! The command was executed successfully.",
         'invalid_action_argument' => "Error! The \"action\" option is invalid.",

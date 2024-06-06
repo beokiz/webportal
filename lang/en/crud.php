@@ -160,4 +160,56 @@ return [
         'export_error'        => "Error! Something went wrong while creating the file, please try again later.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Survey Time Period CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'survey_time_periods' => [
+        'create_success'  => "Survey time period has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating a survey time period. Please try again later.",
+        'update_success'  => "Survey time period has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating a survey time period. Please try again later.",
+        'update_denied'   => "Error! Selected survey time period cannot be updated.",
+        'delete_success'  => "Survey time period has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting a survey time period. Please try again later.",
+        'delete_denied'   => "Error! Selected survey time period cannot be deleted.",
+        'restore_success' => "Survey time period has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring a survey time period. Please try again later.",
+        'restore_denied'  => "Error! Selected survey time period cannot be restored.",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Yearly Evaluation CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'yearly_evaluations' => [
+        'create_success'  => "Yearly evaluation has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating a yearly evaluation. Please try again later.",
+        'update_success'  => "Yearly evaluation has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating a yearly evaluation. Please try again later.",
+        'update_denied'   => "Error! Selected yearly evaluation cannot be updated.",
+        'delete_success'  => "Yearly evaluation has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting a yearly evaluation. Please try again later.",
+        'delete_denied'   => "Error! Selected yearly evaluation cannot be deleted.",
+        'restore_success' => "Yearly evaluation has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring a yearly evaluation. Please try again later.",
+        'restore_denied'  => "Error! Selected yearly evaluation cannot be restored.",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Setting CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'settings' => [
+        'update_success' => "Setting has been updated successfully.",
+        'update_error'   => "Error! Something went wrong while updating a setting. Please try again later.",
+        'update_denied'  => "Error! Selected setting cannot be updated.",
+    ],
+
 ];

@@ -47,12 +47,19 @@ const preparedDomains = ref([]);
 const evaluationResultState = ref(false);
 const evaluationResultData = ref(null);
 
+
+const periods = ref([
+    { name: '1 - 12 Monate', id: 'upToOneYear' },
+    { name: '12 - 24 Monate', id: 'upToTwoYears' },
+    { name: '24 - 36 Monate', id: 'upToThreeYears' },
+])
+
 // Computed
 const isEditMode = computed(() => {
     return !!props.evaluation;
 });
 
-// onMounted
+// onMounted & onBeforeMount
 onBeforeMount(() => {
     // Prepare evaluation data
     if (!isEditMode.value) {
@@ -61,6 +68,10 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
+    // Prepare "child duration in kita" options
+    prepareChildDurationInKita(props.evaluation?.age);
+
+    // Prepare evaluation data
     if (!isEditMode.value) {
         generateEvaluationUuid();
     }
@@ -69,6 +80,17 @@ onMounted(() => {
 const generateEvaluationUuid = () => {
     generatedUUID.value = uuidv4();
     manageForm.uuid = generatedUUID.value;
+};
+
+const prepareChildDurationInKita = (age) => {
+    if (age === 4.5){
+        periods.value.push({ name: 'Länger als 36 Monate', id: 'moreThanThreeYears' })
+    } else {
+        const index = periods.value.findIndex(obj => obj.id === 'moreThanThreeYears');
+        if (index !== -1) {
+            periods.value.splice(index, 1);
+        }
+    }
 };
 
 const setInitialRatingData = () => {
@@ -98,7 +120,10 @@ const manageForm = useForm({
     user_id: isEditMode.value ? props.evaluation.user_id : currentUser.id,
     kita_id: isEditMode.value ? props.evaluation.kita_id : null,
     age: isEditMode.value ? props.evaluation.age : null,
+    child_duration_in_kita: isEditMode.value ? props.evaluation.child_duration_in_kita : null,
     is_daz: isEditMode.value ? props.evaluation.is_daz : false,
+    integration_status: isEditMode.value ? props.evaluation.integration_status : false,
+    speech_therapy_status: isEditMode.value ? props.evaluation.speech_therapy_status : false,
     ratings: isEditMode.value ? props.evaluation.data : [],
 });
 
@@ -106,6 +131,13 @@ watch(
     () => manageForm.age,
     (age) => {
         manageForm.ratings = prepareInitialRatingData(props.domains);
+
+        // Prepare "child duration in kita" options
+        prepareChildDurationInKita(age);
+
+        if (age !== 4.5){
+            manageForm.child_duration_in_kita = null;
+        }
     }
 );
 
@@ -252,7 +284,7 @@ const unfinishedEvaluation = async (id) => {
                                       label="Bezeichner der Einschatzung" required></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="2">
                         <v-select
                             v-model="manageForm.age"
                             :items="ages"
@@ -263,7 +295,7 @@ const unfinishedEvaluation = async (id) => {
                         ></v-select>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="2">
                         <v-select
                             v-model="manageForm.kita_id"
                             :items="kitas"
@@ -274,10 +306,29 @@ const unfinishedEvaluation = async (id) => {
                         ></v-select>
                     </v-col>
 
+                    <v-col cols="12" sm="2">
+                        <v-select
+                            v-model="manageForm.child_duration_in_kita"
+                            :items="periods"
+                            :error-messages="errors.child_duration_in_kita"
+                            item-title="name"
+                            item-value="id"
+                            label="Zeitraum in der Kita"
+                        ></v-select>
+                    </v-col>
+
                     <v-col cols="12" sm="3">
                         <v-checkbox
                             v-model="manageForm.is_daz"
-                            label="Deutsch ist nicht Muttersprache"
+                            label="Deutsch ist nicht Erstsprache des Kindes"
+                        ></v-checkbox>
+                        <v-checkbox
+                            v-model="manageForm.integration_status"
+                            label="Integrationsstatus"
+                        ></v-checkbox>
+                        <v-checkbox
+                            v-model="manageForm.speech_therapy_status"
+                            label="in logopädische Behandlung"
                         ></v-checkbox>
                     </v-col>
                 </v-row>

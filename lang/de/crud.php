@@ -160,4 +160,56 @@ return [
         'export_error'        => "Fehler! Beim Erstellen der Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Survey Time Period CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'survey_time_periods' => [
+        'create_success'  => "Rückmeldezeitraum wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Beim Erstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Rückmeldezeitraum wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Beim Aktualisieren eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht aktualisiert werden.",
+        'delete_success'  => "Rückmeldezeitraum wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Beim Löschen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht gelöscht werden.",
+        'restore_success' => "Rückmeldezeitraum wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Beim Wiederherstellen eines Rückmeldezeitraum ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Ausgewählter Rückmeldezeitraum kann nicht wiederhergestellt werden.",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Yearly Evaluation CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'yearly_evaluations' => [
+        'create_success'  => "Jährliche Rückmeldung wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Beim Erstellen eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Jährliche Rückmeldung wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Beim Aktualisieren eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Ausgewählter Jährliche Rückmeldung kann nicht aktualisiert werden.",
+        'delete_success'  => "Jährliche Rückmeldung wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Beim Löschen eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Ausgewählter Jährliche Rückmeldung kann nicht gelöscht werden.",
+        'restore_success' => "Jährliche Rückmeldung wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Beim Wiederherstellen eines Jährliche Rückmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Ausgewählter Jährliche Rückmeldung kann nicht wiederhergestellt werden.",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Setting CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'settings' => [
+        'update_success' => "Die Einstellung wurde erfolgreich aktualisiert.",
+        'update_error'   => "Fehler! Beim Aktualisieren einer Einstellung ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        'update_denied'  => "Fehler! Die ausgewählte Einstellung kann nicht aktualisiert werden.",
+    ],
+
 ];
