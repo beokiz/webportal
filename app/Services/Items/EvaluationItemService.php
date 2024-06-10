@@ -115,7 +115,7 @@ class EvaluationItemService extends BaseItemService
                 ]),
             ],
             [
-                'file_name'   => 'evaluation_' . Str::slug($item->kita->name, '_') . '_' . $item->uuid,
+                'file_name'   => 'evaluation_' . Str::slug($item->kita->name, '_') . '_' . $item->custom_unique_id,
                 'header-html' => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
                 'footer-html' => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
             ],
