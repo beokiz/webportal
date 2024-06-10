@@ -61,4 +61,6 @@ return [
 
     'service_not_configured_exception_msg' => "Error! \":name\" service is not configured.",
 
+    'non_unique_custom_unique_id' => "Error! The generated custom_unique_id is not unique.",
+
 ];

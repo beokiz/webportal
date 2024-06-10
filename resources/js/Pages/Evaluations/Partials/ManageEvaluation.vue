@@ -17,6 +17,7 @@ const props = defineProps({
     kitas: Array,
     domains: Array,
     errors: Object,
+    newCustomUniqueId: String,
 });
 
 /*
@@ -116,6 +117,7 @@ const clear = () => {
 };
 
 const manageForm = useForm({
+    custom_unique_id: isEditMode.value ? props.evaluation.custom_unique_id : props.newCustomUniqueId,
     uuid: isEditMode.value ? props.evaluation.uuid : null,
     user_id: isEditMode.value ? props.evaluation.user_id : currentUser.id,
     kita_id: isEditMode.value ? props.evaluation.kita_id : null,
@@ -279,7 +281,7 @@ const unfinishedEvaluation = async (id) => {
             <v-container>
                 <v-row>
                     <v-col cols="12" sm="3">
-                        <v-text-field v-model="manageForm.uuid" :error-messages="errors.uuid"
+                        <v-text-field v-model="manageForm.custom_unique_id" :error-messages="errors.custom_unique_id"
                                       readonly
                                       label="Bezeichner der Einschatzung" required></v-text-field>
                     </v-col>

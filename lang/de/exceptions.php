@@ -61,4 +61,6 @@ return [
 
     'service_not_configured_exception_msg' => "Fehler! Der Dienst \":name\" ist nicht konfiguriert.",
 
+    'non_unique_custom_unique_id' => "Fehler! Die generierte custom_unique_id ist nicht eindeutig.",
+
 ];

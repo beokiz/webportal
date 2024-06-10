@@ -9,6 +9,7 @@ namespace App\Models;
 use App\ModelFilters\EvaluationFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
+use App\Models\Traits\UsesCustomUniqueId;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +25,7 @@ use Illuminate\Support\Carbon;
  */
 class Evaluation extends Model
 {
-    use HasFactory, Filterable, HasOrderScope, CanGetTableNameStatically;
+    use HasFactory, Filterable, HasOrderScope, CanGetTableNameStatically, UsesCustomUniqueId;
 
     // use SoftDeletes;
 
@@ -69,6 +70,7 @@ class Evaluation extends Model
      */
     protected $fillable = [
         'uuid',
+        'custom_unique_id',
         'user_id',
         'kita_id',
         'age',
