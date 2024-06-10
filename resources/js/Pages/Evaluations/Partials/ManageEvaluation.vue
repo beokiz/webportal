@@ -424,7 +424,7 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="12">
                                 <p>
                                     <span class="tw-font-black">Bezeichner des Screenings</span>:
-                                    {{`${evaluationResultData.item.kita.formatted_name}_${evaluationResultData.item.uuid}`}}
+                                    {{`${evaluationResultData.item.kita.formatted_name}_${evaluationResultData.item.custom_unique_id}`}}
                                 </p>
                             </v-col>
 
