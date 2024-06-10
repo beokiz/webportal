@@ -57,7 +57,7 @@
         <div class="result-evaluation-col result-evaluation-col-title">
             <p>
                 <span class="tw-font-black">Bezeichner des Screenings</span>:
-                {{$kita['formatted_name']}}_{{$item['uuid']}}
+                {{$kita['formatted_name']}}_{{$item['custom_unique_id']}}
             </p>
         </div>
 
