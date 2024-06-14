@@ -17,6 +17,7 @@ import * as directives from 'vuetify/directives';
 import AOS from 'aos';
 import { en, de } from 'vuetify/locale';
 import { createI18n } from 'vue-i18n';
+import { vuetifyProTipTap } from './tiptap';
 
 
 // CSS
@@ -143,6 +144,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(vuetify)
+            .use(vuetifyProTipTap)
             .use(ZiggyVue)
             .mount(el);
     },

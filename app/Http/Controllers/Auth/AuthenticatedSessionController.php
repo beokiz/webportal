@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\AuthenticationRequest;
 use App\Providers\RouteServiceProvider;
+use App\Services\Items\SettingItemService;
 use App\Services\TwoFactorAuthenticationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,7 +32,12 @@ class AuthenticatedSessionController extends BaseController
      */
     public function create() : Response
     {
+        $settingItemService = app(SettingItemService::class);
+
+        $loginFormHtmlSettings = $settingItemService->findByName('login_form_additional_html', false);
+
         return Inertia::render('Auth/Login', [
+            'loginFormHtml'    => optional($loginFormHtmlSettings)->value,
             'canResetPassword' => Route::has('password.request'),
             'canRegister'      => Route::has('auth.register'),
             'status'           => session('status'),

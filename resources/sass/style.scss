@@ -40,6 +40,11 @@ select{
     background-color: unset !important;
 }
 
+header.v-toolbar{
+    background-color: #0074b2 !important;
+    color: #fff !important;
+}
+
 [type='radio']{
     background-color: #cdcdcd !important;
 }
@@ -107,4 +112,8 @@ div#stripe-cardElement {
 
 .v-picker__actions > div > button:nth-of-type(1){
     display: none;
+}
+
+.guest-layout-custom-html p:not(:nth-last-of-type(1)) {
+    margin-bottom: 20px;
 }

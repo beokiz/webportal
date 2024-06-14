@@ -45,6 +45,9 @@ class SettingsController extends BaseController
         $settingItemService           = app(SettingItemService::class);
         $downloadableFilesItemService = app(DownloadableFilesItemService::class);
 
+        /*
+         * Prepare collections args
+         */
         $orderBy = $request->input('order_by');
         $sort    = $request->input('sort', 'asc');
 
@@ -64,11 +67,31 @@ class SettingsController extends BaseController
                 break;
         }
 
+        /*
+         * Get collections
+         */
+        $settings = $settingItemService->list();
+
+        $surveyTimePeriods = $surveyTimePeriodItemService->collection(['order_by' => $surveyTimePeriodsOrderBy, 'sort' => $sort]);
+        $downloadableFiles = $downloadableFilesItemService->collection(['order_by' => $downloadableFilesOrderBy, 'sort' => $sort]);
+
+        $emailSettings = array_filter($settings, function ($value, $name) {
+            return in_array($name, ['send_yearly_evaluation_reminder_ntf_before_days']);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $loginSettings = array_filter($settings, function ($value, $name) {
+            return in_array($name, ['login_form_additional_html']);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        /*
+         * Return results
+         */
         return Inertia::render('Settings/Settings', [
             'filters'           => $request->only([]),
-            'surveyTimePeriods' => $surveyTimePeriodItemService->collection(['order_by' => $surveyTimePeriodsOrderBy, 'sort' => $sort]),
-            'settings'          => $settingItemService->list(),
-            'downloadableFiles' => $downloadableFilesItemService->collection(['order_by' => $downloadableFilesOrderBy, 'sort' => $sort]),
+            'surveyTimePeriods' => $surveyTimePeriods,
+            'downloadableFiles' => $downloadableFiles,
+            'emailSettings'     => $emailSettings,
+            'loginSettings'     => $loginSettings,
         ]);
     }
 

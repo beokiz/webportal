@@ -23,7 +23,7 @@ class UpdateSettingsRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'settings.*' => array_merge($this->textRules(), ['required']),
+            'settings.*' => ['required'],
         ];
     }
 

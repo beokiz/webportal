@@ -8,6 +8,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 defineProps({
+    loginFormHtml: String,
     canResetPassword: Boolean,
     canRegister: Boolean,
     status: String,
@@ -27,7 +28,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout :additionalHtml="loginFormHtml">
         <Head title="Anmeldung"/>
 
 <!--        <BreezeValidationErrors class="tw-mb-4"/>-->
