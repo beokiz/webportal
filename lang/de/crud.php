@@ -212,4 +212,24 @@ return [
         'update_denied'  => "Fehler! Die ausgewählte Einstellung kann nicht aktualisiert werden.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Downloadable Files CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'downloadable_files' => [
+        'create_success'  => "Die herunterladbare Datei wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Beim Erstellen der herunterladbaren Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        'update_success'  => "Die herunterladbare Datei wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Beim Aktualisieren der herunterladbaren Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        'update_denied'   => "Fehler! Die ausgewählte herunterladbare Datei kann nicht aktualisiert werden.",
+        'delete_success'  => "Die herunterladbare Datei wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Beim Löschen der herunterladbaren Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        'delete_denied'   => "Fehler! Die ausgewählte herunterladbare Datei kann nicht gelöscht werden.",
+        'restore_success' => "Die herunterladbare Datei wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Beim Wiederherstellen der herunterladbaren Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        'restore_denied'  => "Fehler! Die ausgewählte herunterladbare Datei kann nicht wiederhergestellt werden.",
+    ],
+
 ];

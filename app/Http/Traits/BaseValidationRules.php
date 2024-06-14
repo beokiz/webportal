@@ -246,4 +246,29 @@ trait BaseValidationRules
     {
         return [Rule::in(Evaluation::CHILD_AGE_GROUPS)];
     }
+
+    /**
+     * @param array $mimeTypes
+     * @param int $maxKbSize
+     * @return array
+     */
+    public function fileRules(array $mimeTypes = [], int $maxKbSize = 3072) : array
+    {
+        $rules = ['file', "max:{$maxKbSize}"];
+
+        if (!empty($mimeTypes)) {
+            $rules[] = 'mimetypes:' . implode(',', $mimeTypes);
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @param int $maxKbSize
+     * @return array
+     */
+    public function imageFileRules(int $maxKbSize = 3072) : array
+    {
+        return $this->fileRules(['image/jpg', 'image/jpeg', 'image/png'], $maxKbSize);
+    }
 }

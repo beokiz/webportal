@@ -75,6 +75,21 @@ return [
             ],
         ],
 
+        'public_files' => [
+            'driver'      => 'local',
+            'root'        => storage_path('app/public/files'),
+            'permissions' => [
+                'file' => [
+                    'public'  => 0664,
+                    'private' => 0600,
+                ],
+                'dir'  => [
+                    'public'  => 0755,
+                    'private' => 0700,
+                ],
+            ],
+        ],
+
     ],
 
     /*

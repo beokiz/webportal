@@ -285,6 +285,7 @@ return [
         'children_4_with_german_lang'              => "Children with German as their heritage language",
         'children_2_with_foreign_lang'             => "Children with a non-German heritage language",
         'children_4_with_foreign_lang'             => "Children with a non-German heritage language",
+        'file'                                     => "File",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

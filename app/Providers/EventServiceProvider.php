@@ -7,7 +7,9 @@
 namespace App\Providers;
 
 use App\Listeners\TriggerUserVerifiedEmailEvent;
+use App\Models\DownloadableFile;
 use App\Models\User;
+use App\Observers\DownloadableFileObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
@@ -43,6 +45,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        DownloadableFile::observe(DownloadableFileObserver::class);
         User::observe(UserObserver::class);
     }
 }

@@ -16,6 +16,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\EvaluationScreeningController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\DownloadAreaController;
+use App\Http\Controllers\DownloadableFilesController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
@@ -119,7 +121,6 @@ Route::group(['prefix' => '2fa', 'as' => '2fa.', 'middleware' => ['protect_2fa_p
     Route::post('/resend', [TwoFactorAuthenticationController::class, 'resend'])->name('resend');
 });
 
-
 /*
  * Users routes
  */
@@ -133,7 +134,6 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
 });
 
-
 /*
  * Domains routes
  */
@@ -145,7 +145,6 @@ Route::group(['prefix' => 'domains', 'as' => 'domains.', 'middleware' => ['auth'
     Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
     Route::post('/reorder', [DomainsController::class, 'reorder'])->name('reorder');
 });
-
 
 /*
  * Subdomains routes
@@ -159,7 +158,6 @@ Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.', 'middleware' => [
     Route::post('/reorder', [SubdomainsController::class, 'reorder'])->name('reorder');
 });
 
-
 /*
  * Milestones routes
  */
@@ -171,7 +169,6 @@ Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => [
     Route::delete('/{milestone}', [MilestonesController::class, 'destroy'])->name('destroy');
     Route::post('/reorder', [MilestonesController::class, 'reorder'])->name('reorder');
 });
-
 
 /*
  * Kitas routes
@@ -188,7 +185,6 @@ Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'v
     Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
     Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');
 });
-
 
 /*
  * Evaluations routes
@@ -207,7 +203,6 @@ Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' =>
     Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
 });
 
-
 /*
  * Check Evaluation routes
  */
@@ -217,7 +212,6 @@ Route::group(['prefix' => 'screening', 'as' => 'screening.', 'middleware' => ['a
     Route::post('/make', [EvaluationScreeningController::class, 'make'])->name('make');
 });
 
-
 /*
  * Screening Export routes
  */
@@ -225,19 +219,6 @@ Route::group(['prefix' => 'export', 'as' => 'export.', 'middleware' => ['auth', 
     Route::get('/', [ExportController::class, 'index'])->name('index');
     Route::post('/', [ExportController::class, 'make'])->name('make');
 });
-
-
-/*
- * Survey time periods routes
- */
-Route::group(['prefix' => 'survey-time-periods', 'as' => 'survey_time_periods.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [SurveyTimePeriodController::class, 'index'])->name('index');
-    Route::get('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'show'])->name('show');
-    Route::post('/', [SurveyTimePeriodController::class, 'store'])->name('store');
-    Route::put('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'update'])->name('update');
-    Route::delete('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'destroy'])->name('destroy');
-});
-
 
 /*
  * Yearly evaluations routes
@@ -250,10 +231,47 @@ Route::group(['prefix' => 'yearly-evaluations', 'as' => 'yearly_evaluations.', '
     Route::delete('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'destroy'])->name('destroy');
 });
 
-
 /*
  * Settings routes
  */
 Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [SettingsController::class, 'index'])->name('index');
     Route::post('/', [SettingsController::class, 'update'])->name('update');
+});
+
+/*
+ * Survey time periods routes
+ */
+Route::group(['prefix' => 'survey-time-periods', 'as' => 'survey_time_periods.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', function () {
+        return redirect()->route('settings.index');
+    })->name('index');
+
+//    Route::get('/', [SurveyTimePeriodController::class, 'index'])->name('index');
+    Route::get('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'show'])->name('show');
+    Route::post('/', [SurveyTimePeriodController::class, 'store'])->name('store');
+    Route::put('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'update'])->name('update');
+    Route::delete('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'destroy'])->name('destroy');
+});
+
+/*
+ * Downloadable files routes
+ */
+Route::group(['prefix' => 'downloadable-files', 'as' => 'downloadable_files.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', function () {
+        return redirect()->route('settings.index');
+    })->name('index');
+
+//    Route::get('/', [DownloadableFilesController::class, 'index'])->name('index');
+    Route::get('/{downloadableFile}', [DownloadableFilesController::class, 'show'])->name('show');
+    Route::post('/', [DownloadableFilesController::class, 'store'])->name('store');
+    Route::put('/{downloadableFile}', [DownloadableFilesController::class, 'update'])->name('update');
+    Route::delete('/{downloadableFile}', [DownloadableFilesController::class, 'destroy'])->name('destroy');
+});
+
+/*
+ * Download area routes
+ */
+Route::group(['prefix' => 'download-area', 'as' => 'download_area.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [DownloadAreaController::class, 'index'])->name('index');
 });

@@ -9,8 +9,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Settings\UpdateSettingsRequest;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\Items\DownloadableFilesItemService;
 use App\Services\Items\SettingItemService;
+use App\Services\Items\SurveyTimePeriodItemService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 /**
  * Settings Controller
@@ -20,19 +24,52 @@ use Illuminate\Support\Facades\Redirect;
 class SettingsController extends BaseController
 {
     /**
-     * @var SettingItemService
-     */
-    protected $settingItemService;
-
-    /**
      * SettingsController constructor.
      *
-     * @param SettingItemService $settingItemService
      * @return void
      */
-    public function __construct(SettingItemService $settingItemService)
+    public function __construct()
     {
-        $this->settingItemService = $settingItemService;
+        //
+    }
+
+    /**
+     * @param Request $request
+     * @return \Inertia\Response
+     */
+    public function index(Request $request)
+    {
+        $this->authorize('authorizeAccessToSettings', User::class);
+
+        $surveyTimePeriodItemService  = app(SurveyTimePeriodItemService::class);
+        $settingItemService           = app(SettingItemService::class);
+        $downloadableFilesItemService = app(DownloadableFilesItemService::class);
+
+        $orderBy = $request->input('order_by');
+        $sort    = $request->input('sort', 'asc');
+
+        $surveyTimePeriodsOrderBy = 'id';
+        $downloadableFilesOrderBy = 'id';
+
+        switch ($orderBy) {
+            case 'year':
+            case 'age':
+            case 'survey_start_date':
+            case 'survey_end_date':
+                $surveyTimePeriodsOrderBy = $orderBy;
+                break;
+            case 'name':
+            case 'created_at':
+                $downloadableFilesOrderBy = $orderBy;
+                break;
+        }
+
+        return Inertia::render('Settings/Settings', [
+            'filters'           => $request->only([]),
+            'surveyTimePeriods' => $surveyTimePeriodItemService->collection(['order_by' => $surveyTimePeriodsOrderBy, 'sort' => $sort]),
+            'settings'          => $settingItemService->list(),
+            'downloadableFiles' => $downloadableFilesItemService->collection(['order_by' => $downloadableFilesOrderBy, 'sort' => $sort]),
+        ]);
     }
 
     /**
@@ -44,8 +81,10 @@ class SettingsController extends BaseController
     {
         $this->authorize('authorizeAccessToSettings', User::class);
 
+        $settingItemService = app(SettingItemService::class);
+
         $attributes = $request->validated();
-        $result     = $this->settingItemService->bulkUpdate($attributes);
+        $result     = $settingItemService->bulkUpdate($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.settings.update_success'))

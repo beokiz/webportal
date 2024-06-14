@@ -212,4 +212,24 @@ return [
         'update_denied'  => "Error! Selected setting cannot be updated.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Downloadable Files CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'downloadable_files' => [
+        'create_success'  => "Downloadable file has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating a downloadable file. Please try again later.",
+        'update_success'  => "Downloadable file has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating a downloadable file. Please try again later.",
+        'update_denied'   => "Error! Selected downloadable file cannot be updated.",
+        'delete_success'  => "Downloadable file has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting a downloadable file. Please try again later.",
+        'delete_denied'   => "Error! Selected downloadable file cannot be deleted.",
+        'restore_success' => "Downloadable file has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring a downloadable file. Please try again later.",
+        'restore_denied'  => "Error! Selected downloadable file cannot be restored.",
+    ],
+
 ];

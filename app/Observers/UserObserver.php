@@ -17,7 +17,7 @@ use Illuminate\Auth\Passwords\PasswordBroker;
 class UserObserver extends BaseObserver
 {
     /**
-     * @var \Illuminate\Auth\Passwords\TokenRepositoryInterface
+     * @var PasswordBroker
      */
     protected $tokens;
 
