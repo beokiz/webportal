@@ -7,9 +7,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Settings\UpdateSettingsRequest;
-use App\Models\Setting;
 use App\Models\User;
-use App\Services\Items\DownloadableFilesItemService;
+use App\Services\Items\DownloadableFileItemService;
 use App\Services\Items\SettingItemService;
 use App\Services\Items\SurveyTimePeriodItemService;
 use Illuminate\Http\Request;
@@ -41,9 +40,9 @@ class SettingsController extends BaseController
     {
         $this->authorize('authorizeAccessToSettings', User::class);
 
-        $surveyTimePeriodItemService  = app(SurveyTimePeriodItemService::class);
-        $settingItemService           = app(SettingItemService::class);
-        $downloadableFilesItemService = app(DownloadableFilesItemService::class);
+        $surveyTimePeriodItemService = app(SurveyTimePeriodItemService::class);
+        $settingItemService          = app(SettingItemService::class);
+        $downloadableFileItemService = app(DownloadableFileItemService::class);
 
         $orderBy = $request->input('order_by');
         $sort    = $request->input('sort', 'asc');
@@ -68,7 +67,7 @@ class SettingsController extends BaseController
             'filters'           => $request->only([]),
             'surveyTimePeriods' => $surveyTimePeriodItemService->collection(['order_by' => $surveyTimePeriodsOrderBy, 'sort' => $sort]),
             'settings'          => $settingItemService->list(),
-            'downloadableFiles' => $downloadableFilesItemService->collection(['order_by' => $downloadableFilesOrderBy, 'sort' => $sort]),
+            'downloadableFiles' => $downloadableFileItemService->collection(['order_by' => $downloadableFilesOrderBy, 'sort' => $sort]),
         ]);
     }
 

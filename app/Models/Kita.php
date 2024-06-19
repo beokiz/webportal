@@ -147,7 +147,7 @@ class Kita extends Model
                     ->where('is_daz', false)
                     ->count()
                 : 0,
-            set: fn (string $value) => $value*100,
+            set: fn(string $value) => $value * 100,
         );
     }
 

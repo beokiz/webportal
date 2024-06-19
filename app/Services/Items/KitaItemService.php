@@ -137,7 +137,7 @@ class KitaItemService extends BaseItemService
             if ($removeUsers) {
                 $item->users()->detach($users);
             } else {
-                $kitaUsers = $item->users->pluck('id');
+                $kitaUsers    = $item->users->pluck('id');
                 $kitaUsersNtf = collect([]);
 
                 foreach ($users as $userId) {

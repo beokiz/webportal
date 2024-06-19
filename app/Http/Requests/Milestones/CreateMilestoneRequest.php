@@ -7,7 +7,6 @@
 namespace App\Http\Requests\Milestones;
 
 use App\Http\Requests\BaseFormRequest;
-use Illuminate\Validation\Rule;
 
 /**
  * Create Subdomain Request

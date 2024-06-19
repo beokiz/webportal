@@ -9,11 +9,11 @@ namespace App\ModelFilters;
 use EloquentFilter\ModelFilter;
 
 /**
- * DownloadableFiles Model Filter
+ * DownloadableFile Model Filter
  *
  * @package \App\ModelFilters
  */
-class DownloadableFilesFilter extends BaseFilter
+class DownloadableFileFilter extends BaseFilter
 {
     /**
      * @var array
