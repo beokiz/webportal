@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\CreateUserFromKitaRequest;
+use App\Http\Requests\Users\CreateUserFromOperatorRequest;
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
@@ -168,7 +169,23 @@ class UsersController extends BaseController
         $this->authorize('authorizeAccessToUsers', User::class);
 
         $attributes = $request->validated();
-        $result     = $this->userItemService->createFromKita($attributes);
+        $result     = $this->userItemService->createFromKitaOrOperator($attributes);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
+            : Redirect::back()->withErrors(__('crud.users.create_error'));
+    }
+
+    /**
+     * @param CreateUserFromOperatorRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeFromOperator(CreateUserFromOperatorRequest $request)
+    {
+        $this->authorize('authorizeAccessToUsers', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->createFromKitaOrOperator($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.users.create_success'))

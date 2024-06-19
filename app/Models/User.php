@@ -358,6 +358,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function operators() : BelongsToMany
+    {
+        return $this->BelongsToMany(Operator::class, 'operator_has_users', 'user_id', 'operator_id');
+    }
+
+    /**
      * @return HasMany
      */
     public function evaluations() : HasMany

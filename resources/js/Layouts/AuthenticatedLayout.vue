@@ -62,6 +62,11 @@ onMounted(() => {
     }
 
     if (currentUser.is_super_admin || currentUser.is_admin) {
+        menuItemsList.value['operators.index'] = 'Träger';
+        menuGroupsList.value['operators.index'] = 'operators.*';
+    }
+
+    if (currentUser.is_super_admin || currentUser.is_admin) {
         menuItemsList.value['settings.index'] = 'Einstellungen';
         menuGroupsList.value['settings.index'] = 'settings.*';
     }

@@ -9,8 +9,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Kitas\ConnectUsersToKitaRequest;
 use App\Http\Requests\Kitas\ConnectUserToKitaRequest;
 use App\Http\Requests\Kitas\CreateKitaRequest;
-use App\Http\Requests\Kitas\DisconnectUsersToKitaRequest;
-use App\Http\Requests\Kitas\DisconnectUserToKitaRequest;
+use App\Http\Requests\Kitas\DisconnectUsersFromKitaRequest;
+use App\Http\Requests\Kitas\DisconnectUserFromKitaRequest;
 use App\Http\Requests\Kitas\ReorderKitasRequest;
 use App\Http\Requests\Kitas\UpdateKitaRequest;
 use App\Models\Kita;
@@ -158,11 +158,11 @@ class KitaController extends BaseController
     }
 
     /**
-     * @param DisconnectUserToKitaRequest $request
-     * @param Kita                        $kita
+     * @param DisconnectUserFromKitaRequest $request
+     * @param Kita                          $kita
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function disconnectUser(DisconnectUserToKitaRequest $request, Kita $kita)
+    public function disconnectUser(DisconnectUserFromKitaRequest $request, Kita $kita)
     {
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
@@ -175,11 +175,11 @@ class KitaController extends BaseController
     }
 
     /**
-     * @param DisconnectUsersToKitaRequest $request
-     * @param Kita                         $kita
+     * @param DisconnectUsersFromKitaRequest $request
+     * @param Kita                           $kita
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function disconnectUsers(DisconnectUsersToKitaRequest $request, Kita $kita)
+    public function disconnectUsers(DisconnectUsersFromKitaRequest $request, Kita $kita)
     {
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 

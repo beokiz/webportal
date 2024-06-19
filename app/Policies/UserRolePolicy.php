@@ -267,7 +267,7 @@ class UserRolePolicy extends BasePolicy
      * @param int  $kitaId
      * @return bool
      */
-    public function authorizeAccessToSingleYearlyEvaluation(User $user, int $kitaId) : bool
+    public function authorizeAccessToSingleYearlyEvaluations(User $user, int $kitaId) : bool
     {
         $roles = config('permission.project_roles');
 
@@ -313,5 +313,16 @@ class UserRolePolicy extends BasePolicy
         $roles = config('permission.project_roles');
 
         return $this->authorizeRoleAccess($user, [$roles['manager'], $roles['employer']]);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToOperators(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
     }
 }

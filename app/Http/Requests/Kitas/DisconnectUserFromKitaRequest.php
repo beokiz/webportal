@@ -7,11 +7,11 @@
 namespace App\Http\Requests\Kitas;
 
 /**
- * Disconnect Users To Kita Request
+ * Disconnect User From Kita Request
  *
  * @package \App\Http\Requests\Kitas
  */
-class DisconnectUsersToKitaRequest extends ConnectUsersToKitaRequest
+class DisconnectUserFromKitaRequest extends ConnectUserToKitaRequest
 {
     /**
      * @return array

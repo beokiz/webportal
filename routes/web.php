@@ -21,6 +21,7 @@ use App\Http\Controllers\EvaluationScreeningController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
+use App\Http\Controllers\OperatorsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubdomainsController;
@@ -130,6 +131,7 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
     Route::get('/{user}', [UsersController::class, 'edit'])->name('edit');
     Route::post('/', [UsersController::class, 'store'])->name('store');
     Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
+    Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
 });
@@ -274,4 +276,19 @@ Route::group(['prefix' => 'downloadable-files', 'as' => 'downloadable_files.', '
  */
 Route::group(['prefix' => 'download-area', 'as' => 'download_area.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [DownloadAreaController::class, 'index'])->name('index');
+});
+
+/*
+ * Operators routes
+ */
+Route::group(['prefix' => 'operators', 'as' => 'operators.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [OperatorsController::class, 'index'])->name('index');
+    Route::get('/{operator}', [OperatorsController::class, 'show'])->name('show');
+    Route::post('/', [OperatorsController::class, 'store'])->name('store');
+    Route::put('/{operator}', [OperatorsController::class, 'update'])->name('update');
+    Route::post('/{operator}/connect-user', [OperatorsController::class, 'connectUser'])->name('connect_user');
+    Route::post('/{operator}/connect-users', [OperatorsController::class, 'connectUsers'])->name('connect_users');
+    Route::post('/{operator}/disconnect-user', [OperatorsController::class, 'disconnectUser'])->name('disconnect_user');
+    Route::post('/{operator}/disconnect-users', [OperatorsController::class, 'disconnectUsers'])->name('disconnect_users');
+    Route::delete('/{operator}', [OperatorsController::class, 'destroy'])->name('destroy');
 });

@@ -101,7 +101,7 @@ class UserItemService extends BaseItemService
      * @param array $attributes
      * @return mixed
      */
-    public function createFromKita(array $attributes)
+    public function createFromKitaOrOperator(array $attributes)
     {
         if (!empty($attributes['email'])) {
             $user = User::where('email', $attributes['email'])->first();
@@ -212,6 +212,25 @@ class UserItemService extends BaseItemService
                         ->pluck('name')
                         ->toArray()
                 );
+            }
+        }
+
+        /*
+         * Update 'operators' relation
+         */
+        if (!empty($attributes['operators'])) {
+            $userOperators = $item->operators->pluck('id');
+
+            foreach ($attributes['operators'] as $operatorId) {
+                $operatorId = (int) $operatorId;
+
+                if (!$userOperators->contains($operatorId)) {
+                    $userOperators->add($operatorId);
+                }
+            }
+
+            if (!empty($userOperators)) {
+                $item->operators()->sync($userOperators);
             }
         }
     }

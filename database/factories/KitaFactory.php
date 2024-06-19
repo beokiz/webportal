@@ -7,7 +7,7 @@
 namespace Database\Factories;
 
 /**
- * Domain Factory
+ * Kita Factory
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Kita>
  * @package Database\Factories

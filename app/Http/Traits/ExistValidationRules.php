@@ -87,4 +87,12 @@ trait ExistValidationRules
     {
         return $this->existByColumnRule('settings', 'name');
     }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function operatorExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('operators');
+    }
 }
