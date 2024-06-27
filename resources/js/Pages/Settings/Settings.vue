@@ -4,11 +4,12 @@
   -->
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { onMounted, computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ages, prepareDate, formatDate, formatDateTime } from '@/Composables/common.js';
+import Sortable from "sortablejs";
 
 const props = defineProps({
     surveyTimePeriods: Array,
@@ -82,10 +83,9 @@ const settingsLabel = ref({
 
 const surveyTimePeriodsHeaders = [
     { title: 'Jahr', key: 'year', width: '10%', sortable: true },
-    { title: 'Altersgruppe (Jahre)', key: 'age', width: '15%', sortable: true },
-    { title: 'Erhebungsbeginn', key: 'survey_start_date', width: '15%', sortable: true },
-    { title: 'Erhebungsende', key: 'survey_end_date', width: '50%', sortable: true },
-    { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
+    { title: 'Erhebungsbeginn', key: 'survey_start_date', width: '37.5%', sortable: true },
+    { title: 'Erhebungsende', key: 'survey_end_date', width: '37.5%', sortable: true },
+    { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
 
 const downloadableFileHeaders = [
@@ -93,6 +93,10 @@ const downloadableFileHeaders = [
     { title: 'Hinzugefügt am', key: 'created_at', width: '42.5%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
+
+onMounted(() => {
+    setDefaultSurveyDates();
+});
 
 
 // Computed
@@ -132,6 +136,13 @@ const modifyTableItems = (tableItems) => {
     });
 };
 
+const setDefaultSurveyDates = () => {
+    rawSurveyStart.value = prepareDate(new Date(new Date().getFullYear(), 4, 1));
+    rawSurveyEnd.value = prepareDate(new Date(new Date().getFullYear(), 5, 30));
+    surveyStart.value = new Date(new Date().getFullYear(), 4, 1);
+    surveyEnd.value = new Date(new Date().getFullYear(), 5, 30);
+};
+
 const close = () => {
     dialogManageSurveyTimePeriod.value = false;
     dialogManageDownloadableFile.value = false;
@@ -149,8 +160,7 @@ const clear = () => {
     manageDownloadableFileForm.reset();
     manageDownloadableFileForm.clearErrors();
 
-    rawSurveyStart.value = null;
-    rawSurveyEnd.value = null;
+    setDefaultSurveyDates();
 };
 
 const reloadPage = async ({ page, itemsPerPage, sortBy }) => {
@@ -186,13 +196,12 @@ watch(surveyEnd, (val) => {
 
 const openDeleteSurveyTimePeriodDialog = (item) => {
     deleteSurveyTimePeriodForm.id = item.id;
-    deletingSurveyTimePeriodName.value = item.year
-    dialogDeleteSurveyTimePeriod.value = true
+    deletingSurveyTimePeriodName.value = item.year;
+    dialogDeleteSurveyTimePeriod.value = true;
 };
 
 const manageSurveyTimePeriodForm = useForm({
     year: null,
-    age: null,
     survey_start_date: null,
     survey_end_date: null,
 });
@@ -350,11 +359,12 @@ const deleteDownloadableFile = async () => {
                                     <v-card-text>
                                         <v-container>
                                             <v-row>
-                                                <v-col cols="12" sm="6">
+                                                <v-col cols="12" sm="4">
                                                     <v-text-field v-model="manageSurveyTimePeriodForm.year" :error-messages="errors.year"
                                                                   label="Jahr*" required></v-text-field>
                                                 </v-col>
-                                                <v-col cols="12" sm="6">
+
+                                                <v-col cols="12" sm="4">
                                                     <v-locale-provider locale="de">
                                                         <v-menu v-model="isMenuOpen"
                                                                 :return-value.sync="surveyStart"
@@ -367,25 +377,15 @@ const deleteDownloadableFile = async () => {
                                                                     prepend-icon="mdi-calendar"
                                                                     readonly
                                                                     v-bind="props"
+                                                                    :error-messages="errors.survey_start_date"
                                                                 ></v-text-field>
                                                             </template>
                                                             <v-date-picker @update:modelValue="isMenuOpen = false" v-model="surveyStart"></v-date-picker>
                                                         </v-menu>
                                                     </v-locale-provider>
                                                 </v-col>
-                                            </v-row>
-                                            <v-row>
-                                                <v-col cols="12" sm="6">
-                                                    <v-select
-                                                        v-model="manageSurveyTimePeriodForm.age"
-                                                        :items="ages"
-                                                        :error-messages="errors.age"
-                                                        item-title="age_name"
-                                                        item-value="age_number"
-                                                        label="Altersgruppe (Jahre)*"
-                                                    ></v-select>
-                                                </v-col>
-                                                <v-col cols="12" sm="6">
+
+                                                <v-col cols="12" sm="4">
                                                     <v-locale-provider locale="de">
                                                         <v-menu v-model="isMenu2Open"
                                                                 :return-value.sync="surveyEnd"
@@ -398,6 +398,7 @@ const deleteDownloadableFile = async () => {
                                                                     prepend-icon="mdi-calendar"
                                                                     readonly
                                                                     v-bind="props"
+                                                                    :error-messages="errors.survey_end_date"
                                                                 ></v-text-field>
                                                             </template>
                                                             <v-date-picker @update:modelValue="isMenu2Open = false" v-model="surveyEnd"></v-date-picker>
@@ -467,8 +468,6 @@ const deleteDownloadableFile = async () => {
                 <template v-slot:item="{ item }">
                     <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
                         <td>{{item.selectable.year}}</td>
-
-                        <td>{{item.selectable.age}}</td>
 
                         <td>{{ formatDate(item.selectable.survey_start_date, 'sv-SE') }}</td>
 

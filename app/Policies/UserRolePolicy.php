@@ -6,7 +6,9 @@
 
 namespace App\Policies;
 
+use App\Models\SurveyTimePeriod;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 /**
  * User Role Policy
@@ -259,7 +261,18 @@ class UserRolePolicy extends BasePolicy
     {
         $roles = config('permission.project_roles');
 
-        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['manager']]);
+        if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
+            $today = Carbon::today();
+
+            $isSurveyPeriod = SurveyTimePeriod::where('survey_start_date', '<=', $today)
+                ->where('survey_end_date', '>=', $today)
+                ->where('year', $today->year)
+                ->count();
+
+            return $isSurveyPeriod > 0;
+        }
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
     }
 
     /**
@@ -276,7 +289,14 @@ class UserRolePolicy extends BasePolicy
         }
 
         if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
-            return $user->kitas->pluck('id')->contains($kitaId);
+            $today = Carbon::today();
+
+            $isSurveyPeriod = SurveyTimePeriod::where('survey_start_date', '<=', $today)
+                ->where('survey_end_date', '>=', $today)
+                ->where('year', $today->year)
+                ->count();
+
+            return $user->kitas->pluck('id')->contains($kitaId) && $isSurveyPeriod > 0;
         }
 
         return false;

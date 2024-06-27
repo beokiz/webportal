@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 /**
- * Survey Time Period Controller
+ * Yearly Evaluations Controller
  *
  * @package \App\Http\Controllers
  */

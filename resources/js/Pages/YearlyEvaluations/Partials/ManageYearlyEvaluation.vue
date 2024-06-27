@@ -181,19 +181,19 @@ const updateYearlyEvaluation = async () => {
 
 const getChildsTotalLabel = (age) => {
     if (age === '2.5' || age === '4.5') {
-        let surveyTimePeriodForSelectedYear = props.surveyTimePeriods.find(obj => {
-            return obj.year === parseInt(manageForm.year) && obj.age === '4.5';
-        });
+        const currentYear = parseInt(manageForm.year);
 
-        if (surveyTimePeriodForSelectedYear) {
-            let surveyStartDateObj = new Date(surveyTimePeriodForSelectedYear.survey_start_date);
-            let surveyEndDateObj = new Date(surveyTimePeriodForSelectedYear.survey_end_date);
+        let startYear, endYear;
 
-            let surveyStartDateStr = surveyStartDateObj.getFullYear() + '-' + ("0" + (surveyStartDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyStartDateObj.getDate()).slice(-2);
-            let surveyEndDateStr = surveyEndDateObj.getFullYear() + '-' + ("0" + (surveyEndDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyEndDateObj.getDate()).slice(-2);
-
-            return `Gesamtzahl der im Zeitraum ${surveyStartDateStr} - ${surveyEndDateStr} geborenen Kinder`;
+        if (age === '4.5') {
+            startYear = currentYear - 6;
+            endYear = currentYear - 5;
+        } else {
+            startYear = currentYear - 4;
+            endYear = currentYear - 3;
         }
+
+      return `Gesamtzahl der im Zeitraum vom 01.10.${startYear} bis 30.09.${endYear} geborenen Kinder`;
     }
 
     return "Gesamtzahl der Kinder";

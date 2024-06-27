@@ -37,7 +37,6 @@ class SurveyTimePeriod extends Model
      */
     protected $fillable = [
         'year',
-        'age',
         'survey_start_date',
         'survey_end_date',
     ];

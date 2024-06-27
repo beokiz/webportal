@@ -6,7 +6,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SurveyTimePeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -46,15 +48,23 @@ class HandleInertiaRequests extends Middleware
             $successes = [$successes];
         }
 
+        $today = Carbon::today();
+
+        $isSurveyPeriod = SurveyTimePeriod::where('survey_start_date', '<=', $today)
+            ->where('survey_end_date', '>=', $today)
+            ->where('year', $today->year)
+            ->count();
+
         $shared = [
-            'auth'        => [
+            'auth'           => [
                 'canLogin'    => Route::has('auth.login'),
                 'canRegister' => Route::has('auth.register'),
                 'user'        => optional($request->user())->toArray(),
             ],
-            'app_version' => config('app.version'),
-            'successes'   => $successes,
-            'ziggy'       => function () use ($request) {
+            'appVersion'     => config('app.version'),
+            'successes'      => $successes,
+            'isSurveyPeriod' => $isSurveyPeriod > 0,
+            'ziggy'          => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
                 ]);
