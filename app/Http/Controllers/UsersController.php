@@ -67,7 +67,7 @@ class UsersController extends BaseController
 //        $this->authorize('authorizeAccessToUsers', User::class);
 
         $currentUser = $request->user()->loadMissing(['kitas']);
-        $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'full_name', 'email']);
+        $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'full_name', 'email', 'with_roles']);
 
         $usersFilters = ['paginated' => true];
         $rolesFilters = [];
@@ -89,7 +89,7 @@ class UsersController extends BaseController
 
         return Inertia::render('Users/Users', $this->prepareItemsCollection($result, [
             'roles'   => $this->roleItemService->collection($rolesFilters),
-            'filters' => $request->only(['full_name', 'email']),
+            'filters' => $request->only(['full_name', 'email', 'with_roles']),
         ]));
     }
 

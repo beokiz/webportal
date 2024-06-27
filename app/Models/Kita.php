@@ -13,6 +13,7 @@ use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
@@ -29,6 +30,10 @@ class Kita extends Model
 
     // use SoftDeletes;
 
+    const TYPE_SMALL = 'small';
+    const TYPE_LARGE = 'large';
+    const TYPES      = [self::TYPE_SMALL, self::TYPE_LARGE];
+
     /**
      * @var string
      */
@@ -40,12 +45,17 @@ class Kita extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'type',
+        'approved',
         'name',
-        'provider_of_the_kita',
+        'operator_id',
         'city',
+        'district',
         'number',
         'street',
         'house_number',
+        'num_pedagogical_staff',
+        'notes',
         'additional_info',
         'zip_code',
         'order',
@@ -58,9 +68,13 @@ class Kita extends Model
      * @var array
      */
     protected $casts = [
+        'approved'                               => 'boolean',
+        'num_pedagogical_staff'                  => 'integer',
         'order'                                  => 'integer',
         'number'                                 => 'integer',
         'is_yearly_evaluation_reminder_ntf_sent' => 'boolean',
+        'has_yearly_evaluations'                 => 'boolean',
+        'users_emails'                           => 'array',
     ];
 
     /**
@@ -70,6 +84,9 @@ class Kita extends Model
      */
     protected $appends = [
         'formatted_name',
+        'formatted_type',
+        'has_yearly_evaluations',
+        'users_emails',
     ];
 
     /**
@@ -79,6 +96,16 @@ class Kita extends Model
     {
         return Attribute::make(
             get: fn($value, $attributes) => Str::slug($this->name, '_'),
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function formattedType() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => __("validation.attributes.{$attributes['type']}"),
         );
     }
 
@@ -152,6 +179,36 @@ class Kita extends Model
     }
 
     /**
+     * @return Attribute
+     */
+    public function hasYearlyEvaluations() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('currentYearlyEvaluations') && $this->currentYearlyEvaluations()->exists(),
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function usersEmails() : Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                if ($this->relationLoaded('users')) {
+                    return $this->users
+                        ->filter(function ($user) {
+                            return $user->hasRole(config('permission.project_roles.manager'));
+                        })
+                        ->pluck('email');
+                } else {
+                    return [];
+                }
+            },
+        );
+    }
+
+    /**
      * @return string|null
      */
     public function modelFilter() : ?string
@@ -164,6 +221,14 @@ class Kita extends Model
     | Define Model Relations
     |--------------------------------------------------------------------------
     */
+    /**
+     * @return BelongsTo
+     */
+    public function operator() : BelongsTo
+    {
+        return $this->belongsTo(Operator::class, 'operator_id', 'id');
+    }
+
     /**
      * @return BelongsToMany
      */
@@ -186,5 +251,13 @@ class Kita extends Model
     public function yearlyEvaluations() : HasMany
     {
         return $this->hasMany(YearlyEvaluation::class, 'kita_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function currentYearlyEvaluations() : HasMany
+    {
+        return $this->yearlyEvaluations()->where('year', date('Y'));
     }
 }

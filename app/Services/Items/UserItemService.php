@@ -44,8 +44,17 @@ class UserItemService extends BaseItemService
          * Filter & order query
          */
         $query = User::query()->filter($filters)
-            ->customOrderBy($params->order_by ?? 'id', $params->sort === 'desc')
             ->with(['roles']);
+
+        // Check if we need to sort by role name
+        if (isset($params->order_by) && $params->order_by === 'primary_role_name') {
+            $query->leftJoin('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                ->leftJoin('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                ->select('users.*') // Ensure we are selecting all user fields
+                ->orderBy('roles.name', $params->sort === 'desc' ? 'desc' : 'asc');
+        } else {
+            $query->customOrderBy($params->order_by ?? 'id', $params->sort === 'desc');
+        }
 
         /*
          * Return results

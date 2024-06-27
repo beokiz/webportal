@@ -231,6 +231,8 @@ return [
         'survey_time_periods'    => "Survey time periods",
         'survey_time_period_id'  => "Survey time period",
         'survey_time_period_ids' => "Survey time periods",
+        'operator_id'            => "Operator",
+        'operator_ids'           => "Operators",
 
         'id'                                       => "ID",
         'uuid'                                     => "UUID",
@@ -286,6 +288,12 @@ return [
         'children_2_with_foreign_lang'             => "Children with a non-German heritage language",
         'children_4_with_foreign_lang'             => "Children with a non-German heritage language",
         'file'                                     => "File",
+        'self_training'                            => "Self training",
+        'small'                                    => "Small",
+        'large'                                    => "Large",
+        'type'                                     => "Type",
+        'approved'                                 => "Approved",
+        'num_pedagogical_staff'                    => "Number of pedagogical staff",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

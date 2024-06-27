@@ -290,5 +290,9 @@ Route::group(['prefix' => 'operators', 'as' => 'operators.', 'middleware' => ['a
     Route::post('/{operator}/connect-users', [OperatorsController::class, 'connectUsers'])->name('connect_users');
     Route::post('/{operator}/disconnect-user', [OperatorsController::class, 'disconnectUser'])->name('disconnect_user');
     Route::post('/{operator}/disconnect-users', [OperatorsController::class, 'disconnectUsers'])->name('disconnect_users');
+    Route::post('/{operator}/connect-kita', [OperatorsController::class, 'connectKita'])->name('connect_kita');
+    Route::post('/{operator}/connect-kitas', [OperatorsController::class, 'connectKitas'])->name('connect_kitas');
+    Route::post('/{operator}/disconnect-kita', [OperatorsController::class, 'disconnectKita'])->name('disconnect_kita');
+    Route::post('/{operator}/disconnect-kitas', [OperatorsController::class, 'disconnectKitas'])->name('disconnect_kitas');
     Route::delete('/{operator}', [OperatorsController::class, 'destroy'])->name('destroy');
 });

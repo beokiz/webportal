@@ -160,29 +160,20 @@ class OperatorItemService extends BaseItemService
     }
 
     /**
-     * @param array $attributes
-     * @return bool
+     * @param int   $id
+     * @param array $kitas
+     * @param bool  $removeKitas
+     * @return bool|null
      */
-    public function bulkUpdate(array $attributes) : bool
+    public function updateAttachedKitas(int $id, array $kitas, bool $removeKitas = false) : ?bool
     {
-        if (!empty($attributes['settings']) && is_array($attributes['settings'])) {
-            $settings = [];
+        $item = $this->find($id)->loadMissing(['kitas']);
 
-            foreach ($attributes['settings'] as $name => $value) {
-                $settings[] = [
-                    'name'  => $name,
-                    'value' => $value,
-                ];
-            }
-
-            if (!empty($settings)) {
-                Operator::upsert($settings, 'name');
-
-                return true;
-            }
-        }
-
-        return false;
+        return $item->kitas()
+            ->whereIn('id', $kitas)
+            ->update([
+                'operator_id' => $removeKitas ? null : $id,
+            ]);
     }
 
     /**

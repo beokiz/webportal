@@ -28,9 +28,9 @@ class CreateUserRequest extends BaseFormRequest
             'first_name'              => array_merge($this->textRules(), ['required']),
             'last_name'               => array_merge($this->textRules(), ['nullable']),
             'email'                   => ['required', 'email', Rule::unique(User::class)],
-//            'password'                => array_merge($this->passwordRules(), ['required']),
             'role'                    => ['required', $this->roleExistRule(config('permission.project_roles'))],
             'two_factor_auth_enabled' => ['required', 'boolean'],
+            'phone_number'            => ['nullable', 'string'],
         ];
     }
 

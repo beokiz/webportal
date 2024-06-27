@@ -109,4 +109,15 @@ class UserFilter extends BaseFilter
             $query->whereIn('id', (array) $values);
         });
     }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withOperators($values) : ModelFilter
+    {
+        return $this->whereHas('operators', function ($query) use ($values) {
+            $query->whereIn('id', (array) $values);
+        });
+    }
 }

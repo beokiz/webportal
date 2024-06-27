@@ -231,6 +231,8 @@ return [
         'survey_time_periods'    => "Rückmeldezeiträume",
         'survey_time_period_id'  => "Rückmeldezeitraum",
         'survey_time_period_ids' => "Rückmeldezeiträume",
+        'operator_id'            => "Träger",
+        'operator_ids'           => "Träger",
 
         'id'                                       => "ID",
         'uuid'                                     => "UUID",
@@ -286,6 +288,12 @@ return [
         'children_2_with_foreign_lang'             => "Kinder mit nicht deutscher Herkunftssprache",
         'children_4_with_foreign_lang'             => "Kinder mit nicht deutscher Herkunftssprache",
         'file'                                     => "Datei",
+        'self_training'                            => "Selbschulend",
+        'small'                                    => "Klein",
+        'large'                                    => "Groß",
+        'type'                                     => "Typ",
+        'approved'                                 => "Kita zur Ampel zugelassen",
+        'num_pedagogical_staff'                    => "Größe pädagogisches Team",
 
         // 'parent_field.*.child_field' => "Parent field #:counter child field",
     ],

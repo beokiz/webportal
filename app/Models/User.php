@@ -54,6 +54,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'phone_number',
         'email_verified_at',
         'password',
         'two_factor_auth_enabled',

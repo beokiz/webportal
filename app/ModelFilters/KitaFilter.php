@@ -39,7 +39,7 @@ class KitaFilter extends BaseFilter
      */
     public function search(string $value) : ModelFilter
     {
-        return $this->where('name', 'LIKE', '%' . trim($value) . '%');
+        return parent::stringFilter('name', $value);
     }
 
     /**
@@ -51,5 +51,71 @@ class KitaFilter extends BaseFilter
         return $this->whereHas('users', function ($query) use ($values) {
             $query->whereIn('id', (array) $values);
         });
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function approved($values) : ModelFilter
+    {
+        return $this->where(function ($query) use ($values) {
+            foreach ((array) $values as $value) {
+                $query->orWhere('approved', 'LIKE', filter_var($value, FILTER_VALIDATE_BOOLEAN));
+            }
+        });
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function hasYearlyEvaluations($values) : ModelFilter
+    {
+        return $this->where(function ($query) use ($values) {
+            if (in_array('true', $values)) {
+                $query->orWhereHas('yearlyEvaluations');
+            }
+
+            if (in_array('false', $values)) {
+                $query->orWhereDoesntHave('yearlyEvaluations');
+            }
+        });
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function operator($values) : ModelFilter
+    {
+        return $this->whereIn('operator_id', (array) $values);
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function type($values) : ModelFilter
+    {
+        return $this->whereIn('type', (array) $values);
+    }
+
+    /**
+     * @param string $value
+     * @return ModelFilter
+     */
+    public function zipCode(string $value) : ModelFilter
+    {
+        return parent::stringFilter('zip_code', $value);
+    }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withOperators($values) : ModelFilter
+    {
+        return $this->whereIn('operator_id', (array) $values);
     }
 }

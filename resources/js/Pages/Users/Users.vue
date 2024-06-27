@@ -9,6 +9,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import { formatDate, formatDateTime } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import {debounce} from "lodash";
 
 const props = defineProps({
     items: Array,
@@ -40,8 +41,6 @@ Inertia.on('success', (event) => {
         sort.value = newProps.sort;
         totalItems.value = newProps.total;
         lastPage.value = newProps.lastPage;
-        fullNameFilter.value = newProps.filters.full_name ?? null;
-        emailFilter.value = newProps.filters.email ?? null;
     }
 });
 
@@ -59,6 +58,7 @@ const totalItems = ref(props.total);
 const lastPage = ref(props.lastPage);
 const fullNameFilter = ref(props.filters.full_name ?? null);
 const emailFilter = ref(props.filters.email ?? null);
+const rolesFilter = ref(props.filters.roles ?? null);
 const search = ref('');
 const errors = ref(props.errors || {});
 
@@ -68,11 +68,11 @@ const dialogDeleteUser = ref(false);
 
 const headers = [
     { title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center' },
-    { title: 'Name', key: 'first_name', width: '25%', sortable: false },
-    { title: 'Email', key: 'email', width: '20%', sortable: false },
-    { title: 'Rolle', key: 'primary_role_name', width: '10%', sortable: false },
-    { title: 'Letzter Login', key: 'last_seen_at', width: '15%', sortable: false },
-    { title: 'Erster Login', key: 'first_login_at', width: '15%', sortable: false },
+    { title: 'Name', key: 'first_name', width: '25%', sortable: true },
+    { title: 'Email', key: 'email', width: '20%', sortable: true },
+    { title: 'Rolle', key: 'primary_role_name', width: '10%', sortable: true },
+    { title: 'Letzter Login', key: 'last_seen_at', width: '15%', sortable: true },
+    { title: 'Erster Login', key: 'first_login_at', width: '15%', sortable: true },
     { title: 'Aktionen', key: 'actions', width: '10%', sortable: false },
 ];
 
@@ -91,11 +91,11 @@ const modifiedItems = computed(() => {
 });
 
 const allFiltersEmpty = computed(() => {
-    return fullNameFilter.value === null && emailFilter.value === null;
+    return fullNameFilter.value === null && emailFilter.value === null && rolesFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
-    return fullNameFilter.value !== null || emailFilter.value !== null;
+    return fullNameFilter.value !== null || emailFilter.value !== null || rolesFilter.value !== null;
 });
 
 
@@ -106,11 +106,28 @@ watch(dialog, (val) => {
     }
 });
 
+watch(fullNameFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
+watch(emailFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
+watch(rolesFilter, (val) => {
+    triggerSearch();
+});
+const triggerSearch = () => {
+    loading.value = true;
+    search.value = String(Date.now());
+};
+
 // Methods
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
         fullNameFilter.value = null;
         emailFilter.value = null;
+        rolesFilter.value = null;
     }
 
     if (
@@ -120,22 +137,53 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     ) {
         loading.value = true;
 
-        let options = { data: { page: page, per_page: itemsPerPage } };
+        let data = {
+            page: page,
+            per_page: itemsPerPage,
+        };
 
         if (sortBy && sortBy.length > 0) {
-            options.data.order_by = sortBy[0].key;
-            options.data.sort = sortBy[0].order;
+            data.order_by = sortBy[0].key;
+            data.sort = sortBy[0].order;
+        } else {
+            data.order_by = null;
+            data.sort = null;
         }
 
-        // Search filters
-        options.data.full_name = fullNameFilter.value;
-        options.data.email = emailFilter.value;
+        // Apply filters
+        if (fullNameFilter.value) {
+            data.full_name = fullNameFilter.value;
+        }
 
-        await router.reload(options);
+        if (emailFilter.value) {
+            data.email = emailFilter.value;
+        }
 
-        currentPage.value = page;
-        perPage.value = itemsPerPage;
-        loading.value = false;
+        if (rolesFilter.value) {
+            data.with_roles = rolesFilter.value;
+        }
+
+        await router.get(route(route().current()), data, {
+            preserveScroll: true,
+            preserveState: true,
+            onCancelToken: cancelToken => {},
+            onCancel: () => {},
+            onBefore: visit => {
+                loading.value = true;
+            },
+            onStart: visit => {},
+            onProgress: progress => {},
+            onSuccess: page => {
+                currentPage.value = data.page;
+                perPage.value = data.per_page;
+            },
+            onError: errors => {
+                console.log(errors);
+            },
+            onFinish: visit => {
+                loading.value = false;
+            },
+        });
     }
 };
 
@@ -182,6 +230,7 @@ const manageForm = useForm({
     email: null,
     role: null,
     two_factor_auth_enabled: false,
+    phone_number: null,
 });
 
 const manageUser = async () => {
@@ -227,16 +276,23 @@ const manageUser = async () => {
                                             <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.first_name" :error-messages="errors.first_name" label="Vorname" required></v-text-field>
                                             </v-col>
+
                                             <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.last_name" :error-messages="errors.last_name" label="Nachname" required></v-text-field>
                                             </v-col>
                                         </v-row>
 
-
                                         <v-row>
                                             <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
                                             </v-col>
+
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field v-model="manageForm.phone_number" :error-messages="errors.phone_number" label="Telefonnummer"></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
                                             <v-col cols="12" sm="6">
                                                 <v-select
                                                     v-model="manageForm.role"
@@ -248,9 +304,7 @@ const manageUser = async () => {
                                                     required
                                                 ></v-select>
                                             </v-col>
-                                        </v-row>
 
-                                        <v-row>
                                             <v-col cols="12" md="4" sm="6">
                                                 <v-checkbox
                                                     v-model="manageForm.two_factor_auth_enabled"
@@ -306,26 +360,27 @@ const manageUser = async () => {
             <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
                 <div class="tw-w-full">
                     <v-row>
-                        <v-col cols="12" sm="3">
+                        <v-col cols="12" sm="4">
                             <v-text-field v-model="fullNameFilter" label="Name"></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="3">
+                        <v-col cols="12" sm="4">
                             <v-text-field v-model="emailFilter" label="Email"></v-text-field>
                         </v-col>
-                    </v-row>
-                </div>
 
-                <div class="tw-ml-6">
-                    <v-hover v-slot:default="{ isHovering, props }">
-                        <v-btn
-                            class="tw-mt-2"
-                            v-bind="props"
-                            :color="isHovering ? 'accent' : 'primary'"
-                            @click="search = String(Date.now())"
-                            dark
-                        >Suche</v-btn>
-                    </v-hover>
+                        <v-col cols="12" sm="4">
+                            <v-select
+                                v-model="rolesFilter"
+                                :items="roles"
+                                item-title="human_name"
+                                item-value="name"
+                                label="Rolle"
+                                multiple
+                                :disabled="loading"
+                                clearable
+                            ></v-select>
+                        </v-col>
+                    </v-row>
                 </div>
             </div>
 

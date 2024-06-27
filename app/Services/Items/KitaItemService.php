@@ -29,6 +29,7 @@ class KitaItemService extends BaseItemService
 
     /**
      * @param array $args
+     * @param array $with
      * @return mixed
      */
     public function collection(array $args = [])
@@ -42,11 +43,22 @@ class KitaItemService extends BaseItemService
         /*
          * Filter & order query
          */
-        $query = Kita::query()->filter($filters)
-            ->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc');
+        $query = Kita::query()->filter($filters);
+
+        if (!empty($params->order_by) && $params->order_by === 'has_yearly_evaluations') {
+            $query->select('*')
+                ->selectSub(function ($query) {
+                    $query->from('yearly_evaluations')
+                        ->selectRaw('count(*)')
+                        ->whereColumn('yearly_evaluations.kita_id', 'kitas.id');
+                }, 'yearly_evaluations_count')
+                ->orderBy('yearly_evaluations_count', $params->sort === 'desc' ? 'desc' : 'asc');
+        } else {
+            $query->customOrderBy($params->order_by ?? 'order', $params->sort === 'desc');
+        }
 
         if (!empty($args['with'])) {
-            $query->with(['evaluations']);
+            $query->with($args['with']);
         }
 
         /*
@@ -195,6 +207,37 @@ class KitaItemService extends BaseItemService
     | Additional methods
     |--------------------------------------------------------------------------
     */
+    /**
+     * @param array $ids
+     * @return array
+     */
+    public function getWithoutYearlyEvaluationsUsersEmails(array $ids = []) : array
+    {
+        $emails = [];
+
+        Kita::where('approved', true)
+            ->whereDoesntHave('currentYearlyEvaluations')
+            ->when(!empty($ids), function ($query) use ($ids) {
+                $query->whereIn('id', $ids);
+            })
+            ->with(['users.roles'])
+            ->get()
+            ->each(function ($kita) use (&$emails) {
+                $kita->users
+                    ->filter(function ($user) {
+                        return $user->hasRole(config('permission.project_roles.manager'));
+                    })
+                    ->each(function ($user) use (&$emails) {
+                        $emails[$user->email] = [
+                            'title' => "{$user->full_name} <{$user->email}>",
+                            'value' => $user->email,
+                        ];
+                    });
+            });
+
+        return array_values($emails);
+    }
+
     /**
      * @param array $attributes
      * @return void

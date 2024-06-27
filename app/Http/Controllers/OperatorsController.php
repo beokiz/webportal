@@ -6,14 +6,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Operators\ConnectKitasToOperatorRequest;
+use App\Http\Requests\Operators\ConnectKitaToOperatorRequest;
 use App\Http\Requests\Operators\ConnectUsersToOperatorRequest;
 use App\Http\Requests\Operators\ConnectUserToOperatorRequest;
 use App\Http\Requests\Operators\CreateOperatorRequest;
+use App\Http\Requests\Operators\DisconnectKitaFromOperatorRequest;
+use App\Http\Requests\Operators\DisconnectKitasFromOperatorRequest;
 use App\Http\Requests\Operators\DisconnectUserFromOperatorRequest;
 use App\Http\Requests\Operators\DisconnectUsersFromOperatorRequest;
 use App\Http\Requests\Operators\UpdateOperatorFileRequest;
+use App\Models\Kita;
 use App\Models\Operator;
 use App\Models\User;
+use App\Services\Items\KitaItemService;
 use App\Services\Items\OperatorItemService;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
@@ -34,14 +40,21 @@ class OperatorsController extends BaseController
     protected $operatorItemService;
 
     /**
+     * @var KitaItemService
+     */
+    protected $kitaItemService;
+
+    /**
      * OperatorsController constructor.
      *
      * @param OperatorItemService $operatorItemService
+     * @param KitaItemService     $kitaItemService
      * @return void
      */
-    public function __construct(OperatorItemService $operatorItemService)
+    public function __construct(OperatorItemService $operatorItemService, KitaItemService $kitaItemService)
     {
         $this->operatorItemService = $operatorItemService;
+        $this->kitaItemService     = $kitaItemService;
     }
 
     /**
@@ -73,12 +86,31 @@ class OperatorsController extends BaseController
         $this->authorize('authorizeAccessToOperators', User::class);
 
         $roleItemService = app(RoleItemService::class);
+        $kitaItemService = app(KitaItemService::class);
         $userItemService = app(UserItemService::class);
 
+        // Get params for sorting & filtering Kitas & Users
+        $userArgs = $request->only(['user_args']);
+        $kitaArgs = $request->only(['kita_args']);
+
+        $operatorUsers = $userItemService->collection(array_merge($userArgs['user_args'] ?? [], ['paginated' => false, 'with_operators' => [$operator->id]]));
+        $operatorKitas = $kitaItemService->collection(array_merge($kitaArgs['kita_args'] ?? [], ['paginated' => false, 'with_operators' => [$operator->id], 'with' => ['users', 'currentYearlyEvaluations']]));
+
         return Inertia::render('Operators/Partials/ManageOperator', [
-            'operator' => $operator->loadMissing(['users']),
-            'roles'    => $roleItemService->collection(['only_name' => [config('permission.project_roles.user_multiplier')]]),
-            'users'    => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
+            'operator'      => $operator,
+            'operatorUsers' => $operatorUsers,
+            'operatorKitas' => $operatorKitas,
+            'usersEmails'   => (!empty($operatorKitas) && $operatorKitas->isNotEmpty()) ? $kitaItemService->getWithoutYearlyEvaluationsUsersEmails($operatorKitas->pluck('id')->toArray()) : [],
+            'roles'         => $roleItemService->collection(['only_name' => [config('permission.project_roles.user_multiplier')]]),
+            'users'         => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
+            'userFilters'   => $userArgs['user_args'] ?? [],
+            'kitaFilters'   => $kitaArgs['kita_args'] ?? [],
+            'kitaTypes'     => array_map(function ($type) {
+                return [
+                    'title' => __("validation.attributes.{$type}"),
+                    'value' => $type,
+                ];
+            }, Kita::TYPES),
         ]);
     }
 
@@ -177,6 +209,74 @@ class OperatorsController extends BaseController
 
         $attributes = $request->validated();
         $result     = $this->operatorItemService->updateAttachedUsers($operator->id, $attributes['users'], true);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.operators.update_success'))
+            : Redirect::back()->withErrors(__('crud.operators.update_error'));
+    }
+
+    /**
+     * @param ConnectKitaToOperatorRequest $request
+     * @param Operator                     $operator
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectKita(ConnectKitaToOperatorRequest $request, Operator $operator)
+    {
+        $this->authorize('authorizeAccessToOperators', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->operatorItemService->updateAttachedKitas($operator->id, [$attributes['kita']]);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.operators.update_success'))
+            : Redirect::back()->withErrors(__('crud.operators.update_error'));
+    }
+
+    /**
+     * @param ConnectKitasToOperatorRequest $request
+     * @param Operator                      $operator
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectKitas(ConnectKitasToOperatorRequest $request, Operator $operator)
+    {
+        $this->authorize('authorizeAccessToOperators', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->operatorItemService->updateAttachedKitas($operator->id, $attributes['kitas']);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.operators.update_success'))
+            : Redirect::back()->withErrors(__('crud.operators.update_error'));
+    }
+
+    /**
+     * @param DisconnectKitaFromOperatorRequest $request
+     * @param Operator                          $operator
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectKita(DisconnectKitaFromOperatorRequest $request, Operator $operator)
+    {
+        $this->authorize('authorizeAccessToOperators', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->operatorItemService->updateAttachedKitas($operator->id, [$attributes['kita']], true);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.operators.update_success'))
+            : Redirect::back()->withErrors(__('crud.operators.update_error'));
+    }
+
+    /**
+     * @param DisconnectKitasFromOperatorRequest $request
+     * @param Operator                           $operator
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectKitas(DisconnectKitasFromOperatorRequest $request, Operator $operator)
+    {
+        $this->authorize('authorizeAccessToOperators', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->operatorItemService->updateAttachedKitas($operator->id, $attributes['kitas'], true);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.operators.update_success'))
