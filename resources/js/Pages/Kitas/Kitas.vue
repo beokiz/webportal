@@ -388,7 +388,7 @@ const manageKita = async () => {
                                             <v-col cols="12">
                                                 <v-text-field v-model="manageForm.additional_info"
                                                               :error-messages="errors.additional_info"
-                                                              label="Sonstiges*"
+                                                              label="Sonstiges"
                                                               required
                                                 ></v-text-field>
                                             </v-col>
@@ -435,7 +435,7 @@ const manageKita = async () => {
                                             <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.num_pedagogical_staff"
                                                               :error-messages="errors.num_pedagogical_staff"
-                                                              label="Größe pädagogisches Team*"
+                                                              label="Größe pädagogisches Team"
                                                               type="number"
                                                 ></v-text-field>
                                             </v-col>
