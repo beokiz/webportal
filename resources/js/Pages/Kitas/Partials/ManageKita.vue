@@ -70,6 +70,7 @@ const close = () => {
     dialog.value = false;
     connectUserDialog.value = false;
     dialogDeleteKitaUser.value = false;
+    dialogUsersEmails.value = false;
     manageCreateKitaUserForm.reset();
     manageCreateKitaUserForm.clearErrors();
     manageConnectKitaUserForm.reset();
@@ -403,7 +404,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-col cols="12">
                         <v-text-field v-model="manageForm.additional_info"
                                       :error-messages="errors.additional_info"
-                                      label="Sonstiges*"
+                                      label="Sonstiges"
                                       required
                         ></v-text-field>
                     </v-col>
@@ -450,7 +451,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-col cols="12" sm="6">
                         <v-text-field v-model="manageForm.num_pedagogical_staff"
                                       :error-messages="errors.num_pedagogical_staff"
-                                      label="Größe pädagogisches Team*"
+                                      label="Größe pädagogisches Team"
                                       type="number"
                         ></v-text-field>
                     </v-col>
@@ -666,11 +667,19 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                           <div class="tw-w-full">
                               <v-row>
                                   <v-col cols="12" sm="4">
-                                      <v-text-field v-model="fullNameFilter" label="Name"></v-text-field>
+                                      <v-text-field
+                                          v-model="fullNameFilter"
+                                          label="Name"
+                                          clearable
+                                      ></v-text-field>
                                   </v-col>
 
                                   <v-col cols="12" sm="4">
-                                      <v-text-field v-model="emailFilter" label="Email"></v-text-field>
+                                      <v-text-field
+                                          v-model="emailFilter"
+                                          label="Email"
+                                          clearable
+                                      ></v-text-field>
                                   </v-col>
 
                                   <v-col cols="12" sm="4">
@@ -725,8 +734,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                     <td>{{item.selectable?.primary_role_human_name}}</td>
 
-                                    <td align="center">
-                                        <v-tooltip v-if="kita?.approved && !kita?.has_yearly_evaluations" location="top">
+                                    <td align="right">
+                                        <v-tooltip v-if="kita?.approved && !kita?.has_yearly_evaluations && item.selectable?.is_manager" location="top">
                                             <template v-slot:activator="{ props }">
                                                 <a :href="`mailto:?bcc=${item.selectable.email}`" v-bind="props">
                                                   <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
