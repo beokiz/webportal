@@ -726,7 +726,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <td>{{item.selectable?.primary_role_human_name}}</td>
 
                                     <td align="center">
-                                        <v-tooltip v-if="kita?.approved && !kita?.has_yearly_evaluations && item.selectable?.is_admin" location="top">
+                                        <v-tooltip v-if="kita?.approved && !kita?.has_yearly_evaluations && item.selectable?.is_manager" location="top">
                                             <template v-slot:activator="{ props }">
                                                 <a :href="`mailto:?bcc=${item.selectable.email}`" v-bind="props">
                                                   <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
