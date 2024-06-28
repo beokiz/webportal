@@ -361,11 +361,19 @@ const manageUser = async () => {
                 <div class="tw-w-full">
                     <v-row>
                         <v-col cols="12" sm="4">
-                            <v-text-field v-model="fullNameFilter" label="Name"></v-text-field>
+                            <v-text-field
+                                v-model="fullNameFilter"
+                                label="Name"
+                                clearable
+                            ></v-text-field>
                         </v-col>
 
                         <v-col cols="12" sm="4">
-                            <v-text-field v-model="emailFilter" label="Email"></v-text-field>
+                            <v-text-field
+                                v-model="emailFilter"
+                                label="Email"
+                                clearable
+                            ></v-text-field>
                         </v-col>
 
                         <v-col cols="12" sm="4">
