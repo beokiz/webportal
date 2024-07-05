@@ -21,7 +21,7 @@ class UpdateSurveyTimePeriodRequest extends CreateSurveyTimePeriodRequest
     public function rules() : array
     {
         return [
-            'year'              => array_merge($this->yearRules(), ['sometimes', Rule::unique('survey_time_periods')->ignore($this->id)]),
+            'year'              => array_merge($this->bigIntegerRules(), ['sometimes', Rule::unique('survey_time_periods')->ignore($this->id)]),
             'survey_start_date' => ['sometimes', 'date'],
             'survey_end_date'   => ['sometimes', 'date', 'after:survey_start_date'],
         ];

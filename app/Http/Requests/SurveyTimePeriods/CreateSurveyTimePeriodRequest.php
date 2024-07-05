@@ -22,7 +22,7 @@ class CreateSurveyTimePeriodRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'year'              => array_merge($this->yearRules(), ['required', Rule::unique('survey_time_periods')]),
+            'year'              => array_merge($this->bigIntegerRules(), ['required', Rule::unique('survey_time_periods')]),
             'survey_start_date' => ['required', 'date'],
             'survey_end_date'   => ['required', 'date', 'after:survey_start_date'],
         ];
