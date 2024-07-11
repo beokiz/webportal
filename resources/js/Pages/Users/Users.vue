@@ -7,9 +7,9 @@
 import { computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
-import { formatDate, formatDateTime } from '@/Composables/common';
+import { formatDate, formatDateTime, prepareDate } from '@/Composables/common';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {debounce} from "lodash";
+import { debounce } from "lodash";
 
 const props = defineProps({
     items: Array,
@@ -56,15 +56,23 @@ const orderBy = ref(props.orderBy);
 const sort = ref(props.sort);
 const totalItems = ref(props.total);
 const lastPage = ref(props.lastPage);
+const statusFilter = ref(props.filters.status ?? null);
 const fullNameFilter = ref(props.filters.full_name ?? null);
 const emailFilter = ref(props.filters.email ?? null);
-const rolesFilter = ref(props.filters.roles ?? null);
+const rolesFilter = ref(null);
 const search = ref('');
 const errors = ref(props.errors || {});
 
+const isFirstLoginAtFilterOpened = ref(false);
+const isLastSeenAtFilterOpened = ref(false);
 const loading = ref(false);
 const dialog = ref(false);
 const dialogDeleteUser = ref(false);
+
+const rawFirstLoginAtFilter = ref(null);
+const rawLastSeenAtFilter = ref(null);
+const firstLoginAtFilter = ref(null);
+const lastSeenAtFilter = ref(null);
 
 const headers = [
     { title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center' },
@@ -74,6 +82,17 @@ const headers = [
     { title: 'Letzter Login', key: 'last_seen_at', width: '15%', sortable: true },
     { title: 'Erster Login', key: 'first_login_at', width: '15%', sortable: true },
     { title: 'Aktionen', key: 'actions', width: '10%', sortable: false },
+];
+
+const statusFilterValues = [
+    {
+        title: 'Ja',
+        value: 'true',
+    },
+    {
+        title: 'Nein',
+        value: 'false',
+    },
 ];
 
 
@@ -91,11 +110,11 @@ const modifiedItems = computed(() => {
 });
 
 const allFiltersEmpty = computed(() => {
-    return fullNameFilter.value === null && emailFilter.value === null && rolesFilter.value === null;
+    return statusFilter.value === null && fullNameFilter.value === null && emailFilter.value === null && rolesFilter.value === null && firstLoginAtFilter.value === null && lastSeenAtFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
-    return fullNameFilter.value !== null || emailFilter.value !== null || rolesFilter.value !== null;
+    return statusFilter.value !== null || fullNameFilter.value !== null || emailFilter.value !== null || rolesFilter.value !== null || firstLoginAtFilter.value !== null || lastSeenAtFilter.value !== null;
 });
 
 
@@ -104,6 +123,10 @@ watch(dialog, (val) => {
     if (!val) {
         close();
     }
+});
+
+watch(statusFilter, (val) => {
+    triggerSearch();
 });
 
 watch(fullNameFilter, debounce((val) => {
@@ -117,6 +140,17 @@ watch(emailFilter, debounce((val) => {
 watch(rolesFilter, (val) => {
     triggerSearch();
 });
+
+watch(firstLoginAtFilter, (val) => {
+    rawFirstLoginAtFilter.value = val ? prepareDate(val) : null;
+    triggerSearch();
+});
+
+watch(lastSeenAtFilter, (val) => {
+    rawLastSeenAtFilter.value = val ? prepareDate(val) : null;
+    triggerSearch();
+});
+
 const triggerSearch = () => {
     loading.value = true;
     search.value = String(Date.now());
@@ -125,9 +159,12 @@ const triggerSearch = () => {
 // Methods
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
+        statusFilter.value = null;
         fullNameFilter.value = null;
         emailFilter.value = null;
         rolesFilter.value = null;
+        firstLoginAtFilter.value = null;
+        lastSeenAtFilter.value = null;
     }
 
     if (
@@ -151,6 +188,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         }
 
         // Apply filters
+        if (statusFilter.value) {
+            data.status = statusFilter.value;
+        }
+
         if (fullNameFilter.value) {
             data.full_name = fullNameFilter.value;
         }
@@ -161,6 +202,14 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
         if (rolesFilter.value) {
             data.with_roles = rolesFilter.value;
+        }
+
+        if (firstLoginAtFilter.value) {
+            data.first_login_at = firstLoginAtFilter.value.toLocaleString();
+        }
+
+        if (lastSeenAtFilter.value) {
+            data.last_seen_at = lastSeenAtFilter.value.toLocaleString();
         }
 
         await router.get(route(route().current()), data, {
@@ -361,13 +410,24 @@ const manageUser = async () => {
                 <div class="tw-w-full">
                     <v-row>
                         <v-col cols="12" sm="4">
+                            <v-select
+                                v-model="statusFilter"
+                                :items="statusFilterValues"
+                                item-title="title"
+                                item-value="value"
+                                label="Status"
+                                multiple
+                                :disabled="loading"
+                                clearable
+                            ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="4">
                             <v-text-field
                                 v-model="fullNameFilter"
                                 label="Name"
                                 clearable
                             ></v-text-field>
                         </v-col>
-
                         <v-col cols="12" sm="4">
                             <v-text-field
                                 v-model="emailFilter"
@@ -375,7 +435,8 @@ const manageUser = async () => {
                                 clearable
                             ></v-text-field>
                         </v-col>
-
+                    </v-row>
+                    <v-row>
                         <v-col cols="12" sm="4">
                             <v-select
                                 v-model="rolesFilter"
@@ -387,6 +448,44 @@ const manageUser = async () => {
                                 :disabled="loading"
                                 clearable
                             ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="4">
+                            <v-locale-provider locale="de">
+                                  <v-menu v-model="isFirstLoginAtFilterOpened"
+                                          :return-value.sync="firstLoginAtFilter"
+                                          :close-on-content-click="false">
+                                      <template v-slot:activator="{ props }">
+                                          <v-text-field
+                                              label="Letzter Login"
+                                              class="tw-cursor-pointer"
+                                              :model-value="rawFirstLoginAtFilter"
+                                              prepend-icon="mdi-calendar"
+                                              readonly
+                                              v-bind="props"
+                                          ></v-text-field>
+                                      </template>
+                                      <v-date-picker @update:modelValue="isFirstLoginAtFilterOpened = false" v-model="firstLoginAtFilter"></v-date-picker>
+                                  </v-menu>
+                            </v-locale-provider>
+                        </v-col>
+                        <v-col cols="12" sm="4">
+                            <v-locale-provider locale="de">
+                                  <v-menu v-model="isLastSeenAtFilterOpened"
+                                          :return-value.sync="lastSeenAtFilter"
+                                          :close-on-content-click="false">
+                                      <template v-slot:activator="{ props }">
+                                          <v-text-field
+                                              label="Erster Login"
+                                              class="tw-cursor-pointer"
+                                              :model-value="rawLastSeenAtFilter"
+                                              prepend-icon="mdi-calendar"
+                                              readonly
+                                              v-bind="props"
+                                          ></v-text-field>
+                                      </template>
+                                      <v-date-picker @update:modelValue="isLastSeenAtFilterOpened = false" v-model="lastSeenAtFilter"></v-date-picker>
+                                  </v-menu>
+                            </v-locale-provider>
                         </v-col>
                     </v-row>
                 </div>

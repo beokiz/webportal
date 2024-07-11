@@ -96,6 +96,14 @@ class OperatorsController extends BaseController
         $operatorUsers = $userItemService->collection(array_merge($userArgs['user_args'] ?? [], ['paginated' => false, 'with_operators' => [$operator->id]]));
         $operatorKitas = $kitaItemService->collection(array_merge($kitaArgs['kita_args'] ?? [], ['paginated' => false, 'with_operators' => [$operator->id], 'with' => ['users', 'currentYearlyEvaluations']]));
 
+        // Fetch all zip codes from kitas
+        $zipCodesList = $operatorKitas->pluck('zip_code')->unique()->transform(function ($zipCode) {
+            return [
+                'title' => $zipCode,
+                'value' => $zipCode,
+            ];
+        });
+
         return Inertia::render('Operators/Partials/ManageOperator', [
             'operator'      => $operator,
             'operatorUsers' => $operatorUsers,
@@ -111,6 +119,7 @@ class OperatorsController extends BaseController
                     'value' => $type,
                 ];
             }, Kita::TYPES),
+            'zipCodes'      => $zipCodesList,
         ]);
     }
 

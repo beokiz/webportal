@@ -66,8 +66,8 @@ const manageForm = useForm({
 const manageSurveyTimePeriod = async () => {
     manageForm.processing = true;
 
-    manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString()
-    manageForm.survey_end_date = new Date(surveyEnd.value).toLocaleString()
+    manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString();
+    manageForm.survey_end_date = new Date(surveyEnd.value).toLocaleString();
 
     let formOptions = {
         preserveState: false,

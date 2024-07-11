@@ -20,7 +20,7 @@ defineProps({
 
         <div>
             <Link href="/">
-                <ApplicationLogo class="tw-w-20 tw-h-20 tw-fill-current tw-text-gray-500" />
+                <ApplicationLogo class="tw-h-20 tw-fill-current tw-text-gray-500" />
             </Link>
         </div>
 

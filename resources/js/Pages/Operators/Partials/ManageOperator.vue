@@ -6,9 +6,10 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import {Head, useForm, usePage, Link, router} from '@inertiajs/vue3';
+import { Head, useForm, usePage, Link, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {debounce} from "lodash";
+import { debounce } from "lodash";
+import { prepareDate } from "@/Composables/common.js";
 
 const props = defineProps({
     operator: Object,
@@ -25,6 +26,7 @@ const props = defineProps({
     orderBy: String,
     sort: String,
     filters: Object,
+    zipCodes: Array,
     kitaTypes: Array,
     usersEmails: Array,
 });
@@ -71,6 +73,7 @@ const close = () => {
     connectUserDialog.value = false;
     dialogDeleteOperatorUser.value = false;
     dialogDeleteOperatorKita.value = false;
+    dialogUsersEmails.value = false;
     manageConnectOperatorUserForm.reset();
     manageConnectOperatorUserForm.clearErrors();
     deleteUserFromOperatorForm.reset();
@@ -241,7 +244,9 @@ const lastPage = ref(props?.lastPage);
 const usersSearch = ref('');
 const kitasSearch = ref('');
 // Users filters
-const fullNameFilter = ref(props?.userFilters?.full_name ?? null);
+const statusFilter = ref(props.userFilters?.status ?? null);
+const firstNameFilter = ref(props?.userFilters?.first_name ?? null);
+const lastNameFilter = ref(props?.userFilters?.last_name ?? null);
 const emailFilter = ref(props?.userFilters?.email ?? null);
 // Kitas filters
 const searchFilter = ref(props?.kitaFilters?.search ?? null);
@@ -251,6 +256,17 @@ const typeFilter = ref(props?.kitaFilters?.type ?? null);
 const zipCodeFilter = ref(props?.kitaFilters?.zip_code ?? null);
 
 const hasYearlyEvaluationsFilterValues = [
+    {
+        title: 'Ja',
+        value: 'true',
+    },
+    {
+        title: 'Nein',
+        value: 'false',
+    },
+];
+
+const statusFilterValues = [
     {
         title: 'Ja',
         value: 'true',
@@ -284,7 +300,7 @@ const kitasModifiedItems = computed(() => {
 });
 
 const allUsersFiltersEmpty = computed(() => {
-    return fullNameFilter.value === null && emailFilter.value === null;
+    return statusFilter.value === null && firstNameFilter.value === null && lastNameFilter.value === null && emailFilter.value === null;
 });
 
 const allKitasFiltersEmpty = computed(() => {
@@ -292,7 +308,7 @@ const allKitasFiltersEmpty = computed(() => {
 });
 
 const someUsersFiltersNotEmpty = computed(() => {
-    return fullNameFilter.value !== null || emailFilter.value !== null;
+    return statusFilter.value !== null || firstNameFilter.value !== null || lastNameFilter.value !== null || emailFilter.value !== null;
 });
 
 const someKitasFiltersNotEmpty = computed(() => {
@@ -300,7 +316,15 @@ const someKitasFiltersNotEmpty = computed(() => {
 });
 
 // Users filters
-watch(fullNameFilter, debounce((val) => {
+watch(statusFilter, (val) => {
+    triggerSearch('users');
+});
+
+watch(firstNameFilter, debounce((val) => {
+    triggerSearch('users');
+}, 500));
+
+watch(lastNameFilter, debounce((val) => {
     triggerSearch('users');
 }, 500));
 
@@ -340,12 +364,15 @@ const triggerSearch = (type) => {
 };
 
 const openUsersEmailsDialog = () => {
-    dialogUsersEmails.value = true
+    dialogUsersEmails.value = true;
+    selectedUsersEmails.value = props.usersEmails;
 };
 
 const goToUsersPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
-        fullNameFilter.value = null;
+        statusFilter.value = null;
+        firstNameFilter.value = null;
+        lastNameFilter.value = null;
         emailFilter.value = null;
     }
 
@@ -416,8 +443,16 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
      * Apply filters
      */
     // Apply users filters
-    if (fullNameFilter.value) {
-        data.user_args.full_name = fullNameFilter.value;
+    if (statusFilter.value) {
+        data.user_args.status = statusFilter.value;
+    }
+
+    if (firstNameFilter.value) {
+        data.user_args.first_name = firstNameFilter.value;
+    }
+
+    if (lastNameFilter.value) {
+        data.user_args.last_name = lastNameFilter.value;
     }
 
     if (emailFilter.value) {
@@ -604,11 +639,14 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-col>
 
                     <v-col cols="12" sm="6">
-                        <v-text-field v-model="zipCodeFilter"
-                                      label="Postleitzahl"
-                                      :disabled="loading"
-                                      clearable
-                        ></v-text-field>
+                        <v-select
+                            v-model="zipCodeFilter"
+                            :items="zipCodes"
+                            label="Postleitzahl"
+                            multiple
+                            :disabled="loading"
+                            clearable
+                        ></v-select>
                     </v-col>
                 </v-row>
 
@@ -718,13 +756,13 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                 <v-card-actions>
                                     <v-hover v-slot:default="{ isHovering, props }">
                                         <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
-                                          Abbrechen
+                                            Abbrechen
                                         </v-btn>
                                     </v-hover>
                                     <v-spacer></v-spacer>
                                     <v-hover v-slot:default="{ isHovering, props }">
                                         <v-btn-primary :href="`mailto:?bcc=${selectedUsersEmails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="!selectedUsersEmails.length">
-                                          Öffnen Sie den Mail-Client
+                                            Öffnen Sie den Mail-Client
                                         </v-btn-primary>
                                     </v-hover>
                                 </v-card-actions>
@@ -827,15 +865,36 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                         <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
                             <div class="tw-w-full">
                                 <v-row>
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="3">
+                                        <v-select
+                                            v-model="statusFilter"
+                                            :items="statusFilterValues"
+                                            item-title="title"
+                                            item-value="value"
+                                            label="Status"
+                                            multiple
+                                            :disabled="loading"
+                                            clearable
+                                        ></v-select>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="3">
                                         <v-text-field
-                                            v-model="fullNameFilter"
-                                            label="Name"
+                                            v-model="firstNameFilter"
+                                            label="Vorname"
                                             clearable
                                         ></v-text-field>
                                     </v-col>
 
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="3">
+                                        <v-text-field
+                                            v-model="lastNameFilter"
+                                            label="Nachname"
+                                            clearable
+                                        ></v-text-field>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="3">
                                         <v-text-field
                                             v-model="emailFilter"
                                             label="Email"

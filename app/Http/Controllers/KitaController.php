@@ -82,8 +82,17 @@ class KitaController extends BaseController
             $model->name = 'Kein Träger';
         });
 
+        // Fetch all zip codes from kitas
+        $zipCodesList = Kita::pluck('zip_code')->unique()->transform(function ($zipCode) {
+            return [
+                'title' => $zipCode,
+                'value' => $zipCode,
+            ];
+        });
+
         return Inertia::render('Kitas/Kitas', $this->prepareItemsCollection($result, [
             'filters'     => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
+            'zipCodes'    => $zipCodesList,
             'operators'   => $operatorItemService->collection()->prepend($emptyOperator),
             'usersEmails' => $this->kitaItemService->getWithoutYearlyEvaluationsUsersEmails(),
             'types'       => array_map(function ($type) {
@@ -112,7 +121,7 @@ class KitaController extends BaseController
         $operatorItemService = app(OperatorItemService::class);
 
         // Get params for sorting & filtering Kita users
-        $userArgs = $request->only(['sort', 'order_by', 'full_name', 'email', 'with_roles']);
+        $userArgs = $request->only(['sort', 'order_by', 'status', 'first_name', 'last_name', 'email', 'with_roles']);
 
         // Empty model for empty select option
         $emptyOperator = tap(new Operator(), function ($model) {
@@ -121,7 +130,7 @@ class KitaController extends BaseController
         });
 
         return Inertia::render('Kitas/Partials/ManageKita', [
-            'filters'     => $request->only(['full_name', 'email', 'with_roles']),
+            'filters'     => $request->only(['status', 'first_name', 'last_name', 'email', 'with_roles']),
             'kita'        => $kita,
             'kitaUsers'   => $userItemService->collection(array_merge($userArgs, ['paginated' => false, 'with_kitas' => [$kita->id]])),
             'usersEmails' => $this->kitaItemService->getWithoutYearlyEvaluationsUsersEmails([$kita->id]),

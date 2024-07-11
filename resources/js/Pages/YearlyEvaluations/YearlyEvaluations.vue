@@ -10,6 +10,7 @@ import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ages, prepareDate, formatDate } from '@/Composables/common';
 import WarningEvaluationTooltip from "@/Components/WarningEvaluationTooltip.vue";
+import {debounce} from "lodash";
 
 const props = defineProps({
     items: Array,
@@ -24,6 +25,7 @@ const props = defineProps({
     errors: Object,
     kitas: Array,
     surveyTimePeriods: Array,
+    usersEmails: Array,
 });
 
 /*
@@ -41,7 +43,6 @@ Inertia.on('success', (event) => {
         sort.value = newProps.sort;
         totalItems.value = newProps.total;
         lastPage.value = newProps.lastPage;
-        searchFilter.value = newProps.filters.search ?? null;
     }
 });
 
@@ -56,14 +57,22 @@ const orderBy = ref(props.orderBy);
 const sort = ref(props.sort);
 const totalItems = ref(props.total);
 const lastPage = ref(props.lastPage);
-const searchFilter = ref(props.filters.search ?? null);
+const yearFilter = ref(props.filters.year ?? null);
+const withKitasFilter = ref(props.filters.with_kita_names ?? null);
+const children2BornPerYearFilter = ref(props.filters.children2_born_per_year ?? null);
+const children4BornPerYearFilter = ref(props.filters.children4_born_per_year ?? null);
+const evaluationsWithDaz2TotalPerYearFilter = ref(props.filters.evaluations_with_daz2_total_per_year ?? null);
+const evaluationsWithDaz4TotalPerYearFilter = ref(props.filters.evaluations_with_daz4_total_per_year ?? null);
 const search = ref('');
 const errors = ref(props.errors || {});
+
+const selectedUsersEmails = ref([]);
 
 const loading = ref(false);
 const dialog = ref(false);
 const dialogIssues = ref(false);
 const dialogDeleteEvaluation = ref(false);
+const dialogUsersEmails = ref(false);
 const deletingItemName = ref(null);
 const allowSaveState = ref(false);
 const canSaveMainForm = ref(false);
@@ -72,10 +81,10 @@ const canSavePopupForm = ref(false);
 const headers = [
     { title: 'Jahr', key: 'year', width: '7%', sortable: false},
     { title: 'Kitas', key: 'kita_name', width: '11%', sortable: false },
-    { title: 'gemeldete Kinder  bis 2,5 Jahre', key: 'children_2_born_per_year', width: '18%', sortable: false },
-    { title: 'gemeldete Kinder  bis 4,5 Jahre', key: 'children_4_born_per_year', width: '18%', sortable: false },
-    { title: 'Evaluationen für Kinder  bis 2,5 Jahre', key: 'evaluations_with_daz_2_total_per_year', width: '18%', sortable: false },
-    { title: 'Evaluationen für Kinder  bis 4,5 Jahre', key: 'evaluations_with_daz_4_total_per_year', width: '18%', sortable: false },
+    { title: 'Gemeldete Kinder bis 2.5 Jahre', key: 'children_2_born_per_year', width: '18%', sortable: false },
+    { title: 'Gemeldete Kinder bis 4.5 Jahre', key: 'children_4_born_per_year', width: '18%', sortable: false },
+    { title: 'Evaluationen für Kinder bis 2.5 Jahre', key: 'evaluations_with_daz_2_total_per_year', width: '18%', sortable: false },
+    { title: 'Evaluationen für Kinder bis 4.5 Jahre', key: 'evaluations_with_daz_4_total_per_year', width: '18%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
 ];
 
@@ -94,11 +103,11 @@ const modifiedItems = computed(() => {
 });
 
 const allFiltersEmpty = computed(() => {
-    return searchFilter.value === null;
+    return yearFilter.value === null && withKitasFilter.value === null && children2BornPerYearFilter.value === null && children4BornPerYearFilter.value === null && evaluationsWithDaz2TotalPerYearFilter.value === null && evaluationsWithDaz4TotalPerYearFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
-    return searchFilter.value !== null;
+    return yearFilter.value !== null || withKitasFilter.value !== null || children2BornPerYearFilter.value !== null || children4BornPerYearFilter.value !== null || evaluationsWithDaz2TotalPerYearFilter.value !== null || evaluationsWithDaz4TotalPerYearFilter.value !== null;
 });
 
 const childsTotal2Label = computed(() => {
@@ -124,14 +133,53 @@ watch(dialog, (val) => {
     }
 });
 
+watch(yearFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
+watch(withKitasFilter, (val) => {
+    triggerSearch();
+});
+
+watch(children2BornPerYearFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
+watch(children4BornPerYearFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
+watch(evaluationsWithDaz2TotalPerYearFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
+watch(evaluationsWithDaz4TotalPerYearFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
 watch(dialogIssues, (val) => {
     canSavePopupForm.value = true;
 });
 
 // Methods
+const openUsersEmailsDialog = () => {
+    dialogUsersEmails.value = true;
+    selectedUsersEmails.value = props.usersEmails;
+};
+
+const triggerSearch = () => {
+    loading.value = true;
+    search.value = String(Date.now());
+};
+
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
-        searchFilter.value = null;
+        yearFilter.value = null;
+        withKitasFilter.value = null;
+        children2BornPerYearFilter.value = null;
+        children4BornPerYearFilter.value = null;
+        evaluationsWithDaz2TotalPerYearFilter.value = null;
+        evaluationsWithDaz4TotalPerYearFilter.value = null;
     }
 
     if (
@@ -141,24 +189,66 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     ) {
         loading.value = true;
 
-        let options = { data: { page: page, per_page: itemsPerPage } };
+        let data = {
+            page: page,
+            per_page: itemsPerPage,
+        };
 
         if (sortBy && sortBy.length > 0) {
-            options.data.order_by = sortBy[0].key;
-            options.data.sort = sortBy[0].order;
+            data.order_by = sortBy[0].key;
+            data.sort = sortBy[0].order;
         } else {
-            options.data.order_by = null;
-            options.data.sort = null;
+            data.order_by = null;
+            data.sort = null;
         }
 
-        // Search filters
-        options.data.search = searchFilter.value;
+        // Apply filters
+        if (yearFilter.value) {
 
-        await router.reload(options);
+            data.year = yearFilter.value;
+        }
 
-        currentPage.value = page;
-        perPage.value = itemsPerPage;
-        loading.value = false;
+        if (withKitasFilter.value) {
+            data.with_kita_names = withKitasFilter.value;
+        }
+
+        if (children2BornPerYearFilter.value) {
+            data.children_2_born_per_year = children2BornPerYearFilter.value;
+        }
+
+        if (children4BornPerYearFilter.value) {
+            data.children_4_born_per_year = children4BornPerYearFilter.value;
+        }
+
+        if (evaluationsWithDaz2TotalPerYearFilter.value) {
+            data.evaluations_with_daz_2_total_per_year = evaluationsWithDaz2TotalPerYearFilter.value;
+        }
+
+        if (evaluationsWithDaz4TotalPerYearFilter.value) {
+            data.evaluations_with_daz_4_total_per_year = evaluationsWithDaz4TotalPerYearFilter.value;
+        }
+
+        await router.get(route(route().current()), data, {
+            preserveScroll: true,
+            preserveState: true,
+            onCancelToken: cancelToken => {},
+            onCancel: () => {},
+            onBefore: visit => {
+                loading.value = true;
+            },
+            onStart: visit => {},
+            onProgress: progress => {},
+            onSuccess: page => {
+                currentPage.value = data.page;
+                perPage.value = data.per_page;
+            },
+            onError: errors => {
+                console.log(errors);
+            },
+            onFinish: visit => {
+                loading.value = false;
+            },
+        });
     }
 };
 
@@ -205,6 +295,7 @@ const close = () => {
     dialog.value = false;
     dialogIssues.value = false;
     dialogDeleteEvaluation.value = false;
+    dialogUsersEmails.value = false;
     allowSaveState.value = false;
     canSavePopupForm.value = false;
     manageForm.reset();
@@ -557,7 +648,6 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                                 <v-col cols="12">
                                     <h4>Wir haben eine Abweichung zwischen der Anzahl der von Ihnen gemeldeten Kinder und der Anzahl über die BeoKiz-Ampel erfassten Kindern festgestellt:</h4>
 
-
                                     <div class="tw-flex tw-items-center tw-mt-2">
                                         <v-icon v-bind="props" icon="mdi-alert" color="orange"></v-icon>
                                         <ul style="list-style-type: disc; margin-left: 25px;">
@@ -599,6 +689,81 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+            <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
+                <div class="tw-w-full">
+                    <v-row>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
+                                type="number"
+                                v-model="yearFilter"
+                                label="Jahr"
+                                clearable
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <v-select
+                                v-model="withKitasFilter"
+                                :items="kitas"
+                                item-title="name"
+                                item-value="name"
+                                label="Kitas"
+                                multiple
+                                :disabled="loading"
+                                clearable
+                            ></v-select>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
+                                type="number"
+                                v-model="children2BornPerYearFilter"
+                                label="Gemeldete Kinder bis 2.5 Jahre"
+                                clearable
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
+                                type="number"
+                                v-model="children4BornPerYearFilter"
+                                label="Gemeldete Kinder bis 4.5 Jahre"
+                                clearable
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
+                                type="number"
+                                v-model="evaluationsWithDaz2TotalPerYearFilter"
+                                label="Evaluationen für Kinder bis 4.5 Jahre"
+                                clearable
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
+                                type="number"
+                                v-model="evaluationsWithDaz4TotalPerYearFilter"
+                                label="Evaluationen für Kinder bis 4.5 Jahre"
+                                clearable
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                </div>
+            </div>
+        </div>
+
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+            <v-row class="flex justify-end mb-4">
+                <v-hover v-slot:default="{ isHovering, props }">
+                    <v-col cols="12" sm="4" class="text-right">
+                        <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">
+                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                            <span>Schreibe E-Mail an Auswahl</span>
+                        </v-btn>
+                    </v-col>
+                </v-hover>
+            </v-row>
 
             <v-data-table-server
                 v-model:items-per-page="perPage"
@@ -672,6 +837,45 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
 
             </v-data-table-server>
         </div>
+
+        <v-dialog v-model="dialogUsersEmails" width="40vw">
+            <v-card height="80vh">
+                <v-card-title>
+                    <span class="tw-text-h5">Schreibe E-Mail an Auswahl</span>
+                </v-card-title>
+
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-select
+                                    v-model="selectedUsersEmails"
+                                    :items="usersEmails"
+                                    label="Benutzer"
+                                    multiple
+                                    :disabled="loading"
+                                    clearable
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                            Abbrechen
+                        </v-btn>
+                    </v-hover>
+                    <v-spacer></v-spacer>
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn-primary :href="`mailto:?bcc=${selectedUsersEmails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="!selectedUsersEmails.length">
+                            Öffnen Sie den Mail-Client
+                        </v-btn-primary>
+                    </v-hover>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 
     </AuthenticatedLayout>
 </template>

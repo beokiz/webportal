@@ -7,6 +7,7 @@
 namespace App\ModelFilters;
 
 use EloquentFilter\ModelFilter;
+use Illuminate\Support\Carbon;
 
 /**
  * User Model Filter
@@ -78,6 +79,21 @@ class UserFilter extends BaseFilter
     }
 
     /**
+     * @param array $values
+     * @return ModelFilter
+     */
+    public function status(array $values) : ModelFilter
+    {
+        return $this->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                filter_var($value, FILTER_VALIDATE_BOOLEAN)
+                    ? $query->orWhere('last_seen_at', '>=', Carbon::now()->subMinutes(3))
+                    : $query->orWhere('last_seen_at', '<', Carbon::now()->subMinutes(3))->orWhereNull('last_seen_at');
+            }
+        });
+    }
+
+    /**
      * @param string|array $values
      * @return ModelFilter
      */
@@ -119,5 +135,27 @@ class UserFilter extends BaseFilter
         return $this->whereHas('operators', function ($query) use ($values) {
             $query->whereIn('id', (array) $values);
         });
+    }
+
+    /**
+     * @param string $value
+     * @return mixed
+     */
+    public function firstLoginAt(string $value) : mixed
+    {
+        if ($value) {
+            return $this->whereDate('first_login_at', Carbon::parse($value)->format('Y-m-d'));
+        }
+    }
+
+    /**
+     * @param string $value
+     * @return mixed
+     */
+    public function lastSeenAt(string $value) : mixed
+    {
+        if ($value) {
+            return $this->whereDate('last_seen_at', Carbon::parse($value)->format('Y-m-d'));
+        }
     }
 }

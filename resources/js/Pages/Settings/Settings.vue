@@ -539,6 +539,38 @@ const deleteDownloadableFile = async () => {
             </v-row>
         </div>
 
+        <!-- Login form settings block -->
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-mb-8">
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight tw-mb-4">Text auf Login Seite</h2>
+            <v-row>
+                <v-col cols="12">
+                    <template v-for="(value, name) in loginSettings">
+                        <div class="tw-flex tw-items-center tw-justify-start">
+                            <template v-if="name === 'login_form_additional_html'">
+                                <TiptapEditor v-model="manageLoginSettingsForm.settings[name]" :minHeight="300"/>
+                            </template>
+                            <template v-else>
+                                <v-text-field v-model="manageLoginSettingsForm.settings[name]"
+                                              :error-messages="errors?.settings ? errors.settings[name] : false"
+                                              :label="`${settingsLabel[name]}*`"
+                                              required
+                                ></v-text-field>
+                            </template>
+                        </div>
+                    </template>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="tw-flex tw-items-center tw-justify-start">
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn-primary @click="manageSettings('login')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                            Speichern
+                        </v-btn-primary>
+                    </v-hover>
+                </v-col>
+            </v-row>
+        </div>
+
         <!-- Downloadable files block -->
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-mb-8">
             <!-- New downloadable files button & popup -->

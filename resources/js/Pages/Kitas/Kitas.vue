@@ -22,6 +22,7 @@ const props = defineProps({
     filters: Object,
     errors: Object,
     types: Array,
+    zipCodes: Array,
     operators: Array,
     usersEmails: Array,
 });
@@ -58,7 +59,7 @@ const lastPage = ref(props.lastPage);
 const searchFilter = ref(props.filters?.search ?? null);
 const hasYearlyEvaluationsFilter = ref(props.filters?.has_yearly_evaluations ?? null);
 const approvedFilter = ref(props.filters?.approved ?? null);
-const operatorIdFilter = ref(props.filters?.operator_id ?? null);
+const operatorIdFilter = ref(null);
 const typeFilter = ref(props.filters?.type ?? null);
 const zipCodeFilter = ref(props.filters?.zip_code ?? null);
 const search = ref('');
@@ -134,7 +135,7 @@ watch(dialog, (val) => {
 });
 
 watch(searchFilter, debounce((val) => {
-  triggerSearch();
+    triggerSearch();
 }, 500));
 
 watch(hasYearlyEvaluationsFilter, (val) => {
@@ -154,17 +155,18 @@ watch(typeFilter, (val) => {
 });
 
 watch(zipCodeFilter, debounce((val) => {
-  triggerSearch();
+    triggerSearch();
 }, 500));
 
 // Methods
 const openUsersEmailsDialog = () => {
-    dialogUsersEmails.value = true
+    dialogUsersEmails.value = true;
+    selectedUsersEmails.value = props.usersEmails;
 };
 
 const triggerSearch = () => {
-  loading.value = true;
-  search.value = String(Date.now());
+    loading.value = true;
+    search.value = String(Date.now());
 };
 
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
@@ -512,7 +514,7 @@ const manageKita = async () => {
                     <v-row>
                         <v-col cols="12" sm="4">
                             <v-text-field v-model="searchFilter"
-                                          label="Name"
+                                          label="Suchen"
                                           :disabled="loading"
                                           clearable
                             ></v-text-field>
@@ -567,11 +569,14 @@ const manageKita = async () => {
                         </v-col>
 
                         <v-col cols="12" sm="4">
-                            <v-text-field v-model="zipCodeFilter"
-                                          label="Postleitzahl"
-                                          :disabled="loading"
-                                          clearable
-                            ></v-text-field>
+                            <v-select
+                                v-model="zipCodeFilter"
+                                :items="zipCodes"
+                                label="Postleitzahl"
+                                multiple
+                                :disabled="loading"
+                                clearable
+                            ></v-select>
                         </v-col>
                     </v-row>
                 </div>
