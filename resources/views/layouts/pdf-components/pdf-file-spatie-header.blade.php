@@ -68,7 +68,7 @@
 <body>
 <div id="report-pdf-image-header">
     <div>
-        <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.jpg')) }}"/>
+        <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.png')) }}"/>
     </div>
 
     <div>
