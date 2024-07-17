@@ -209,16 +209,19 @@ class KitaItemService extends BaseItemService
     */
     /**
      * @param array $ids
+     * @param bool $withoutYearlyEvaluations
      * @return array
      */
-    public function getWithoutYearlyEvaluationsUsersEmails(array $ids = []) : array
+    public function getUsersEmails(array $ids = [], bool $withoutYearlyEvaluations = false) : array
     {
         $emails = [];
 
         Kita::where('approved', true)
-            ->whereDoesntHave('currentYearlyEvaluations')
             ->when(!empty($ids), function ($query) use ($ids) {
                 $query->whereIn('id', $ids);
+            })
+            ->when(!empty($withoutYearlyEvaluations), function ($query) use ($ids) {
+                $query->whereDoesntHave('currentYearlyEvaluations');
             })
             ->with(['users.roles'])
             ->get()

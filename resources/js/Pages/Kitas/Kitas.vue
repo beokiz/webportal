@@ -598,11 +598,11 @@ const manageKita = async () => {
             <v-data-table-server
                 v-model:items-per-page="perPage"
                 :items-per-page-options="[
-                  {value: 10, title: '10'},
-                  {value: 25, title: '25'},
-                  {value: 50, title: '50'},
-                  {value: 100, title: '100'},
-                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}
+                    { value: 10, title: '10' },
+                    { value: 25, title: '25' },
+                    { value: 50, title: '50' },
+                    { value: 100, title: '100' },
+                    { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
                 ]"
                 :items-per-page-text="'Objekte pro Seite:'"
                 :headers="headers"
@@ -631,7 +631,7 @@ const manageKita = async () => {
                         <td>{{item.selectable?.zip_code}}</td>
 
                         <td class="text-right">
-                            <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0 && !item.selectable?.has_yearly_evaluations" location="top">
+                            <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0" location="top">
                                 <template v-slot:activator="{ props }">
                                     <a :href="`mailto:?bcc=${item.selectable?.users_emails.join(',')}`" v-bind="props">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>

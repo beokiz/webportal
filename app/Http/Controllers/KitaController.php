@@ -94,7 +94,7 @@ class KitaController extends BaseController
             'filters'     => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
             'zipCodes'    => $zipCodesList,
             'operators'   => $operatorItemService->collection()->prepend($emptyOperator),
-            'usersEmails' => $this->kitaItemService->getWithoutYearlyEvaluationsUsersEmails(),
+            'usersEmails' => $this->kitaItemService->getUsersEmails($result->pluck('id')->toArray()),
             'types'       => array_map(function ($type) {
                 return [
                     'title' => __("validation.attributes.{$type}"),
@@ -133,7 +133,7 @@ class KitaController extends BaseController
             'filters'     => $request->only(['status', 'first_name', 'last_name', 'email', 'with_roles']),
             'kita'        => $kita,
             'kitaUsers'   => $userItemService->collection(array_merge($userArgs, ['paginated' => false, 'with_kitas' => [$kita->id]])),
-            'usersEmails' => $this->kitaItemService->getWithoutYearlyEvaluationsUsersEmails([$kita->id]),
+            'usersEmails' => $this->kitaItemService->getUsersEmails([$kita->id]),
             'roles'       => $roleItemService->collection(['only_name' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
             'users'       => $userItemService->collection(['with_roles' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
             'operators'   => $operatorItemService->collection()->prepend($emptyOperator),

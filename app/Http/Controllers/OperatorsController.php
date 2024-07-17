@@ -108,7 +108,7 @@ class OperatorsController extends BaseController
             'operator'      => $operator,
             'operatorUsers' => $operatorUsers,
             'operatorKitas' => $operatorKitas,
-            'usersEmails'   => (!empty($operatorKitas) && $operatorKitas->isNotEmpty()) ? $kitaItemService->getWithoutYearlyEvaluationsUsersEmails($operatorKitas->pluck('id')->toArray()) : [],
+            'usersEmails'   => (!empty($operatorKitas) && $operatorKitas->isNotEmpty()) ? $kitaItemService->getUsersEmails($operatorKitas->pluck('id')->toArray()) : [],
             'roles'         => $roleItemService->collection(['only_name' => [config('permission.project_roles.user_multiplier')]]),
             'users'         => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
             'userFilters'   => $userArgs['user_args'] ?? [],

@@ -65,7 +65,7 @@ const deletingItemName = ref(null);
 const headers = [
     { title: 'Name', key: 'name', width: '45%', sortable: true},
     { title: 'Selbschulend', key: 'self_training', width: '45%', sortable: true },
-    { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
+    { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
 
 
@@ -283,11 +283,11 @@ const manageOperator = async () => {
             <v-data-table-server
                 v-model:items-per-page="perPage"
                 :items-per-page-options="[
-                  {value: 10, title: '10'},
-                  {value: 25, title: '25'},
-                  {value: 50, title: '50'},
-                  {value: 100, title: '100'},
-                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}
+                  { value: 10, title: '10' },
+                  { value: 25, title: '25' },
+                  { value: 50, title: '50' },
+                  { value: 100, title: '100' },
+                  { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
                 ]"
                 :items-per-page-text="'Objekte pro Seite:'"
                 :headers="headers"

@@ -156,11 +156,11 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             <v-data-table-server
                 v-model:items-per-page="perPage"
                 :items-per-page-options="[
-                  {value: 10, title: '10'},
-                  {value: 25, title: '25'},
-                  {value: 50, title: '50'},
-                  {value: 100, title: '100'},
-                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}
+                    { value: 10, title: '10' },
+                    { value: 25, title: '25' },
+                    { value: 50, title: '50' },
+                    { value: 100, title: '100' },
+                    { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
                 ]"
                 :items-per-page-text="'Objekte pro Seite:'"
                 :headers="headers"

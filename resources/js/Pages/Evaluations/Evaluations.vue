@@ -65,11 +65,11 @@ const evaluationResultItem = ref(null);
 const evaluationResultDomains = ref(null);
 
 const headers = [
-    { title: 'ID', key: 'id', width: '40%', sortable: false},
+    { title: 'ID', key: 'id', width: '40%', sortable: false },
     { title: 'Zuletzt bearbeitet', key: 'updated_at', width: '15%', sortable: false },
     { title: 'Abgegeben am', key: 'finished_at', width: '15%', sortable: false },
     { title: 'Bearbeitungszeit endet', key: 'not_editable_at', width: '20%', sortable: false },
-    { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center'},
+    { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
 
 // Computed
@@ -271,11 +271,11 @@ const unfinishedEvaluation = async (id) => {
             <v-data-table-server
                 v-model:items-per-page="perPage"
                 :items-per-page-options="[
-                  {value: 10, title: '10'},
-                  {value: 25, title: '25'},
-                  {value: 50, title: '50'},
-                  {value: 100, title: '100'},
-                  {value: -1, title: '$vuetify.dataFooter.itemsPerPageAll'}
+                  { value: 10, title: '10' },
+                  { value: 25, title: '25' },
+                  { value: 50, title: '50' },
+                  { value: 100, title: '100' },
+                  { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
                 ]"
                 :items-per-page-text="'Objekte pro Seite:'"
                 :headers="headers"

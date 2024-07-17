@@ -88,7 +88,7 @@ class YearlyEvaluationsController extends BaseController
             'filters'           => $request->only(['year', 'with_kita_names', 'children_2_born_per_year', 'children_4_born_per_year', 'evaluations_with_daz_2_total_per_year', 'evaluations_with_daz_4_total_per_year']),
             'kitas'             => $kitas,
             'surveyTimePeriods' => $surveyTimePeriodItemService->collection(),
-            'usersEmails'       => $kitaItemService->getWithoutYearlyEvaluationsUsersEmails(),
+            'usersEmails'       => $kitaItemService->getUsersEmails($kitas->pluck('id')->toArray()),
         ]));
     }
 

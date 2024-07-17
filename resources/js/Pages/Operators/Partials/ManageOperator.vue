@@ -217,12 +217,12 @@ const modifyItems = (items) => {
 };
 
 const usersHeaders = [
-  {title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center'},
-  {title: 'Vorname', key: 'first_name', width: '17.5%', sortable: true},
-  {title: 'Nachname', key: 'last_name', width: '17.5%', sortable: true},
-  {title: 'E-Mail', key: 'email', width: '25%', sortable: true},
-  {title: 'Rolle', key: 'primary_role_name', width: '20%', sortable: true},
-  {title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center'},
+  { title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center' },
+  { title: 'Vorname', key: 'first_name', width: '17.5%', sortable: true },
+  { title: 'Nachname', key: 'last_name', width: '17.5%', sortable: true },
+  { title: 'E-Mail', key: 'email', width: '25%', sortable: true },
+  { title: 'Rolle', key: 'primary_role_name', width: '20%', sortable: true },
+  { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
 
 const kitaHeaders = [
@@ -687,7 +687,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                     <td>{{item.selectable?.zip_code}}</td>
 
                                     <td class="text-right">
-                                          <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0 && !item.selectable?.has_yearly_evaluations" location="top">
+                                          <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0" location="top">
                                               <template v-slot:activator="{ props }">
                                                   <a :href="`mailto:?bcc=${item.selectable?.users_emails.join(',')}`" v-bind="props">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
