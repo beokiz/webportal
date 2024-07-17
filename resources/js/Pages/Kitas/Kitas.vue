@@ -154,9 +154,9 @@ watch(typeFilter, (val) => {
     triggerSearch();
 });
 
-watch(zipCodeFilter, debounce((val) => {
+watch(zipCodeFilter, (val) => {
     triggerSearch();
-}, 500));
+});
 
 // Methods
 const openUsersEmailsDialog = () => {
