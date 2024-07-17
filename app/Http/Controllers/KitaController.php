@@ -88,7 +88,7 @@ class KitaController extends BaseController
                 'title' => $zipCode,
                 'value' => $zipCode,
             ];
-        });
+        })->values()->toArray();
 
         return Inertia::render('Kitas/Kitas', $this->prepareItemsCollection($result, [
             'filters'     => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),

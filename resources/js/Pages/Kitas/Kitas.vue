@@ -154,9 +154,9 @@ watch(typeFilter, (val) => {
     triggerSearch();
 });
 
-watch(zipCodeFilter, debounce((val) => {
+watch(zipCodeFilter, (val) => {
     triggerSearch();
-}, 500));
+});
 
 // Methods
 const openUsersEmailsDialog = () => {
@@ -247,6 +247,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     }
 };
 
+//
 const openDeleteKitaDialog = (item) => {
     deletingItemName.value = item.name
     deleteForm.id = item.id;
