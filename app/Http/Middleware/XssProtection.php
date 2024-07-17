@@ -25,7 +25,7 @@ class XssProtection
      */
     public function handle(Request $request, Closure $next)
     {
-        $inputs = $request->all();
+        $inputs = $request->except('settings');
 
         array_walk_recursive($inputs, function (&$input) {
             if ($input) {

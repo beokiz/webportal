@@ -45,7 +45,7 @@ class DownloadableFileObserver extends BaseObserver
         $oldFilename = $downloadableFile->getOriginal('filename');
         $newFilename = $downloadableFile->filename;
 
-        if ($oldFilename !== $newFilename || empty($newFilename)) {
+        if (!empty($oldFilename) && ($oldFilename !== $newFilename || empty($newFilename))) {
             Storage::disk('public_files')->delete($oldFilename);
         }
     }
