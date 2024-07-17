@@ -102,12 +102,12 @@ class KitaFilter extends BaseFilter
     }
 
     /**
-     * @param string $value
+     * @param string|array $values
      * @return ModelFilter
      */
-    public function zipCode(string $value) : ModelFilter
+    public function zipCode($values) : ModelFilter
     {
-        return parent::stringFilter('zip_code', $value);
+        return $this->whereIn('zip_code', (array) $values);
     }
 
     /**

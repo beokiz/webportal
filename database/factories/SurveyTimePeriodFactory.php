@@ -26,7 +26,6 @@ class SurveyTimePeriodFactory extends BaseFactory
     {
         return [
             'year'              => $this->faker->year,
-            'age'               => $this->faker->randomElement(['2.5', '4.5']),
             'survey_start_date' => rand(0, 1) ? $this->faker->date() : null,
             'survey_end_date'   => rand(0, 1) ? $this->faker->date() : null,
         ];

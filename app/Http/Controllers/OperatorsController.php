@@ -96,11 +96,19 @@ class OperatorsController extends BaseController
         $operatorUsers = $userItemService->collection(array_merge($userArgs['user_args'] ?? [], ['paginated' => false, 'with_operators' => [$operator->id]]));
         $operatorKitas = $kitaItemService->collection(array_merge($kitaArgs['kita_args'] ?? [], ['paginated' => false, 'with_operators' => [$operator->id], 'with' => ['users', 'currentYearlyEvaluations']]));
 
+        // Fetch all zip codes from kitas
+        $zipCodesList = $operatorKitas->pluck('zip_code')->unique()->transform(function ($zipCode) {
+            return [
+                'title' => $zipCode,
+                'value' => $zipCode,
+            ];
+        });
+
         return Inertia::render('Operators/Partials/ManageOperator', [
             'operator'      => $operator,
             'operatorUsers' => $operatorUsers,
             'operatorKitas' => $operatorKitas,
-            'usersEmails'   => (!empty($operatorKitas) && $operatorKitas->isNotEmpty()) ? $kitaItemService->getWithoutYearlyEvaluationsUsersEmails($operatorKitas->pluck('id')->toArray()) : [],
+            'usersEmails'   => (!empty($operatorKitas) && $operatorKitas->isNotEmpty()) ? $kitaItemService->getUsersEmails($operatorKitas->pluck('id')->toArray()) : [],
             'roles'         => $roleItemService->collection(['only_name' => [config('permission.project_roles.user_multiplier')]]),
             'users'         => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
             'userFilters'   => $userArgs['user_args'] ?? [],
@@ -111,6 +119,7 @@ class OperatorsController extends BaseController
                     'value' => $type,
                 ];
             }, Kita::TYPES),
+            'zipCodes'      => $zipCodesList,
         ]);
     }
 

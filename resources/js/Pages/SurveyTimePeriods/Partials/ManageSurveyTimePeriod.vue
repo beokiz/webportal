@@ -59,7 +59,6 @@ watch(surveyEnd, (val) => {
 const manageForm = useForm({
     id: editedSurveyTimePeriod.value.id,
     year: editedSurveyTimePeriod.value.year,
-    age: editedSurveyTimePeriod.value.age,
     survey_start_date: null,
     survey_end_date: null,
 });
@@ -67,8 +66,8 @@ const manageForm = useForm({
 const manageSurveyTimePeriod = async () => {
     manageForm.processing = true;
 
-    manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString()
-    manageForm.survey_end_date = new Date(surveyEnd.value).toLocaleString()
+    manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString();
+    manageForm.survey_end_date = new Date(surveyEnd.value).toLocaleString();
 
     let formOptions = {
         preserveState: false,
@@ -106,11 +105,11 @@ const manageSurveyTimePeriod = async () => {
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.year" :error-messages="errors.year"
                                       label="Jahr*" required></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-locale-provider locale="de">
                             <v-menu v-model="isMenuOpen"
                                     :return-value.sync="surveyStart"
@@ -123,25 +122,15 @@ const manageSurveyTimePeriod = async () => {
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
+                                        :error-messages="errors.survey_start_date"
                                     ></v-text-field>
                                 </template>
                                 <v-date-picker @update:modelValue="isMenuOpen = false" v-model="surveyStart"></v-date-picker>
                             </v-menu>
                         </v-locale-provider>
                     </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12" sm="6">
-                        <v-select
-                            v-model="manageForm.age"
-                            :items="ages"
-                            :error-messages="errors.age"
-                            item-title="age_name"
-                            item-value="age_number"
-                            label="Altersgruppe (Jahre)*"
-                        ></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="6">
+
+                    <v-col cols="12" sm="4">
                         <v-locale-provider locale="de">
                             <v-menu v-model="isMenu2Open"
                                     :return-value.sync="surveyEnd"
@@ -154,9 +143,10 @@ const manageSurveyTimePeriod = async () => {
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
+                                        :error-messages="errors.survey_end_date"
                                     ></v-text-field>
                                 </template>
-                                <v-date-picker @update:modelValue="isMenu2Open = false" v-model="surveyEnd"></v-date-picker>
+                              <v-date-picker @update:modelValue="isMenu2Open = false" v-model="surveyEnd"></v-date-picker>
                             </v-menu>
                         </v-locale-provider>
                     </v-col>

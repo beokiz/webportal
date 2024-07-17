@@ -35,7 +35,7 @@ class BaseInertiaResourceCollection extends ResourceCollection
                 'lastPage'    => (int) $this->resource->lastPage(),
                 'perPage'     => (int) $this->resource->perPage(),
                 'total'       => (int) $this->resource->total(),
-                'sort'        => $request->input('sort'),
+                'sort'        => $request->input('sort', 'asc'),
                 'orderBy'     => $request->input('order_by'),
             ]);
         }

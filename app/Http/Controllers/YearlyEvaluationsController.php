@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 /**
- * Survey Time Period Controller
+ * Yearly Evaluations Controller
  *
  * @package \App\Http\Controllers
  */
@@ -71,7 +71,7 @@ class YearlyEvaluationsController extends BaseController
         });
 
         if (!empty($kitas) && $kitas->isNotEmpty()) {
-            $args = $request->only(['page', 'per_page', 'sort', 'order_by']);
+            $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'year', 'with_kita_names', 'children_2_born_per_year', 'children_4_born_per_year', 'evaluations_with_daz_2_total_per_year', 'evaluations_with_daz_4_total_per_year']);
 
             if ($currentUser->is_manager) {
                 $args['with_kitas'] = $kitas->pluck('id')->toArray();
@@ -85,9 +85,10 @@ class YearlyEvaluationsController extends BaseController
         }
 
         return Inertia::render('YearlyEvaluations/YearlyEvaluations', $this->prepareItemsCollection($result, [
-            'filters'           => $request->only([]),
+            'filters'           => $request->only(['year', 'with_kita_names', 'children_2_born_per_year', 'children_4_born_per_year', 'evaluations_with_daz_2_total_per_year', 'evaluations_with_daz_4_total_per_year']),
             'kitas'             => $kitas,
             'surveyTimePeriods' => $surveyTimePeriodItemService->collection(),
+            'usersEmails'       => $kitaItemService->getUsersEmails($kitas->pluck('id')->toArray()),
         ]));
     }
 

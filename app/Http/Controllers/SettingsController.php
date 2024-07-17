@@ -40,9 +40,9 @@ class SettingsController extends BaseController
     {
         $this->authorize('authorizeAccessToSettings', User::class);
 
-        $surveyTimePeriodItemService = app(SurveyTimePeriodItemService::class);
-        $settingItemService          = app(SettingItemService::class);
-        $downloadableFileItemService = app(DownloadableFileItemService::class);
+        $surveyTimePeriodItemService  = app(SurveyTimePeriodItemService::class);
+        $settingItemService           = app(SettingItemService::class);
+        $downloadableFilesItemService = app(DownloadableFileItemService::class);
 
         /*
          * Prepare collections args
@@ -87,6 +87,7 @@ class SettingsController extends BaseController
          */
         return Inertia::render('Settings/Settings', [
             'filters'           => $request->only([]),
+            'settings'          => $settingItemService->list(),
             'surveyTimePeriods' => $surveyTimePeriods,
             'downloadableFiles' => $downloadableFiles,
             'emailSettings'     => $emailSettings,

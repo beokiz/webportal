@@ -7,6 +7,7 @@
 namespace App\Http\Requests\SurveyTimePeriods;
 
 use App\Http\Requests\BaseFormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Create Survey Time Period Request
@@ -21,8 +22,7 @@ class CreateSurveyTimePeriodRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'year'              => array_merge($this->yearRules(), ['required']),
-            'age'               => array_merge($this->ageGroupRules(), ['required']),
+            'year'              => array_merge($this->bigIntegerRules(), ['required', Rule::unique('survey_time_periods')]),
             'survey_start_date' => ['required', 'date'],
             'survey_end_date'   => ['required', 'date', 'after:survey_start_date'],
         ];
@@ -34,7 +34,7 @@ class CreateSurveyTimePeriodRequest extends BaseFormRequest
     public function attributes() : array
     {
         return [
-            'age' => __('validation.attributes.age_year'),
+            //
         ];
     }
 }

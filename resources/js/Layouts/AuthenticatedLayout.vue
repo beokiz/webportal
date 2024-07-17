@@ -14,8 +14,9 @@ const props = defineProps({
     successes: Object,
 });
 
-const appVersion = usePage().props.app_version ?? '1.0.0';
+const appVersion = usePage().props.appVersion ?? '1.0.0';
 const currentUser = usePage().props.auth.user ?? {};
+const isSurveyPeriod = usePage().props.isSurveyPeriod ?? false;
 
 const topBar = ref(null);
 
@@ -23,7 +24,7 @@ let menuItemsList = ref({});
 let menuGroupsList = ref({});
 
 onMounted(() => {
-    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager) {
+    if (currentUser.is_super_admin || currentUser.is_admin || (currentUser.is_manager && isSurveyPeriod)) {
         menuItemsList.value['yearly_evaluations.index'] = 'Jährliche Rückmeldung';
         menuGroupsList.value['yearly_evaluations.index'] = 'yearly_evaluations.*';
     }

@@ -181,22 +181,22 @@ const updateYearlyEvaluation = async () => {
 
 const getChildsTotalLabel = (age) => {
     if (age === '2.5' || age === '4.5') {
-        let surveyTimePeriodForSelectedYear = props.surveyTimePeriods.find(obj => {
-            return obj.year === parseInt(manageForm.year) && obj.age === '4.5';
-        });
+        const currentYear = parseInt(manageForm.year);
 
-        if (surveyTimePeriodForSelectedYear) {
-            let surveyStartDateObj = new Date(surveyTimePeriodForSelectedYear.survey_start_date);
-            let surveyEndDateObj = new Date(surveyTimePeriodForSelectedYear.survey_end_date);
+        let startYear, endYear;
 
-            let surveyStartDateStr = surveyStartDateObj.getFullYear() + '-' + ("0" + (surveyStartDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyStartDateObj.getDate()).slice(-2);
-            let surveyEndDateStr = surveyEndDateObj.getFullYear() + '-' + ("0" + (surveyEndDateObj.getMonth() + 1)).slice(-2) + '-' + ("0" + surveyEndDateObj.getDate()).slice(-2);
-
-            return `Angaben für Kinder die im Zeitraum vom ${surveyStartDateStr} bis ${surveyEndDateStr} geborenen sind`;
+        if (age === '4.5') {
+            startYear = currentYear - 6;
+            endYear = currentYear - 5;
+        } else {
+            startYear = currentYear - 4;
+            endYear = currentYear - 3;
         }
+
+        return `Gesamtzahl der im Zeitraum vom 01.10.${startYear} bis 30.09.${endYear} geborenen Kinder`;
     }
 
-    return "Angaben für Kinder";
+    return "Gesamtzahl der Kinder";
 };
 
 const validateChildrensAmount = (age) => {
@@ -277,21 +277,21 @@ const validateChildrensAmount = (age) => {
                     </v-col>
                     <v-col cols="12" sm="6">
                         <v-card class="tw-p-6">
-                            <h5>{{ childsTotal2Label }}</h5>
+                            <h5>Kinder bis 2,5 Jahre</h5>
                             <v-text-field v-model="manageForm.children_2_born_per_year" :error-messages="errors.children_2_born_per_year"
-                                          label="Gesamtzahl der im Zeitraum geborenen Kinder" type="number" required></v-text-field>
+                                          :label="childsTotal2Label" type="number" required></v-text-field>
 
                             <v-row>
                                 <v-col cols="12" sm="7">
                                     <v-text-field v-model="manageForm.children_2_with_german_lang" :error-messages="errors.children_2_with_german_lang"
-                                                  label="davon Kinder mit Deutsch als nicht Erstsprache*" type="number" required></v-text-field>
+                                                  label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="5">
                                     <v-row>
                                         <WarningEvaluationTooltip v-if="checkYears('2_german')"/>
                                         <v-col cols="12" sm="10">
                                             <v-text-field v-model="manageForm.evaluations_with_daz_2_total_per_year" :error-messages="errors.evaluations_with_daz_2_total_per_year"
-                                                          label="Anzahl bisher eingereichter Einschätzungen" type="number" disabled required>
+                                                          label="Bisher eingereichte Einschätzungen" type="number" disabled required>
                                             </v-text-field>
                                         </v-col>
                                     </v-row>
@@ -300,14 +300,14 @@ const validateChildrensAmount = (age) => {
                             <v-row>
                                 <v-col cols="12" sm="7">
                                     <v-text-field v-model="manageForm.children_2_with_foreign_lang" :error-messages="errors.children_2_with_foreign_lang"
-                                                  label="davon Kinder mit Deutsch als nicht Erstsprache*" type="number" required></v-text-field>
+                                                  label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="5">
                                     <v-row>
                                         <WarningEvaluationTooltip v-if="checkYears('2_foreign')"/>
                                         <v-col cols="12" sm="10">
                                             <v-text-field v-model="manageForm.evaluations_without_daz_2_total_per_year" :error-messages="errors.evaluations_without_daz_2_total_per_year"
-                                                          label="Anzahl bisher eingereichter Einschätzungen" type="number" disabled required></v-text-field>
+                                                          label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -316,22 +316,22 @@ const validateChildrensAmount = (age) => {
                     </v-col>
                     <v-col cols="12" sm="6">
                         <v-card class="tw-p-6">
-                            <h5>{{ childsTotal4Label }}</h5>
+                            <h5>Kinder bis 4,5 Jahre</h5>
                             <v-text-field v-model="manageForm.children_4_born_per_year" :error-messages="errors.children_4_born_per_year"
-                                          label="Gesamtzahl der im Zeitraum geborenen Kinder" type="number" required></v-text-field>
+                                          :label="childsTotal4Label" type="number" required></v-text-field>
 
 
                             <v-row>
                                 <v-col cols="12" sm="7">
                                     <v-text-field v-model="manageForm.children_4_with_german_lang" :error-messages="errors.children_4_with_german_lang"
-                                                  label="davon Kinder mit Deutsch als Erstsprache*" type="number" required></v-text-field>
+                                                  label="Kinder mit deutscher Herkunftssprache*" type="number" required></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="5">
                                     <v-row>
                                         <WarningEvaluationTooltip v-if="checkYears('4_german')"/>
                                         <v-col cols="12" sm="10">
                                             <v-text-field v-model="manageForm.evaluations_with_daz_4_total_per_year" :error-messages="errors.evaluations_with_daz_4_total_per_year"
-                                                          label="Anzahl bisher eingereichter Einschätzungen" type="number" disabled required></v-text-field>
+                                                          label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -340,14 +340,14 @@ const validateChildrensAmount = (age) => {
                             <v-row>
                                 <v-col cols="12" sm="7">
                                     <v-text-field v-model="manageForm.children_4_with_foreign_lang" :error-messages="errors.children_4_with_foreign_lang"
-                                                  label="davon Kinder mit Deutsch als nicht Erstsprache*" type="number" required></v-text-field>
+                                                  label="Kinder mit nicht deutscher Herkunftssprache*" type="number" required></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="5">
                                     <v-row>
                                         <WarningEvaluationTooltip v-if="checkYears('4_foreign')"/>
                                         <v-col cols="12" sm="10">
                                             <v-text-field v-model="manageForm.evaluations_without_daz_4_total_per_year" :error-messages="errors.evaluations_without_daz_4_total_per_year"
-                                                          label="Anzahl bisher eingereichter Einschätzungen" type="number" disabled required></v-text-field>
+                                                          label="Bisher eingereichte Einschätzungen" type="number" disabled required></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>

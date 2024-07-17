@@ -211,12 +211,23 @@ const manageConnectKitaUser = async () => {
  * Users table
  */
 const headers = [
-  {title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center'},
-  {title: 'Vorname', key: 'first_name', width: '17.5%', sortable: true},
-  {title: 'Nachname', key: 'last_name', width: '17.5%', sortable: true},
-  {title: 'E-Mail', key: 'email', width: '25%', sortable: true},
-  {title: 'Rolle', key: 'primary_role_name', width: '20%', sortable: true},
-  {title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center'},
+  { title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center' },
+  { title: 'Vorname', key: 'first_name', width: '17.5%', sortable: true },
+  { title: 'Nachname', key: 'last_name', width: '17.5%', sortable: true },
+  { title: 'E-Mail', key: 'email', width: '25%', sortable: true },
+  { title: 'Rolle', key: 'primary_role_name', width: '20%', sortable: true },
+  { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
+];
+
+const statusFilterValues = [
+    {
+        title: 'Ja',
+        value: 'true',
+    },
+    {
+        title: 'Nein',
+        value: 'false',
+    },
 ];
 
 const currentPage = ref(props.currentPage); // Track the current page number
@@ -225,7 +236,9 @@ const orderBy = ref(props.orderBy);
 const sort = ref(props.sort);
 const totalItems = ref(props.total);
 const lastPage = ref(props.lastPage);
-const fullNameFilter = ref(props.filters.full_name ?? null);
+const statusFilter = ref(props.filters.status ?? null);
+const firstNameFilter = ref(props.filters.first_name ?? null);
+const lastNameFilter = ref(props.filters.last_name ?? null);
 const emailFilter = ref(props.filters.email ?? null);
 const rolesFilter = ref(props.filters.roles ?? null);
 const search = ref('');
@@ -246,14 +259,22 @@ const modifiedItems = computed(() => {
 });
 
 const allFiltersEmpty = computed(() => {
-    return fullNameFilter.value === null && emailFilter.value === null && rolesFilter.value === null;
+    return statusFilter.value === null && firstNameFilter.value === null && lastNameFilter.value === null && emailFilter.value === null && rolesFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
-    return fullNameFilter.value !== null || emailFilter.value !== null || rolesFilter.value !== null;
+    return statusFilter.value !== null || firstNameFilter.value !== null || lastNameFilter.value !== null || emailFilter.value !== null || rolesFilter.value !== null;
 });
 
-watch(fullNameFilter, debounce((val) => {
+watch(statusFilter, (val) => {
+    triggerSearch();
+});
+
+watch(firstNameFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
+watch(lastNameFilter, debounce((val) => {
     triggerSearch();
 }, 500));
 
@@ -271,12 +292,15 @@ const triggerSearch = () => {
 };
 
 const openUsersEmailsDialog = () => {
-    dialogUsersEmails.value = true
+    dialogUsersEmails.value = true;
+    selectedUsersEmails.value = props.usersEmails;
 };
 
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
-        fullNameFilter.value = null;
+        statusFilter.value = null;
+        firstNameFilter.value = null;
+        lastNameFilter.value = null;
         emailFilter.value = null;
         rolesFilter.value = null;
     }
@@ -302,8 +326,16 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         }
 
         // Apply filters
-        if (fullNameFilter.value) {
-            data.full_name = fullNameFilter.value;
+        if (statusFilter.value) {
+            data.status = statusFilter.value;
+        }
+
+        if (firstNameFilter.value) {
+            data.first_name = firstNameFilter.value;
+        }
+
+        if (lastNameFilter.value) {
+            data.last_name = lastNameFilter.value;
         }
 
         if (emailFilter.value) {
@@ -663,39 +695,62 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                 <v-row>
                     <v-col cols="12">
-                      <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
-                          <div class="tw-w-full">
-                              <v-row>
-                                  <v-col cols="12" sm="4">
-                                      <v-text-field
-                                          v-model="fullNameFilter"
-                                          label="Name"
-                                          clearable
-                                      ></v-text-field>
-                                  </v-col>
+                        <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
+                            <div class="tw-w-full">
+                                <v-row>
+                                    <v-col cols="12" sm="4">
+                                        <v-select
+                                            v-model="statusFilter"
+                                            :items="statusFilterValues"
+                                            item-title="title"
+                                            item-value="value"
+                                            label="Status"
+                                            multiple
+                                            :disabled="loading"
+                                            clearable
+                                        ></v-select>
+                                    </v-col>
 
-                                  <v-col cols="12" sm="4">
-                                      <v-text-field
-                                          v-model="emailFilter"
-                                          label="Email"
-                                          clearable
-                                      ></v-text-field>
-                                  </v-col>
+                                    <v-col cols="12" sm="4">
+                                        <v-text-field
+                                            v-model="firstNameFilter"
+                                            label="Vorname"
+                                            clearable
+                                        ></v-text-field>
+                                    </v-col>
 
-                                  <v-col cols="12" sm="4">
-                                      <v-select
-                                          v-model="rolesFilter"
-                                          :items="roles"
-                                          item-title="human_name"
-                                          item-value="name"
-                                          label="Rolle"
-                                          multiple
-                                          :disabled="loading"
-                                          clearable
-                                      ></v-select>
-                                  </v-col>
-                              </v-row>
-                          </div>
+                                    <v-col cols="12" sm="4">
+                                        <v-text-field
+                                            v-model="lastNameFilter"
+                                            label="Nachname"
+                                            clearable
+                                        ></v-text-field>
+                                    </v-col>
+                                </v-row>
+
+                                <v-row>
+                                    <v-col cols="12" sm="6">
+                                        <v-text-field
+                                            v-model="emailFilter"
+                                            label="Email"
+                                            clearable
+                                        ></v-text-field>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="6">
+                                        <v-select
+                                            v-model="rolesFilter"
+                                            :items="roles"
+                                            item-title="human_name"
+                                            item-value="name"
+                                            label="Rolle"
+                                            multiple
+                                            :disabled="loading"
+                                            clearable
+                                        ></v-select>
+                                    </v-col>
+                                </v-row>
+                            </div>
                         </div>
                     </v-col>
 
@@ -713,6 +768,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             :items-per-page="-1"
                             :headers="headers"
                             :items="modifiedItems"
+                            :sort-by="sortItem"
                             :search="search"
                             v-sortable-data-table
                             :loading="loading"
@@ -735,7 +791,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <td>{{item.selectable?.primary_role_human_name}}</td>
 
                                     <td align="right">
-                                        <v-tooltip v-if="kita?.approved && !kita?.has_yearly_evaluations && item.selectable?.is_manager" location="top">
+                                        <v-tooltip v-if="kita?.approved && item.selectable?.is_manager" location="top">
                                             <template v-slot:activator="{ props }">
                                                 <a :href="`mailto:?bcc=${item.selectable.email}`" v-bind="props">
                                                   <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>

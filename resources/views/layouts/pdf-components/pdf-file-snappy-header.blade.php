@@ -30,7 +30,7 @@
 <body onload="parseSnappyPdfVariables()">
 <div id="report-pdf-image-header">
     <div>
-        <img src="{{ resource_path('images/logo-pdf.jpg') }}"/>
+        <img src="{{ resource_path('images/logo-pdf.png') }}"/>
     </div>
 
     <div>
