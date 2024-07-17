@@ -91,7 +91,7 @@ class SettingItemService extends BaseItemService
      * @param bool   $throwExceptionIfFail
      * @return mixed
      */
-    protected function findByName(string $name, bool $throwExceptionIfFail = false) : mixed
+    public function findByName(string $name, bool $throwExceptionIfFail = false) : mixed
     {
         $query = Setting::where('name', $name);
 

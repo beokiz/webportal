@@ -9,11 +9,13 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ages, prepareDate, formatDate, formatDateTime } from '@/Composables/common.js';
+import TiptapEditor from "@/Components/TiptapEditor.vue";
 
 const props = defineProps({
     surveyTimePeriods: Array,
-    settings: Object,
     downloadableFiles: Array,
+    emailSettings: Object,
+    loginSettings: Object,
     currentPage: Number,
     perPage: Number,
     lastPage: Number,
@@ -241,27 +243,34 @@ const deleteSurveyTimePeriod = async () => {
 /*
  * Settings methods
  */
-const manageSettingsForm = useForm({
-    settings: props.settings,
+const manageEmailSettingsForm = useForm({
+    settings: props.emailSettings,
 });
 
-const manageSettings = async () => {
-    manageSettingsForm.processing = true;
+const manageLoginSettingsForm = useForm({
+    settings: props.loginSettings,
+});
+
+const manageSettings = async (type) => {
+    let manageForm = type === 'login' ? manageLoginSettingsForm : manageEmailSettingsForm;
+
+    manageForm.processing = true;
 
     let formOptions = {
+        preserveScroll: true,
         preserveState: true,
         onSuccess: (page) => {
-
+            //
         },
         onError: (err) => {
             errors.value = err;
         },
         onFinish: () => {
-            manageSettingsForm.processing = false;
+            manageForm.processing = false;
         },
     };
 
-    manageSettingsForm.post(route('settings.update'), formOptions);
+    manageForm.post(route('settings.update'), formOptions);
 };
 
 /*
@@ -504,15 +513,15 @@ const deleteDownloadableFile = async () => {
             </v-data-table-server>
         </div>
 
-        <!-- E-mail Settings block -->
+        <!-- E-mail settings block -->
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-mb-8">
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight tw-mb-4">E-Mail Einstellungen</h2>
 
             <v-row>
                 <v-col cols="12" md="6">
-                    <template v-for="(value, name) in settings">
+                    <template v-for="(value, name) in emailSettings">
                         <div class="tw-flex tw-items-center tw-justify-start">
-                            <v-text-field v-model="manageSettingsForm.settings[name]"
+                            <v-text-field v-model="manageEmailSettingsForm.settings[name]"
                                           :error-messages="errors?.settings ? errors.settings[name] : false"
                                           :label="`${settingsLabel[name]}*`" required></v-text-field>
                         </div>
@@ -523,7 +532,7 @@ const deleteDownloadableFile = async () => {
             <v-row>
                 <v-col cols="12" class="tw-flex tw-items-center tw-justify-start">
                     <v-hover v-slot:default="{ isHovering, props }">
-                        <v-btn-primary @click="manageSettings" v-bind="props"
+                        <v-btn-primary @click="manageSettings('email')" v-bind="props"
                                        :color="isHovering ? 'accent' : 'primary'">Speichern
                         </v-btn-primary>
                     </v-hover>
@@ -678,5 +687,36 @@ const deleteDownloadableFile = async () => {
             </v-data-table-server>
         </div>
 
+        <!-- Login form settings block -->
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-mb-8">
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight tw-mb-4">Text auf Login Seite</h2>
+
+            <v-row>
+                <v-col cols="12">
+                    <template v-for="(value, name) in loginSettings">
+                        <div class="tw-flex tw-items-center tw-justify-start">
+                            <template v-if="name === 'login_form_additional_html'">
+                                <TiptapEditor v-model="manageLoginSettingsForm.settings[name]" :minHeight="300"/>
+                            </template>
+                            <template v-else>
+                                <v-text-field v-model="manageLoginSettingsForm.settings[name]"
+                                              :error-messages="errors?.settings ? errors.settings[name] : false"
+                                              :label="`${settingsLabel[name]}*`" required></v-text-field>
+                            </template>
+                        </div>
+                    </template>
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col cols="12" class="tw-flex tw-items-center tw-justify-start">
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn-primary @click="manageSettings('login')" v-bind="props"
+                                       :color="isHovering ? 'accent' : 'primary'">Speichern
+                        </v-btn-primary>
+                    </v-hover>
+                </v-col>
+            </v-row>
+        </div>
     </AuthenticatedLayout>
 </template>
