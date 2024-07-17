@@ -292,4 +292,26 @@ class UserRolePolicy extends BasePolicy
 
         return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToDownloadableFiles(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToDownloadArea(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['manager'], $roles['employer']]);
+    }
 }

@@ -133,7 +133,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 };
 
 const openDeleteEvaluationDialog = (item) => {
-    deletingItemName.value = item.uuid
+    deletingItemName.value = item.custom_unique_id
     deleteForm.id = item.id;
     dialogDeleteEvaluation.value = true
 };
@@ -289,7 +289,7 @@ const unfinishedEvaluation = async (id) => {
 
                 <template v-slot:item="{ item }">
                     <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{`${item.selectable.kita.formatted_name}_${item.selectable.uuid}`}}</td>
+                        <td>{{`${item.selectable.kita.formatted_name}_${item.selectable.custom_unique_id}`}}</td>
 
                         <td>{{formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
 
@@ -378,7 +378,7 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="12">
                                 <p>
                                     <span class="tw-font-black">Bezeichner des Screenings</span>:
-                                    {{`${evaluationResultItem.kita.formatted_name}_${evaluationResultItem.uuid}`}}
+                                    {{`${evaluationResultItem.kita.formatted_name}_${evaluationResultItem.custom_unique_id}`}}
                                 </p>
                             </v-col>
 

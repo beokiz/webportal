@@ -38,6 +38,7 @@ class CreateEvaluationRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
+            'custom_unique_id'                    => ['required', 'string'],
             'uuid'                                => ['required', 'uuid'],
             'user_id'                             => ['required', $this->userExistRule()],
             'kita_id'                             => ['required', $this->kitaExistRule()],

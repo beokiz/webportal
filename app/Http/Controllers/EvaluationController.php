@@ -104,8 +104,9 @@ class EvaluationController extends BaseController
         ]));
 
         return Inertia::render('Evaluations/Partials/ManageEvaluation', [
-            'kitas'   => $currentUser->kitas,
-            'domains' => $domains,
+            'kitas'             => $currentUser->kitas,
+            'domains'           => $domains,
+            'newCustomUniqueId' => (new Evaluation())->generateModelCustomUniqueId(),
         ]);
     }
 

@@ -56,9 +56,14 @@ onMounted(() => {
         menuGroupsList.value['export.index'] = 'export.*';
     }
 
+    if (currentUser.is_manager || currentUser.is_employer) {
+        menuItemsList.value['download_area.index'] = 'Downloadbereich';
+        menuGroupsList.value['download_area.index'] = 'download_area.*';
+    }
+
     if (currentUser.is_super_admin || currentUser.is_admin) {
-        menuItemsList.value['survey_time_periods.index'] = 'Einstellungen';
-        menuGroupsList.value['survey_time_periods.index'] = 'survey_time_periods.*';
+        menuItemsList.value['settings.index'] = 'Einstellungen';
+        menuGroupsList.value['settings.index'] = 'settings.*';
     }
 
     menuItemsList.value['profile.edit'] = 'Profil';

@@ -10,7 +10,6 @@ use App\Http\Requests\SurveyTimePeriods\CreateSurveyTimePeriodRequest;
 use App\Http\Requests\SurveyTimePeriods\UpdateSurveyTimePeriodRequest;
 use App\Models\SurveyTimePeriod;
 use App\Models\User;
-use App\Services\Items\SettingItemService;
 use App\Services\Items\SurveyTimePeriodItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -37,27 +36,6 @@ class SurveyTimePeriodController extends BaseController
     public function __construct(SurveyTimePeriodItemService $surveyTimePeriodItemService)
     {
         $this->surveyTimePeriodItemService = $surveyTimePeriodItemService;
-    }
-
-    /**
-     * @param Request $request
-     * @return \Inertia\Response
-     */
-    public function index(Request $request)
-    {
-        $this->authorize('authorizeAccessToSurveyTimePeriods', User::class);
-
-        $settingItemService = app(SettingItemService::class);
-
-        $args   = $request->only(['page', 'per_page', 'sort', 'order_by']);
-        $result = $this->surveyTimePeriodItemService->collection(array_merge($args, [
-            'paginated' => true,
-        ]));
-
-        return Inertia::render('SurveyTimePeriods/SurveyTimePeriods', $this->prepareItemsCollection($result, [
-            'filters'  => $request->only([]),
-            'settings' => $settingItemService->list(),
-        ]));
     }
 
     /**

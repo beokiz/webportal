@@ -42,17 +42,17 @@ const loading = ref(false);
 const isMenuOpen = ref(false);
 const isMenu2Open = ref(false);
 const rawSurveyStart = ref(prepareDate(props.surveyTimePeriod.survey_start_date));
-const rawSurvayEnd = ref(prepareDate(props.surveyTimePeriod.survey_end_date));
+const rawSurveyEnd = ref(prepareDate(props.surveyTimePeriod.survey_end_date));
 const surveyStart = ref(new Date(props.surveyTimePeriod.survey_start_date).toString());
-const survayEnd = ref(new Date(props.surveyTimePeriod.survey_end_date).toString());
+const surveyEnd = ref(new Date(props.surveyTimePeriod.survey_end_date).toString());
 
 // Watch
 watch(surveyStart, (val) => {
     rawSurveyStart.value = prepareDate(val);
 });
 
-watch(survayEnd, (val) => {
-    rawSurvayEnd.value = prepareDate(val);
+watch(surveyEnd, (val) => {
+    rawSurveyEnd.value = prepareDate(val);
 });
 
 // Methods
@@ -68,7 +68,7 @@ const manageSurveyTimePeriod = async () => {
     manageForm.processing = true;
 
     manageForm.survey_start_date = new Date(surveyStart.value).toLocaleString()
-    manageForm.survey_end_date = new Date(survayEnd.value).toLocaleString()
+    manageForm.survey_end_date = new Date(surveyEnd.value).toLocaleString()
 
     let formOptions = {
         preserveState: false,
@@ -105,7 +105,6 @@ const manageSurveyTimePeriod = async () => {
             </v-container>
 
             <v-container>
-
                 <v-row>
                     <v-col cols="12" sm="6">
                         <v-text-field v-model="manageForm.year" :error-messages="errors.year"
@@ -145,19 +144,19 @@ const manageSurveyTimePeriod = async () => {
                     <v-col cols="12" sm="6">
                         <v-locale-provider locale="de">
                             <v-menu v-model="isMenu2Open"
-                                    :return-value.sync="survayEnd"
+                                    :return-value.sync="surveyEnd"
                                     :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
                                     <v-text-field
                                         label="Erhebungsende*"
                                         class="tw-cursor-pointer"
-                                        :model-value="rawSurvayEnd"
+                                        :model-value="rawSurveyEnd"
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
                                     ></v-text-field>
                                 </template>
-                                <v-date-picker @update:modelValue="isMenu2Open = false" v-model="survayEnd"></v-date-picker>
+                                <v-date-picker @update:modelValue="isMenu2Open = false" v-model="surveyEnd"></v-date-picker>
                             </v-menu>
                         </v-locale-provider>
                     </v-col>
@@ -176,10 +175,8 @@ const manageSurveyTimePeriod = async () => {
                             </v-btn-primary>
                         </v-hover>
                     </v-col>
-
                 </v-row>
             </v-container>
-
         </div>
     </AuthenticatedLayout>
 </template>

@@ -25,13 +25,14 @@ class EvaluationFactory extends BaseFactory
     public function definition() : array
     {
         return [
-            'uuid'        => $this->faker->uuid,
-            'user_id'     => User::inRandomOrder()->first()->id,
-            'kita_id'     => Kita::inRandomOrder()->first()->id,
-            'age'         => $this->faker->randomElement(['2.5', '4.5']),
-            'is_daz'      => $this->faker->boolean,
-            'data'        => [],
-            'finished_at' => rand(0, 1) ? $this->faker->dateTimeBetween('-1 month', 'now') : null,
+            'uuid'             => $this->faker->uuid,
+            'custom_unique_id' => generate_custom_unique_id(),
+            'user_id'          => User::inRandomOrder()->first()->id,
+            'kita_id'          => Kita::inRandomOrder()->first()->id,
+            'age'              => $this->faker->randomElement(['2.5', '4.5']),
+            'is_daz'           => $this->faker->boolean,
+            'data'             => [],
+            'finished_at'      => rand(0, 1) ? $this->faker->dateTimeBetween('-1 month', 'now') : null,
         ];
     }
 }

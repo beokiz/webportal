@@ -62,6 +62,8 @@ class ClearTemporaryFilesCommand extends Command
                 }
             }
 
+            $tmpStorage->delete($deletedFiles);
+
             if (!$this->option('silent')) {
                 $this->info(__('artisan.gk_temp.clear_tmp_message', [
                     'count' => count($deletedFiles),
