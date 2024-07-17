@@ -570,11 +570,6 @@ const manageKita = async () => {
                         </v-col>
 
                         <v-col cols="12" sm="4">
-                            <div style="display: none !important;">
-                              {{zipCodes}}
-                            </div>
-
-
                             <v-select
                                 v-model="zipCodeFilter"
                                 :items="zipCodes"

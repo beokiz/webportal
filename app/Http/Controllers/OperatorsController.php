@@ -102,7 +102,7 @@ class OperatorsController extends BaseController
                 'title' => $zipCode,
                 'value' => $zipCode,
             ];
-        });
+        })->values()->toArray();
 
         return Inertia::render('Operators/Partials/ManageOperator', [
             'operator'      => $operator,
