@@ -247,6 +247,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     }
 };
 
+//
 const openDeleteKitaDialog = (item) => {
     deletingItemName.value = item.name
     deleteForm.id = item.id;
