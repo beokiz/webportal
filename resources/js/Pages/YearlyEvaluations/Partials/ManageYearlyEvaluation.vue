@@ -193,7 +193,7 @@ const getChildsTotalLabel = (age) => {
             endYear = currentYear - 3;
         }
 
-      return `Gesamtzahl der im Zeitraum vom 01.10.${startYear} bis 30.09.${endYear} geborenen Kinder`;
+        return `Gesamtzahl der im Zeitraum vom 01.10.${startYear} bis 30.09.${endYear} geborenen Kinder`;
     }
 
     return "Gesamtzahl der Kinder";
