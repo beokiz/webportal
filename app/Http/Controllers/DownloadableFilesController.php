@@ -10,7 +10,7 @@ use App\Http\Requests\DownloadableFiles\CreateDownloadableFileRequest;
 use App\Http\Requests\DownloadableFiles\UpdateDownloadableFileRequest;
 use App\Models\DownloadableFile;
 use App\Models\User;
-use App\Services\Items\DownloadableFilesItemService;
+use App\Services\Items\DownloadableFileItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -23,19 +23,19 @@ use Inertia\Inertia;
 class DownloadableFilesController extends BaseController
 {
     /**
-     * @var DownloadableFilesItemService
+     * @var DownloadableFileItemService
      */
-    protected $downloadableFilesItemService;
+    protected $downloadableFileItemService;
 
     /**
      * DownloadableFilesController constructor.
      *
-     * @param DownloadableFilesItemService $downloadableFilesItemService
+     * @param DownloadableFileItemService $downloadableFileItemService
      * @return void
      */
-    public function __construct(DownloadableFilesItemService $downloadableFilesItemService)
+    public function __construct(DownloadableFileItemService $downloadableFileItemService)
     {
-        $this->downloadableFilesItemService = $downloadableFilesItemService;
+        $this->downloadableFileItemService = $downloadableFileItemService;
     }
 
     /**
@@ -61,7 +61,7 @@ class DownloadableFilesController extends BaseController
         $this->authorize('authorizeAccessToDownloadableFiles', User::class);
 
         $attributes = $request->validated();
-        $result     = $this->downloadableFilesItemService->create($attributes);
+        $result     = $this->downloadableFileItemService->create($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.downloadable_files.create_success'))
@@ -78,7 +78,7 @@ class DownloadableFilesController extends BaseController
         $this->authorize('authorizeAccessToDownloadableFiles', User::class);
 
         $attributes = $request->validated();
-        $result     = $this->downloadableFilesItemService->update($downloadableFile->id, $attributes);
+        $result     = $this->downloadableFileItemService->update($downloadableFile->id, $attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.downloadable_files.update_success'))
@@ -94,7 +94,7 @@ class DownloadableFilesController extends BaseController
     {
         $this->authorize('authorizeAccessToDownloadableFiles', User::class);
 
-        $result = $this->downloadableFilesItemService->delete($downloadableFile->id);
+        $result = $this->downloadableFileItemService->delete($downloadableFile->id);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.downloadable_files.delete_success'))

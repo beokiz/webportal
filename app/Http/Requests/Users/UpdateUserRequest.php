@@ -44,6 +44,7 @@ class UpdateUserRequest extends CreateUserRequest
             'email'                   => ['sometimes', 'email', Rule::unique(User::class)->ignore($this->route('user'))],
             'role'                    => ['sometimes', $this->roleExistRule(config('permission.project_roles'))],
             'two_factor_auth_enabled' => ['sometimes', 'boolean'],
+            'phone_number'            => ['nullable', 'string'],
         ];
 
         if (!empty($this->input('password'))) {

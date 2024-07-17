@@ -6,8 +6,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Kita;
+
 /**
- * Domain Factory
+ * Kita Factory
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Kita>
  * @package Database\Factories
@@ -22,15 +24,20 @@ class KitaFactory extends BaseFactory
     public function definition() : array
     {
         return [
-            'name'                 => $this->faker->unique()->domainWord,
-            'provider_of_the_kita' => $this->faker->company,
-            'city'                 => $this->faker->city,
-            'number'               => $this->faker->randomNumber(),
-            'street'               => $this->faker->streetName,
-            'house_number'         => $this->faker->randomNumber(),
-            'additional_info'      => rand(0, 1) ? $this->faker->sentences : null,
-            'order'                => $this->faker->numberBetween(1, 999),
-            'zip_code'             => $this->faker->postcode,
+            'type'                  => $this->faker->randomElement(Kita::TYPES),
+            'approved'              => $this->faker->boolean,
+            'name'                  => $this->faker->unique()->domainWord,
+            'provider_of_the_kita'  => $this->faker->company,
+            'city'                  => $this->faker->city,
+            'district'              => $this->faker->randomElement(['Zentral', 'Nord', 'Süd', 'Ost', 'West', 'Innenstadt', 'Oberstadt', 'Stadtmitte']),
+            'number'                => $this->faker->randomNumber(),
+            'street'                => $this->faker->streetName,
+            'house_number'          => $this->faker->randomNumber(),
+            'num_pedagogical_staff' => rand(1, 10),
+            'notes'                 => rand(0, 1) ? $this->faker->sentences : null,
+            'additional_info'       => rand(0, 1) ? $this->faker->sentences : null,
+            'order'                 => $this->faker->numberBetween(1, 999),
+            'zip_code'              => $this->faker->postcode,
         ];
     }
 }

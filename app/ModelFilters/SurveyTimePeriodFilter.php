@@ -6,8 +6,6 @@
 
 namespace App\ModelFilters;
 
-use EloquentFilter\ModelFilter;
-
 /**
  * SurveyTimePeriod Model Filter
  *

@@ -249,7 +249,7 @@ trait BaseValidationRules
 
     /**
      * @param array $mimeTypes
-     * @param int $maxKbSize
+     * @param int   $maxKbSize
      * @return array
      */
     public function fileRules(array $mimeTypes = [], int $maxKbSize = 3072) : array

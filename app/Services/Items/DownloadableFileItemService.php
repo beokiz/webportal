@@ -12,14 +12,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * DownloadableFiles Item Service
+ * Downloadable File Item Service
  *
  * @package \App\Services\Items
  */
-class DownloadableFilesItemService extends BaseItemService
+class DownloadableFileItemService extends BaseItemService
 {
     /**
-     * SettingItemService constructor.
+     * DownloadableFileItemService constructor.
      *
      * @return void
      */

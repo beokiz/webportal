@@ -11,7 +11,10 @@ use App\Models\User;
 use Illuminate\Support\Str;
 
 /**
+ * User Factory
+ *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @package Database\Factories
  */
 class UserFactory extends BaseFactory
 {

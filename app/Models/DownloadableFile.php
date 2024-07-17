@@ -6,11 +6,10 @@
 
 namespace App\Models;
 
-use App\ModelFilters\DownloadableFilesFilter;
+use App\ModelFilters\DownloadableFileFilter;
 use App\Models\Traits\HasOrderScope;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -67,7 +66,7 @@ class DownloadableFile extends Model
      */
     public function modelFilter() : ?string
     {
-        return $this->provideFilter(DownloadableFilesFilter::class);
+        return $this->provideFilter(DownloadableFileFilter::class);
     }
 
     /*

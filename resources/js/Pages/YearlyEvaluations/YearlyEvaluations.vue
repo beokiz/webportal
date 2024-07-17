@@ -146,6 +146,9 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         if (sortBy && sortBy.length > 0) {
             options.data.order_by = sortBy[0].key;
             options.data.sort = sortBy[0].order;
+        } else {
+            options.data.order_by = null;
+            options.data.sort = null;
         }
 
         // Search filters

@@ -54,6 +54,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'phone_number',
         'email_verified_at',
         'password',
         'two_factor_auth_enabled',
@@ -355,6 +356,14 @@ class User extends Authenticatable
     public function kitas() : BelongsToMany
     {
         return $this->BelongsToMany(Kita::class, 'kita_has_users', 'user_id', 'kita_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function operators() : BelongsToMany
+    {
+        return $this->BelongsToMany(Operator::class, 'operator_has_users', 'user_id', 'operator_id');
     }
 
     /**

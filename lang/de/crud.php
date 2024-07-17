@@ -232,4 +232,24 @@ return [
         'restore_denied'  => "Fehler! Die ausgewählte herunterladbare Datei kann nicht wiederhergestellt werden.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Operators CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'operators' => [
+        'create_success'  => "Der Betreiber wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Beim Erstellen eines Betreibers ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Der Betreiber wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Beim Aktualisieren eines Betreibers ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Der ausgewählte Betreiber kann nicht aktualisiert werden.",
+        'delete_success'  => "Der Betreiber wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Beim Löschen eines Betreibers ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Der ausgewählte Betreiber kann nicht gelöscht werden.",
+        'restore_success' => "Der Betreiber wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Beim Wiederherstellen eines Betreibers ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Der ausgewählte Betreiber kann nicht wiederhergestellt werden.",
+    ],
+
 ];

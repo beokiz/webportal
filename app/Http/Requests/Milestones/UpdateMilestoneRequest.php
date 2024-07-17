@@ -6,8 +6,6 @@
 
 namespace App\Http\Requests\Milestones;
 
-use Illuminate\Validation\Rule;
-
 /**
  * Update Subdomain Request
  *

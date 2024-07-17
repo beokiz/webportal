@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\CreateUserFromKitaRequest;
+use App\Http\Requests\Users\CreateUserFromOperatorRequest;
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
@@ -66,7 +67,7 @@ class UsersController extends BaseController
 //        $this->authorize('authorizeAccessToUsers', User::class);
 
         $currentUser = $request->user()->loadMissing(['kitas']);
-        $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'full_name', 'email']);
+        $args        = $request->only(['page', 'per_page', 'sort', 'order_by', 'full_name', 'email', 'with_roles']);
 
         $usersFilters = ['paginated' => true];
         $rolesFilters = [];
@@ -88,7 +89,7 @@ class UsersController extends BaseController
 
         return Inertia::render('Users/Users', $this->prepareItemsCollection($result, [
             'roles'   => $this->roleItemService->collection($rolesFilters),
-            'filters' => $request->only(['full_name', 'email']),
+            'filters' => $request->only(['full_name', 'email', 'with_roles']),
         ]));
     }
 
@@ -168,7 +169,23 @@ class UsersController extends BaseController
         $this->authorize('authorizeAccessToUsers', User::class);
 
         $attributes = $request->validated();
-        $result     = $this->userItemService->createFromKita($attributes);
+        $result     = $this->userItemService->createFromKitaOrOperator($attributes);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
+            : Redirect::back()->withErrors(__('crud.users.create_error'));
+    }
+
+    /**
+     * @param CreateUserFromOperatorRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeFromOperator(CreateUserFromOperatorRequest $request)
+    {
+        $this->authorize('authorizeAccessToUsers', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->createFromKitaOrOperator($attributes);
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.users.create_success'))

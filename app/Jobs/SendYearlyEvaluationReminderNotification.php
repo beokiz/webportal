@@ -9,7 +9,6 @@ namespace App\Jobs;
 use App\Models\Kita;
 use App\Models\Setting;
 use App\Models\SurveyTimePeriod;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

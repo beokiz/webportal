@@ -6,8 +6,6 @@
 
 namespace App\Http\Requests\Evaluations;
 
-use Illuminate\Validation\Rule;
-
 /**
  * Create Evaluation Request
  *

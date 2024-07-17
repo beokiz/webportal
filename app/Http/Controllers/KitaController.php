@@ -9,13 +9,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Kitas\ConnectUsersToKitaRequest;
 use App\Http\Requests\Kitas\ConnectUserToKitaRequest;
 use App\Http\Requests\Kitas\CreateKitaRequest;
-use App\Http\Requests\Kitas\DisconnectUsersToKitaRequest;
-use App\Http\Requests\Kitas\DisconnectUserToKitaRequest;
+use App\Http\Requests\Kitas\DisconnectUsersFromKitaRequest;
+use App\Http\Requests\Kitas\DisconnectUserFromKitaRequest;
 use App\Http\Requests\Kitas\ReorderKitasRequest;
 use App\Http\Requests\Kitas\UpdateKitaRequest;
 use App\Models\Kita;
+use App\Models\Operator;
 use App\Models\User;
 use App\Services\Items\KitaItemService;
+use App\Services\Items\OperatorItemService;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
@@ -55,7 +57,10 @@ class KitaController extends BaseController
 
         $currentUser = $request->user();
 
-        $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
+        $args = $request->only([
+            'page', 'per_page', 'sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id',
+            'type', 'zip_code',
+        ]);
 
         if ($currentUser->is_manager) {
             $args['with_users'] = $currentUser->id;
@@ -63,10 +68,30 @@ class KitaController extends BaseController
 
         $result = $this->kitaItemService->collection(array_merge($args, [
             'paginated' => true,
+            'with'      => ['operator', 'currentYearlyEvaluations', 'users.roles'],
         ]));
 
+        /*
+         * Prepare Operators list for select
+         */
+        $operatorItemService = app(OperatorItemService::class);
+
+        // Empty model for empty select option
+        $emptyOperator = tap(new Operator(), function ($model) {
+            $model->id   = null;
+            $model->name = 'Kein Träger';
+        });
+
         return Inertia::render('Kitas/Kitas', $this->prepareItemsCollection($result, [
-            'filters' => $request->only(['search']),
+            'filters'     => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
+            'operators'   => $operatorItemService->collection()->prepend($emptyOperator),
+            'usersEmails' => $this->kitaItemService->getWithoutYearlyEvaluationsUsersEmails(),
+            'types'       => array_map(function ($type) {
+                return [
+                    'title' => __("validation.attributes.{$type}"),
+                    'value' => $type,
+                ];
+            }, Kita::TYPES),
         ]));
     }
 
@@ -80,13 +105,35 @@ class KitaController extends BaseController
         $this->authorize('authorizeAccessToKitas', User::class);
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
-        $roleItemService = app(RoleItemService::class);
-        $userItemService = app(UserItemService::class);
+        $kita->loadMissing(['users', 'currentYearlyEvaluations']);
+
+        $roleItemService     = app(RoleItemService::class);
+        $userItemService     = app(UserItemService::class);
+        $operatorItemService = app(OperatorItemService::class);
+
+        // Get params for sorting & filtering Kita users
+        $userArgs = $request->only(['sort', 'order_by', 'full_name', 'email', 'with_roles']);
+
+        // Empty model for empty select option
+        $emptyOperator = tap(new Operator(), function ($model) {
+            $model->id   = null;
+            $model->name = 'Kein Träger';
+        });
 
         return Inertia::render('Kitas/Partials/ManageKita', [
-            'kita'  => $kita->loadMissing(['users']),
-            'roles' => $roleItemService->collection(['only_name' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
-            'users' => $userItemService->collection(['with_roles' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
+            'filters'     => $request->only(['full_name', 'email', 'with_roles']),
+            'kita'        => $kita,
+            'kitaUsers'   => $userItemService->collection(array_merge($userArgs, ['paginated' => false, 'with_kitas' => [$kita->id]])),
+            'usersEmails' => $this->kitaItemService->getWithoutYearlyEvaluationsUsersEmails([$kita->id]),
+            'roles'       => $roleItemService->collection(['only_name' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
+            'users'       => $userItemService->collection(['with_roles' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
+            'operators'   => $operatorItemService->collection()->prepend($emptyOperator),
+            'types'       => array_map(function ($type) {
+                return [
+                    'title' => __("validation.attributes.{$type}"),
+                    'value' => $type,
+                ];
+            }, Kita::TYPES),
         ]);
     }
 
@@ -158,11 +205,11 @@ class KitaController extends BaseController
     }
 
     /**
-     * @param DisconnectUserToKitaRequest $request
-     * @param Kita                        $kita
+     * @param DisconnectUserFromKitaRequest $request
+     * @param Kita                          $kita
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function disconnectUser(DisconnectUserToKitaRequest $request, Kita $kita)
+    public function disconnectUser(DisconnectUserFromKitaRequest $request, Kita $kita)
     {
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
@@ -175,11 +222,11 @@ class KitaController extends BaseController
     }
 
     /**
-     * @param DisconnectUsersToKitaRequest $request
-     * @param Kita                         $kita
+     * @param DisconnectUsersFromKitaRequest $request
+     * @param Kita                           $kita
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function disconnectUsers(DisconnectUsersToKitaRequest $request, Kita $kita)
+    public function disconnectUsers(DisconnectUsersFromKitaRequest $request, Kita $kita)
     {
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 

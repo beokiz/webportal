@@ -30,13 +30,13 @@ if (!function_exists('generate_custom_unique_id')) {
         $nouns = [
             "Eichhörnchen", "Häschen", "Schaf", "Küken", "Reh", "Fohlen", "Kälbchen", "Seepferdchen", "Lämmchen",
             "Schweinchen", "Kätzchen", "Entchen", "Pony", "Kamel", "Schmetterling", "Meerschweinchen", "Chamäleon",
-            "Kaninchen", "Murmeltier", "Nilpferd", "Zebra", "Seelöwenbaby", "Delfinbaby", "Nashornbaby"
+            "Kaninchen", "Murmeltier", "Nilpferd", "Zebra", "Seelöwenbaby", "Delfinbaby", "Nashornbaby",
         ];
 
         $adjectiveIndex = array_rand($adjectives);
-        $colorIndex = array_rand($colors);
-        $nounIndex = array_rand($nouns);
-        $nonceNumber = rand(1, 100);
+        $colorIndex     = array_rand($colors);
+        $nounIndex      = array_rand($nouns);
+        $nonceNumber    = rand(1, 100);
 
         return "{$adjectives[$adjectiveIndex]}_{$colors[$colorIndex]}_{$nouns[$nounIndex]}_{$nonceNumber}";
     }

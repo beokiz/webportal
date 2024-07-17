@@ -70,6 +70,7 @@ const manageForm = useForm({
     password_confirmation: null,
     role: editedUser.value.primary_role_id,
     two_factor_auth_enabled: editedUser.value.two_factor_auth_enabled,
+    phone_number: editedUser.value.phone_number,
 });
 
 const manageUser = async () => {
@@ -112,37 +113,44 @@ const manageUser = async () => {
                     <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.first_name" :error-messages="errors.first_name" label="Vorname" required></v-text-field>
                     </v-col>
+
                     <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.last_name" :error-messages="errors.last_name" label="Nachname" required></v-text-field>
                     </v-col>
+
                     <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
                     </v-col>
                 </v-row>
 
-
                 <v-row>
+                    <v-col cols="12" sm="4">
+                        <v-text-field v-model="manageForm.phone_number" :error-messages="errors.phone_number" label="Telefonnummer"></v-text-field>
+                    </v-col>
+
                     <v-col cols="12" sm="4">
                         <v-text-field type="password" autocomplete="new-password" v-model="manageForm.password" :error-messages="errors.password" label="Passwort" required></v-text-field>
                     </v-col>
+
                     <v-col cols="12" sm="4">
                         <v-text-field type="password" v-model="manageForm.password_confirmation" :error-messages="errors.password_confirmation" label="Passwort Bestätigung" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                        <v-select
-                            :disabled="$page.props.auth.user.id === editedUser.id"
-                            v-model="manageForm.role"
-                            :items="roles"
-                            :error-messages="errors.role"
-                            item-title="human_name"
-                            item-value="id"
-                            label="Rolle"
-                            required
-                        ></v-select>
                     </v-col>
                 </v-row>
 
                 <v-row>
+                    <v-col cols="12" sm="4">
+                      <v-select
+                          :disabled="$page.props.auth.user.id === editedUser.id"
+                          v-model="manageForm.role"
+                          :items="roles"
+                          :error-messages="errors.role"
+                          item-title="human_name"
+                          item-value="id"
+                          label="Rolle"
+                          required
+                      ></v-select>
+                    </v-col>
+
                     <v-col cols="12" sm="4">
                         <v-checkbox
                             v-model="manageForm.two_factor_auth_enabled"

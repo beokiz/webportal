@@ -8,11 +8,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\YearlyEvaluations\CreateYearlyEvaluationRequest;
 use App\Http\Requests\YearlyEvaluations\UpdateYearlyEvaluationRequest;
-use App\Models\Evaluation;
 use App\Models\Kita;
-use App\Models\YearlyEvaluation;
 use App\Models\User;
-use App\Services\Items\EvaluationItemService;
+use App\Models\YearlyEvaluation;
 use App\Services\Items\KitaItemService;
 use App\Services\Items\SurveyTimePeriodItemService;
 use App\Services\Items\YearlyEvaluationItemService;
@@ -101,7 +99,7 @@ class YearlyEvaluationsController extends BaseController
     public function show(Request $request, YearlyEvaluation $yearlyEvaluation)
     {
 //        $this->authorize('authorizeAccessToYearlyEvaluations', User::class);
-        $this->authorize('authorizeAccessToSingleYearlyEvaluation', [User::class, $yearlyEvaluation->kita_id]);
+        $this->authorize('authorizeAccessToSingleYearlyEvaluations', [User::class, $yearlyEvaluation->kita_id]);
 
         $currentUser = $request->user();
 
@@ -111,17 +109,18 @@ class YearlyEvaluationsController extends BaseController
         // Get all kitas for select
         $kitas = $kitaItemService->collection(array_merge([
             'with' => 'evaluations',
-        ], $currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []))->transform(function (Kita $kita) {
-            $kita->append([
-                'evaluations_total_per_year_count',
-                'evaluations_with_daz2_total_per_year_count',
-                'evaluations_with_daz4_total_per_year_count',
-                'evaluations_without_daz2_total_per_year_count',
-                'evaluations_without_daz4_total_per_year_count',
-            ]);
+        ], $currentUser->is_manager ? ['with_users' => [$currentUser->id]] : []))
+            ->transform(function (Kita $kita) {
+                $kita->append([
+                    'evaluations_total_per_year_count',
+                    'evaluations_with_daz2_total_per_year_count',
+                    'evaluations_with_daz4_total_per_year_count',
+                    'evaluations_without_daz2_total_per_year_count',
+                    'evaluations_without_daz4_total_per_year_count',
+                ]);
 
-            return $kita;
-        });
+                return $kita;
+            });
 
         return Inertia::render('YearlyEvaluations/Partials/ManageYearlyEvaluation', [
             'yearlyEvaluation'  => $yearlyEvaluation,

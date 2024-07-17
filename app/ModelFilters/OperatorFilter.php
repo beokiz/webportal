@@ -9,11 +9,11 @@ namespace App\ModelFilters;
 use EloquentFilter\ModelFilter;
 
 /**
- * DownloadableFiles Model Filter
+ * Operator Model Filter
  *
  * @package \App\ModelFilters
  */
-class DownloadableFilesFilter extends BaseFilter
+class OperatorFilter extends BaseFilter
 {
     /**
      * @var array
@@ -31,14 +31,5 @@ class DownloadableFilesFilter extends BaseFilter
     public function setup() : void
     {
         //
-    }
-
-    /**
-     * @param string $value
-     * @return ModelFilter
-     */
-    public function search(string $value) : ModelFilter
-    {
-        return $this->where('name', 'LIKE', '%' . trim($value) . '%');
     }
 }

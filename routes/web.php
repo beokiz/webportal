@@ -13,14 +13,15 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\DownloadableFilesController;
+use App\Http\Controllers\DownloadAreaController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationScreeningController;
 use App\Http\Controllers\ExportController;
-use App\Http\Controllers\DomainsController;
-use App\Http\Controllers\DownloadAreaController;
-use App\Http\Controllers\DownloadableFilesController;
-use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
+use App\Http\Controllers\OperatorsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubdomainsController;
@@ -130,6 +131,7 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'v
     Route::get('/{user}', [UsersController::class, 'edit'])->name('edit');
     Route::post('/', [UsersController::class, 'store'])->name('store');
     Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
+    Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
     Route::put('/{user}', [UsersController::class, 'update'])->name('update');
     Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
 });
@@ -274,4 +276,23 @@ Route::group(['prefix' => 'downloadable-files', 'as' => 'downloadable_files.', '
  */
 Route::group(['prefix' => 'download-area', 'as' => 'download_area.', 'middleware' => ['auth', 'verified_2fa']], function () {
     Route::get('/', [DownloadAreaController::class, 'index'])->name('index');
+});
+
+/*
+ * Operators routes
+ */
+Route::group(['prefix' => 'operators', 'as' => 'operators.', 'middleware' => ['auth', 'verified_2fa']], function () {
+    Route::get('/', [OperatorsController::class, 'index'])->name('index');
+    Route::get('/{operator}', [OperatorsController::class, 'show'])->name('show');
+    Route::post('/', [OperatorsController::class, 'store'])->name('store');
+    Route::put('/{operator}', [OperatorsController::class, 'update'])->name('update');
+    Route::post('/{operator}/connect-user', [OperatorsController::class, 'connectUser'])->name('connect_user');
+    Route::post('/{operator}/connect-users', [OperatorsController::class, 'connectUsers'])->name('connect_users');
+    Route::post('/{operator}/disconnect-user', [OperatorsController::class, 'disconnectUser'])->name('disconnect_user');
+    Route::post('/{operator}/disconnect-users', [OperatorsController::class, 'disconnectUsers'])->name('disconnect_users');
+    Route::post('/{operator}/connect-kita', [OperatorsController::class, 'connectKita'])->name('connect_kita');
+    Route::post('/{operator}/connect-kitas', [OperatorsController::class, 'connectKitas'])->name('connect_kitas');
+    Route::post('/{operator}/disconnect-kita', [OperatorsController::class, 'disconnectKita'])->name('disconnect_kita');
+    Route::post('/{operator}/disconnect-kitas', [OperatorsController::class, 'disconnectKitas'])->name('disconnect_kitas');
+    Route::delete('/{operator}', [OperatorsController::class, 'destroy'])->name('destroy');
 });

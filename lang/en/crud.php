@@ -232,4 +232,24 @@ return [
         'restore_denied'  => "Error! Selected downloadable file cannot be restored.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Operators CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'operators' => [
+        'create_success'  => "Operator has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating a operator. Please try again later.",
+        'update_success'  => "Operator has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating a operator. Please try again later.",
+        'update_denied'   => "Error! Selected operator cannot be updated.",
+        'delete_success'  => "Operator has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting a operator. Please try again later.",
+        'delete_denied'   => "Error! Selected operator cannot be deleted.",
+        'restore_success' => "Operator has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring a operator. Please try again later.",
+        'restore_denied'  => "Error! Selected operator cannot be restored.",
+    ],
+
 ];

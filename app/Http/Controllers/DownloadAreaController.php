@@ -6,13 +6,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Settings\UpdateSettingsRequest;
 use App\Models\User;
-use App\Services\Items\DownloadableFilesItemService;
-use App\Services\Items\SettingItemService;
-use App\Services\Items\SurveyTimePeriodItemService;
+use App\Services\Items\DownloadableFileItemService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 /**
@@ -23,19 +19,19 @@ use Inertia\Inertia;
 class DownloadAreaController extends BaseController
 {
     /**
-     * @var DownloadableFilesItemService
+     * @var DownloadableFileItemService
      */
-    public $downloadableFilesItemService;
+    public $downloadableFileItemService;
 
     /**
      * DownloadAreaController constructor.
      *
-     * @param DownloadableFilesItemService $downloadableFilesItemService
+     * @param DownloadableFileItemService $downloadableFileItemService
      * @return void
      */
-    public function __construct(DownloadableFilesItemService $downloadableFilesItemService)
+    public function __construct(DownloadableFileItemService $downloadableFileItemService)
     {
-        $this->downloadableFilesItemService = $downloadableFilesItemService;
+        $this->downloadableFileItemService = $downloadableFileItemService;
     }
 
     /**
@@ -48,7 +44,7 @@ class DownloadAreaController extends BaseController
 
         $args = $request->only(['page', 'per_page', 'sort', 'order_by', 'search']);
 
-        $result = $this->downloadableFilesItemService->collection(array_merge($args, [
+        $result = $this->downloadableFileItemService->collection(array_merge($args, [
             'paginated' => true,
         ]));
 

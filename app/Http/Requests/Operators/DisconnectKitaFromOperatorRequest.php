@@ -4,14 +4,14 @@
  * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
  */
 
-namespace App\Http\Requests\Kitas;
+namespace App\Http\Requests\Operators;
 
 /**
- * Disconnect User To Kita Request
+ * Disconnect Kita From Operator Request
  *
- * @package \App\Http\Requests\Kitas
+ * @package \App\Http\Requests\Operators
  */
-class DisconnectUserToKitaRequest extends ConnectUserToKitaRequest
+class DisconnectKitaFromOperatorRequest extends ConnectKitaToOperatorRequest
 {
     /**
      * @return array

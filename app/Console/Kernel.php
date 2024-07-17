@@ -28,9 +28,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->job(new ResetKitasYearlyEvaluationReminder())->dailyAt('12:00');
+        // $schedule->job(new ResetKitasYearlyEvaluationReminder())->dailyAt('12:00');
 
-        $schedule->job(new SendYearlyEvaluationReminderNotification())->hourly();
+        // $schedule->job(new SendYearlyEvaluationReminderNotification())->hourly();
 
         // Remove project temporary files
         $schedule->command('temp:files:clear')->hourly();
