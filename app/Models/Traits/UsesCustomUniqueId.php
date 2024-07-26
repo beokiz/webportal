@@ -19,7 +19,7 @@ trait UsesCustomUniqueId
     protected static function bootUsesUuid()
     {
         static::creating(function ($model) {
-            if (is_null($model->custom_unique_id)) {
+            if (empty($model->custom_unique_id)) {
                 $model->uuid = $this->generateModelCustomUniqueId();
             }
         });
@@ -29,13 +29,13 @@ trait UsesCustomUniqueId
      * @param int $attempt
      * @return string
      */
-    public function generateModelCustomUniqueId(int $attempt = 0)
+    public static function generateModelCustomUniqueId(int $attempt = 0)
     {
         $key = generate_custom_unique_id();
 
         if (self::where('custom_unique_id', $key)->exists()) {
             if ($attempt <= 50) {
-                return $this->generateModelCustomUniqueId(++$attempt);
+                return self::generateModelCustomUniqueId(++$attempt);
             } else {
                 throw new \Exception(__('exceptions.non_unique_custom_unique_id'));
             }
