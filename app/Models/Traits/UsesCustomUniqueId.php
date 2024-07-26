@@ -16,11 +16,19 @@ trait UsesCustomUniqueId
     /**
      * @return void
      */
-    protected static function bootUsesUuid()
+    protected static function bootUsesCustomUniqueId()
     {
+        // Define a model creating event listener
         static::creating(function ($model) {
             if (empty($model->custom_unique_id)) {
-                $model->uuid = $this->generateModelCustomUniqueId();
+                $model->custom_unique_id = self::generateModelCustomUniqueId();
+            }
+        });
+
+        // Define a model updating event listener
+        static::updating(function ($model) {
+            if (empty($model->custom_unique_id)) {
+                $model->custom_unique_id = self::generateModelCustomUniqueId();
             }
         });
     }
@@ -28,6 +36,7 @@ trait UsesCustomUniqueId
     /**
      * @param int $attempt
      * @return string
+     * @throws \Exception
      */
     public static function generateModelCustomUniqueId(int $attempt = 0)
     {
