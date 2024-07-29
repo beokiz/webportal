@@ -15,22 +15,19 @@ if (!function_exists('generate_custom_unique_id')) {
     function generate_custom_unique_id() : string
     {
         $adjectives = [
-            "glückliches", "gemütliches", "fröhliches", "tapferes", "lebhaftes", "freudiges", "liebes", "sanftes",
-            "helles", "freundliches", "ruhiges", "gnädiges", "strahlendes", "funkelndes", "sprudelndes", "heiteres",
-            "entzückendes", "charmantes", "friedliches", "sonniges", "lebendiges", "witziges", "verspieltes", "weises",
-            "nachdenkliches", "großzügiges", "fürsorgliches", "süßes",
+            "Baum", "Hocker", "Buch", "Bild", "Pflanze", "Tasse", "Tisch", "Pinsel", "Glas", "Ball", "Kissen", "Stift",
+            "Tür", "Blatt", "Fenster", "Schale", "Teller", "Zaun", "Sand", "Holz",
         ];
 
         $colors = [
-            "grünes", "blaues", "oranges", "rotes", "gelbes", "violettes", "rosanes", "türkises", "lavendelfarbenes",
-            "goldenes", "silbernes", "bronzenes", "korallenrotes", "smaragdgrünes", "saphirblaues", "rubinrotes",
-            "bernsteinfarbenes", "violettes", "magenta", "türkises", "pfirsichfarbenes", "mintgrünes", "marineblaues",
+            "Grün", "Blau", "Orange", "Roten", "Gelb", "Violett", "Rosa", "Türkis", "Lavendelfarbenes", "Gold", "Silber",
+            "Bronze", "Koralle", "Smaragd", "Sphir", "Rubin", "Bernstein", "Violett", "Magenta", "Mintgrün", "Marineblau",
+            "Ocker", "Sepia", "Indigo",
         ];
 
         $nouns = [
-            "Eichhörnchen", "Häschen", "Schaf", "Küken", "Reh", "Fohlen", "Kälbchen", "Seepferdchen", "Lämmchen",
-            "Schweinchen", "Kätzchen", "Entchen", "Pony", "Kamel", "Schmetterling", "Meerschweinchen", "Chamäleon",
-            "Kaninchen", "Murmeltier", "Nilpferd", "Zebra", "Seelöwenbaby", "Delfinbaby", "Nashornbaby",
+            "Ananas", "Apfel",  "Artischocke", "Avocado", "Birne", "Banane", "Brokkoli", "Knoblauch", "Lauch", "Möhre",
+            "Olive", "Paprika", "Pilz", "Rhabarber", "Salat", "Sellerie", "Spinat", "Tomate", "Traube", "Zucchini",
         ];
 
         $adjectiveIndex = array_rand($adjectives);
