@@ -57,3 +57,13 @@ label.v-label{
     padding-top: 15px !important;
     padding-bottom: 15px !important;
 }
+
+.vue__time-picker .dropdown ul li:not([disabled]).active,
+.vue__time-picker .dropdown ul li:not([disabled]).active:focus,
+.vue__time-picker .dropdown ul li:not([disabled]).active:hover {
+    background: #00537f !important;
+}
+
+.hide-details .v-input__details {
+    display: none !important;
+}

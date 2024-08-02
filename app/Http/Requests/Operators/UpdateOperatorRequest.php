@@ -6,23 +6,29 @@
 
 namespace App\Http\Requests\Operators;
 
-use App\Http\Requests\BaseFormRequest;
-
 /**
- * Connect Kita To Operator Request
+ * Update Operator Request
  *
  * @package \App\Http\Requests\Operators
  */
-class ConnectKitaToOperatorRequest extends BaseFormRequest
+class UpdateOperatorRequest extends CreateOperatorRequest
 {
+    /**
+     * @return void
+     */
+    protected function prepareForValidation() : void
+    {
+        parent::prepareForValidation();
+    }
+
     /**
      * @return array
      */
     public function rules() : array
     {
-        return [
-            'kita' => ['required', $this->kitaExistRule()],
-        ];
+        return array_merge(parent::rules(), [
+            //
+        ]);
     }
 
     /**

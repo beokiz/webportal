@@ -252,4 +252,25 @@ return [
         'restore_denied'  => "Fehler! Der ausgewählte Betreiber kann nicht wiederhergestellt werden.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Trainings CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'trainings' => [
+        'create_success'  => "Das Training wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Bei der Erstellung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Das Training wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Bei der Aktualisierung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Das ausgewählte Training kann nicht aktualisiert werden.",
+        'delete_success'  => "Das Training wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Bei der Löschung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Das ausgewählte Training kann nicht gelöscht werden.",
+        'restore_success' => "Das Training wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Bei der Wiederherstellung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Das ausgewählte Training kann nicht wiederhergestellt werden.",
+    ],
+
+
 ];

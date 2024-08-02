@@ -161,7 +161,7 @@ watch(zipCodeFilter, (val) => {
 // Methods
 const openUsersEmailsDialog = () => {
     dialogUsersEmails.value = true;
-    selectedUsersEmails.value = props.usersEmails;
+    selectedUsersEmails.value = props.usersEmails.map(item => item.value);
 };
 
 const triggerSearch = () => {
@@ -173,6 +173,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
         searchFilter.value = null;
         hasYearlyEvaluationsFilter.value = null;
+        approvedFilter.value = null;
         operatorIdFilter.value = null;
         typeFilter.value = null;
         zipCodeFilter.value = null;

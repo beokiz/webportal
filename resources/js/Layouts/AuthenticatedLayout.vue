@@ -47,7 +47,7 @@ onMounted(() => {
         menuGroupsList.value['domains.index'] = 'domains.*';
     }
 
-    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager) {
+    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager || currentUser.is_user_multiplier) {
         menuItemsList.value['kitas.index'] = 'Einrichtungen';
         menuGroupsList.value['kitas.index'] = 'kitas.*';
     }
@@ -65,6 +65,11 @@ onMounted(() => {
     if (currentUser.is_super_admin || currentUser.is_admin) {
         menuItemsList.value['operators.index'] = 'Träger';
         menuGroupsList.value['operators.index'] = 'operators.*';
+    }
+
+    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_user_multiplier) {
+        menuItemsList.value['trainings.index'] = 'Schulungen';
+        menuGroupsList.value['trainings.index'] = 'trainings.*';
     }
 
     if (currentUser.is_super_admin || currentUser.is_admin) {

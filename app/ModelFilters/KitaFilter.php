@@ -118,4 +118,15 @@ class KitaFilter extends BaseFilter
     {
         return $this->whereIn('operator_id', (array) $values);
     }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withTrainings($values) : ModelFilter
+    {
+        return $this->whereHas('trainings', function ($query) use ($values) {
+            $query->whereIn('id', (array) $values);
+        });
+    }
 }

@@ -293,7 +293,7 @@ const triggerSearch = () => {
 
 const openUsersEmailsDialog = () => {
     dialogUsersEmails.value = true;
-    selectedUsersEmails.value = props.usersEmails;
+    selectedUsersEmails.value = props.usersEmails.map(item => item.value);
 };
 
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
@@ -531,345 +531,347 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
             </v-container>
 
-            <v-container>
-                <v-row class="tw-border-t-8 tw-mt-8 tw-pt-8">
-                    <v-col cols="12" sm="6">
-                        <h3>Zugeordnete Benutzer</h3>
-                    </v-col>
+            <!-- Kita users block -->
+            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_manager">
+                <v-container>
+                    <v-row class="tw-border-t-8 tw-mt-8 tw-pt-8">
+                        <v-col cols="12" sm="6">
+                            <h3>Zugeordnete Benutzer</h3>
+                        </v-col>
 
-                    <v-col cols="12" sm="6">
-                        <div class="tw-flex tw-items-center tw-justify-end">
-                            <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark class="mr-2">
-                                    Benutzer verbinden
+                        <v-col cols="12" sm="6">
+                            <div class="tw-flex tw-items-center tw-justify-end">
+                                <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
+                                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark class="mr-2">
+                                        Benutzer verbinden
 
-                                    <v-dialog v-model="connectUserDialog" activator="parent" width="80vw">
-                                        <v-card height="80vh">
-                                            <v-card-title>
-                                                <span class="tw-text-h5">Verbinden Benutzer</span>
-                                            </v-card-title>
+                                        <v-dialog v-model="connectUserDialog" activator="parent" width="80vw">
+                                            <v-card height="80vh">
+                                                <v-card-title>
+                                                    <span class="tw-text-h5">Verbinden Benutzer</span>
+                                                </v-card-title>
 
-                                            <v-card-text>
-                                                <v-container>
-                                                    <v-row>
-                                                        <v-col cols="12">
-                                                            <p>Wählen Sie die Benutzer aus, die Sie diesem Einrichtung hinzufügen möchten</p>
-                                                        </v-col>
-                                                    </v-row>
-                                                    <v-row>
-                                                        <v-col cols="12">
-                                                            <v-autocomplete
-                                                                v-model="manageConnectKitaUserForm.users"
-                                                                :items="users"
-                                                                :error-messages="errors.users"
-                                                                item-title="full_name"
-                                                                item-value="id"
-                                                                label="User"
-                                                                multiple
-                                                                required
-                                                            ></v-autocomplete>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-container>
-                                            </v-card-text>
+                                                <v-card-text>
+                                                    <v-container>
+                                                        <v-row>
+                                                            <v-col cols="12">
+                                                                <p>Wählen Sie die Benutzer aus, die Sie diesem Einrichtung hinzufügen möchten</p>
+                                                            </v-col>
+                                                        </v-row>
+                                                        <v-row>
+                                                            <v-col cols="12">
+                                                                <v-autocomplete
+                                                                    v-model="manageConnectKitaUserForm.users"
+                                                                    :items="users"
+                                                                    :error-messages="errors.users"
+                                                                    item-title="full_name"
+                                                                    item-value="id"
+                                                                    label="User"
+                                                                    multiple
+                                                                    required
+                                                                ></v-autocomplete>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-container>
+                                                </v-card-text>
 
-                                            <v-card-actions>
-                                                <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn-primary>
-                                                </v-hover>
-                                                <v-spacer></v-spacer>
-                                                <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
-                                                </v-hover>
-                                                <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="manageConnectKitaUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
-                                                </v-hover>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-dialog>
+                                                <v-card-actions>
+                                                    <v-hover v-slot:default="{ isHovering, props }">
+                                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn-primary>
+                                                    </v-hover>
+                                                    <v-spacer></v-spacer>
+                                                    <v-hover v-slot:default="{ isHovering, props }">
+                                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
+                                                    </v-hover>
+                                                    <v-hover v-slot:default="{ isHovering, props }">
+                                                        <v-btn-primary @click="manageConnectKitaUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                                    </v-hover>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </v-dialog>
+                                    </v-btn>
+                                </v-hover>
+
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
+                                        Benutzer hinzufügen
+
+                                        <v-dialog v-model="dialog" activator="parent" width="80vw">
+                                            <v-card height="80vh">
+                                                <v-card-title>
+                                                    <span class="tw-text-h5">Neue Benutzer</span>
+                                                </v-card-title>
+
+                                                <v-card-text>
+                                                    <v-container>
+                                                        <v-row>
+                                                            <v-col cols="12" sm="6">
+                                                                <v-text-field v-model="manageCreateKitaUserForm.first_name" :error-messages="errors.first_name" label="Vorname" required></v-text-field>
+                                                            </v-col>
+
+                                                            <v-col cols="12" sm="6">
+                                                                <v-text-field v-model="manageCreateKitaUserForm.last_name" :error-messages="errors.last_name" label="Nachname" required></v-text-field>
+                                                            </v-col>
+                                                        </v-row>
+
+                                                        <v-row>
+                                                            <v-col cols="12" sm="6">
+                                                                <v-text-field v-model="manageCreateKitaUserForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
+                                                            </v-col>
+
+                                                            <v-col cols="12" sm="6">
+                                                                <v-text-field v-model="manageCreateKitaUserForm.phone_number" :error-messages="errors.phone_number" label="Telefonnummer"></v-text-field>
+                                                            </v-col>
+                                                        </v-row>
+
+                                                        <v-row>
+                                                            <v-col cols="12" sm="6">
+                                                                <v-select
+                                                                    v-model="manageCreateKitaUserForm.role"
+                                                                    :items="roles"
+                                                                    :error-messages="errors.role"
+                                                                    item-title="human_name"
+                                                                    item-value="id"
+                                                                    label="Role"
+                                                                    required
+                                                                ></v-select>
+                                                            </v-col>
+
+                                                            <v-col cols="12" md="4" sm="6">
+                                                                <v-checkbox
+                                                                    v-model="manageCreateKitaUserForm.two_factor_auth_enabled"
+                                                                    label="Zwei-Faktor-Authentifizierung"
+                                                                    :value="true"
+                                                                ></v-checkbox>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-container>
+                                                </v-card-text>
+
+                                                <v-card-actions>
+                                                    <v-hover v-slot:default="{ isHovering, props }">
+                                                        <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn-primary>
+                                                    </v-hover>
+                                                    <v-spacer></v-spacer>
+                                                    <v-hover v-slot:default="{ isHovering, props }">
+                                                        <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
+                                                    </v-hover>
+                                                    <v-hover v-slot:default="{ isHovering, props }">
+                                                        <v-btn-primary @click="manageCreateKitaUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                                    </v-hover>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </v-dialog>
+                                    </v-btn>
+                                </v-hover>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-container>
+
+                <v-container>
+                    <v-dialog v-model="dialogDeleteKitaUser" width="20vw">
+                        <v-card height="30vh">
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <p>Sind Sie sicher, dass Sie den Benutzer {{deletingItemName}} aus Einrichtung Liste löschen möchten? (Der Benutzer wird vom aktuellen Einrichtung getrennt)</p>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
+                                </v-hover>
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn-primary @click="deleteUserFromKita" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                </v-hover>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+                    <v-row>
+                        <v-col cols="12">
+                            <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
+                                <div class="tw-w-full">
+                                    <v-row>
+                                        <v-col cols="12" sm="4">
+                                            <v-select
+                                                v-model="statusFilter"
+                                                :items="statusFilterValues"
+                                                item-title="title"
+                                                item-value="value"
+                                                label="Status"
+                                                multiple
+                                                :disabled="loading"
+                                                clearable
+                                            ></v-select>
+                                        </v-col>
+
+                                        <v-col cols="12" sm="4">
+                                            <v-text-field
+                                                v-model="firstNameFilter"
+                                                label="Vorname"
+                                                clearable
+                                            ></v-text-field>
+                                        </v-col>
+
+                                        <v-col cols="12" sm="4">
+                                            <v-text-field
+                                                v-model="lastNameFilter"
+                                                label="Nachname"
+                                                clearable
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+
+                                    <v-row>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field
+                                                v-model="emailFilter"
+                                                label="Email"
+                                                clearable
+                                            ></v-text-field>
+                                        </v-col>
+
+                                        <v-col cols="12" sm="6">
+                                            <v-select
+                                                v-model="rolesFilter"
+                                                :items="roles"
+                                                item-title="human_name"
+                                                item-value="name"
+                                                label="Rolle"
+                                                multiple
+                                                :disabled="loading"
+                                                clearable
+                                            ></v-select>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                            </div>
+                        </v-col>
+
+                        <v-col cols="12" class="text-right">
+                            <v-hover v-if="usersEmails && usersEmails.length > 0" v-slot:default="{ isHovering, props }">
+                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">
+                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                    <span>Schreibe E-Mail an Auswahl</span>
                                 </v-btn>
                             </v-hover>
+                        </v-col>
 
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
-                                    Benutzer hinzufügen
+                        <v-col cols="12">
+                            <v-data-table-server
+                                :items-per-page="-1"
+                                :headers="headers"
+                                :items="modifiedItems"
+                                :sort-by="sortItem"
+                                :search="search"
+                                v-sortable-data-table
+                                :loading="loading"
+                                class="data-table-container data-table-container-hide-footer elevation-1"
+                                item-value="name"
+                                @update:options="goToPage"
+                            >
+                                <template v-slot:item="{ item }">
+                                    <tr :data-id="item.selectable?.id" :data-order="item.selectable?.order">
+                                        <td align="center">
+                                            <v-icon size="medium" :class="{ active: item?.selectable.is_online }">mdi-circle</v-icon>
+                                        </td>
 
-                                    <v-dialog v-model="dialog" activator="parent" width="80vw">
-                                        <v-card height="80vh">
-                                            <v-card-title>
-                                                <span class="tw-text-h5">Neue Benutzer</span>
-                                            </v-card-title>
+                                        <td>{{item.selectable?.first_name}}</td>
 
-                                            <v-card-text>
-                                                <v-container>
-                                                    <v-row>
-                                                        <v-col cols="12" sm="6">
-                                                            <v-text-field v-model="manageCreateKitaUserForm.first_name" :error-messages="errors.first_name" label="Vorname" required></v-text-field>
-                                                        </v-col>
+                                        <td>{{item.selectable?.last_name}}</td>
 
-                                                        <v-col cols="12" sm="6">
-                                                            <v-text-field v-model="manageCreateKitaUserForm.last_name" :error-messages="errors.last_name" label="Nachname" required></v-text-field>
-                                                        </v-col>
-                                                    </v-row>
+                                        <td>{{item.selectable?.email}}</td>
 
+                                        <td>{{item.selectable?.primary_role_human_name}}</td>
 
-                                                    <v-row>
-                                                        <v-col cols="12" sm="6">
-                                                            <v-text-field v-model="manageCreateKitaUserForm.email" :error-messages="errors.email" label="Email" required></v-text-field>
-                                                        </v-col>
+                                        <td align="right">
+                                            <v-tooltip v-if="kita?.approved && item.selectable?.is_manager" location="top">
+                                                <template v-slot:activator="{ props }">
+                                                    <a :href="`mailto:?bcc=${item.selectable.email}`" v-bind="props">
+                                                      <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                                    </a>
+                                                </template>
+                                                <span>Schreibe E-Mail</span>
+                                            </v-tooltip>
 
-                                                        <v-col cols="12" sm="6">
-                                                            <v-text-field v-model="manageCreateKitaUserForm.phone_number" :error-messages="errors.phone_number" label="Telefonnummer"></v-text-field>
-                                                        </v-col>
-                                                    </v-row>
+                                            <v-tooltip location="top">
+                                                <template v-slot:activator="{ props }">
+                                                    <Link :href="`${route('users.edit', { id: item.selectable.id })}?from=kitas.show;${kita.id}`">
+                                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
+                                                    </Link>
+                                                </template>
+                                                <span>Benutzer bearbeiten</span>
+                                            </v-tooltip>
 
-                                                    <v-row>
-                                                        <v-col cols="12" sm="6">
-                                                            <v-select
-                                                                v-model="manageCreateKitaUserForm.role"
-                                                                :items="roles"
-                                                                :error-messages="errors.role"
-                                                                item-title="human_name"
-                                                                item-value="id"
-                                                                label="Role"
-                                                                required
-                                                            ></v-select>
-                                                        </v-col>
+                                            <v-tooltip location="top">
+                                                <template v-slot:activator="{ props }">
+                                                    <v-icon v-bind="props" size="small" class="tw-me-2"
+                                                            @click="openDeleteUserFromKitaDialog(item.raw)">mdi-delete
+                                                    </v-icon>
+                                                </template>
+                                                <span>Benutzer löschen</span>
+                                            </v-tooltip>
+                                        </td>
+                                    </tr>
+                                </template>
 
-                                                        <v-col cols="12" md="4" sm="6">
-                                                            <v-checkbox
-                                                                v-model="manageCreateKitaUserForm.two_factor_auth_enabled"
-                                                                label="Zwei-Faktor-Authentifizierung"
-                                                                :value="true"
-                                                            ></v-checkbox>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-container>
-                                            </v-card-text>
+                                <template v-slot:no-data>
+                                    <div class="tw-py-6">
+                                        <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
+                                    </div>
+                                </template>
 
-                                            <v-card-actions>
-                                                <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn-primary>
-                                                </v-hover>
-                                                <v-spacer></v-spacer>
-                                                <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
-                                                </v-hover>
-                                                <v-hover v-slot:default="{ isHovering, props }">
-                                                    <v-btn-primary @click="manageCreateKitaUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
-                                                </v-hover>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-dialog>
-                                </v-btn>
-                            </v-hover>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-container>
+                            </v-data-table-server>
+                        </v-col>
+                    </v-row>
+                </v-container>
 
-            <v-container>
-                <v-dialog v-model="dialogDeleteKitaUser" width="20vw">
-                    <v-card height="30vh">
+                <v-dialog v-model="dialogUsersEmails" width="40vw">
+                    <v-card height="80vh">
+                        <v-card-title>
+                            <span class="tw-text-h5">Schreibe E-Mail an Auswahl</span>
+                        </v-card-title>
+
                         <v-card-text>
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <p>Sind Sie sicher, dass Sie den Benutzer {{deletingItemName}} aus Einrichtung Liste löschen möchten? (Der Benutzer wird vom aktuellen Einrichtung getrennt)</p>
+                                        <v-select
+                                                v-model="selectedUsersEmails"
+                                                :items="usersEmails"
+                                                label="Benutzer"
+                                                multiple
+                                                :disabled="loading"
+                                                clearable
+                                        ></v-select>
                                     </v-col>
                                 </v-row>
                             </v-container>
                         </v-card-text>
 
                         <v-card-actions>
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                                    Abbrechen
+                                </v-btn>
+                            </v-hover>
                             <v-spacer></v-spacer>
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
-                            </v-hover>
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="deleteUserFromKita" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                <v-btn-primary :href="`mailto:?bcc=${selectedUsersEmails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="!selectedUsersEmails.length">
+                                    Öffnen Sie den Mail-Client
+                                </v-btn-primary>
                             </v-hover>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-
-                <v-row>
-                    <v-col cols="12">
-                        <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
-                            <div class="tw-w-full">
-                                <v-row>
-                                    <v-col cols="12" sm="4">
-                                        <v-select
-                                            v-model="statusFilter"
-                                            :items="statusFilterValues"
-                                            item-title="title"
-                                            item-value="value"
-                                            label="Status"
-                                            multiple
-                                            :disabled="loading"
-                                            clearable
-                                        ></v-select>
-                                    </v-col>
-
-                                    <v-col cols="12" sm="4">
-                                        <v-text-field
-                                            v-model="firstNameFilter"
-                                            label="Vorname"
-                                            clearable
-                                        ></v-text-field>
-                                    </v-col>
-
-                                    <v-col cols="12" sm="4">
-                                        <v-text-field
-                                            v-model="lastNameFilter"
-                                            label="Nachname"
-                                            clearable
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-
-                                <v-row>
-                                    <v-col cols="12" sm="6">
-                                        <v-text-field
-                                            v-model="emailFilter"
-                                            label="Email"
-                                            clearable
-                                        ></v-text-field>
-                                    </v-col>
-
-                                    <v-col cols="12" sm="6">
-                                        <v-select
-                                            v-model="rolesFilter"
-                                            :items="roles"
-                                            item-title="human_name"
-                                            item-value="name"
-                                            label="Rolle"
-                                            multiple
-                                            :disabled="loading"
-                                            clearable
-                                        ></v-select>
-                                    </v-col>
-                                </v-row>
-                            </div>
-                        </div>
-                    </v-col>
-
-                    <v-col cols="12" class="text-right">
-                        <v-hover v-if="usersEmails && usersEmails.length > 0" v-slot:default="{ isHovering, props }">
-                            <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">
-                                <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                <span>Schreibe E-Mail an Auswahl</span>
-                            </v-btn>
-                        </v-hover>
-                    </v-col>
-
-                    <v-col cols="12">
-                        <v-data-table-server
-                            :items-per-page="-1"
-                            :headers="headers"
-                            :items="modifiedItems"
-                            :sort-by="sortItem"
-                            :search="search"
-                            v-sortable-data-table
-                            :loading="loading"
-                            class="data-table-container data-table-container-hide-footer elevation-1"
-                            item-value="name"
-                            @update:options="goToPage"
-                        >
-                            <template v-slot:item="{ item }">
-                                <tr :data-id="item.selectable?.id" :data-order="item.selectable?.order">
-                                    <td align="center">
-                                        <v-icon size="medium" :class="{ active: item?.selectable.is_online }">mdi-circle</v-icon>
-                                    </td>
-
-                                    <td>{{item.selectable?.first_name}}</td>
-
-                                    <td>{{item.selectable?.last_name}}</td>
-
-                                    <td>{{item.selectable?.email}}</td>
-
-                                    <td>{{item.selectable?.primary_role_human_name}}</td>
-
-                                    <td align="right">
-                                        <v-tooltip v-if="kita?.approved && item.selectable?.is_manager" location="top">
-                                            <template v-slot:activator="{ props }">
-                                                <a :href="`mailto:?bcc=${item.selectable.email}`" v-bind="props">
-                                                  <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                                </a>
-                                            </template>
-                                            <span>Schreibe E-Mail</span>
-                                        </v-tooltip>
-
-                                        <v-tooltip location="top">
-                                            <template v-slot:activator="{ props }">
-                                                <Link :href="`${route('users.edit', { id: item.selectable.id })}?from=kitas.show;${kita.id}`">
-                                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
-                                                </Link>
-                                            </template>
-                                            <span>Benutzer bearbeiten</span>
-                                        </v-tooltip>
-
-                                        <v-tooltip location="top">
-                                            <template v-slot:activator="{ props }">
-                                                <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                        @click="openDeleteUserFromKitaDialog(item.raw)">mdi-delete
-                                                </v-icon>
-                                            </template>
-                                            <span>Benutzer löschen</span>
-                                        </v-tooltip>
-                                    </td>
-                                </tr>
-                            </template>
-
-                            <template v-slot:no-data>
-                                <div class="tw-py-6">
-                                    <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
-                                </div>
-                            </template>
-
-                        </v-data-table-server>
-                    </v-col>
-                </v-row>
-            </v-container>
-
-            <v-dialog v-model="dialogUsersEmails" width="40vw">
-                <v-card height="80vh">
-                    <v-card-title>
-                        <span class="tw-text-h5">Schreibe E-Mail an Auswahl</span>
-                    </v-card-title>
-
-                    <v-card-text>
-                        <v-container>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-select
-                                            v-model="selectedUsersEmails"
-                                            :items="usersEmails"
-                                            label="Benutzer"
-                                            multiple
-                                            :disabled="loading"
-                                            clearable
-                                    ></v-select>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card-text>
-
-                    <v-card-actions>
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
-                                Abbrechen
-                            </v-btn>
-                        </v-hover>
-                        <v-spacer></v-spacer>
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary :href="`mailto:?bcc=${selectedUsersEmails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="!selectedUsersEmails.length">
-                                Öffnen Sie den Mail-Client
-                            </v-btn-primary>
-                        </v-hover>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+            </template>
         </div>
     </AuthenticatedLayout>
 </template>

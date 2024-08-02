@@ -4,25 +4,23 @@
  * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
  */
 
-namespace App\Http\Requests\Operators;
-
-use App\Http\Requests\BaseFormRequest;
+namespace App\Http\Requests\Trainings;
 
 /**
- * Connect Kita To Operator Request
+ * Remove Kitas From Training Request
  *
- * @package \App\Http\Requests\Operators
+ * @package \App\Http\Requests\Trainings
  */
-class ConnectKitaToOperatorRequest extends BaseFormRequest
+class RemoveKitasFromTrainingRequest extends AddKitasToTrainingRequest
 {
     /**
      * @return array
      */
     public function rules() : array
     {
-        return [
-            'kita' => ['required', $this->kitaExistRule()],
-        ];
+        return array_merge(parent::rules(), [
+            //
+        ]);
     }
 
     /**

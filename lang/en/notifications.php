@@ -30,7 +30,7 @@ return [
     */
 
     'reset_password' => [
-        'subject'     => "BeoKiz password recovery",
+        'subject'     => sprintf("%s: Password recovery", config('app.name')),
         'greeting'    => "Hello :name,",
         'action_text' => "Restore Password",
         'first_line'  => "We have received a request to reset your password for your account on the BeoKiz traffic light portal of the Berlin Milestones.",
@@ -45,7 +45,7 @@ return [
     */
 
     'email_verification' => [
-        'subject'     => "BeoKiz email verification",
+        'subject'     => sprintf("%s: Email verification", config('app.name')),
         'greeting'    => "Hello!",
         'action_text' => "Confirm",
         'first_line'  => "Confirm your email address to complete account registration. If you have not created an account in our system, please ignore this message.",
@@ -58,7 +58,7 @@ return [
     */
 
     '2fa_verification' => [
-        'subject'     => "2FA BeoKiz verification code",
+        'subject'     => sprintf("%s: 2FA verification code", config('app.name')),
         'action_text' => "Verify 2FA Code",
         'first_line'  => "If you have not tried to log in and have received this notification, please ignore this message.",
         'second_line' => "Code for two-factor authentication: :code",
@@ -71,7 +71,7 @@ return [
     */
 
     'welcome' => [
-        'subject'     => "Created BeoKiz account",
+        'subject'     => sprintf("%s: Created account", config('app.name')),
         'greeting'    => "Hello :name,",
         'action_text' => "Set new password",
         'first_line'  => "you have been invited to the BeoKiz portal of Berlin milestones.",
@@ -85,9 +85,8 @@ return [
     */
 
     'password_changed' => [
-        'subject'     => "BeoKiz password change confirmed",
+        'subject'     => sprintf("%s: Password change confirmed", config('app.name')),
         'greeting'    => "Hello :name,",
-//        'action_text' => "",
         'first_line'  => "we would like to inform you that the password for your Beokiz account has been successfully changed.",
         'second_line' => "If you did not initiate this change, please contact our support immediately at <:support_email>.",
         'third_line'  => "Your safety is important to us. It's always a good idea to change your password regularly and ensure you use a strong and unique password for each online account.",
@@ -101,7 +100,7 @@ return [
     */
 
     'connected_to_kitas' => [
-        'subject'     => "Connected to Kitas",
+        'subject'     => sprintf("%s: Connected to Kitas", config('app.name')),
         'greeting'    => "Hello :name,",
         'first_line'  => "you have just been assigned to another facility in the BeoKiz traffic light portal. You are now assigned to the following facilities: \n :kitas",
         'second_line' => "Your access data has not changed as a result.",
@@ -115,12 +114,46 @@ return [
     */
 
     'yearly_evaluation_reminder' => [
-        'subject'     => "Yearly Evaluation Reminder",
+        'subject'     => sprintf("%s: Yearly evaluation reminder", config('app.name')),
         'greeting'    => "Dear facility manager,",
         'first_line'  => "The annual feedback on the statistical evaluation of the language proficiency assessment for children in daycare centers and childcare (status survey) for the daycare year :evaluation_year must be provided by :survey_end_date.",
         'second_line' => "We have not yet received a status report from your facility. We therefore ask you to submit this email by :survey_end_date. The corresponding function is available in your user account on <a href=':site'>:site</a>.",
         'third_line'  => "Thanks and best regards",
         'salutation'  => sprintf('Your %s Team', config('app.name')) . "\non behalf of the Senate Department for Education, Youth and Family",
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Training Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    // 'confirmed' status notification
+    'training_confirmed'         => [
+        'subject'     => sprintf("%s: Confirmation of training dates on :first_date and :second_date", config('app.name')),
+        'greeting'    => "Dear educational team of the daycare center,",
+        'first_line'  => "We are pleased to inform you that your chosen training date has been confirmed.",
+        'second_line' => "1st training day: :first_date from :first_date_start_and_end_time  \n 2nd training day: :second_date from :second_date_start_and_end_time  \n Location: :location  \n Your facilitator: :multiplier_name",
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+    ],
+
+    // 'completed' status notification
+    'training_completed'         => [
+        'subject'     => sprintf("%s: Training successfully completed", config('app.name')),
+        'greeting'    => "Dear educational team of the daycare center,",
+        'first_line'  => "We are pleased to inform you that your training on :first_date and :second_date has been successfully completed.",
+        'second_line' => sprintf("You will soon receive your access to the %s portal.", config('app.name')),
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+    ],
+
+    // 'cancelled' status notification
+    'training_cancelled'         => [
+        'subject'     => sprintf("%s: Cancellation of training dates on :first_date and :second_date", config('app.name')),
+        'greeting'    => "Dear educational team of the daycare center,",
+        'first_line'  => "Unfortunately, we have to inform you that the training dates on :first_date and :second_date have been cancelled.",
+        'second_line' => "We apologize for any inconvenience.",
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+    ],
+
 
 ];

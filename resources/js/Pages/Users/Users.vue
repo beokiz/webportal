@@ -421,6 +421,7 @@ const manageUser = async () => {
                                 clearable
                             ></v-select>
                         </v-col>
+
                         <v-col cols="12" sm="4">
                             <v-text-field
                                 v-model="fullNameFilter"
@@ -428,6 +429,7 @@ const manageUser = async () => {
                                 clearable
                             ></v-text-field>
                         </v-col>
+
                         <v-col cols="12" sm="4">
                             <v-text-field
                                 v-model="emailFilter"
@@ -436,6 +438,7 @@ const manageUser = async () => {
                             ></v-text-field>
                         </v-col>
                     </v-row>
+
                     <v-row>
                         <v-col cols="12" sm="4">
                             <v-select
@@ -449,6 +452,7 @@ const manageUser = async () => {
                                 clearable
                             ></v-select>
                         </v-col>
+
                         <v-col cols="12" sm="4">
                             <v-locale-provider locale="de">
                                   <v-menu v-model="isFirstLoginAtFilterOpened"
@@ -468,6 +472,7 @@ const manageUser = async () => {
                                   </v-menu>
                             </v-locale-provider>
                         </v-col>
+
                         <v-col cols="12" sm="4">
                             <v-locale-provider locale="de">
                                   <v-menu v-model="isLastSeenAtFilterOpened"

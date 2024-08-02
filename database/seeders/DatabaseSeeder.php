@@ -62,5 +62,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\Operator::factory()
             ->count(10)
             ->create();
+
+        \App\Models\Training::factory()
+            ->count(30)
+            ->create();
     }
 }

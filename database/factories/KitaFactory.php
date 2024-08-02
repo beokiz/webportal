@@ -34,8 +34,8 @@ class KitaFactory extends BaseFactory
             'street'                => $this->faker->streetName,
             'house_number'          => $this->faker->randomNumber(),
             'num_pedagogical_staff' => rand(1, 10),
-            'notes'                 => rand(0, 1) ? $this->faker->sentences : null,
-            'additional_info'       => rand(0, 1) ? $this->faker->sentences : null,
+            'notes'                 => rand(0, 1) ? $this->faker->sentence : null,
+            'additional_info'       => rand(0, 1) ? $this->faker->sentence : null,
             'order'                 => $this->faker->numberBetween(1, 999),
             'zip_code'              => $this->faker->postcode,
         ];

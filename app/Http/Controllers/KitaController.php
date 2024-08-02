@@ -55,6 +55,8 @@ class KitaController extends BaseController
     {
         $this->authorize('authorizeAccessToKitas', User::class);
 
+        $operatorItemService = app(OperatorItemService::class);
+
         $currentUser = $request->user();
 
         $args = $request->only([
@@ -64,23 +66,18 @@ class KitaController extends BaseController
 
         if ($currentUser->is_manager) {
             $args['with_users'] = $currentUser->id;
+        } else if ($currentUser->is_user_multiplier) {
+            $currentUser->loadMissing(['operators']);
+
+            $args['with_operators'] = $currentUser->operators->pluck('id');
+        } else {
+            //
         }
 
         $result = $this->kitaItemService->collection(array_merge($args, [
             'paginated' => true,
             'with'      => ['operator', 'currentYearlyEvaluations', 'users.roles'],
         ]));
-
-        /*
-         * Prepare Operators list for select
-         */
-        $operatorItemService = app(OperatorItemService::class);
-
-        // Empty model for empty select option
-        $emptyOperator = tap(new Operator(), function ($model) {
-            $model->id   = null;
-            $model->name = 'Kein Träger';
-        });
 
         // Fetch all zip codes from kitas
         $zipCodesList = Kita::pluck('zip_code')->unique()->transform(function ($zipCode) {
@@ -90,10 +87,27 @@ class KitaController extends BaseController
             ];
         })->values()->toArray();
 
+        // Prepare operators list
+        if ($currentUser->is_user_multiplier) {
+            $currentUser->loadMissing(['operators']);
+
+            $operators = $currentUser->operators;
+        } else {
+            $operators = $operatorItemService->collection();
+        }
+
+        // Empty model for empty select option
+        if ($currentUser->is_super_admin || $currentUser->is_admin || $currentUser->is_manager) {
+            $emptyOperator = tap(new Operator(), function ($model) {
+                $model->id   = null;
+                $model->name = 'Kein Träger';
+            });
+        }
+
         return Inertia::render('Kitas/Kitas', $this->prepareItemsCollection($result, [
             'filters'     => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
             'zipCodes'    => $zipCodesList,
-            'operators'   => $operatorItemService->collection()->prepend($emptyOperator),
+            'operators'   => !empty($emptyOperator) ? $operators->prepend($emptyOperator) : $operators,
             'usersEmails' => $this->kitaItemService->getUsersEmails($result->pluck('id')->toArray()),
             'types'       => array_map(function ($type) {
                 return [
@@ -114,6 +128,8 @@ class KitaController extends BaseController
         $this->authorize('authorizeAccessToKitas', User::class);
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
+        $currentUser = $request->user();
+
         $kita->loadMissing(['users', 'currentYearlyEvaluations']);
 
         $roleItemService     = app(RoleItemService::class);
@@ -129,6 +145,15 @@ class KitaController extends BaseController
             $model->name = 'Kein Träger';
         });
 
+        // Prepare operators list
+        if ($currentUser->is_user_multiplier) {
+            $currentUser->loadMissing(['operators']);
+
+            $operators = $currentUser->operators;
+        } else {
+            $operators = $operatorItemService->collection();
+        }
+
         return Inertia::render('Kitas/Partials/ManageKita', [
             'filters'     => $request->only(['status', 'first_name', 'last_name', 'email', 'with_roles']),
             'kita'        => $kita,
@@ -136,7 +161,7 @@ class KitaController extends BaseController
             'usersEmails' => $this->kitaItemService->getUsersEmails([$kita->id]),
             'roles'       => $roleItemService->collection(['only_name' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
             'users'       => $userItemService->collection(['with_roles' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
-            'operators'   => $operatorItemService->collection()->prepend($emptyOperator),
+            'operators'   => $operators->prepend($emptyOperator),
             'types'       => array_map(function ($type) {
                 return [
                     'title' => __("validation.attributes.{$type}"),

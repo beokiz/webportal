@@ -26,6 +26,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubdomainsController;
 use App\Http\Controllers\SurveyTimePeriodController;
+use App\Http\Controllers\TrainingsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\YearlyEvaluationsController;
 use Illuminate\Support\Facades\Route;
@@ -45,35 +46,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 /*
- * Main routes
- */
+|--------------------------------------------------------------------------
+| Main routes
+|--------------------------------------------------------------------------
+*/
 Route::group(['as' => 'main.', 'middleware' => []], function () {
     Route::get('/', function () {
         return redirect()->route('profile.edit');
     })->name('index');
 });
 
-/*
- * Dashboard routes
- */
-Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.', 'middleware' => ['auth', 'verified_2fa']], function () {
-//    Route::get('/', [DashboardController::class, 'index'])->name('index');
-});
-
 
 /*
- * Profile routes
- */
-Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-    Route::patch('/', [ProfileController::class, 'update'])->name('update');
-//    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
-});
-
-
-/*
- * Authentication, 2FA & verification routes
- */
+|--------------------------------------------------------------------------
+| Authentication, 2FA & verification routes
+|--------------------------------------------------------------------------
+*/
 Route::group(['middleware' => ['guest']], function () {
     Route::group(['as' => 'auth.'], function () {
         Route::get('register', function () {
@@ -122,177 +110,217 @@ Route::group(['prefix' => '2fa', 'as' => '2fa.', 'middleware' => ['protect_2fa_p
     Route::post('/resend', [TwoFactorAuthenticationController::class, 'resend'])->name('resend');
 });
 
-/*
- * Users routes
- */
-Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [UsersController::class, 'index'])->name('index');
-//    Route::get('/{user}', [UsersController::class, 'show'])->name('show');
-    Route::get('/{user}', [UsersController::class, 'edit'])->name('edit');
-    Route::post('/', [UsersController::class, 'store'])->name('store');
-    Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
-    Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
-    Route::put('/{user}', [UsersController::class, 'update'])->name('update');
-    Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
-});
 
 /*
- * Domains routes
- */
-Route::group(['prefix' => 'domains', 'as' => 'domains.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [DomainsController::class, 'index'])->name('index');
-    Route::get('/{domain}', [DomainsController::class, 'show'])->name('show');
-    Route::post('/', [DomainsController::class, 'store'])->name('store');
-    Route::put('/{domain}', [DomainsController::class, 'update'])->name('update');
-    Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
-    Route::post('/reorder', [DomainsController::class, 'reorder'])->name('reorder');
-});
+|--------------------------------------------------------------------------
+| Beokiz routes
+|--------------------------------------------------------------------------
+*/
 
-/*
- * Subdomains routes
- */
-Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.', 'middleware' => ['auth', 'verified_2fa']], function () {
-//    Route::get('/', [SubdomainsController::class, 'index'])->name('index');
-    Route::get('/{subdomain}', [SubdomainsController::class, 'show'])->name('show');
-    Route::post('/', [SubdomainsController::class, 'store'])->name('store');
-    Route::put('/{subdomain}', [SubdomainsController::class, 'update'])->name('update');
-    Route::delete('/{subdomain}', [SubdomainsController::class, 'destroy'])->name('destroy');
-    Route::post('/reorder', [SubdomainsController::class, 'reorder'])->name('reorder');
-});
+Route::group(['middleware' => ['auth', 'verified_2fa']], function () {
+    /*
+     * Dashboard routes
+     */
+    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
+//        Route::get('/', [DashboardController::class, 'index'])->name('index');
+    });
 
-/*
- * Milestones routes
- */
-Route::group(['prefix' => 'milestones', 'as' => 'milestones.', 'middleware' => ['auth', 'verified_2fa']], function () {
-//    Route::get('/', [MilestonesController::class, 'index'])->name('index');
-    Route::get('/{milestone}', [MilestonesController::class, 'show'])->name('show');
-    Route::post('/', [MilestonesController::class, 'store'])->name('store');
-    Route::put('/{milestone}', [MilestonesController::class, 'update'])->name('update');
-    Route::delete('/{milestone}', [MilestonesController::class, 'destroy'])->name('destroy');
-    Route::post('/reorder', [MilestonesController::class, 'reorder'])->name('reorder');
-});
+    /*
+     * Profile routes
+     */
+    Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+//        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
 
-/*
- * Kitas routes
- */
-Route::group(['prefix' => 'kitas', 'as' => 'kitas.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [KitaController::class, 'index'])->name('index');
-    Route::get('/{kita}', [KitaController::class, 'show'])->name('show');
-    Route::post('/', [KitaController::class, 'store'])->name('store');
-    Route::put('/{kita}', [KitaController::class, 'update'])->name('update');
-    Route::post('/{kita}/connect-user', [KitaController::class, 'connectUser'])->name('connect_user');
-    Route::post('/{kita}/connect-users', [KitaController::class, 'connectUsers'])->name('connect_users');
-    Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');
-    Route::post('/{kita}/disconnect-users', [KitaController::class, 'disconnectUsers'])->name('disconnect_users');
-    Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
-    Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');
-});
+    /*
+     * Users routes
+     */
+    Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+        Route::get('/', [UsersController::class, 'index'])->name('index');
+//        Route::get('/{user}', [UsersController::class, 'show'])->name('show');
+        Route::get('/{user}', [UsersController::class, 'edit'])->name('edit');
+        Route::post('/', [UsersController::class, 'store'])->name('store');
+        Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
+        Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
+        Route::put('/{user}', [UsersController::class, 'update'])->name('update');
+        Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
+    });
 
-/*
- * Evaluations routes
- */
-Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [EvaluationController::class, 'index'])->name('index');
-    Route::get('/create', [EvaluationController::class, 'create'])->name('create');
-    Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
-    Route::post('/{evaluation}/popup', [EvaluationController::class, 'showPopup'])->name('show_popup');
-    Route::get('/{evaluation}/pdf', [EvaluationController::class, 'pdf'])->name('pdf');
-    Route::get('/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('edit');
-    Route::post('/', [EvaluationController::class, 'store'])->name('store');
-    Route::put('/{evaluation}', [EvaluationController::class, 'update'])->name('update');
-    Route::post('/{evaluation}/unfinished', [EvaluationController::class, 'unfinished'])->name('unfinished');
-    Route::post('/save', [EvaluationController::class, 'save'])->name('save');
-    Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
-});
+    /*
+     * Domains routes
+     */
+    Route::group(['prefix' => 'domains', 'as' => 'domains.'], function () {
+        Route::get('/', [DomainsController::class, 'index'])->name('index');
+        Route::get('/{domain}', [DomainsController::class, 'show'])->name('show');
+        Route::post('/', [DomainsController::class, 'store'])->name('store');
+        Route::put('/{domain}', [DomainsController::class, 'update'])->name('update');
+        Route::delete('/{domain}', [DomainsController::class, 'destroy'])->name('destroy');
+        Route::post('/reorder', [DomainsController::class, 'reorder'])->name('reorder');
+    });
 
-/*
- * Check Evaluation routes
- */
-Route::group(['prefix' => 'screening', 'as' => 'screening.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [EvaluationScreeningController::class, 'index'])->name('index');
-    Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
-    Route::post('/make', [EvaluationScreeningController::class, 'make'])->name('make');
-});
+    /*
+     * Subdomains routes
+     */
+    Route::group(['prefix' => 'subdomains', 'as' => 'subdomains.'], function () {
+//        Route::get('/', [SubdomainsController::class, 'index'])->name('index');
+        Route::get('/{subdomain}', [SubdomainsController::class, 'show'])->name('show');
+        Route::post('/', [SubdomainsController::class, 'store'])->name('store');
+        Route::put('/{subdomain}', [SubdomainsController::class, 'update'])->name('update');
+        Route::delete('/{subdomain}', [SubdomainsController::class, 'destroy'])->name('destroy');
+        Route::post('/reorder', [SubdomainsController::class, 'reorder'])->name('reorder');
+    });
 
-/*
- * Screening Export routes
- */
-Route::group(['prefix' => 'export', 'as' => 'export.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [ExportController::class, 'index'])->name('index');
-    Route::post('/', [ExportController::class, 'make'])->name('make');
-});
+    /*
+     * Milestones routes
+     */
+    Route::group(['prefix' => 'milestones', 'as' => 'milestones.'], function () {
+//        Route::get('/', [MilestonesController::class, 'index'])->name('index');
+        Route::get('/{milestone}', [MilestonesController::class, 'show'])->name('show');
+        Route::post('/', [MilestonesController::class, 'store'])->name('store');
+        Route::put('/{milestone}', [MilestonesController::class, 'update'])->name('update');
+        Route::delete('/{milestone}', [MilestonesController::class, 'destroy'])->name('destroy');
+        Route::post('/reorder', [MilestonesController::class, 'reorder'])->name('reorder');
+    });
 
-/*
- * Yearly evaluations routes
- */
-Route::group(['prefix' => 'yearly-evaluations', 'as' => 'yearly_evaluations.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [YearlyEvaluationsController::class, 'index'])->name('index');
-    Route::get('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'show'])->name('show');
-    Route::post('/', [YearlyEvaluationsController::class, 'store'])->name('store');
-    Route::put('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'update'])->name('update');
-    Route::delete('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'destroy'])->name('destroy');
-});
+    /*
+     * Kitas routes
+     */
+    Route::group(['prefix' => 'kitas', 'as' => 'kitas.'], function () {
+        Route::get('/', [KitaController::class, 'index'])->name('index');
+        Route::get('/{kita}', [KitaController::class, 'show'])->name('show');
+        Route::post('/', [KitaController::class, 'store'])->name('store');
+        Route::put('/{kita}', [KitaController::class, 'update'])->name('update');
+        Route::post('/{kita}/connect-user', [KitaController::class, 'connectUser'])->name('connect_user');
+        Route::post('/{kita}/connect-users', [KitaController::class, 'connectUsers'])->name('connect_users');
+        Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');
+        Route::post('/{kita}/disconnect-users', [KitaController::class, 'disconnectUsers'])->name('disconnect_users');
+        Route::delete('/{kita}', [KitaController::class, 'destroy'])->name('destroy');
+        Route::post('/reorder', [KitaController::class, 'reorder'])->name('reorder');
+    });
 
-/*
- * Settings routes
- */
-Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [SettingsController::class, 'index'])->name('index');
-    Route::post('/', [SettingsController::class, 'update'])->name('update');
-});
+    /*
+     * Evaluations routes
+     */
+    Route::group(['prefix' => 'evaluations', 'as' => 'evaluations.'], function () {
+        Route::get('/', [EvaluationController::class, 'index'])->name('index');
+        Route::get('/create', [EvaluationController::class, 'create'])->name('create');
+        Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
+        Route::post('/{evaluation}/popup', [EvaluationController::class, 'showPopup'])->name('show_popup');
+        Route::get('/{evaluation}/pdf', [EvaluationController::class, 'pdf'])->name('pdf');
+        Route::get('/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('edit');
+        Route::post('/', [EvaluationController::class, 'store'])->name('store');
+        Route::put('/{evaluation}', [EvaluationController::class, 'update'])->name('update');
+        Route::post('/{evaluation}/unfinished', [EvaluationController::class, 'unfinished'])->name('unfinished');
+        Route::post('/save', [EvaluationController::class, 'save'])->name('save');
+        Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
+    });
 
-/*
- * Survey time periods routes
- */
-Route::group(['prefix' => 'survey-time-periods', 'as' => 'survey_time_periods.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', function () {
-        return redirect()->route('settings.index');
-    })->name('index');
+    /*
+     * Check Evaluation routes
+     */
+    Route::group(['prefix' => 'screening', 'as' => 'screening.'], function () {
+        Route::get('/', [EvaluationScreeningController::class, 'index'])->name('index');
+        Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
+        Route::post('/make', [EvaluationScreeningController::class, 'make'])->name('make');
+    });
 
-//    Route::get('/', [SurveyTimePeriodController::class, 'index'])->name('index');
-    Route::get('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'show'])->name('show');
-    Route::post('/', [SurveyTimePeriodController::class, 'store'])->name('store');
-    Route::put('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'update'])->name('update');
-    Route::delete('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'destroy'])->name('destroy');
-});
+    /*
+     * Screening Export routes
+     */
+    Route::group(['prefix' => 'export', 'as' => 'export.'], function () {
+        Route::get('/', [ExportController::class, 'index'])->name('index');
+        Route::post('/', [ExportController::class, 'make'])->name('make');
+    });
 
-/*
- * Downloadable files routes
- */
-Route::group(['prefix' => 'downloadable-files', 'as' => 'downloadable_files.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', function () {
-        return redirect()->route('settings.index');
-    })->name('index');
+    /*
+     * Yearly evaluations routes
+     */
+    Route::group(['prefix' => 'yearly-evaluations', 'as' => 'yearly_evaluations.'], function () {
+        Route::get('/', [YearlyEvaluationsController::class, 'index'])->name('index');
+        Route::get('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'show'])->name('show');
+        Route::post('/', [YearlyEvaluationsController::class, 'store'])->name('store');
+        Route::put('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'update'])->name('update');
+        Route::delete('/{yearlyEvaluation}', [YearlyEvaluationsController::class, 'destroy'])->name('destroy');
+    });
 
-//    Route::get('/', [DownloadableFilesController::class, 'index'])->name('index');
-    Route::get('/{downloadableFile}', [DownloadableFilesController::class, 'show'])->name('show');
-    Route::post('/', [DownloadableFilesController::class, 'store'])->name('store');
-    Route::put('/{downloadableFile}', [DownloadableFilesController::class, 'update'])->name('update');
-    Route::delete('/{downloadableFile}', [DownloadableFilesController::class, 'destroy'])->name('destroy');
-});
+    /*
+     * Settings routes
+     */
+    Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
+        Route::get('/', [SettingsController::class, 'index'])->name('index');
+        Route::post('/', [SettingsController::class, 'update'])->name('update');
+    });
 
-/*
- * Download area routes
- */
-Route::group(['prefix' => 'download-area', 'as' => 'download_area.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [DownloadAreaController::class, 'index'])->name('index');
-});
+    /*
+     * Survey time periods routes
+     */
+    Route::group(['prefix' => 'survey-time-periods', 'as' => 'survey_time_periods.'], function () {
+        Route::get('/', function () {
+            return redirect()->route('settings.index');
+        })->name('index');
 
-/*
- * Operators routes
- */
-Route::group(['prefix' => 'operators', 'as' => 'operators.', 'middleware' => ['auth', 'verified_2fa']], function () {
-    Route::get('/', [OperatorsController::class, 'index'])->name('index');
-    Route::get('/{operator}', [OperatorsController::class, 'show'])->name('show');
-    Route::post('/', [OperatorsController::class, 'store'])->name('store');
-    Route::put('/{operator}', [OperatorsController::class, 'update'])->name('update');
-    Route::post('/{operator}/connect-user', [OperatorsController::class, 'connectUser'])->name('connect_user');
-    Route::post('/{operator}/connect-users', [OperatorsController::class, 'connectUsers'])->name('connect_users');
-    Route::post('/{operator}/disconnect-user', [OperatorsController::class, 'disconnectUser'])->name('disconnect_user');
-    Route::post('/{operator}/disconnect-users', [OperatorsController::class, 'disconnectUsers'])->name('disconnect_users');
-    Route::post('/{operator}/connect-kita', [OperatorsController::class, 'connectKita'])->name('connect_kita');
-    Route::post('/{operator}/connect-kitas', [OperatorsController::class, 'connectKitas'])->name('connect_kitas');
-    Route::post('/{operator}/disconnect-kita', [OperatorsController::class, 'disconnectKita'])->name('disconnect_kita');
-    Route::post('/{operator}/disconnect-kitas', [OperatorsController::class, 'disconnectKitas'])->name('disconnect_kitas');
-    Route::delete('/{operator}', [OperatorsController::class, 'destroy'])->name('destroy');
+//        Route::get('/', [SurveyTimePeriodController::class, 'index'])->name('index');
+        Route::get('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'show'])->name('show');
+        Route::post('/', [SurveyTimePeriodController::class, 'store'])->name('store');
+        Route::put('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'update'])->name('update');
+        Route::delete('/{surveyTimePeriod}', [SurveyTimePeriodController::class, 'destroy'])->name('destroy');
+    });
+
+    /*
+     * Downloadable files routes
+     */
+    Route::group(['prefix' => 'downloadable-files', 'as' => 'downloadable_files.'], function () {
+        Route::get('/', function () {
+            return redirect()->route('settings.index');
+        })->name('index');
+
+//        Route::get('/', [DownloadableFilesController::class, 'index'])->name('index');
+        Route::get('/{downloadableFile}', [DownloadableFilesController::class, 'show'])->name('show');
+        Route::post('/', [DownloadableFilesController::class, 'store'])->name('store');
+        Route::put('/{downloadableFile}', [DownloadableFilesController::class, 'update'])->name('update');
+        Route::delete('/{downloadableFile}', [DownloadableFilesController::class, 'destroy'])->name('destroy');
+    });
+
+    /*
+     * Download area routes
+     */
+    Route::group(['prefix' => 'download-area', 'as' => 'download_area.'], function () {
+        Route::get('/', [DownloadAreaController::class, 'index'])->name('index');
+    });
+
+    /*
+     * Operators routes
+     */
+    Route::group(['prefix' => 'operators', 'as' => 'operators.'], function () {
+        Route::get('/', [OperatorsController::class, 'index'])->name('index');
+        Route::get('/{operator}', [OperatorsController::class, 'show'])->name('show');
+        Route::post('/', [OperatorsController::class, 'store'])->name('store');
+        Route::put('/{operator}', [OperatorsController::class, 'update'])->name('update');
+        Route::post('/{operator}/connect-user', [OperatorsController::class, 'connectUser'])->name('connect_user');
+        Route::post('/{operator}/connect-users', [OperatorsController::class, 'connectUsers'])->name('connect_users');
+        Route::post('/{operator}/disconnect-user', [OperatorsController::class, 'disconnectUser'])->name('disconnect_user');
+        Route::post('/{operator}/disconnect-users', [OperatorsController::class, 'disconnectUsers'])->name('disconnect_users');
+        Route::post('/{operator}/connect-kita', [OperatorsController::class, 'connectKita'])->name('connect_kita');
+        Route::post('/{operator}/connect-kitas', [OperatorsController::class, 'connectKitas'])->name('connect_kitas');
+        Route::post('/{operator}/disconnect-kita', [OperatorsController::class, 'disconnectKita'])->name('disconnect_kita');
+        Route::post('/{operator}/disconnect-kitas', [OperatorsController::class, 'disconnectKitas'])->name('disconnect_kitas');
+        Route::delete('/{operator}', [OperatorsController::class, 'destroy'])->name('destroy');
+    });
+
+    /*
+     * Training routes
+     */
+    Route::group(['prefix' => 'trainings', 'as' => 'trainings.'], function () {
+        Route::get('/', [TrainingsController::class, 'index'])->name('index');
+        Route::get('/{training}', [TrainingsController::class, 'show'])->name('show');
+        Route::post('/', [TrainingsController::class, 'store'])->name('store');
+        Route::put('/{training}', [TrainingsController::class, 'update'])->name('update');
+        Route::post('/{training}/add-kita', [TrainingsController::class, 'addKita'])->name('add_kita');
+        Route::post('/{training}/add-kitas', [TrainingsController::class, 'addKitas'])->name('add_kitas');
+        Route::post('/{training}/remove-kita', [TrainingsController::class, 'removeKita'])->name('remove_kita');
+        Route::post('/{training}/remove-kitas', [TrainingsController::class, 'removeKitas'])->name('remove_kitas');
+        Route::delete('/{training}', [TrainingsController::class, 'destroy'])->name('destroy');
+    });
 });

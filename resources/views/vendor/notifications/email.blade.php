@@ -35,7 +35,7 @@ $color = 'primary';
 
 {{-- Salutation --}}
 @if (! empty($salutation))
-{{ $salutation }}
+{!! $salutation !!}
 @else
 @lang(
 'notifications.common.salutation',

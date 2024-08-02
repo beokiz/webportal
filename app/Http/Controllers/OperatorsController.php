@@ -15,7 +15,7 @@ use App\Http\Requests\Operators\DisconnectKitaFromOperatorRequest;
 use App\Http\Requests\Operators\DisconnectKitasFromOperatorRequest;
 use App\Http\Requests\Operators\DisconnectUserFromOperatorRequest;
 use App\Http\Requests\Operators\DisconnectUsersFromOperatorRequest;
-use App\Http\Requests\Operators\UpdateOperatorFileRequest;
+use App\Http\Requests\Operators\UpdateOperatorRequest;
 use App\Models\Kita;
 use App\Models\Operator;
 use App\Models\User;
@@ -140,11 +140,11 @@ class OperatorsController extends BaseController
     }
 
     /**
-     * @param UpdateOperatorFileRequest $request
-     * @param Operator                  $operator
+     * @param UpdateOperatorRequest $request
+     * @param Operator              $operator
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateOperatorFileRequest $request, Operator $operator)
+    public function update(UpdateOperatorRequest $request, Operator $operator)
     {
         $this->authorize('authorizeAccessToOperators', User::class);
 

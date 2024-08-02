@@ -72,7 +72,7 @@ const manageSurveyTimePeriod = async () => {
     let formOptions = {
         preserveState: false,
         onSuccess: (page) => {
-
+            //
         },
         onError: (err) => {
             errors.value = err;

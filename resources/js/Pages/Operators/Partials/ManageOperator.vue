@@ -365,7 +365,7 @@ const triggerSearch = (type) => {
 
 const openUsersEmailsDialog = () => {
     dialogUsersEmails.value = true;
-    selectedUsersEmails.value = props.usersEmails;
+    selectedUsersEmails.value = props.usersEmails.map(item => item.value);
 };
 
 const goToUsersPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {

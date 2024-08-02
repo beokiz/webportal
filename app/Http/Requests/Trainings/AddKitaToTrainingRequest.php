@@ -4,16 +4,16 @@
  * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
  */
 
-namespace App\Http\Requests\Operators;
+namespace App\Http\Requests\Trainings;
 
 use App\Http\Requests\BaseFormRequest;
 
 /**
- * Connect Kita To Operator Request
+ * Add Kita To Training Request
  *
- * @package \App\Http\Requests\Operators
+ * @package \App\Http\Requests\Trainings
  */
-class ConnectKitaToOperatorRequest extends BaseFormRequest
+class AddKitaToTrainingRequest extends BaseFormRequest
 {
     /**
      * @return array
