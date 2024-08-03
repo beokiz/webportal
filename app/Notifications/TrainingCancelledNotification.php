@@ -56,7 +56,10 @@ class TrainingCancelledNotification extends Notification
     public function toMail($notifiable)
     {
         return (new CustomMailMessage)
-            ->subject(__('notifications.training_cancelled.subject'))
+            ->subject(__('notifications.training_cancelled.subject', [
+                'first_date'  => $this->args['first_date'],
+                'second_date' => $this->args['second_date'],
+            ]))
             ->greeting(__('notifications.training_cancelled.greeting'))
             ->line(__('notifications.training_cancelled.first_line', [
                 'first_date'  => $this->args['first_date'],

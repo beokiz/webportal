@@ -56,7 +56,10 @@ class TrainingConfirmedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new CustomMailMessage)
-            ->subject(__('notifications.training_confirmed.subject'))
+            ->subject(__('notifications.training_confirmed.subject', [
+                'first_date'  => $this->args['first_date'],
+                'second_date' => $this->args['second_date'],
+            ]))
             ->greeting(__('notifications.training_confirmed.greeting'))
             ->line(__('notifications.training_confirmed.first_line'))
             ->line(__('notifications.training_confirmed.second_line', [
