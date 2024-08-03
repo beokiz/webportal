@@ -186,6 +186,7 @@ const manageTraining = async () => {
 
 
 const openConfirmTrainingDialog = () => {
+  console.log([props.trainingKitas, currentTrainingKitas])
     confirmTrainingDialog.value = true;
 };
 
