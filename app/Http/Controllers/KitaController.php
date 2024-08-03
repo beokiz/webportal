@@ -69,7 +69,10 @@ class KitaController extends BaseController
         } else if ($currentUser->is_user_multiplier) {
             $currentUser->loadMissing(['operators']);
 
-            $args['with_operators'] = $currentUser->operators->pluck('id');
+            $args['with_operators'] = $currentUser->operators->pluck('id')
+                ->flatten()
+                ->unique()
+                ->toArray();
         } else {
             //
         }
@@ -140,10 +143,12 @@ class KitaController extends BaseController
         $userArgs = $request->only(['sort', 'order_by', 'status', 'first_name', 'last_name', 'email', 'with_roles']);
 
         // Empty model for empty select option
-        $emptyOperator = tap(new Operator(), function ($model) {
-            $model->id   = null;
-            $model->name = 'Kein Träger';
-        });
+        if ($currentUser->is_super_admin || $currentUser->is_admin || $currentUser->is_manager) {
+            $emptyOperator = tap(new Operator(), function ($model) {
+                $model->id   = null;
+                $model->name = 'Kein Träger';
+            });
+        }
 
         // Prepare operators list
         if ($currentUser->is_user_multiplier) {
@@ -161,7 +166,7 @@ class KitaController extends BaseController
             'usersEmails' => $this->kitaItemService->getUsersEmails([$kita->id]),
             'roles'       => $roleItemService->collection(['only_name' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
             'users'       => $userItemService->collection(['with_roles' => [config('permission.project_roles.manager'), config('permission.project_roles.employer')]]),
-            'operators'   => $operators->prepend($emptyOperator),
+            'operators'   => !empty($emptyOperator) ? $operators->prepend($emptyOperator) : $operators,
             'types'       => array_map(function ($type) {
                 return [
                     'title' => __("validation.attributes.{$type}"),

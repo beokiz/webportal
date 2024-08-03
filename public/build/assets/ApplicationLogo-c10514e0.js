@@ -1,0 +1,1 @@
+import{o as n,f as r}from"./app-cc71f302.js";const _="/build/assets/logo-9c885a86.png",a=(o,t)=>{const c=o.__vccOpts||o;for(const[s,e]of t)c[s]=e;return c},p={},i={src:_,alt:"HappyGen"};function l(o,t){return n(),r("img",i)}const m=a(p,[["render",l]]);export{m as A,a as _};

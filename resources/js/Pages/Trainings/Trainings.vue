@@ -187,6 +187,14 @@ watch(secondDateFilter, (val) => {
     triggerSearch();
 });
 
+watch(rawFirstDateFilter, (val) => {
+    triggerSearch();
+});
+
+watch(rawSecondDateFilter, (val) => {
+    triggerSearch();
+});
+
 watch(locationFilter, debounce((val) => {
     triggerSearch();
 }, 500));
@@ -225,6 +233,15 @@ const triggerSearch = () => {
 };
 
 // Methods
+const clearFirstDateFilter = () => {
+    firstDateFilter.value = null;
+    rawFirstDateFilter.value = null;
+};
+const clearSecondDateFilter = () => {
+    secondDateFilter.value = null;
+    rawSecondDateFilter.value = null;
+};
+
 const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
         firstDateFilter.value = null;
@@ -526,6 +543,7 @@ const manageTrainingStatus = async (status) => {
                                                                 :error-messages="errors.first_date"
                                                                 prepend-icon="mdi-calendar"
                                                                 readonly
+                                                                clearable
                                                                 v-bind="props"
                                                                 :disabled="loading"
                                                             ></v-text-field>
@@ -561,6 +579,7 @@ const manageTrainingStatus = async (status) => {
                                                                 :error-messages="errors.second_date"
                                                                 prepend-icon="mdi-calendar"
                                                                 readonly
+                                                                clearable
                                                                 v-bind="props"
                                                                 :disabled="loading"
                                                             ></v-text-field>
@@ -715,7 +734,9 @@ const manageTrainingStatus = async (status) => {
                                             :model-value="rawFirstDateFilter"
                                             prepend-icon="mdi-calendar"
                                             readonly
+                                            clearable
                                             v-bind="props"
+                                            @click:clear="clearFirstDateFilter"
                                         ></v-text-field>
                                     </template>
                                     <v-date-picker @update:modelValue="isFirstDateFilterOpened = false" v-model="firstDateFilter"></v-date-picker>
@@ -735,10 +756,14 @@ const manageTrainingStatus = async (status) => {
                                             :model-value="rawSecondDateFilter"
                                             prepend-icon="mdi-calendar"
                                             readonly
+                                            clearable
                                             v-bind="props"
+                                            @click:clear="clearSecondDateFilter"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker @update:modelValue="isSecondDateFilterOpened = false" v-model="secondDateFilter"></v-date-picker>
+                                    <v-date-picker v-model="secondDateFilter"
+                                                   @update:modelValue="isSecondDateFilterOpened = false"
+                                    ></v-date-picker>
                                 </v-menu>
                             </v-locale-provider>
                         </v-col>
@@ -876,7 +901,7 @@ const manageTrainingStatus = async (status) => {
                                     <span>Schulungstermin bestätigen</span>
                                 </v-tooltip>
                             </template>
-                            <template v-else-if="item.selectable.status === 'confirmed'">
+                            <template v-if="item.selectable.status === 'confirmed'">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
                                         <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'completed')">
@@ -886,7 +911,7 @@ const manageTrainingStatus = async (status) => {
                                     <span>Training abschließen und Einrichtungen zulassen</span>
                               </v-tooltip>
                             </template>
-                            <template v-else-if="item.selectable.status === 'completed' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
+                            <template v-if="item.selectable.status !== 'completed' && item.selectable.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
                                         <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'cancelled')">

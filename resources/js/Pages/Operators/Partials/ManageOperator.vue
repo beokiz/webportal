@@ -707,7 +707,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                               <span>Einrichtung bearbeiten</span>
                                           </v-tooltip>
 
-                                          <v-tooltip location="top">
+                                          <v-tooltip v-if="!$page.props.auth.user.is_manager && !$page.props.auth.user.is_user_multiplier" location="top">
                                               <template v-slot:activator="{ props }">
                                                   <v-icon v-bind="props" size="small" class="tw-me-2"
                                                           @click="openDeleteKitaFromOperatorDialog(item.raw)">mdi-delete

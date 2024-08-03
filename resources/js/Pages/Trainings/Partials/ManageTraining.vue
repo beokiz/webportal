@@ -46,6 +46,7 @@ Inertia.on('success', (event) => {
     let pageType = event.detail.page.component;
 
     if (pageType === 'Trainings/Partials/ManageTraining' && newProps) {
+        console.log(newProps)
         editedTraining.value = newProps.training;
     }
 });
@@ -155,7 +156,7 @@ const manageForm = useForm({
     second_date_start_and_end_time: editedTraining.value?.second_date_start_and_end_time,
     location: editedTraining.value?.location,
     max_participant_count: editedTraining.value?.max_participant_count,
-    participant_count: editedTraining.value?.participant_count,
+    // participant_count: currentParticipantCount,
     type: editedTraining.value?.type,
     // status: editedTraining.value?.status,
     notes: editedTraining.value?.notes,
@@ -207,7 +208,7 @@ const manageTrainingStatus = async (status) => {
     manageStatusForm.status = status;
 
     let formOptions = {
-        // preserveState: false,
+        preserveState: false,
         onSuccess: (page) => {
             close();
         },
@@ -539,28 +540,28 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="3">
                         <h3>Termin</h3>
                     </v-col>
 
-                    <v-col cols="12" sm="6" class="text-right">
+                    <v-col cols="12" sm="9" class="text-right">
                         <template v-if="editedTraining.status === 'planned'">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openConfirmTrainingDialog">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openConfirmTrainingDialog">
                                     <span>Schulungstermin bestätigen</span>
                                 </v-btn>
                             </v-hover>
                         </template>
-                        <template v-else-if="editedTraining.status === 'confirmed'">
+                        <template v-if="editedTraining.status === 'confirmed'">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'background' : 'success'" dark @click="openCompleteTrainingDialog">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'success'" dark @click="openCompleteTrainingDialog">
                                     <span>Training abschließen und Einrichtungen zulassen</span>
                                 </v-btn>
                             </v-hover>
                         </template>
-                        <template v-else-if="editedTraining.status === 'completed' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
+                        <template v-if="editedTraining.status !== 'completed' && editedTraining.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'background' : 'error'" dark @click="openCancelTrainingDialog">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'error'" dark @click="openCancelTrainingDialog">
                                     <span>Training abbrechen</span>
                                 </v-btn>
                             </v-hover>
@@ -644,8 +645,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-col cols="12" sm="2">
                         <v-text-field
                             type="number"
-                            v-model="manageForm.participant_count"
-                            :error-messages="errors.max_participant_count"
+                            v-model="editedTraining.participant_count"
+                            :error-messages="errors.participant_count"
                             label="Teilnehmerzahl*"
                             :disabled="loading || $page.props.auth.user.is_user_multiplier"
                             readonly
@@ -895,7 +896,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                   <span>Einrichtung bearbeiten</span>
                                               </v-tooltip>
 
-                                              <v-tooltip location="top">
+                                              <v-tooltip v-if="!$page.props.auth.user.is_manager && !$page.props.auth.user.is_user_multiplier" location="top">
                                                   <template v-slot:activator="{ props }">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2"
                                                               @click="openRemoveKitaFromTrainingDialog(item.raw)">mdi-delete
