@@ -73,13 +73,17 @@ class TrainingsController extends BaseController
 
         $result = $this->trainingItemService->collection(array_merge($args, [
             'paginated' => true,
-        ]), ['kitas.users'])->map(function ($training) {
+        ]), ['kitas.users']);
+
+        $preparedResult = $this->prepareItemsCollection($result);
+
+        $preparedResult['items'] = $preparedResult['items']->map(function ($training) {
             $training->email_messages = $training->getEmailMessagesContent();
 
             return $training;
         });
 
-        return Inertia::render('Trainings/Trainings', $this->prepareItemsCollection($result, [
+        return Inertia::render('Trainings/Trainings', array_merge($preparedResult, [
             'filters'     => $request->only([
                 'first_date', 'second_date', 'location', 'participant_count', 'max_participant_count', 'type',
                 'with_multipliers', 'status',

@@ -369,8 +369,8 @@ const close = () => {
 
     manageForm.reset();
     manageForm.clearErrors();
-    manageTrainingStatus.reset();
-    manageTrainingStatus.clearErrors();
+    manageStatusForm.reset();
+    manageStatusForm.clearErrors();
 
     rawFirstDateField.value = null;
     rawSecondDateField.value = null;
@@ -444,7 +444,6 @@ const openChangeTrainingStatusDialog = (item, status) => {
     manageStatusForm.id = item?.id;
     manageStatusForm.status = status;
 
-    console.log(item)
     selectedTraining.value = item;
     selectedTrainingKitas.value = item?.kitas;
 };
@@ -461,14 +460,6 @@ const manageTrainingStatus = async (status) => {
 
     manageStatusForm.put(route('trainings.update', { training: manageStatusForm.id }), {
         onSuccess: (page) => {
-            close();
-        },
-        onError: (err) => {
-            errors.value = err;
-        },
-        onFinish: () => {
-            manageStatusForm.processing = false;
-
             // Open local mail client with kita managers emails
             if (status === 'confirmed') {
                 let userEmails = [];
@@ -486,6 +477,7 @@ const manageTrainingStatus = async (status) => {
                     const link = document.createElement('a');
 
                     // Prepare email content
+                    console.log(selectedTraining.value)
                     const subject = selectedTraining.value?.email_messages[status]?.subject;
                     const body = selectedTraining.value?.email_messages[status]?.body;
 
@@ -504,6 +496,14 @@ const manageTrainingStatus = async (status) => {
 
                 ntfKitas.value = [];
             }
+
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            manageStatusForm.processing = false;
         },
     });
 };
@@ -845,6 +845,11 @@ const manageTrainingStatus = async (status) => {
                     </v-row>
                 </div>
             </div>
+
+<!--            {{perPage}}-->
+            {{totalItems}}
+<!--            {{lastPage}}-->
+<!--            {{currentPage}}-->
 
             <v-data-table-server
                 v-model:items-per-page="perPage"

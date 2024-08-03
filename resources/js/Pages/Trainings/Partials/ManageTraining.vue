@@ -46,7 +46,6 @@ Inertia.on('success', (event) => {
     let pageType = event.detail.page.component;
 
     if (pageType === 'Trainings/Partials/ManageTraining' && newProps) {
-        console.log(newProps)
         editedTraining.value = newProps.training;
     }
 });
@@ -210,14 +209,6 @@ const manageTrainingStatus = async (status) => {
     let formOptions = {
         preserveState: false,
         onSuccess: (page) => {
-            close();
-        },
-        onError: (err) => {
-            errors.value = err;
-        },
-        onFinish: () => {
-            manageStatusForm.processing = false;
-
             // Open local mail client with kita managers emails
             if (status === 'confirmed') {
                 let userEmails = [];
@@ -253,6 +244,14 @@ const manageTrainingStatus = async (status) => {
 
                 ntfKitas.value = [];
             }
+
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            manageStatusForm.processing = false;
         },
     };
 
