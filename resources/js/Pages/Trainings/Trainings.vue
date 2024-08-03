@@ -988,7 +988,7 @@ const manageTrainingStatus = async (status) => {
                                         </v-col>
                                     </v-row>
 
-                                    <v-row v-if="selectedTrainingKitas">
+                                    <v-row v-if="selectedTrainingKitas  && selectedTrainingKitas.length">
                                         <v-col cols="12">
                                             <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
                                             <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
