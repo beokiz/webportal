@@ -75,6 +75,7 @@ const rawSecondDateField = ref(prepareDate(props.training.second_date));
 const firstDateField = ref(new Date(props.training.first_date).toString());
 const secondDateField = ref(new Date(props.training.second_date).toString());
 
+const currentTrainingKitas = ref(props.trainingKitas ?? []);
 const ntfKitas = ref([]);
 
 const completedTrainingInfo = ref([
@@ -270,7 +271,7 @@ const addKitaToTrainingForm = useForm({
 });
 
 const allKitasExcludeAdded = computed(() => {
-    let trainingKitasIds = props.trainingKitas.map(kita => kita.id);
+    let trainingKitasIds = currentTrainingKitas.value.map(kita => kita.id);
 
     return props.allKitas.filter(kita => !trainingKitasIds.includes(kita.id));
 });
@@ -402,7 +403,7 @@ const selectedUsersEmails = ref([]);
 const dialogUsersEmails = ref(false);
 
 const modifiedItems = computed(() => {
-    return modifyItems(props.trainingKitas);
+    return modifyItems(currentTrainingKitas.value);
 });
 
 const allFiltersEmpty = computed(() => {
@@ -946,7 +947,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         </v-col>
                                     </v-row>
 
-                                    <v-row v-if="trainingKitas">
+                                    <v-row v-if="currentTrainingKitas">
                                         <v-col cols="12">
                                             <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
                                             <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
@@ -954,7 +955,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                         <v-col cols="12" class="tw--mt-6">
                                             <v-list>
-                                                <v-list-item class="hide-details" v-for="kita in trainingKitas" :key="kita.id">
+                                                <v-list-item class="hide-details" v-for="kita in currentTrainingKitas" :key="kita.id">
                                                     <v-checkbox
                                                         class="!tw-font-bold !tw-font-italic !tw-text-black"
                                                         :label="kita.name"

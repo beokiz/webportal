@@ -132,7 +132,10 @@ class TrainingsController extends BaseController
         if ($currentUser->is_user_multiplier) {
             $currentUser->loadMissing(['operators']);
 
-            $allKitaArgs['with_operators'] = $currentUser->operators->pluck('id');
+            $allKitaArgs['with_operators'] = $currentUser->operators->pluck('id')
+                ->flatten()
+                ->unique()
+                ->toArray();
         }
 
         $allKitas = $kitaItemService->collection(array_merge($allKitaArgs, [
