@@ -155,6 +155,7 @@ return [
     'not_present_with'          => "The \":attribute\" must not be present if \":value\" is present.",
     'file_name'                 => "The \":attribute\" must be a file name with one of following type: :values.",
     'not_match_old_password'    => "The \":attribute\" should not be same as old password.",
+    'date_difference'           => "The \":attribute\" must be at least :days days greater than the :other_field date.",
 
     /*
     |--------------------------------------------------------------------------
@@ -299,6 +300,10 @@ return [
         'planned'                                  => "Planned",
         'confirmed'                                => "Confirmed",
         'completed'                                => "Completed",
+        'open'                                     => "Open",
+        'obsolete'                                 => "Obsolete",
+        'reserved'                                 => "Reserved",
+        'confirmation_pending'                     => "Confirmation pending",
         'cancelled'                                => "Cancelled",
         'multi_id'                                 => "Multiplier",
         'first_date'                               => "First date",

@@ -155,6 +155,7 @@ return [
     'not_present_with'          => "Das Feld \":attribute\" darf nicht vorhanden sein, wenn \":value\" vorhanden ist.",
     'file_name'                 => "Das Feld \":attribute\" muss einen Dateinamen mit einem der folgenden Typen sein: :values.",
     'not_match_old_password'    => "Das Feld \":attribute\" darf nicht mit dem alten Passwort übereinstimmen.",
+    'date_difference'           => "Das Feld \":attribute\" muss mindestens :days Tage nach dem :other_field-Datum liegen.",
 
     /*
     |--------------------------------------------------------------------------
@@ -299,6 +300,10 @@ return [
         'planned'                                  => "Geplant",
         'confirmed'                                => "Bestätigt",
         'completed'                                => "Abgeschlossen",
+        'open'                                     => "Offen",
+        'obsolete'                                 => "Obsolete",
+        'reserved'                                 => "Reserviert",
+        'confirmation_pending'                     => "Bestätigung ausstehend",
         'cancelled'                                => "Abgesagt",
         'multi_id'                                 => "Multiplikator",
         'first_date'                               => "Erster Schulungstag",

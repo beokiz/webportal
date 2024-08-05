@@ -246,6 +246,14 @@ class Kita extends Model
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function trainingProposals() : BelongsToMany
+    {
+        return $this->BelongsToMany(TrainingProposal::class, 'kita_has_training_proposals', 'kita_id', 'training_proposal_id');
+    }
+
+    /**
      * @return HasMany
      */
     public function evaluations() : HasMany

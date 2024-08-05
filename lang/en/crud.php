@@ -259,17 +259,38 @@ return [
     */
 
     'trainings' => [
-        'create_success'  => "Training has been created successfully.",
-        'create_error'    => "Error! Something went wrong while creating a training. Please try again later.",
-        'update_success'  => "Training has been updated successfully.",
-        'update_error'    => "Error! Something went wrong while updating a training. Please try again later.",
-        'update_denied'   => "Error! Selected training cannot be updated.",
-        'delete_success'  => "Training has been deleted successfully.",
-        'delete_error'    => "Error! Something went wrong while deleting a training. Please try again later.",
-        'delete_denied'   => "Error! Selected training cannot be deleted.",
-        'restore_success' => "Training has been restored successfully.",
-        'restore_error'   => "Error! Something went wrong while restoring a training. Please try again later.",
-        'restore_denied'  => "Error! Selected training cannot be restored.",
+        'create_success'  => "The training has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating the training. Please try again later.",
+        'update_success'  => "The training has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating the training. Please try again later.",
+        'update_denied'   => "Error! The selected training cannot be updated.",
+        'delete_success'  => "The training has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting the training. Please try again later.",
+        'delete_denied'   => "Error! The selected training cannot be deleted.",
+        'restore_success' => "The training has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring the training. Please try again later.",
+        'restore_denied'  => "Error! The selected training cannot be restored.",
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Training Proposals CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'training_proposals' => [
+        'create_success'  => "The training proposal has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating the training proposal. Please try again later.",
+        'update_success'  => "The training proposal has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating the training proposal. Please try again later.",
+        'update_denied'   => "Error! The selected training proposal cannot be updated.",
+        'delete_success'  => "The training proposal has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting the training proposal. Please try again later.",
+        'delete_denied'   => "Error! The selected training proposal cannot be deleted.",
+        'restore_success' => "The training proposal has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring the training proposal. Please try again later.",
+        'restore_denied'  => "Error! The selected training proposal cannot be restored.",
+    ],
+
 
 ];

@@ -24,7 +24,7 @@ class TrainingObserver extends BaseObserver
     protected $tokens;
 
     /**
-     * DownloadableFileObserver constructor.
+     * TrainingObserver constructor.
      *
      * @return void
      */

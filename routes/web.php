@@ -26,6 +26,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubdomainsController;
 use App\Http\Controllers\SurveyTimePeriodController;
+use App\Http\Controllers\TrainingProposalsController;
 use App\Http\Controllers\TrainingsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\YearlyEvaluationsController;
@@ -322,5 +323,20 @@ Route::group(['middleware' => ['auth', 'verified_2fa']], function () {
         Route::post('/{training}/remove-kita', [TrainingsController::class, 'removeKita'])->name('remove_kita');
         Route::post('/{training}/remove-kitas', [TrainingsController::class, 'removeKitas'])->name('remove_kitas');
         Route::delete('/{training}', [TrainingsController::class, 'destroy'])->name('destroy');
+    });
+
+    /*
+     * Training proposals routes
+     */
+    Route::group(['prefix' => 'training-proposals', 'as' => 'training_proposals.'], function () {
+        Route::get('/', [TrainingProposalsController::class, 'index'])->name('index');
+        Route::get('/{trainingProposals}', [TrainingProposalsController::class, 'show'])->name('show');
+        Route::post('/', [TrainingProposalsController::class, 'store'])->name('store');
+        Route::put('/{trainingProposals}', [TrainingProposalsController::class, 'update'])->name('update');
+        Route::post('/{trainingProposals}/add-kita', [TrainingProposalsController::class, 'addKita'])->name('add_kita');
+        Route::post('/{trainingProposals}/add-kitas', [TrainingProposalsController::class, 'addKitas'])->name('add_kitas');
+        Route::post('/{trainingProposals}/remove-kita', [TrainingProposalsController::class, 'removeKita'])->name('remove_kita');
+        Route::post('/{trainingProposals}/remove-kitas', [TrainingProposalsController::class, 'removeKitas'])->name('remove_kitas');
+        Route::delete('/{trainingProposals}', [TrainingProposalsController::class, 'destroy'])->name('destroy');
     });
 });

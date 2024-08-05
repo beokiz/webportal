@@ -26,7 +26,6 @@ const props = defineProps({
     errors: Object,
     multipliers: Array,
     statuses: Array,
-    types: Array,
 });
 
 /*
@@ -37,7 +36,7 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Trainings/Trainings' && newProps) {
+    if (pageType === 'TrainingProposals/TrainingProposals' && newProps) {
         currentPage.value = newProps.currentPage;
         perPage.value = newProps.perPage;
         orderBy.value = newProps.orderBy;
@@ -61,7 +60,6 @@ const totalItems = ref(props.total);
 const lastPage = ref(props.lastPage);
 const locationFilter = ref(props.filters.location ?? null);
 const participantCountFilter = ref(props.filters.participant_count ?? null);
-const maxParticipantCountFilter = ref(props.filters.max_participant_count ?? null);
 const typeFilter = ref(props.filters.type ?? null);
 const multiIdFilter = ref(props.filters.multi_id ?? null);
 const statusFilter = ref(props.filters.status ?? null);
@@ -75,10 +73,9 @@ const isSecondDateFieldOpened = ref(false);
 
 const loading = ref(false);
 const dialog = ref(false);
-const confirmTrainingDialog = ref(false);
-const completeTrainingDialog = ref(false);
-const cancelTrainingDialog = ref(false);
-const dialogDeleteTraining = ref(false);
+const acceptTrainingProposalDialog = ref(false);
+const revokeTrainingProposalDialog = ref(false);
+const dialogDeleteTrainingProposal = ref(false);
 const deletingItemName = ref(null);
 
 const rawFirstDateFilter = ref(null);
@@ -91,22 +88,20 @@ const rawSecondDateField = ref(null);
 const firstDateField = ref(null);
 const secondDateField = ref(null);
 
-const selectedTraining = ref(null);
-const selectedTrainingKitas = ref([]);
+const selectedTrainingProposal = ref(null);
+const selectedTrainingProposalKitas = ref([]);
 const ntfKitas = ref([]);
 
 const headers = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: true },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '10%', sortable: true },
-    { title: 'Teilnehmer ', key: 'prepared_participant_count', width: '5%', sortable: true },
-    { title: 'Typ', key: 'type', width: '7%', sortable: true },
+    { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: true },
+    { title: 'Kita', key: 'kitas_list', width: '20%', sortable: false },
     { title: 'Status', key: 'status', width: '10%', sortable: true },
-    { title: 'Multiplikator', key: 'multi_id', width: '10%', sortable: true },
-    { title: 'Notizen', key: 'notes', width: '20%', sortable: true },
-    { title: 'Erstellt am', key: 'created_at', width: '10%', sortable: true },
-    { title: 'Geändert am', key: 'updated_at', width: '10%', sortable: true },
-    { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
+    { title: 'Erstellt am', key: 'created_at', width: '16%', sortable: true },
+    { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: true },
+    { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
 
 
@@ -128,7 +123,6 @@ const allFiltersEmpty = computed(() => {
         secondDateFilter.value === null &&
         locationFilter.value === null &&
         participantCountFilter.value === null &&
-        maxParticipantCountFilter.value === null &&
         typeFilter.value === null &&
         multiIdFilter.value === null &&
         statusFilter.value === null;
@@ -139,7 +133,6 @@ const someFiltersNotEmpty = computed(() => {
         secondDateFilter.value !== null ||
         locationFilter.value !== null ||
         participantCountFilter.value !== null ||
-        maxParticipantCountFilter.value !== null ||
         typeFilter.value !== null ||
         multiIdFilter.value !== null ||
         statusFilter.value !== null;
@@ -149,23 +142,23 @@ const completedTrainingInfo = computed(() => {
     return [
         {
             label: 'Erster Schukungstag',
-            value: `${prepareDate(selectedTraining.value?.first_date)} ${selectedTraining.value?.first_date_start_and_end_time}`,
+            value: `${prepareDate(selectedTrainingProposal.value?.first_date)} ${selectedTrainingProposal.value?.first_date_start_and_end_time}`,
         },
         {
             label: 'Zweiter Schulungstag',
-            value: `${prepareDate(selectedTraining.value?.second_date)} ${selectedTraining.value?.second_date_start_and_end_time}`,
+            value: `${prepareDate(selectedTrainingProposal.value?.second_date)} ${selectedTrainingProposal.value?.second_date_start_and_end_time}`,
         },
         {
             label: 'Ort',
-            value: selectedTraining.value?.location,
+            value: selectedTrainingProposal.value?.location,
         },
         {
             label: 'Typ',
-            value: selectedTraining.value?.type,
+            value: selectedTrainingProposal.value?.type,
         },
         {
             label: 'Teinhemheranzahl',
-            value: selectedTraining.value?.participant_count,
+            value: selectedTrainingProposal.value?.participant_count,
         },
     ];
 });
@@ -200,10 +193,6 @@ watch(locationFilter, debounce((val) => {
 }, 500));
 
 watch(participantCountFilter, debounce((val) => {
-    triggerSearch();
-}, 500));
-
-watch(maxParticipantCountFilter, debounce((val) => {
     triggerSearch();
 }, 500));
 
@@ -248,7 +237,6 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         secondDateFilter.value = null;
         locationFilter.value = null;
         participantCountFilter.value = null;
-        maxParticipantCountFilter.value = null;
         typeFilter.value = null;
         multiIdFilter.value = null;
         statusFilter.value = null;
@@ -291,10 +279,6 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             data.participant_count = participantCountFilter.value;
         }
 
-        if (maxParticipantCountFilter.value) {
-            data.max_participant_count = maxParticipantCountFilter.value;
-        }
-
         if (typeFilter.value) {
             data.type = typeFilter.value;
         }
@@ -331,17 +315,17 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     }
 };
 
-const openDeleteTrainingDialog = (item) => {
+const openDeleteTrainingProposalDialog = (item) => {
     deletingItemName.value = item.name
     deleteForm.id = item.id;
-    dialogDeleteTraining.value = true
+    dialogDeleteTrainingProposal.value = true
 };
 
 const deleteForm = useForm({
     id: null,
 });
 
-const deleteTraining = async () => {
+const deleteTrainingProposal = async () => {
     deleteForm.processing = true;
 
     let formOptions = {
@@ -357,15 +341,14 @@ const deleteTraining = async () => {
         },
     };
 
-    deleteForm.delete(route('trainings.destroy', { id: deleteForm.id }), formOptions);
+    deleteForm.delete(route('training_proposals.destroy', { id: deleteForm.id }), formOptions);
 };
 
 const close = () => {
     dialog.value = false;
-    dialogDeleteTraining.value = false;
-    confirmTrainingDialog.value = false;
-    completeTrainingDialog.value = false;
-    cancelTrainingDialog.value = false;
+    dialogDeleteTrainingProposal.value = false;
+    acceptTrainingProposalDialog.value = false;
+    revokeTrainingProposalDialog.value = false;
 
     manageForm.reset();
     manageForm.clearErrors();
@@ -377,8 +360,8 @@ const close = () => {
     firstDateField.value = null;
     secondDateField.value = null;
 
-    selectedTraining.value = null;
-    selectedTrainingKitas.value = null;
+    selectedTrainingProposal.value = null;
+    selectedTrainingProposalKitas.value = null;
 
     errors.value = {};
 };
@@ -397,24 +380,20 @@ const clear = () => {
 const manageForm = useForm({
     multi_id: null,
     first_date: null,
-    first_date_start_and_end_time: '12:00',
     second_date: null,
-    second_date_start_and_end_time: '12:00',
     location: null,
-    max_participant_count: null,
-    // participant_count: null,
-    type: null,
+    participant_count: null,
     // status: null,
     notes: null,
 });
 
-const manageTraining = async () => {
+const manageTrainingProposal = async () => {
     manageForm.processing = true;
 
     manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
     manageForm.second_date = secondDateField.value ? new Date(secondDateField.value).toLocaleString() : null;
 
-    manageForm.post(route('trainings.store'), {
+    manageForm.post(route('training_proposals.store'), {
         onSuccess: (page) => {
             close();
         },
@@ -428,24 +407,21 @@ const manageTraining = async () => {
 };
 
 
-const openChangeTrainingStatusDialog = (item, status) => {
+const openChangeTrainingProposalStatusDialog = (item, status) => {
     switch (status) {
-        case 'confirmed':
-            confirmTrainingDialog.value = true;
+        case 'reserved':
+            acceptTrainingProposalDialog.value = true;
             break;
-        case 'completed':
-            completeTrainingDialog.value = true;
-            break;
-        case 'cancelled':
-            cancelTrainingDialog.value = true;
+        case 'open':
+            revokeTrainingProposalDialog.value = true;
             break;
     }
 
     manageStatusForm.id = item?.id;
     manageStatusForm.status = status;
 
-    selectedTraining.value = item;
-    selectedTrainingKitas.value = item?.kitas;
+    selectedTrainingProposal.value = item;
+    selectedTrainingProposalKitas.value = item?.kitas;
 };
 
 const manageStatusForm = useForm({
@@ -453,12 +429,12 @@ const manageStatusForm = useForm({
     status: null,
 });
 
-const manageTrainingStatus = async (status) => {
+const manageTrainingProposalStatus = async (status) => {
     manageStatusForm.processing = true;
 
     manageStatusForm.status = status;
 
-    manageStatusForm.put(route('trainings.update', { training: manageStatusForm.id }), {
+    manageStatusForm.put(route('training_proposals.update', { training: manageStatusForm.id }), {
         onSuccess: (page) => {
             // Open local mail client with kita managers emails
             if (status === 'confirmed') {
@@ -477,8 +453,8 @@ const manageTrainingStatus = async (status) => {
                     const link = document.createElement('a');
 
                     // Prepare email content
-                    const subject = selectedTraining.value?.email_messages[status]?.subject;
-                    const body = selectedTraining.value?.email_messages[status]?.body;
+                    const subject = selectedTrainingProposal.value?.email_messages[status]?.subject;
+                    const body = selectedTrainingProposal.value?.email_messages[status]?.body;
 
                     // Set href before clicking
                     link.href = `mailto:?bcc=${userEmails.join(',')}&subject=${subject}&body=${body}`;
@@ -509,11 +485,11 @@ const manageTrainingStatus = async (status) => {
 </script>
 
 <template>
-    <Head title="Schulungen" />
+    <Head title="Terminvorschläge" />
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Schulungen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Terminvorschläge</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
                 <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
@@ -523,13 +499,13 @@ const manageTrainingStatus = async (status) => {
                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                             <v-card height="80vh">
                                 <v-card-title>
-                                    <span class="tw-text-h5">Verwalte Schulungen</span>
+                                    <span class="tw-text-h5">Verwalte Terminvorschläge</span>
                                 </v-card-title>
 
                                 <v-card-text>
                                     <v-container>
                                         <v-row>
-                                            <v-col cols="12" sm="6">
+                                            <v-col cols="12" sm="3">
                                                 <v-locale-provider locale="de">
                                                     <v-menu v-model="isFirstDateFieldOpened"
                                                             :return-value.sync="firstDateField"
@@ -552,20 +528,7 @@ const manageTrainingStatus = async (status) => {
                                                 </v-locale-provider>
                                             </v-col>
 
-                                            <v-col cols="12" sm="6">
-                                                <v-label class="tw-mt-6 tw-mr-2">Zeitraum erster Schulungstag*</v-label>
-
-                                                <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
-                                                                :hideClearButton="true"
-                                                                :hourLabel="'Std.'"
-                                                                :minuteLabel="'Protokoll'"
-                                                                :disabled="loading">
-                                                </vue-timepicker>
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-row>
-                                            <v-col cols="12" sm="6">
+                                            <v-col cols="12" sm="3">
                                                 <v-locale-provider locale="de">
                                                     <v-menu v-model="isSecondDateFieldOpened"
                                                             :return-value.sync="secondDateField"
@@ -585,47 +548,21 @@ const manageTrainingStatus = async (status) => {
                                                         </template>
                                                         <v-date-picker @update:modelValue="isSecondDateFieldOpened = false" v-model="secondDateField"></v-date-picker>
                                                     </v-menu>
-                                                  </v-locale-provider>
+                                                </v-locale-provider>
                                             </v-col>
 
-                                            <v-col cols="12" sm="6">
-                                                <v-label class="tw-mt-6 tw-mr-2">Zeitraum zweiter Schulungstag*</v-label>
-
-                                                <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
-                                                                :hideClearButton="true"
-                                                                :hourLabel="'Std.'"
-                                                                :minuteLabel="'Protokoll'"
-                                                                :disabled="loading">
-                                                </vue-timepicker>
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-row>
-                                            <v-col cols="12" sm="4">
+                                            <v-col cols="12" sm="3">
                                                 <v-text-field
                                                     type="number"
-                                                    v-model="manageForm.max_participant_count"
-                                                    :error-messages="errors.max_participant_count"
-                                                    label="Max. Teilnehmerzahl*"
+                                                    v-model="manageForm.participant_count"
+                                                    :error-messages="errors.participant_count"
+                                                    label="Teilnehmerzahl*"
                                                     :disabled="loading"
                                                     clearable
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <v-col cols="12" sm="4">
-                                                <v-select
-                                                    v-model="manageForm.type"
-                                                    :error-messages="errors.type"
-                                                    :items="types"
-                                                    item-title="title"
-                                                    item-value="value"
-                                                    label="Typ*"
-                                                    :disabled="loading"
-                                                    clearable
-                                                ></v-select>
-                                            </v-col>
-
-                                            <v-col cols="12" sm="4">
+                                            <v-col cols="12" sm="3">
                                                 <v-select
                                                     v-model="manageForm.multi_id"
                                                     :error-messages="errors.multi_id"
@@ -637,19 +574,6 @@ const manageTrainingStatus = async (status) => {
                                                     clearable
                                                 ></v-select>
                                             </v-col>
-
-<!--                                            <v-col cols="12" sm="3">-->
-<!--                                              <v-select-->
-<!--                                                  v-model="manageForm.status"-->
-<!--                                                  :error-messages="errors.status"-->
-<!--                                                  :items="statuses"-->
-<!--                                                  item-title="title"-->
-<!--                                                  item-value="value"-->
-<!--                                                  label="Status*"-->
-<!--                                                  :disabled="loading"-->
-<!--                                                  clearable-->
-<!--                                              ></v-select>-->
-<!--                                            </v-col>-->
                                         </v-row>
 
                                         <v-row>
@@ -683,7 +607,7 @@ const manageTrainingStatus = async (status) => {
                                         <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Stornieren</v-btn>
                                     </v-hover>
                                     <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn-primary @click="manageTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                        <v-btn-primary @click="manageTrainingProposal" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
                                     </v-hover>
                                 </v-card-actions>
                             </v-card>
@@ -692,13 +616,13 @@ const manageTrainingStatus = async (status) => {
                 </v-hover>
             </div>
 
-            <v-dialog v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-model="dialogDeleteTraining" width="20vw">
+            <v-dialog v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-model="dialogDeleteTrainingProposal" width="20vw">
                 <v-card height="30vh">
                     <v-card-text>
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <p>Sind Sie sicher, dass Sie die ausgewählte Schulung löschen möchten?</p>
+                                    <p>Sind Sie sicher, dass Sie die ausgewählte Terminvorschlag löschen möchten?</p>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -710,7 +634,7 @@ const manageTrainingStatus = async (status) => {
                             <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                         </v-hover>
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="deleteTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                            <v-btn-primary @click="deleteTrainingProposal" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                         </v-hover>
                     </v-card-actions>
                 </v-card>
@@ -787,30 +711,6 @@ const manageTrainingStatus = async (status) => {
                         </v-col>
 
                         <v-col cols="12" sm="4">
-                            <v-text-field
-                                type="number"
-                                v-model="maxParticipantCountFilter"
-                                label="Max. Teilnehmerzahl"
-                                clearable
-                            ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="4">
-                            <v-select
-                                v-model="typeFilter"
-                                :items="types"
-                                item-title="title"
-                                item-value="value"
-                                label="Typ"
-                                multiple
-                                :disabled="loading"
-                                clearable
-                            ></v-select>
-                        </v-col>
-                    </v-row>
-
-                    <v-row>
-                        <v-col cols="12" sm="4">
                             <v-select
                                 v-model="statusFilter"
                                 :items="statuses"
@@ -836,10 +736,6 @@ const manageTrainingStatus = async (status) => {
                                     clearable
                                 ></v-select>
                             </template>
-                        </v-col>
-
-                        <v-col cols="12" sm="4">
-
                         </v-col>
                     </v-row>
                 </div>
@@ -874,55 +770,41 @@ const manageTrainingStatus = async (status) => {
 
                         <td>{{item.selectable.location}}</td>
 
-                        <td>{{item.selectable.prepared_participant_count}}</td>
+                        <td>{{item.selectable.participant_count}}</td>
 
-                        <td>{{item.selectable.formatted_type}}</td>
+                        <td>{{item.selectable?.kitas_list && item.selectable?.kitas_list.length ? item.selectable?.kitas_list : '-'}}</td>
 
                         <td>{{item.selectable.formatted_status}}</td>
-
-                        <td>{{item.selectable?.multiplier ? item.selectable?.multiplier?.full_name : '-'}}</td>
-
-                        <td>{{item.selectable.notes}}</td>
 
                         <td>{{!item.selectable.created_at || item.selectable.created_at === '-' ? item.selectable.created_at : formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
 
                         <td>{{!item.selectable.updated_at || item.selectable.updated_at === '-' ? item.selectable.updated_at : formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
 
                         <td class="text-center">
-                            <template v-if="item.selectable.status === 'planned'">
+                            <template v-if="item.selectable.status === 'open' && ($page.props.auth.user.is_user_multiplier)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'confirmed')">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-progress-check</v-icon>
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item.selectable, 'reserved')">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-plus-circle-outline</v-icon>
                                         </span>
                                     </template>
-                                    <span>Schulungstermin bestätigen</span>
+                                    <span>Termin bestätigen</span>
                                 </v-tooltip>
                             </template>
-                            <template v-if="item.selectable.status === 'confirmed'">
+                            <template v-if="item.selectable.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'completed')">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-check</v-icon>
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item.selectable, 'open')">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>
                                         </span>
                                     </template>
-                                    <span>Training abschließen und Einrichtungen zulassen</span>
+                                    <span>Reservierung aufheben</span>
                               </v-tooltip>
-                            </template>
-                            <template v-if="item.selectable.status !== 'completed' && item.selectable.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
-                                <v-tooltip location="top">
-                                    <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'cancelled')">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-close</v-icon>
-                                        </span>
-                                    </template>
-                                    <span>Training abbrechen</span>
-                                </v-tooltip>
                             </template>
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('trainings.show', { id: item.selectable.id })">
+                                    <Link :href="route('training_proposals.show', { id: item.selectable.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -931,7 +813,7 @@ const manageTrainingStatus = async (status) => {
 
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingProposalDialog(item.raw)">mdi-delete</v-icon>
                                 </template>
                                 <span>Schulung löschen</span>
                             </v-tooltip>
@@ -981,7 +863,7 @@ const manageTrainingStatus = async (status) => {
                                         </v-col>
                                     </v-row>
 
-                                    <v-row v-if="selectedTrainingKitas  && selectedTrainingKitas.length">
+                                    <v-row v-if="selectedTrainingProposalKitas  && selectedTrainingProposalKitas.length">
                                         <v-col cols="12">
                                             <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
                                             <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
@@ -989,7 +871,7 @@ const manageTrainingStatus = async (status) => {
 
                                         <v-col cols="12" class="tw--mt-6">
                                             <v-list>
-                                                <v-list-item class="hide-details" v-for="kita in selectedTrainingKitas" :key="kita.id">
+                                                <v-list-item class="hide-details" v-for="kita in selectedTrainingProposalKitas" :key="kita.id">
                                                     <v-checkbox
                                                         class="!tw-font-bold !tw-font-italic !tw-text-black"
                                                         :label="kita.name"
@@ -1009,7 +891,7 @@ const manageTrainingStatus = async (status) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
@@ -1034,7 +916,7 @@ const manageTrainingStatus = async (status) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('completed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus('completed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
@@ -1059,7 +941,7 @@ const manageTrainingStatus = async (status) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('cancelled')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus('cancelled')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>

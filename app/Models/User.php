@@ -16,6 +16,7 @@ use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TrainingCancelledNotification;
 use App\Notifications\TrainingCompletedNotification;
 use App\Notifications\TrainingConfirmedNotification;
+use App\Notifications\TrainingProposalConfirmationPendingNotification;
 use App\Notifications\TwoFactorVerificationNotification;
 use App\Notifications\VerifyEmailNotification;
 use App\Notifications\WelcomeNotification;
@@ -373,6 +374,15 @@ class User extends Authenticatable
     public function sendTrainingCancelledNotification(array $args) : void
     {
         $this->notify(new TrainingCancelledNotification($args));
+    }
+
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendTrainingProposalConfirmationPendingNotification(array $args) : void
+    {
+        $this->notify(new TrainingProposalConfirmationPendingNotification($args));
     }
 
     /*

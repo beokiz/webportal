@@ -36,7 +36,7 @@ class TrainingsController extends BaseController
     protected $trainingItemService;
 
     /**
-     * OperatorsController constructor.
+     * TrainingsController constructor.
      *
      * @param TrainingItemService $trainingItemService
      * @return void

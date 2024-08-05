@@ -10,11 +10,11 @@ use EloquentFilter\ModelFilter;
 use Illuminate\Support\Carbon;
 
 /**
- * Training Model Filter
+ * TrainingProposal Model Filter
  *
  * @package \App\ModelFilters
  */
-class TrainingFilter extends BaseFilter
+class TrainingProposalFilter extends BaseFilter
 {
     /**
      * @var array
@@ -83,24 +83,6 @@ class TrainingFilter extends BaseFilter
     public function participantCount(string $value) : ModelFilter
     {
         return $this->where('participant_count', 'LIKE', trim($value) . '%');
-    }
-
-    /**
-     * @param string $value
-     * @return ModelFilter
-     */
-    public function maxParticipantCount(string $value) : ModelFilter
-    {
-        return $this->where('max_participant_count', 'LIKE', trim($value) . '%');
-    }
-
-    /**
-     * @param string|array $values
-     * @return ModelFilter
-     */
-    public function type($values) : ModelFilter
-    {
-        return $this->whereIn('type', (array) $values);
     }
 
     /**
