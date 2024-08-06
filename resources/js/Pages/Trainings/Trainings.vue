@@ -477,7 +477,6 @@ const manageTrainingStatus = async (status) => {
                     const link = document.createElement('a');
 
                     // Prepare email content
-                    console.log(selectedTraining.value)
                     const subject = selectedTraining.value?.email_messages[status]?.subject;
                     const body = selectedTraining.value?.email_messages[status]?.body;
 
@@ -846,11 +845,6 @@ const manageTrainingStatus = async (status) => {
                 </div>
             </div>
 
-<!--            {{perPage}}-->
-            {{totalItems}}
-<!--            {{lastPage}}-->
-<!--            {{currentPage}}-->
-
             <v-data-table-server
                 v-model:items-per-page="perPage"
                 :items-per-page-options="[
@@ -1016,7 +1010,7 @@ const manageTrainingStatus = async (status) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
@@ -1041,7 +1035,7 @@ const manageTrainingStatus = async (status) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('completed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingStatus('completed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
@@ -1066,7 +1060,7 @@ const manageTrainingStatus = async (status) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('cancelled')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingStatus('cancelled')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
