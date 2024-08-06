@@ -421,4 +421,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Training::class, 'multi_id', 'id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function trainingProposals() : HasMany
+    {
+        return $this->hasMany(TrainingProposal::class, 'multi_id', 'id');
+    }
 }

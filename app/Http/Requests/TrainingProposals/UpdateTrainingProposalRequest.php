@@ -23,7 +23,7 @@ class UpdateTrainingProposalRequest extends CreateTrainingProposalRequest
     public function rules() : array
     {
         return [
-            'multi_id'          => ['sometimes', $this->userExistRule()],
+            'multi_id'          => ['nullable', $this->userExistRule()],
             'first_date'        => ['sometimes', 'date'],
             'second_date'       => ['sometimes', 'date', new DateDifferenceRule('first_date', $this->input('first_date'), 7)],
             'location'          => array_merge($this->textRules(), ['sometimes']),

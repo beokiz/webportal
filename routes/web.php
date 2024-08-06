@@ -330,13 +330,14 @@ Route::group(['middleware' => ['auth', 'verified_2fa']], function () {
      */
     Route::group(['prefix' => 'training-proposals', 'as' => 'training_proposals.'], function () {
         Route::get('/', [TrainingProposalsController::class, 'index'])->name('index');
-        Route::get('/{trainingProposals}', [TrainingProposalsController::class, 'show'])->name('show');
+        Route::get('/{trainingProposal}', [TrainingProposalsController::class, 'show'])->name('show');
         Route::post('/', [TrainingProposalsController::class, 'store'])->name('store');
-        Route::put('/{trainingProposals}', [TrainingProposalsController::class, 'update'])->name('update');
-        Route::post('/{trainingProposals}/add-kita', [TrainingProposalsController::class, 'addKita'])->name('add_kita');
-        Route::post('/{trainingProposals}/add-kitas', [TrainingProposalsController::class, 'addKitas'])->name('add_kitas');
-        Route::post('/{trainingProposals}/remove-kita', [TrainingProposalsController::class, 'removeKita'])->name('remove_kita');
-        Route::post('/{trainingProposals}/remove-kitas', [TrainingProposalsController::class, 'removeKitas'])->name('remove_kitas');
-        Route::delete('/{trainingProposals}', [TrainingProposalsController::class, 'destroy'])->name('destroy');
+        Route::put('/{trainingProposal}', [TrainingProposalsController::class, 'update'])->name('update');
+        Route::post('/{trainingProposal}/add-multiplier', [TrainingProposalsController::class, 'addMultiplier'])->name('add_multiplier');
+        Route::post('/{trainingProposal}/add-kita', [TrainingProposalsController::class, 'addKita'])->name('add_kita');
+        Route::post('/{trainingProposal}/add-kitas', [TrainingProposalsController::class, 'addKitas'])->name('add_kitas');
+        Route::post('/{trainingProposal}/remove-kita', [TrainingProposalsController::class, 'removeKita'])->name('remove_kita');
+        Route::post('/{trainingProposal}/remove-kitas', [TrainingProposalsController::class, 'removeKitas'])->name('remove_kitas');
+        Route::delete('/{trainingProposal}', [TrainingProposalsController::class, 'destroy'])->name('destroy');
     });
 });

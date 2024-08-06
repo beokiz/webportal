@@ -13,9 +13,9 @@ import { prepareDate } from "@/Composables/common.js";
 import VueTimepicker from "vue3-timepicker";
 
 const props = defineProps({
-    training: Object,
+    trainingProposal: Object,
     allKitas: Array,
-    trainingKitas: Array,
+    trainingProposalKitas: Array,
     errors: Object,
     multipliers: Array,
     operators: Array,
@@ -45,8 +45,8 @@ Inertia.on('success', (event) => {
     let newProps = event.detail.page.props;
     let pageType = event.detail.page.component;
 
-    if (pageType === 'Trainings/Partials/ManageTraining' && newProps) {
-        editedTraining.value = newProps.training;
+    if (pageType === 'TrainingProposals/Partials/ManageTrainingProposal' && newProps) {
+        editedTrainingProposal.value = newProps.trainingProposal;
     }
 });
 
@@ -56,47 +56,42 @@ Inertia.on('success', (event) => {
  */
 const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
-const editedTraining = ref(props.training);
+const editedTrainingProposal = ref(props.trainingProposal);
 const errors = ref(props.errors || {});
 const loading = ref(false);
 const selectedKitaName = ref(null);
 const dialog = ref(false);
-const confirmTrainingDialog = ref(false);
-const completeTrainingDialog = ref(false);
-const cancelTrainingDialog = ref(false);
-const addKitaToTrainingDialog = ref(false);
-const removeKitaFromTrainingDialog = ref(false);
+const acceptTrainingProposalDialog = ref(false);
+const revokeTrainingProposalDialog = ref(false);
+const confirmTrainingProposalDialog = ref(false);
+const addMultiplierToTrainingProposalDialog = ref(false);
+const addKitaToTrainingProposalDialog = ref(false);
+const removeKitaFromTrainingProposalDialog = ref(false);
 
 const isFirstDateFieldOpened = ref(false);
 const isSecondDateFieldOpened = ref(false);
 
-const rawFirstDateField = ref(prepareDate(props.training.first_date));
-const rawSecondDateField = ref(prepareDate(props.training.second_date));
-const firstDateField = ref(new Date(props.training.first_date).toString());
-const secondDateField = ref(new Date(props.training.second_date).toString());
+const rawFirstDateField = ref(prepareDate(props.trainingProposal.first_date));
+const rawSecondDateField = ref(prepareDate(props.trainingProposal.second_date));
+const firstDateField = ref(new Date(props.trainingProposal.first_date).toString());
+const secondDateField = ref(new Date(props.trainingProposal.second_date).toString());
 
-const ntfKitas = ref([]);
-
-const completedTrainingInfo = ref([
+const confirmedTrainingProposalInfo = ref([
     {
-        label: 'Erster Schukungstag',
-        value: `${prepareDate(editedTraining.value?.first_date)} ${editedTraining.value?.first_date_start_and_end_time}`,
+      label: 'Erster Schukungstag',
+      value: `${prepareDate(editedTrainingProposal.value?.first_date)}`,
     },
     {
-        label: 'Zweiter Schulungstag',
-        value: `${prepareDate(editedTraining.value?.second_date)} ${editedTraining.value?.second_date_start_and_end_time}`,
+      label: 'Zweiter Schulungstag',
+      value: `${prepareDate(editedTrainingProposal.value?.second_date)}`,
     },
     {
-        label: 'Ort',
-        value: editedTraining.value?.location,
+      label: 'Ort',
+      value: editedTrainingProposal.value?.location,
     },
     {
-        label: 'Typ',
-        value: editedTraining.value?.type,
-    },
-    {
-        label: 'Teinhemheranzahl',
-        value: editedTraining.value?.participant_count,
+      label: 'Teinhemheranzahl',
+      value: editedTrainingProposal.value?.participant_count,
     },
 ]);
 
@@ -118,18 +113,18 @@ watch(secondDateField, (val) => {
 const close = () => {
     dialog.value = false;
     selectedKitaName.value = null;
-    addKitaToTrainingDialog.value = false;
-    removeKitaFromTrainingDialog.value = false;
-    confirmTrainingDialog.value = false;
-    completeTrainingDialog.value = false;
-    cancelTrainingDialog.value = false;
+    addMultiplierToTrainingProposalDialog.value = false;
+    addKitaToTrainingProposalDialog.value = false;
+    removeKitaFromTrainingProposalDialog.value = false;
+    acceptTrainingProposalDialog.value = false;
+    revokeTrainingProposalDialog.value = false;
 
     manageStatusForm.reset();
     manageStatusForm.clearErrors();
-    addKitaToTrainingForm.reset();
-    addKitaToTrainingForm.clearErrors();
-    removeKitaFromTrainingForm.reset();
-    removeKitaFromTrainingForm.clearErrors();
+    addKitaToTrainingProposalForm.reset();
+    addKitaToTrainingProposalForm.clearErrors();
+    removeKitaFromTrainingProposalForm.reset();
+    removeKitaFromTrainingProposalForm.clearErrors();
 
     errors.value = {};
 };
@@ -140,25 +135,21 @@ const clear = () => {
 
     manageStatusForm.reset();
     manageStatusForm.clearErrors();
-    addKitaToTrainingForm.reset();
-    addKitaToTrainingForm.clearErrors();
-    removeKitaFromTrainingForm.reset();
-    removeKitaFromTrainingForm.clearErrors();
+    addKitaToTrainingProposalForm.reset();
+    addKitaToTrainingProposalForm.clearErrors();
+    removeKitaFromTrainingProposalForm.reset();
+    removeKitaFromTrainingProposalForm.clearErrors();
 };
 
 const manageForm = useForm({
-    id: editedTraining.value?.id,
-    multi_id: editedTraining.value?.multi_id,
-    first_date: editedTraining.value?.first_date,
-    first_date_start_and_end_time: editedTraining.value?.first_date_start_and_end_time,
-    second_date: editedTraining.value?.second_date,
-    second_date_start_and_end_time: editedTraining.value?.second_date_start_and_end_time,
-    location: editedTraining.value?.location,
-    max_participant_count: editedTraining.value?.max_participant_count,
-    // participant_count: currentParticipantCount,
-    type: editedTraining.value?.type,
-    // status: editedTraining.value?.status,
-    notes: editedTraining.value?.notes,
+    id: editedTrainingProposal.value?.id,
+    // multi_id: editedTrainingProposal.value?.multi_id,
+    first_date: editedTrainingProposal.value?.first_date,
+    second_date: editedTrainingProposal.value?.second_date,
+    location: editedTrainingProposal.value?.location,
+    participant_count: editedTrainingProposal.value?.participant_count,
+    // status: editedTrainingProposal.value?.status,
+    notes: editedTrainingProposal.value?.notes,
 });
 
 const manageTraining = async () => {
@@ -180,71 +171,64 @@ const manageTraining = async () => {
         },
     };
 
-    manageForm.put(route('trainings.update', {training: manageForm.id}), formOptions);
+    manageForm.put(route('training_proposals.update', { trainingProposal: manageForm.id }), formOptions);
 };
 
 
-const openConfirmTrainingDialog = () => {
-    confirmTrainingDialog.value = true;
+const openAddMultiplierToTrainingProposalDialog = () => {
+  addMultiplierToTrainingProposalDialog.value = true;
 };
 
-const openCompleteTrainingDialog = () => {
-    completeTrainingDialog.value = true;
+const addMultiplierToTrainingProposalForm = useForm({
+    multi_id: null,
+});
+
+const addMultiplierToTrainingProposal = async () => {
+    addMultiplierToTrainingProposalForm.processing = true;
+
+    addMultiplierToTrainingProposalForm.post(route('training_proposals.add_multiplier', { trainingProposal: props.trainingProposal.id }), {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            addMultiplierToTrainingProposalForm.processing = false;
+        },
+    });
 };
 
-const openCancelTrainingDialog = () => {
-    cancelTrainingDialog.value = true;
+
+const openConfirmTrainingProposalDialog = () => {
+    confirmTrainingProposalDialog.value = true;
+};
+
+const openAcceptTrainingProposalDialog = () => {
+    acceptTrainingProposalDialog.value = true;
+};
+
+const openRevokeTrainingProposalDialog = () => {
+    revokeTrainingProposalDialog.value = true;
 };
 
 const manageStatusForm = useForm({
-    id: editedTraining.value?.id,
+    id: editedTrainingProposal.value?.id,
     status: null,
 });
 
-const manageTrainingStatus = async (status) => {
+const manageTrainingProposalStatus = async (status) => {
     manageStatusForm.processing = true;
 
     manageStatusForm.status = status;
 
+    if (status === 'open') {
+        manageStatusForm.multi_id = null;
+    }
+
     let formOptions = {
         preserveState: false,
         onSuccess: (page) => {
-            // Open local mail client with kita managers emails
-            if (status === 'confirmed') {
-                let userEmails = [];
-
-                ntfKitas.value.map(kita => {
-                    kita?.users_emails.map(email => {
-                        userEmails.push(email);
-                    });
-                });
-
-                userEmails = userEmails.filter((value, index, array) => array.indexOf(value) === index);
-
-                if (userEmails && userEmails.length) {
-                    // Create a fake link
-                    const link = document.createElement('a');
-
-                    // Prepare email content
-                    const subject = props.emailMessages[status]?.subject;
-                    const body = props.emailMessages[status]?.body;
-
-                    // Set href before clicking
-                    link.href = `mailto:?bcc=${userEmails.join(',')}&subject=${subject}&body=${body}`;
-
-                    // Append the link to the document
-                    document.body.appendChild(link);
-
-                    // Programmatically click the link
-                    link.click();
-
-                    // Remove the link from the document
-                    document.body.removeChild(link);
-                }
-
-                ntfKitas.value = [];
-            }
-
             close();
         },
         onError: (err) => {
@@ -255,45 +239,30 @@ const manageTrainingStatus = async (status) => {
         },
     };
 
-    manageStatusForm.put(route('trainings.update', {training: manageStatusForm.id}), formOptions);
+    manageStatusForm.put(route('training_proposals.update', { trainingProposal: manageStatusForm.id }), formOptions);
 };
 
 /*
- * Add / remove Kita from Training
+ * Add / remove Kita from Training Proposal
  */
-const openAddKitaToTrainingDialog = () => {
-    addKitaToTrainingDialog.value = true;
+const openAddKitaToTrainingProposalDialog = () => {
+    addKitaToTrainingProposalDialog.value = true;
 };
 
-const addKitaToTrainingForm = useForm({
+const addKitaToTrainingProposalForm = useForm({
     kitas: [],
 });
 
 const allKitasExcludeAdded = computed(() => {
-    let trainingKitasIds = props.trainingKitas.map(kita => kita.id);
+    let trainingProposalKitasIds = props.trainingProposalKitas.map(kita => kita.id);
 
-    return props.allKitas.filter(kita => !trainingKitasIds.includes(kita.id));
+    return props.allKitas.filter(kita => !trainingProposalKitasIds.includes(kita.id));
 });
 
-const maxParticipantCountExceeded = computed(() => {
-    let selectedKitas = props.allKitas.filter(kita => addKitaToTrainingForm.kitas.includes(kita.id)) ?? [];
-    let newParticipantCount = selectedKitas.map(kita => kita.num_pedagogical_staff).reduce((partialSum, a) => partialSum + a, 0)
+const addKitaToTrainingProposal = async () => {
+    addKitaToTrainingProposalForm.processing = true;
 
-    let result = (newParticipantCount + editedTraining.value?.participant_count) > editedTraining.value?.max_participant_count;
-
-    if (result) {
-        errors.value.kitas = `Sie haben die maximale Teilnehmerzahl (${newParticipantCount + editedTraining.value?.participant_count}/${editedTraining.value?.max_participant_count}) überschritten.`;
-    } else {
-        delete errors.value?.kitas;
-    }
-
-    return result;
-});
-
-const addKitaToTraining = async () => {
-    addKitaToTrainingForm.processing = true;
-
-    addKitaToTrainingForm.post(route('trainings.add_kitas', {training: props.training.id}), {
+    addKitaToTrainingProposalForm.post(route('training_proposals.add_kitas', { trainingProposal: props.trainingProposal.id }), {
         onSuccess: (page) => {
             close();
         },
@@ -301,23 +270,23 @@ const addKitaToTraining = async () => {
             errors.value = err;
         },
         onFinish: () => {
-            addKitaToTrainingForm.processing = false;
+            addKitaToTrainingProposalForm.processing = false;
         },
     });
 };
 
-const openRemoveKitaFromTrainingDialog = (item) => {
+const openRemoveKitaFromTrainingProposalDialog = (item) => {
     selectedKitaName.value = item.name
-    removeKitaFromTrainingForm.kita = item.id;
-    removeKitaFromTrainingDialog.value = true;
+    removeKitaFromTrainingProposalForm.kita = item.id;
+    removeKitaFromTrainingProposalDialog.value = true;
 };
 
-const removeKitaFromTrainingForm = useForm({
+const removeKitaFromTrainingProposalForm = useForm({
     kita: null,
 });
 
-const removeKitaFromTraining = async () => {
-    removeKitaFromTrainingForm.processing = true;
+const removeKitaFromTrainingProposal = async () => {
+    removeKitaFromTrainingProposalForm.processing = true;
 
     let formOptions = {
         onSuccess: (page) => {
@@ -327,11 +296,11 @@ const removeKitaFromTraining = async () => {
             errors.value = err;
         },
         onFinish: () => {
-            removeKitaFromTrainingForm.processing = false;
+            removeKitaFromTrainingProposalForm.processing = false;
         },
     };
 
-    removeKitaFromTrainingForm.post(route('trainings.remove_kita', {id: props.training.id}), formOptions);
+    removeKitaFromTrainingProposalForm.post(route('training_proposals.remove_kita', {id: props.trainingProposal.id}), formOptions);
 };
 
 
@@ -402,7 +371,7 @@ const selectedUsersEmails = ref([]);
 const dialogUsersEmails = ref(false);
 
 const modifiedItems = computed(() => {
-    return modifyItems(props.trainingKitas);
+    return modifyItems(props.trainingProposalKitas);
 });
 
 const allFiltersEmpty = computed(() => {
@@ -503,7 +472,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             data.zip_code = zipCodeFilter.value;
         }
 
-        await router.get(route(route().current(), {training: manageForm.id}), data, {
+        await router.get(route(route().current(), { trainingProposal: manageForm.id }), data, {
             preserveScroll: true,
             preserveState: true,
             onCancelToken: cancelToken => {},
@@ -529,11 +498,11 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 </script>
 
 <template>
-    <Head :title="`Verwalte Termin Eigenschaften`"/>
+    <Head :title="`Verwalte Terminvorschlag`"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Termin Eigenschaften</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Verwalte Terminvorschlag</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
@@ -544,24 +513,24 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-col>
 
                     <v-col cols="12" sm="9" class="text-right">
-                        <template v-if="editedTraining.status === 'planned'">
+                        <template v-if="editedTrainingProposal.status === 'open'">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openConfirmTrainingDialog">
-                                    <span>Schulungstermin bestätigen</span>
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openAddMultiplierToTrainingProposalDialog">
+                                    <span>Akzeptieren für Multiplikator</span>
                                 </v-btn>
                             </v-hover>
                         </template>
-                        <template v-if="editedTraining.status === 'confirmed'">
+                        <template v-if="editedTrainingProposal.status === 'reserved'">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'success'" dark @click="openCompleteTrainingDialog">
-                                    <span>Training abschließen und Einrichtungen zulassen</span>
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'success'" dark @click="openConfirmTrainingProposalDialog">
+                                    <span>Termin bestätigen</span>
                                 </v-btn>
                             </v-hover>
                         </template>
-                        <template v-if="editedTraining.status !== 'completed' && editedTraining.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
+                        <template v-if="editedTrainingProposal.status === 'reserved'">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'error'" dark @click="openCancelTrainingDialog">
-                                    <span>Training abbrechen</span>
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'error'" dark @click="openRevokeTrainingProposalDialog">
+                                    <span>Reservierung aufheben</span>
                                 </v-btn>
                             </v-hover>
                         </template>
@@ -571,7 +540,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-locale-provider locale="de">
                             <v-menu v-model="isFirstDateFieldOpened"
                                     :return-value.sync="firstDateField"
@@ -585,7 +554,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                                        :disabled="loading"
                                     ></v-text-field>
                                 </template>
                                 <v-date-picker @update:modelValue="isFirstDateFieldOpened = false" v-model="firstDateField"></v-date-picker>
@@ -593,20 +562,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         </v-locale-provider>
                     </v-col>
 
-                    <v-col cols="12" sm="6">
-                        <v-label class="tw-mt-6 tw-mr-2">Zeitraum erster Schulungstag*</v-label>
-
-                        <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
-                                        :hideClearButton="true"
-                                        :hourLabel="'Std.'"
-                                        :minuteLabel="'Protokoll'"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier">
-                        </vue-timepicker>
-                    </v-col>
-                </v-row>
-
-                <v-row>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-locale-provider locale="de">
                             <v-menu v-model="isSecondDateFieldOpened"
                                     :return-value.sync="secondDateField"
@@ -620,7 +576,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                                        :disabled="loading"
                                     ></v-text-field>
                                 </template>
                                 <v-date-picker @update:modelValue="isSecondDateFieldOpened = false" v-model="secondDateField"></v-date-picker>
@@ -628,83 +584,16 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         </v-locale-provider>
                     </v-col>
 
-                    <v-col cols="12" sm="6">
-                        <v-label class="tw-mt-6 tw-mr-2">Zeitraum zweiter Schulungstag*</v-label>
-
-                        <vue-timepicker v-model="manageForm.second_date_start_and_end_time"
-                                        :hideClearButton="true"
-                                        :hourLabel="'Std.'"
-                                        :minuteLabel="'Protokoll'"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier">
-                        </vue-timepicker>
-                    </v-col>
-                </v-row>
-
-                <v-row>
-                    <v-col cols="12" sm="2">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             type="number"
-                            v-model="editedTraining.participant_count"
+                            v-model="manageForm.participant_count"
                             :error-messages="errors.participant_count"
                             label="Teilnehmerzahl*"
-                            :disabled="loading || $page.props.auth.user.is_user_multiplier"
-                            readonly
+                            clearable
+                            :disabled="loading"
                         ></v-text-field>
                     </v-col>
-
-                    <v-col cols="12" sm="1" class="tw-text-center">
-                        <span class="tw-inline-block tw-mt-4">von</span>
-                    </v-col>
-
-                    <v-col cols="12" sm="2">
-                        <v-text-field
-                            type="number"
-                            v-model="manageForm.max_participant_count"
-                            :error-messages="errors.max_participant_count"
-                            label="Max. Teilnehmerzahl*"
-                            clearable
-                            :disabled="loading || $page.props.auth.user.is_user_multiplier"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="12" sm="3">
-                        <v-select
-                            v-model="manageForm.type"
-                            :error-messages="errors.type"
-                            :items="types"
-                            item-title="title"
-                            item-value="value"
-                            label="Typ*"
-                            :disabled="loading || $page.props.auth.user.is_user_multiplier"
-                            clearable
-                        ></v-select>
-                    </v-col>
-
-                    <v-col cols="12" sm="4">
-                        <v-select
-                            v-model="manageForm.multi_id"
-                            :error-messages="errors.multi_id"
-                            :items="multipliers"
-                            item-title="full_name"
-                            item-value="id"
-                            label="Multiplikator*"
-                            :disabled="loading || $page.props.auth.user.is_user_multiplier"
-                            clearable
-                        ></v-select>
-                    </v-col>
-
-<!--                                            <v-col cols="12" sm="3">-->
-<!--                                              <v-select-->
-<!--                                                  v-model="manageForm.status"-->
-<!--                                                  :error-messages="errors.status"-->
-<!--                                                  :items="statuses"-->
-<!--                                                  item-title="title"-->
-<!--                                                  item-value="value"-->
-<!--                                                  label="Status*"-->
-<!--                                                  :disabled="loading"-->
-<!--                                                  clearable-->
-<!--                                              ></v-select>-->
-<!--                                            </v-col>-->
                 </v-row>
 
                 <v-row>
@@ -713,7 +602,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     :error-messages="errors.location"
                                     label="Ort*"
                                     required
-                                    :disabled="$page.props.auth.user.is_user_multiplier">
+                                    :disabled="loading">
                         </v-textarea>
                     </v-col>
 
@@ -722,28 +611,28 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     :error-messages="errors.notes"
                                     label="Notizen"
                                     required
-                                    :disabled="$page.props.auth.user.is_user_multiplier">
+                                    :disabled="loading">
                         </v-textarea>
                     </v-col>
                 </v-row>
 
                 <v-row>
                     <v-col cols="12" sm="6">
-                        <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
+                        <v-hover v-slot:default="{ isHovering, props }">
                             <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
                         </v-hover>
                     </v-col>
 
                     <v-col cols="12" sm="6" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('trainings.index')">
+                            <Link :href="route('training_proposals.index')">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>
 
-                        <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="manageTraining" v-bind="props"
-                                           :color="isHovering ? 'accent' : 'primary'">Speichern
+                        <v-hover v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="manageTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                                Speichern
                             </v-btn-primary>
                         </v-hover>
                     </v-col>
@@ -760,7 +649,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                         <v-col cols="12" sm="6" class="text-right">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openAddKitaToTrainingDialog">
+                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openAddKitaToTrainingProposalDialog">
                                     <span>Einrichtung hinzufügen</span>
                                 </v-btn>
                             </v-hover>
@@ -898,7 +787,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                               <v-tooltip v-if="!$page.props.auth.user.is_manager && !$page.props.auth.user.is_user_multiplier" location="top">
                                                   <template v-slot:activator="{ props }">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                              @click="openRemoveKitaFromTrainingDialog(item.raw)">mdi-delete
+                                                              @click="openRemoveKitaFromTrainingProposalDialog(item.raw)">mdi-delete
                                                       </v-icon>
                                                   </template>
                                                   <span>Einrichtung löschen</span>
@@ -921,8 +810,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             <!-- Popups -->
             <v-container>
                 <v-row>
-                    <!-- Confirm Training popup -->
-                    <v-dialog v-model="confirmTrainingDialog" width="80vw">
+                    <!-- Confirm Training Proposal popup -->
+                    <v-dialog v-model="confirmTrainingProposalDialog" width="80vw">
                         <v-card height="80vw">
                             <v-card-title>
                                 <span class="tw-text-h5">Schulung gegenüber den Kitas bestätigen?</span>
@@ -932,7 +821,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12">
-                                            <template v-for="row in completedTrainingInfo">
+                                            <template v-for="row in confirmedTrainingProposalInfo">
                                                 <v-row>
                                                     <v-col cols="12" sm="2">
                                                         <span class="tw-font-bold tw-font-italic">{{ row?.label }}:</span>
@@ -946,21 +835,21 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         </v-col>
                                     </v-row>
 
-                                    <v-row v-if="trainingKitas && trainingKitas.length">
+                                    <v-row v-if="trainingProposalKitas && trainingProposalKitas.length">
                                         <v-col cols="12">
-                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
-                                            <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
+                                            <p>Are you sure you want to confirm the appointments with the following daycare centers? An email will be sent to the managers of the daycare centers to confirm the proposal.</p>
                                         </v-col>
 
                                         <v-col cols="12" class="tw--mt-6">
                                             <v-list>
-                                                <v-list-item class="hide-details" v-for="kita in trainingKitas" :key="kita.id">
-                                                    <v-checkbox
-                                                        class="!tw-font-bold !tw-font-italic !tw-text-black"
-                                                        :label="kita.name"
-                                                        :value="kita"
-                                                        v-model="ntfKitas"
-                                                    ></v-checkbox>
+                                                <v-list-item class="hide-details" v-for="kita in trainingProposalKitas" :key="kita.id">
+<!--                                                    <v-checkbox-->
+<!--                                                        class="!tw-font-bold !tw-font-italic !tw-text-black"-->
+<!--                                                        :label="kita.name"-->
+<!--                                                        :value="kita"-->
+<!--                                                        v-model="ntfKitas"-->
+<!--                                                    ></v-checkbox>-->
+                                                  {{ kita.name }}
                                                 </v-list-item>
                                             </v-list>
                                         </v-col>
@@ -974,20 +863,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
 
-                    <!-- Complete Training popup -->
-                    <v-dialog v-model="completeTrainingDialog" width="20vw">
+                    <!-- Accept Training Proposal popup -->
+                    <v-dialog v-model="acceptTrainingProposalDialog" width="20vw">
                         <v-card height="30vh">
                             <v-card-text>
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12">
-                                            <p>Möchten Sie die ausgewählte Ausbildung wirklich absolvieren?</p>
+                                            <p>Möchten Sie die ausgewählten Terminvorschläge wirklich akzeptieren?</p>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -999,20 +888,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('completed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus('reserved')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
 
-                    <!-- Cancel Training popup -->
-                    <v-dialog v-model="cancelTrainingDialog" width="20vw">
+                    <!-- Revoke Training Proposal popup -->
+                    <v-dialog v-model="revokeTrainingProposalDialog" width="20vw">
                         <v-card height="30vh">
                             <v-card-text>
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12">
-                                            <p>Sind Sie sicher, dass Sie die ausgewählte Schulung stornieren möchten?</p>
+                                            <p>Sind Sie sicher, dass Sie die ausgewählten Terminvorschläge widerrufen möchten?</p>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -1024,14 +913,61 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('cancelled')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus('open', null)" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
 
-                    <!-- Add Kita to Training popup -->
-                    <v-dialog v-model="addKitaToTrainingDialog" width="80vw">
+                    <!-- Add Multiplier to Training Proposal popup -->
+                    <v-dialog v-model="addMultiplierToTrainingProposalDialog" width="80vw">
+                        <v-card height="80vh">
+                            <v-card-title>
+                                <span class="tw-text-h5">Multiplikator hinzufügen</span>
+                            </v-card-title>
+
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <p>Wählen Sie den Multiplikator aus, den Sie diesem Trainingsvorschlag hinzufügen möchten</p>
+                                        </v-col>
+                                    </v-row>
+
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-autocomplete
+                                                v-model="addMultiplierToTrainingProposalForm.multi_id"
+                                                :items="multipliers"
+                                                :error-messages="errors.multi_id"
+                                                item-title="full_name"
+                                                item-value="id"
+                                                label="Multiplikator"
+                                                required
+                                            ></v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                                        Zurück
+                                    </v-btn>
+                                </v-hover>
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn-primary @click="addMultiplierToTrainingProposal" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                                        Speichern
+                                    </v-btn-primary>
+                                </v-hover>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+                    <!-- Add Kita to Training Proposal popup -->
+                    <v-dialog v-model="addKitaToTrainingProposalDialog" width="80vw">
                         <v-card height="80vh">
                             <v-card-title>
                                 <span class="tw-text-h5">Einrichtungen hinzufügen</span>
@@ -1048,7 +984,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-row>
                                         <v-col cols="12">
                                             <v-autocomplete
-                                                v-model="addKitaToTrainingForm.kitas"
+                                                v-model="addKitaToTrainingProposalForm.kitas"
                                                 :items="allKitasExcludeAdded"
                                                 :error-messages="errors.kitas"
                                                 item-title="name"
@@ -1070,7 +1006,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     </v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="addKitaToTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="maxParticipantCountExceeded">
+                                    <v-btn-primary @click="addKitaToTrainingProposal" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="maxParticipantCountExceeded">
                                         Speichern
                                     </v-btn-primary>
                                 </v-hover>
@@ -1078,8 +1014,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         </v-card>
                     </v-dialog>
 
-                    <!-- Remove Kita from Training popup -->
-                    <v-dialog v-model="removeKitaFromTrainingDialog" width="20vw">
+                    <!-- Remove Kita from Training Proposal popup -->
+                    <v-dialog v-model="removeKitaFromTrainingProposalDialog" width="20vw">
                         <v-card height="30vh">
                             <v-card-text>
                                 <v-container>
@@ -1097,7 +1033,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="removeKitaFromTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="removeKitaFromTrainingProposal" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>

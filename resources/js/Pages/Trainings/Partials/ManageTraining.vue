@@ -713,7 +713,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     :error-messages="errors.location"
                                     label="Ort*"
                                     required
-                                    :disabled="$page.props.auth.user.is_user_multiplier">
+                                    :disabled="loading || $page.props.auth.user.is_user_multiplier">
                         </v-textarea>
                     </v-col>
 
@@ -722,7 +722,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     :error-messages="errors.notes"
                                     label="Notizen"
                                     required
-                                    :disabled="$page.props.auth.user.is_user_multiplier">
+                                    :disabled="loading || $page.props.auth.user.is_user_multiplier">
                         </v-textarea>
                     </v-col>
                 </v-row>
@@ -742,8 +742,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         </v-hover>
 
                         <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="manageTraining" v-bind="props"
-                                           :color="isHovering ? 'accent' : 'primary'">Speichern
+                            <v-btn-primary @click="manageTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                                Speichern
                             </v-btn-primary>
                         </v-hover>
                     </v-col>

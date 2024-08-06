@@ -7,8 +7,10 @@
 namespace App\Observers;
 
 use App\Models\Kita;
+use App\Models\Training;
 use App\Models\TrainingProposal;
 use App\Models\User;
+use App\Services\Items\TrainingItemService;
 
 /**
  * Observer for TrainingProposal Model
@@ -43,23 +45,63 @@ class TrainingProposalObserver extends BaseObserver
     public function updated(TrainingProposal $trainingProposal)
     {
         if ($trainingProposal->isDirty('status')) {
-            $trainingProposal->loadMissing(['multiplier']);
+            $trainingItemService = app(TrainingItemService::class);
+
+            $trainingProposal->loadMissing(['multiplier', 'kitas.trainingProposals']);
+
+            $notificationData = $trainingProposal->getNotificationsData();
+
+            $roles = config('permission.project_roles');
 
             switch ($trainingProposal->status) {
                 case TrainingProposal::STATUS_OPEN:
-                    //
+                    $trainingProposal->kitas->trainingProposals()
+                        ->where('id', '!=', $trainingProposal->id)
+                        ->where('status', TrainingProposal::STATUS_OBSOLETE)
+                        ->update(['status' => TrainingProposal::STATUS_OPEN]);
+                    break;
+                case TrainingProposal::STATUS_RESERVED:
+                    $trainingProposal->kitas->trainingProposals()
+                        ->where('id', '!=', $trainingProposal->id)
+                        ->where('status', TrainingProposal::STATUS_OPEN)
+                        ->update(['status' => TrainingProposal::STATUS_OBSOLETE]);
                     break;
                 case TrainingProposal::STATUS_OBSOLETE:
                     //
                     break;
-                case TrainingProposal::STATUS_RESERVED:
-                    //
-                    break;
                 case TrainingProposal::STATUS_CONFIRMATION_PENDING:
-                    //
+                    // Send kitas managers notifications
+                    $trainingProposal->kitas->each(function (Kita $kita) use ($trainingProposal, $notificationData, $roles) {
+                        $kita->users()->whereHas('roles', function ($query) use ($roles) {
+                            $query->where('name', $roles['manager']);
+                        })->get()->each(function (User $user) use ($trainingProposal, $notificationData) {
+                            $user->sendTrainingProposalConfirmationPendingNotification($notificationData);
+                        });
+                    });
+
+                    // Additionally, we send a notification to the multiplier user
+                    if (!empty($trainingProposal->multiplier)) {
+                        $trainingProposal->multiplier->sendTrainingProposalConfirmationPendingNotification($notificationData);
+                    }
                     break;
                 case TrainingProposal::STATUS_CONFIRMED:
-                    //
+                    $training = $trainingItemService->create([
+                        'multi_id'                       => $trainingProposal->multiplier,
+                        'first_date'                     => $trainingProposal->first_date,
+                        'first_date_start_and_end_time'  => null,
+                        'second_date'                    => $trainingProposal->second_date,
+                        'second_date_start_and_end_time' => null,
+                        'location'                       => $trainingProposal->location,
+                        'max_participant_count'          => $trainingProposal->participant_count,
+                        'participant_count'              => $trainingProposal->participant_count,
+                        'type'                           => Training::TYPE_IN_HOUSE,
+                        'status'                         => Training::STATUS_CONFIRMED,
+                        'notes'                          => $trainingProposal->notes,
+                    ]);
+
+                    if (!empty($training)) {
+                        $trainingItemService->updateAttachedKitas($training->id, $trainingProposal->kitas->pluck('id'));
+                    }
                     break;
             }
         }

@@ -99,8 +99,21 @@ class TrainingProposal extends Model
     public function kitasList() : Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attributes) => $this->relationLoaded('kitas') ? $this->kitas->pluck('name') : [],
+            get: fn($value, $attributes) => $this->relationLoaded('kitas') ? $this->kitas->pluck('name') : [],
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getNotificationsData() : array
+    {
+        return [
+            'first_date'      => $this->first_date->format('Y-m-d'),
+            'second_date'     => $this->second_date->format('Y-m-d'),
+            'location'        => $this->location,
+            'multiplier_name' => optional($this->multiplier)->full_name,
+        ];
     }
 
     /**

@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TrainingProposals\AddKitasToTrainingProposalRequest;
 use App\Http\Requests\TrainingProposals\AddKitaToTrainingProposalRequest;
+use App\Http\Requests\TrainingProposals\AddMultiplierToTrainingProposalRequest;
 use App\Http\Requests\TrainingProposals\CreateTrainingProposalRequest;
 use App\Http\Requests\TrainingProposals\RemoveKitaFromTrainingProposalRequest;
 use App\Http\Requests\TrainingProposals\RemoveKitasFromTrainingProposalRequest;
@@ -64,7 +65,9 @@ class TrainingProposalsController extends BaseController
         ]);
 
         if ($currentUser->is_user_multiplier) {
-            $args['with_multipliers'] = [$currentUser->id];
+            $args['status'] = TrainingProposal::STATUS_OPEN;
+
+            $currentUser->loadMissing(['trainingProposals']);
         }
 
         $result = $this->trainingProposalItemService->collection(array_merge($args, [
@@ -72,9 +75,10 @@ class TrainingProposalsController extends BaseController
         ]), ['kitas.users']);
 
         return Inertia::render('TrainingProposals/TrainingProposals', array_merge($this->prepareItemsCollection($result), [
-            'filters'     => $request->only(['first_date', 'second_date', 'location', 'participant_count', 'with_multipliers', 'status']),
-            'multipliers' => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
-            'statuses'    => array_map(function ($status) {
+            'userTrainingProposals' => $currentUser->is_user_multiplier ? $currentUser->trainingProposals : null,
+            'filters'               => $request->only(['first_date', 'second_date', 'location', 'participant_count', 'with_multipliers', 'status']),
+            'multipliers'           => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
+            'statuses'              => array_map(function ($status) {
                 return [
                     'title' => __("validation.attributes.{$status}"),
                     'value' => $status,
@@ -101,9 +105,9 @@ class TrainingProposalsController extends BaseController
         $operatorItemService = app(OperatorItemService::class);
 
         // Get params for sorting & filtering TrainingProposal Kitas
-        $trainingKitaArgs = $request->only(['sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']);
+        $trainingProposalKitaArgs = $request->only(['sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']);
 
-        $trainingKitas = $kitaItemService->collection(array_merge($trainingKitaArgs ?? [], ['paginated' => false, 'with_trainings' => [$trainingProposal->id], 'with' => ['users', 'currentYearlyEvaluations']]));
+        $trainingProposalKitas = $kitaItemService->collection(array_merge($trainingProposalKitaArgs ?? [], ['paginated' => false, 'with_training_proposals' => [$trainingProposal->id], 'with' => ['users', 'currentYearlyEvaluations']]));
 
         // Get params for sorting & filtering all Kitas
         $allKitaArgs = [];
@@ -123,7 +127,7 @@ class TrainingProposalsController extends BaseController
         ]));
 
         // Fetch all zip codes from kitas
-        $zipCodesList = $trainingKitas->pluck('zip_code')->unique()->transform(function ($zipCode) {
+        $zipCodesList = $trainingProposalKitas->pluck('zip_code')->unique()->transform(function ($zipCode) {
             return [
                 'title' => $zipCode,
                 'value' => $zipCode,
@@ -139,28 +143,27 @@ class TrainingProposalsController extends BaseController
             $operators = $operatorItemService->collection();
         }
 
-        return Inertia::render('Trainings/Partials/ManageTraining', [
-            'training'      => $trainingProposal,
-            'emailMessages' => $trainingProposal->getEmailMessagesContent(),
-            'filters'       => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
-            'allKitas'      => $allKitas,
-            'trainingKitas' => $trainingKitas,
-            'usersEmails'   => (!empty($trainingKitas) && $trainingKitas->isNotEmpty()) ? $kitaItemService->getUsersEmails($trainingKitas->pluck('id')->toArray()) : [],
-            'multipliers'   => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
-            'operators'     => $operators,
-            'statuses'      => array_map(function ($status) {
+        return Inertia::render('TrainingProposals/Partials/ManageTrainingProposal', [
+            'trainingProposal'      => $trainingProposal,
+            'filters'               => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
+            'allKitas'              => $allKitas,
+            'trainingProposalKitas' => $trainingProposalKitas,
+            'usersEmails'           => (!empty($trainingProposalKitas) && $trainingProposalKitas->isNotEmpty()) ? $kitaItemService->getUsersEmails($trainingProposalKitas->pluck('id')->toArray()) : [],
+            'multipliers'           => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
+            'operators'             => $operators,
+            'statuses'              => array_map(function ($status) {
                 return [
                     'title' => __("validation.attributes.{$status}"),
                     'value' => $status,
                 ];
             }, TrainingProposal::STATUSES),
-            'kitaTypes'     => array_map(function ($type) {
+            'kitaTypes'             => array_map(function ($type) {
                 return [
                     'title' => __("validation.attributes.{$type}"),
                     'value' => $type,
                 ];
             }, Kita::TYPES),
-            'zipCodes'      => $zipCodesList,
+            'zipCodes'              => $zipCodesList,
         ]);
     }
 
@@ -208,6 +211,25 @@ class TrainingProposalsController extends BaseController
 
         $attributes = $request->validated();
         $result     = $this->trainingProposalItemService->updateAttachedKitas($trainingProposal->id, [$attributes['kita']]);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.training_proposals.update_success'))
+            : Redirect::back()->withErrors(__('crud.training_proposals.update_error'));
+    }
+
+    /**
+     * @param AddMultiplierToTrainingProposalRequest $request
+     * @param TrainingProposal                       $trainingProposal
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function addMultiplier(AddMultiplierToTrainingProposalRequest $request, TrainingProposal $trainingProposal)
+    {
+        $this->authorize('authorizeAccessToTrainingProposals', User::class);
+
+        $attributes = $request->validated();
+        $result     = $this->trainingProposalItemService->update($trainingProposal->id, array_merge($attributes, [
+            'status' => TrainingProposal::STATUS_RESERVED,
+        ]));
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.training_proposals.update_success'))

@@ -24,7 +24,7 @@ class CreateTrainingProposalRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'multi_id'          => ['required', $this->userExistRule()],
+//            'multi_id'          => ['nullable', $this->userExistRule()],
             'first_date'        => ['required', 'date'],
             'second_date'       => ['required', 'date', new DateDifferenceRule('first_date', $this->input('first_date'), 7)],
             'location'          => ['required', $this->textRules()],
