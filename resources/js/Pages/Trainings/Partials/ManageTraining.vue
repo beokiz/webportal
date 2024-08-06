@@ -974,7 +974,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
@@ -999,7 +999,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('completed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingStatus('completed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
@@ -1024,7 +1024,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingStatus('cancelled')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingStatus('cancelled')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
@@ -1097,7 +1097,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="removeKitaFromTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Löschen</v-btn-primary>
+                                    <v-btn-primary @click="removeKitaFromTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>
