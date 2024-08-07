@@ -14,6 +14,7 @@ import VueTimepicker from "vue3-timepicker";
 
 const props = defineProps({
     trainingProposal: Object,
+    notEditable: Boolean,
     allKitas: Array,
     trainingProposalKitas: Array,
     errors: Object,
@@ -152,7 +153,7 @@ const manageForm = useForm({
     notes: editedTrainingProposal.value?.notes,
 });
 
-const manageTraining = async () => {
+const manageTrainingProposal = async () => {
     manageForm.processing = true;
 
     manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
@@ -215,6 +216,7 @@ const openRevokeTrainingProposalDialog = () => {
 const manageStatusForm = useForm({
     id: editedTrainingProposal.value?.id,
     status: null,
+    multi_id: null,
 });
 
 const manageTrainingProposalStatus = async (status) => {
@@ -222,8 +224,8 @@ const manageTrainingProposalStatus = async (status) => {
 
     manageStatusForm.status = status;
 
-    if (status === 'open') {
-        manageStatusForm.multi_id = null;
+    if (status !== 'open') {
+        delete manageStatusForm.multi_id;
     }
 
     let formOptions = {
@@ -513,7 +515,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-col>
 
                     <v-col cols="12" sm="9" class="text-right">
-                        <template v-if="editedTrainingProposal.status === 'open'">
+                        <template v-if="editedTrainingProposal.status === 'open' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openAddMultiplierToTrainingProposalDialog">
                                     <span>Akzeptieren für Multiplikator</span>
@@ -544,7 +546,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <v-locale-provider locale="de">
                             <v-menu v-model="isFirstDateFieldOpened"
                                     :return-value.sync="firstDateField"
-                                    :close-on-content-click="false">
+                                    :close-on-content-click="false"
+                                    :disabled="notEditable">
                                 <template v-slot:activator="{ props }">
                                     <v-text-field
                                         label="Erster Schulungstag*"
@@ -552,8 +555,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         :model-value="rawFirstDateField"
                                         :error-messages="errors.first_date"
                                         prepend-icon="mdi-calendar"
-                                        readonly
                                         v-bind="props"
+                                        readonly
                                         :disabled="loading"
                                     ></v-text-field>
                                 </template>
@@ -566,7 +569,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <v-locale-provider locale="de">
                             <v-menu v-model="isSecondDateFieldOpened"
                                     :return-value.sync="secondDateField"
-                                    :close-on-content-click="false">
+                                    :close-on-content-click="false"
+                                    :disabled="notEditable">
                                 <template v-slot:activator="{ props }">
                                     <v-text-field
                                         label="Zweiter Schulungstag*"
@@ -574,8 +578,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         :model-value="rawSecondDateField"
                                         :error-messages="errors.second_date"
                                         prepend-icon="mdi-calendar"
-                                        readonly
                                         v-bind="props"
+                                        readonly
                                         :disabled="loading"
                                     ></v-text-field>
                                 </template>
@@ -591,6 +595,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             :error-messages="errors.participant_count"
                             label="Teilnehmerzahl*"
                             clearable
+                            :readonly="notEditable"
                             :disabled="loading"
                         ></v-text-field>
                     </v-col>
@@ -602,6 +607,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     :error-messages="errors.location"
                                     label="Ort*"
                                     required
+                                    :readonly="notEditable"
                                     :disabled="loading">
                         </v-textarea>
                     </v-col>
@@ -611,6 +617,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     :error-messages="errors.notes"
                                     label="Notizen"
                                     required
+                                    :readonly="notEditable"
                                     :disabled="loading">
                         </v-textarea>
                     </v-col>
@@ -618,7 +625,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                 <v-row>
                     <v-col cols="12" sm="6">
-                        <v-hover v-slot:default="{ isHovering, props }">
+                        <v-hover v-if="!notEditable || ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)" v-slot:default="{ isHovering, props }">
                             <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
                         </v-hover>
                     </v-col>
@@ -630,8 +637,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             </Link>
                         </v-hover>
 
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="manageTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                        <v-hover v-if="!notEditable || ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)" v-slot:default="{ isHovering, props }">
+                            <v-btn-primary @click="manageTrainingProposal" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
                                 Speichern
                             </v-btn-primary>
                         </v-hover>
@@ -863,7 +870,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingProposalStatus('confirmed')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus('confirmation_pending')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>

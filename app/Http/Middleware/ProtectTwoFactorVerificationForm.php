@@ -30,7 +30,11 @@ class ProtectTwoFactorVerificationForm
         if ($request->is('2fa*')) {
             // Redirect authenticated user to homepage
             if (auth()->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                $targetUrl = redirect()->intended()->getTargetUrl();
+
+                return !empty($targetUrl)
+                    ? redirect()->intended(prepare_intended_path($targetUrl))
+                    : redirect(RouteServiceProvider::HOME);
             }
 
             // If 2FA verification code not exist in session - redirect to log-in form

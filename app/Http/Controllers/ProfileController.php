@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Profile\ProfileUpdateRequest;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -87,6 +88,6 @@ class ProfileController extends BaseController
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect(RouteServiceProvider::HOME);
     }
 }

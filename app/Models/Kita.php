@@ -238,22 +238,6 @@ class Kita extends Model
     }
 
     /**
-     * @return BelongsToMany
-     */
-    public function trainings() : BelongsToMany
-    {
-        return $this->BelongsToMany(Training::class, 'kita_has_trainings', 'kita_id', 'training_id');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function trainingProposals() : BelongsToMany
-    {
-        return $this->BelongsToMany(TrainingProposal::class, 'kita_has_training_proposals', 'kita_id', 'training_proposal_id');
-    }
-
-    /**
      * @return HasMany
      */
     public function evaluations() : HasMany
@@ -275,5 +259,29 @@ class Kita extends Model
     public function currentYearlyEvaluations() : HasMany
     {
         return $this->yearlyEvaluations()->where('year', date('Y'));
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function trainings() : BelongsToMany
+    {
+        return $this->BelongsToMany(Training::class, 'kita_has_trainings', 'kita_id', 'training_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function trainingProposals() : BelongsToMany
+    {
+        return $this->BelongsToMany(TrainingProposal::class, 'kita_has_training_proposals', 'kita_id', 'training_proposal_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function trainingProposalConfirmations() : HasMany
+    {
+        return $this->hasMany(TrainingProposalConfirmation::class, 'kita_id', 'id');
     }
 }

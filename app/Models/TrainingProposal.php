@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * TrainingProposal Model
@@ -129,6 +130,14 @@ class TrainingProposal extends Model
     | Define Model Relations
     |--------------------------------------------------------------------------
     */
+    /**
+     * @return HasMany
+     */
+    public function trainingProposalConfirmations() : HasMany
+    {
+        return $this->hasMany(TrainingProposalConfirmation::class, 'training_proposal_id', 'id');
+    }
+
     /**
      * @return BelongsTo
      */

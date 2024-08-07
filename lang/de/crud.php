@@ -284,6 +284,8 @@ return [
         'update_success'  => "Der Trainingsvorschlag wurde erfolgreich aktualisiert.",
         'update_error'    => "Fehler! Bei der Aktualisierung des Trainingsvorschlags ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'update_denied'   => "Fehler! Der ausgewählte Trainingsvorschlag kann nicht aktualisiert werden.",
+        'confirm_success' => "Der Trainingsvorschlag wurde erfolgreich bestätigt.",
+        'confirm_error'   => "Fehler! Bei der Bestätigung des Trainingsvorschlags ist etwas schiefgelaufen. Bitte versuchen Sie es später erneut.",
         'delete_success'  => "Der Trainingsvorschlag wurde erfolgreich gelöscht.",
         'delete_error'    => "Fehler! Bei der Löschung des Trainingsvorschlags ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'delete_denied'   => "Fehler! Der ausgewählte Trainingsvorschlag kann nicht gelöscht werden.",

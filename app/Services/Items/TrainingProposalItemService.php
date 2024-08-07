@@ -113,6 +113,31 @@ class TrainingProposalItemService extends BaseItemService
     }
 
     /**
+     * @param int    $id
+     * @param string $token
+     * @return bool
+     */
+    public function confirm(int $id, string $token) : bool
+    {
+        if (!empty($token)) {
+            $item = $this->find($id)->loadMissing(['kitas', 'trainingProposalConfirmations']);
+
+            $trainingProposalConfirmation = $item->trainingProposalConfirmations->where('token', $token)->first();
+
+            if (!empty($trainingProposalConfirmation) && $item->kitas->contains('id', $trainingProposalConfirmation->kita_id)) {
+                if ($item->status !== TrainingProposal::STATUS_CONFIRMED) {
+                    $item->update(['status' => TrainingProposal::STATUS_CONFIRMED]);
+                }
+
+
+                return $trainingProposalConfirmation->update(['confirmed' => true]);
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param int   $id
      * @param array $kitas
      * @param bool  $removeKitas
@@ -126,7 +151,7 @@ class TrainingProposalItemService extends BaseItemService
             if ($removeKitas) {
                 $item->kitas()->detach($kitas);
             } else {
-                $trainingKitas    = $item->kitas->pluck('id');
+                $trainingKitas = $item->kitas->pluck('id');
 
                 foreach ($kitas as $userId) {
                     $userId = (int) $userId;

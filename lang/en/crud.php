@@ -284,6 +284,8 @@ return [
         'update_success'  => "The training proposal has been updated successfully.",
         'update_error'    => "Error! Something went wrong while updating the training proposal. Please try again later.",
         'update_denied'   => "Error! The selected training proposal cannot be updated.",
+        'confirm_success' => "The training proposal has been confirmed successfully.",
+        'confirm_error'   => "Error! Something went wrong while confirming the training proposal. Please try again later.",
         'delete_success'  => "The training proposal has been deleted successfully.",
         'delete_error'    => "Error! Something went wrong while deleting the training proposal. Please try again later.",
         'delete_denied'   => "Error! The selected training proposal cannot be deleted.",

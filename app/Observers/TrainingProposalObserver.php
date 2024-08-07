@@ -11,6 +11,7 @@ use App\Models\Training;
 use App\Models\TrainingProposal;
 use App\Models\User;
 use App\Services\Items\TrainingItemService;
+use Illuminate\Support\Str;
 
 /**
  * Observer for TrainingProposal Model
@@ -55,38 +56,54 @@ class TrainingProposalObserver extends BaseObserver
 
             switch ($trainingProposal->status) {
                 case TrainingProposal::STATUS_OPEN:
-                    $trainingProposal->kitas->trainingProposals()
-                        ->where('id', '!=', $trainingProposal->id)
-                        ->where('status', TrainingProposal::STATUS_OBSOLETE)
-                        ->update(['status' => TrainingProposal::STATUS_OPEN]);
+                    $trainingProposal->kitas->each(function ($kita) use ($trainingProposal) {
+                        $kita->trainingProposals()
+                            ->where('id', '!=', $trainingProposal->id)
+                            ->where('status', TrainingProposal::STATUS_OBSOLETE)
+                            ->update(['status' => TrainingProposal::STATUS_OPEN]);
+                    });
                     break;
                 case TrainingProposal::STATUS_RESERVED:
-                    $trainingProposal->kitas->trainingProposals()
-                        ->where('id', '!=', $trainingProposal->id)
-                        ->where('status', TrainingProposal::STATUS_OPEN)
-                        ->update(['status' => TrainingProposal::STATUS_OBSOLETE]);
+                    $trainingProposal->kitas->each(function ($kita) use ($trainingProposal) {
+                        $kita->trainingProposals()
+                            ->where('id', '!=', $trainingProposal->id)
+                            ->where('status', TrainingProposal::STATUS_OPEN)
+                            ->update(['status' => TrainingProposal::STATUS_OBSOLETE]);
+                    });
                     break;
                 case TrainingProposal::STATUS_OBSOLETE:
                     //
                     break;
                 case TrainingProposal::STATUS_CONFIRMATION_PENDING:
+                    $trainingProposalConfirmation = null;
+
                     // Send kitas managers notifications
-                    $trainingProposal->kitas->each(function (Kita $kita) use ($trainingProposal, $notificationData, $roles) {
+                    $trainingProposal->kitas->each(function (Kita $kita) use ($trainingProposal, $notificationData, $roles, &$trainingProposalConfirmation) {
+                        $trainingProposalConfirmation = $kita->trainingProposalConfirmations()->create([
+                            'training_proposal_id' => $trainingProposal->id,
+                            'confirmed'            => false,
+                            'token'                => Str::random(20),
+                        ]);
+
                         $kita->users()->whereHas('roles', function ($query) use ($roles) {
                             $query->where('name', $roles['manager']);
-                        })->get()->each(function (User $user) use ($trainingProposal, $notificationData) {
-                            $user->sendTrainingProposalConfirmationPendingNotification($notificationData);
+                        })->get()->each(function (User $user) use ($trainingProposal, $notificationData, $trainingProposalConfirmation) {
+                            $user->sendTrainingProposalConfirmationPendingNotification(array_merge($notificationData, [
+                                'confirmation_link' => route('training_proposals.confirm', [$trainingProposal->id, 'token' => $trainingProposalConfirmation->token]),
+                            ]));
                         });
                     });
 
                     // Additionally, we send a notification to the multiplier user
-                    if (!empty($trainingProposal->multiplier)) {
-                        $trainingProposal->multiplier->sendTrainingProposalConfirmationPendingNotification($notificationData);
+                    if (!empty($trainingProposal->multiplier) && !empty($trainingProposalConfirmation)) {
+                        $trainingProposal->multiplier->sendTrainingProposalConfirmationPendingNotification(array_merge($notificationData, [
+                            'confirmation_link' => route('training_proposals.confirm', [$trainingProposal->id, 'token' => $trainingProposalConfirmation->token]),
+                        ]));
                     }
                     break;
                 case TrainingProposal::STATUS_CONFIRMED:
                     $training = $trainingItemService->create([
-                        'multi_id'                       => $trainingProposal->multiplier,
+                        'multi_id'                       => $trainingProposal->multiplier->id,
                         'first_date'                     => $trainingProposal->first_date,
                         'first_date_start_and_end_time'  => null,
                         'second_date'                    => $trainingProposal->second_date,
@@ -100,7 +117,10 @@ class TrainingProposalObserver extends BaseObserver
                     ]);
 
                     if (!empty($training)) {
-                        $trainingItemService->updateAttachedKitas($training->id, $trainingProposal->kitas->pluck('id'));
+                        $trainingItemService->updateAttachedKitas(
+                            $training->id,
+                            $trainingProposal->kitas->pluck('id')->toArray()
+                        );
                     }
                     break;
             }

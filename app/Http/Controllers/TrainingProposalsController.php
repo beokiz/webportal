@@ -95,6 +95,7 @@ class TrainingProposalsController extends BaseController
     public function show(Request $request, TrainingProposal $trainingProposal)
     {
         $this->authorize('authorizeAccessToTrainingProposals', User::class);
+        $this->authorize('authorizeAccessToSingleTrainingProposal', [User::class, $trainingProposal]);
 
         $trainingProposal->loadMissing(['multiplier']);
 
@@ -145,6 +146,7 @@ class TrainingProposalsController extends BaseController
 
         return Inertia::render('TrainingProposals/Partials/ManageTrainingProposal', [
             'trainingProposal'      => $trainingProposal,
+            'notEditable'           => $currentUser->is_user_multiplier ? $trainingProposal->multi_id !== $currentUser->id : false,
             'filters'               => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
             'allKitas'              => $allKitas,
             'trainingProposalKitas' => $trainingProposalKitas,
@@ -191,6 +193,7 @@ class TrainingProposalsController extends BaseController
     public function update(UpdateTrainingProposalRequest $request, TrainingProposal $trainingProposal)
     {
         $this->authorize('authorizeAccessToTrainingProposals', User::class);
+//        $this->authorize('authorizeAccessToSingleTrainingProposal', [User::class, $trainingProposal]);
 
         $attributes = $request->validated();
         $result     = $this->trainingProposalItemService->update($trainingProposal->id, $attributes);
@@ -198,6 +201,25 @@ class TrainingProposalsController extends BaseController
         return $result
             ? Redirect::back()->withSuccesses(__('crud.training_proposals.update_success'))
             : Redirect::back()->withErrors(__('crud.training_proposals.update_error'));
+    }
+
+    /**
+     * @param Request          $request
+     * @param TrainingProposal $trainingProposal
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function confirm(Request $request, TrainingProposal $trainingProposal)
+    {
+//        $this->authorize('authorizeAccessToTrainingProposals', User::class);
+//        $this->authorize('authorizeAccessToSingleTrainingProposal', [User::class, $trainingProposal]);
+
+        $token = $request->input('token', '');
+
+        $result = $this->trainingProposalItemService->confirm($trainingProposal->id, $token);
+
+        return $result
+            ? Redirect::route('profile.edit')->withSuccesses(__('crud.training_proposals.confirm_success'))
+            : Redirect::route('profile.edit')->withErrors(__('crud.training_proposals.confirm_error'));
     }
 
     /**
@@ -295,6 +317,7 @@ class TrainingProposalsController extends BaseController
     public function destroy(Request $request, TrainingProposal $trainingProposal)
     {
         $this->authorize('authorizeAccessToTrainingProposals', User::class);
+        $this->authorize('authorizeAccessToSingleTrainingProposal', [User::class, $trainingProposal]);
 
         $result = $this->trainingProposalItemService->delete($trainingProposal->id);
 
