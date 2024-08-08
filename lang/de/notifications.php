@@ -133,7 +133,7 @@ return [
         'subject'     => sprintf("%s: Bestätigung des Schulungstermine am :first_date und :second_date", config('app.name')),
         'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita,",
         'first_line'  => "Wir freuen uns, Ihnen mitteilen zu können, dass Ihr gewählter Schulungstermin bestätigt werden konnte.",
-        'second_line' => "1. Schulungstag: :first_date von :first_date_start_and_end_time  \n2. Schulungstag: :second_date von :second_date_start_and_end_time  \nOrt: :location  \nIhr Multiplikator: :multiplier_name",
+        'second_line' => "1. Schulungstag: :first_date von :first_date_start_and_end_time  \n2. Schulungstag: :second_date von :second_date_start_and_end_time  \nOrt: :location  \nIhr Multiplikator: :multiplier_name ",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
 
@@ -166,7 +166,7 @@ return [
         'subject'     => sprintf("%s: Bestätigung des Terminvorschlags am :first_date und :second_date", config('app.name')),
         'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita, ",
         'first_line'  => "Bitte bestätigen Sie den vorgeschlagenen Schulungstermin durch Klicken auf den folgenden Link: :confirmation_link",
-        'second_line' => "Schulungstage: :first_date und :second_date jeweils von 09 bis 15 Uhr  \nOrt: :location  \nIhr Multiplikator: :multiplier_name",
+        'second_line' => "Schulungstage: :first_date und :second_date jeweils von 09 bis 15 Uhr  \nOrt: :location  <br/> Ihr Multiplikator: :multiplier_name ",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
 
