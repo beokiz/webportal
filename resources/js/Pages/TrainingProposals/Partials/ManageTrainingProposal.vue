@@ -55,7 +55,7 @@ Inertia.on('success', (event) => {
 /*
  * Main data
  */
-const currentUser = usePage().props.auth.user ?? {};  // Global info about user
+// const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 
 const editedTrainingProposal = ref(props.trainingProposal);
 const errors = ref(props.errors || {});
@@ -253,6 +253,15 @@ const openAddKitaToTrainingProposalDialog = () => {
 
 const addKitaToTrainingProposalForm = useForm({
     kitas: [],
+});
+
+const showConfirmationPopupButton = computed(() => {
+    let currentUser = usePage().props.auth.user;
+
+    let attachedKitasCount = props.trainingProposalKitas?.length;
+    let validStatus = currentUser?.is_super_admin || currentUser?.is_admin ? 'reserved' : 'confirmation_pending';
+
+    return editedTrainingProposal.value?.status === validStatus && attachedKitasCount > 0 && editedTrainingProposal.value?.multi_id;
 });
 
 const allKitasExcludeAdded = computed(() => {
@@ -522,7 +531,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 </v-btn>
                             </v-hover>
                         </template>
-                        <template v-if="editedTrainingProposal.status === 'reserved'">
+                        <template v-if="showConfirmationPopupButton">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'success'" dark @click="openConfirmTrainingProposalDialog">
                                     <span>Termin bestätigen</span>
@@ -870,7 +879,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Abbrechen</v-btn>
                                 </v-hover>
                                 <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn-primary @click="manageTrainingProposalStatus('confirmation_pending')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
+                                    <v-btn-primary @click="manageTrainingProposalStatus($page.props.auth.user.is_user_multiplier ? 'confirmed' : 'confirmation_pending')" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Einreichen</v-btn-primary>
                                 </v-hover>
                             </v-card-actions>
                         </v-card>

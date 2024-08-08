@@ -48,7 +48,7 @@ class TrainingProposalObserver extends BaseObserver
         if ($trainingProposal->isDirty('status')) {
             $trainingItemService = app(TrainingItemService::class);
 
-            $trainingProposal->loadMissing(['multiplier', 'kitas.trainingProposals']);
+            $trainingProposal->loadMissing(['multiplier', 'kitas.trainingProposals', 'trainingProposalConfirmations']);
 
             $notificationData = $trainingProposal->getNotificationsData();
 
@@ -102,6 +102,27 @@ class TrainingProposalObserver extends BaseObserver
                     }
                     break;
                 case TrainingProposal::STATUS_CONFIRMED:
+                    // Create a new Training proposal confirmation if it has not been created before
+                    $trainingProposal->kitas->each(function (Kita $kita) use ($trainingProposal) {
+                        $trainingProposalConfirmation = $trainingProposal->trainingProposalConfirmations
+                            ->where('training_proposal_id', $trainingProposal->id)
+                            ->where('kita_id', $kita->id)
+                            ->first();
+
+                        if (empty($trainingProposalConfirmation)) {
+                            $kita->trainingProposalConfirmations()->create([
+                                'training_proposal_id' => $trainingProposal->id,
+                                'confirmed'            => true,
+                                'token'                => Str::random(20),
+                            ]);
+                        } else {
+                            $trainingProposalConfirmation->update([
+                                'confirmed' => true,
+                            ]);
+                        }
+                    });
+
+                    // Create new Training based on Training proposal
                     $training = $trainingItemService->create([
                         'multi_id'                       => $trainingProposal->multiplier->id,
                         'first_date'                     => $trainingProposal->first_date,
