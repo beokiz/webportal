@@ -472,7 +472,6 @@ const deleteDownloadableFile = async () => {
                 :headers="surveyTimePeriodsHeaders"
                 :items="modifiedSurveyTimePeriodItems"
                 :search="search"
-                v-sortable-data-table
                 :loading="loading"
                 class="data-table-container elevation-1"
                 item-value="name"
@@ -639,7 +638,6 @@ const deleteDownloadableFile = async () => {
                 :headers="downloadableFileHeaders"
                 :items="modifiedDownloadableFileItems"
                 :search="search"
-                v-sortable-data-table
                 :loading="loading"
                 class="data-table-container elevation-1"
                 item-value="name"

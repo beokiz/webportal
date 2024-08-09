@@ -35,6 +35,17 @@ class VerifyEmailController extends BaseController
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME . '?verified=1');
+        $request->user()->update([
+            'first_login_at' => null,
+        ]);
+
+        auth()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect()->route('auth.login');
+//        return redirect()->intended(RouteServiceProvider::HOME . '?verified=1');
     }
 }

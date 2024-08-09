@@ -95,4 +95,20 @@ trait ExistValidationRules
     {
         return $this->existByColumnRule('operators');
     }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function trainingExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('trainings');
+    }
+
+    /**
+     * @return \Illuminate\Validation\Rules\Exists
+     */
+    protected function trainingProposalExistRule() : \Illuminate\Validation\Rules\Exists
+    {
+        return $this->existByColumnRule('training_proposals');
+    }
 }

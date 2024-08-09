@@ -17,15 +17,16 @@ return [
     |
     */
 
-    'failed'     => "Die Anmeldedaten stimmen nicht mit unseren Aufzeichnungen überein.",
-    'password'   => "Das angegebene Passwort ist inkorrekt.",
-    'throttle'   => "Zu viele Anmeldeversuche. Bitte versuchen Sie es in :seconds Sekunden erneut.",
-    'logged_in'  => "Sie sind erfolgreich angemeldet!",
-    'logged_out' => "Sie sind erfolgreich abgemeldet!",
+    'failed'             => "Die Anmeldedaten stimmen nicht mit unseren Aufzeichnungen überein.",
+    'password'           => "Das angegebene Passwort ist inkorrekt.",
+    'throttle'           => "Zu viele Anmeldeversuche. Bitte versuchen Sie es in :seconds Sekunden erneut.",
+    'logged_in'          => "Sie sind erfolgreich angemeldet!",
+    'logged_out'         => "Sie sind erfolgreich abgemeldet!",
+    'email_not_verified' => "Ihre E-Mail-Adresse ist nicht verifiziert!",
 
-    '2fa_error'   => 'Die Zwei-Faktor-Authentifizierung (2FA) ist gescheitert! Bitte melden Sie sich erneut an.',
-    '2fa_failed'  => 'Der eingegebene Bestätigungscode für die Zwei-Faktor-Authentifizierung ist falsch.',
-    '2fa_expired' => 'Ihr Bestätigungscode für die Zwei-Faktor-Authentifizierung ist abgelaufen! Bitte melden Sie sich erneut an.',
-    '2fa_resend'  => 'Ein neuer Bestätigungscode für die Zwei-Faktor-Authentifizierung wurde gesendet.',
+    '2fa_error'   => "Die Zwei-Faktor-Authentifizierung (2FA) ist gescheitert! Bitte melden Sie sich erneut an.",
+    '2fa_failed'  => "Der eingegebene Bestätigungscode für die Zwei-Faktor-Authentifizierung ist falsch.",
+    '2fa_expired' => "Ihr Bestätigungscode für die Zwei-Faktor-Authentifizierung ist abgelaufen! Bitte melden Sie sich erneut an.",
+    '2fa_resend'  => "Ein neuer Bestätigungscode für die Zwei-Faktor-Authentifizierung wurde gesendet.",
 
 ];

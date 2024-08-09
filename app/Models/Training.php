@@ -67,13 +67,14 @@ class Training extends Model
      * @var array
      */
     protected $casts = [
-        'first_date'                 => 'date',
-        'second_date'                => 'date',
-        'max_participant_count'      => 'integer',
-        'participant_count'          => 'integer',
-        'prepared_participant_count' => 'integer',
-        'created_at'                 => 'datetime',
-        'updated_at'                 => 'datetime',
+        'first_date'                  => 'date',
+        'second_date'                 => 'date',
+        'max_participant_count'       => 'integer',
+        'participant_count'           => 'integer',
+        'available_participant_count' => 'integer',
+        'prepared_participant_count'  => 'integer',
+        'created_at'                  => 'datetime',
+        'updated_at'                  => 'datetime',
     ];
 
     /**
@@ -83,6 +84,7 @@ class Training extends Model
      */
     protected $appends = [
         'prepared_participant_count',
+        'available_participant_count',
         'formatted_type',
         'formatted_status',
     ];
@@ -94,6 +96,18 @@ class Training extends Model
     {
         return Attribute::make(
             get: fn($value, $attributes) => "{$attributes['participant_count']}/{$attributes['max_participant_count']}",
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function availableParticipantCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['max_participant_count'] > $attributes['participant_count']
+                ? $attributes['max_participant_count'] - $attributes['participant_count']
+                : 0,
         );
     }
 

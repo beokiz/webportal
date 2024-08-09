@@ -61,7 +61,6 @@ const modifiedItems = computed(() => {
                         :items-per-page="-1"
                         :headers="headers"
                         :items="modifiedItems"
-                        v-sortable-data-table
                         :loading="loading"
                         class="data-table-container data-table-container-hide-footer elevation-1"
                         item-value="name">

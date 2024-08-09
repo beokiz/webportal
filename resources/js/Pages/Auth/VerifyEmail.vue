@@ -4,49 +4,57 @@
   -->
 
 <script setup>
-import { computed } from 'vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 
 const props = defineProps({
     status: String,
 });
-
-const form = useForm({});
-
-const submit = () => {
-    form.post(route('verification.send'));
-};
-
-const verificationLinkSent = computed(() => props.status === 'verification-link-sent');
 </script>
 
 <template>
     <GuestLayout>
         <Head title="E-Mail-Verifizierung"/>
 
-        <div class="tw-mb-4 tw-text-sm tw-text-gray-600">
-            Vielen Dank für Ihre Anmeldung! Bevor Sie beginnen können, würden Sie bitte Ihre E-Mail-Adresse bestätigen,
-            indem Sie auf den Link klicken, den wir Ihnen gerade per E-Mail geschickt haben? Falls Sie die E-Mail nicht
-            erhalten haben, senden wir Ihnen gerne eine weitere.
-        </div>
+        <v-container>
+            <v-row>
+                <v-col cols="12" class="tw-flex tw-items-center tw-justify-center tw-mb-8">
+                    <Link href="/">
+                        <ApplicationLogo class="tw-h-20 tw-fill-current tw-text-gray-500" />
+                    </Link>
+                </v-col>
+            </v-row>
+        </v-container>
 
-        <div class="tw-mb-4 tw-font-medium tw-text-sm tw-text-green-600" v-if="verificationLinkSent">
-            Ein neuer Bestätigungslink wurde an die E-Mail-Adresse gesendet, die Sie bei der Registrierung angegeben haben.
-        </div>
+        <v-container>
+            <v-row>
+                <v-col cols="12" class="tw-mb-8">
+                    <h2 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight tw-mb-4">
+                        Anmeldung zur BeoKiz-Schulung
+                    </h2>
 
-        <form @submit.prevent="submit">
-            <div class="tw-mt-4 tw-flex tw-items-center tw-justify-between">
-                <v-btn-primary type="submit">Bestätigungs-E-Mail erneut senden</v-btn-primary>
+                    <p class="tw-mb-4">
+                        Vielen Dank für Ihre Anmeldung!
+                    </p>
 
-                <Link
-                    :href="route('auth.logout')"
-                    method="post"
-                    as="button"
-                    class="tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
-                    >Abmelden</Link
-                >
-            </div>
-        </form>
+                    <p class="tw-mb-4">
+                        Ihre Registrierung ist fast abgeschlossen. Um die Anmeldung abzuschließen, bestätigen Sie bitte Ihre E-Mail-Adresse. Eine E-Mail wurde an die von Ihnen angegebene Adresse gesendet. Bitte klicken Sie auf den Bestätigungslink in dieser E-Mail.
+                    </p>
+
+                    <p class="tw-mb-4">
+                        Falls Sie die E-Mail nicht erhalten haben, überprüfen Sie bitte Ihren Spam-Ordner oder versuchen Sie es erneut.
+                    </p>
+
+                    <p class="tw-mb-4">
+                        Wir freuen uns darauf, Sie bald bei der BeoKiz-Schulung willkommen zu heißen!
+                    </p>
+
+                    <p class="tw-mb-4">
+                        Mit freundlichen Grüßen, <br/>Ihr BeoKiz-Team
+                    </p>
+                </v-col>
+            </v-row>
+        </v-container>
     </GuestLayout>
 </template>

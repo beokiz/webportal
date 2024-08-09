@@ -6,11 +6,12 @@
 
 namespace App\Models;
 
-//use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\ModelFilters\UserFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use App\Notifications\ConnectedToKitasNotification;
+use App\Notifications\EmailVerifiedNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TrainingCancelledNotification;
@@ -38,7 +39,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @mixin \Eloquent
  * @package \App\Models
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable, Filterable, HasOrderScope, CanGetTableNameStatically;
 
@@ -295,6 +296,14 @@ class User extends Authenticatable
     public function sendEmailVerificationNotification() : void
     {
         $this->notify(new VerifyEmailNotification());
+    }
+
+    /**
+     * @return void
+     */
+    public function sendEmailVerifiedNotification() : void
+    {
+        $this->notify(new EmailVerifiedNotification());
     }
 
     /**

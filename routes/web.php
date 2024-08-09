@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DomainsController;
@@ -31,9 +32,6 @@ use App\Http\Controllers\TrainingsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\YearlyEvaluationsController;
 use Illuminate\Support\Facades\Route;
-
-//use App\Http\Controllers\Auth\RegisteredUserController;
-//use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,12 +63,8 @@ Route::group(['as' => 'main.', 'middleware' => []], function () {
 */
 Route::group(['middleware' => ['guest']], function () {
     Route::group(['as' => 'auth.'], function () {
-        Route::get('register', function () {
-            return redirect()->route('auth.login');
-        });
-
-//        Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-//        Route::post('register', [RegisteredUserController::class, 'store']);
+        Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+        Route::post('register', [RegisteredUserController::class, 'store'])->name('register_submit');
         Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
     });
@@ -93,8 +87,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['as' => 'verification.'], function () {
-        Route::get('verify-email', EmailVerificationPromptController::class)->name('notice');
         Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verify');
+        Route::get('verify-email', EmailVerificationPromptController::class)->name('notice');
         Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('send');
     });
 
@@ -118,7 +112,7 @@ Route::group(['prefix' => '2fa', 'as' => '2fa.', 'middleware' => ['protect_2fa_p
 |--------------------------------------------------------------------------
 */
 
-Route::group(['middleware' => ['auth', 'verified_2fa']], function () {
+Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function () {
     /*
      * Dashboard routes
      */

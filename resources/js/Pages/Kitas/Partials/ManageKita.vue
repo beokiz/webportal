@@ -771,7 +771,6 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 :items="modifiedItems"
                                 :sort-by="sortItem"
                                 :search="search"
-                                v-sortable-data-table
                                 :loading="loading"
                                 class="data-table-container data-table-container-hide-footer elevation-1"
                                 item-value="name"
