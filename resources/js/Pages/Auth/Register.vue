@@ -204,67 +204,73 @@ const removeTrainingSuggestion = (index) => {
     }
 };
 
-let isUpdating = false;
+const previousSuggestions = ref([]);  // Хранение предыдущего состояния дат
 
 watch(trainingSuggestions, (newVal) => {
-  if (!isUpdating) {
-    newVal.forEach((_, index) => {
+  newVal.forEach((suggestion, index) => {
+    // Проверяем, изменились ли даты по сравнению с предыдущим состоянием
+    const oldSuggestion = previousSuggestions.value[index] || {};
+
+    if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
       validateTrainingSuggestionDates(index);
-    });
-  }
+    }
+  });
+
+  // Обновляем предыдущее состояние после всех проверок
+  previousSuggestions.value = newVal.map(suggestion => ({
+    first_date: suggestion.first_date,
+    second_date: suggestion.second_date
+  }));
 }, { deep: true });
 
 const validateTrainingSuggestionDates = (index) => {
-  isUpdating = true;  // Устанавливаем флаг, чтобы предотвратить повторное выполнение
-
   const suggestion = trainingSuggestions.value[index];
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  console.log('test1');
+  let firstDayError = '';
+  let secondDayError = '';
+
   if (suggestion.first_date) {
     const firstDate = new Date(suggestion.first_date);
 
-    console.log('test1.1');
     if (firstDate < today) {
-      console.log('test1.2');
-      suggestion.first_day_error = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';
-    } else {
-      console.log('test1.3');
-      suggestion.first_day_error = '';
+      firstDayError = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';
     }
   }
 
-  console.log('test2');
   if (suggestion.second_date) {
     const secondDate = new Date(suggestion.second_date);
-    console.log('test2.1');
 
     if (secondDate < today) {
-      console.log('test2.2');
-      suggestion.second_day_error = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';
-    } else {
-      console.log('test2.3');
-      suggestion.second_day_error = '';
+      secondDayError = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';
     }
   }
 
-  console.log('test3');
   if (suggestion.first_date && suggestion.second_date) {
     const firstDate = new Date(suggestion.first_date);
     const secondDate = new Date(suggestion.second_date);
     const differenceInDays = (secondDate - firstDate) / (1000 * 60 * 60 * 24);
 
-    console.log('test3.1');
     if (differenceInDays < 7) {
-      console.log('test3.2');
-      suggestion.first_day_error = 'Erster Schulungstag muss mindestens 7 Tage vor dem Zweiten Schulungstag liegen.';
-      suggestion.second_day_error = 'Zweiter Schulungstag muss mindestens 7 Tage nach dem Ersten Schulungstag liegen.';
+      firstDayError = 'Erster Schulungstag muss mindestens 7 Tage vor dem Zweiten Schulungstag liegen.';
+      secondDayError = 'Zweiter Schulungstag muss mindestens 7 Tage nach dem Ersten Schulungstag liegen.';
     }
   }
 
-  isUpdating = false;  // Снимаем флаг
+  // Обновляем ошибки после завершения валидации
+  nextTick(() => {
+    suggestion.first_day_error = firstDayError;
+    suggestion.second_day_error = secondDayError;
+  });
 };
+
+
+watch(trainingSuggestions, (newVal) => {
+    newVal.forEach((_, index) => {
+        validateTrainingSuggestionDates(index);
+    });
+}, { deep: true });
 </script>
 
 <template>
