@@ -209,32 +209,44 @@ const validateTrainingSuggestionDates = (index) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    console.log('test1')
     if (suggestion.first_date) {
         const firstDate = new Date(suggestion.first_date);
 
+
+        console.log('test1.1')
         if (firstDate < today) {
+          console.log('test1.2')
             suggestion.first_day_error = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';
         } else {
+          console.log('test1.3')
             suggestion.first_day_error = '';
         }
     }
 
+    console.log('test2')
     if (suggestion.second_date) {
         const secondDate = new Date(suggestion.second_date);
+      console.log('test2.1')
 
         if (secondDate < today) {
+          console.log('test2.2')
             suggestion.second_day_error = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';
         } else {
+          console.log('test2.3')
             suggestion.second_day_error = '';
         }
     }
 
+  console.log('test3')
     if (suggestion.first_date && suggestion.second_date) {
         const firstDate = new Date(suggestion.first_date);
         const secondDate = new Date(suggestion.second_date);
         const differenceInDays = (secondDate - firstDate) / (1000 * 60 * 60 * 24);
 
+      console.log('test3.1')
         if (differenceInDays < 7) {
+          console.log('test3.2')
             suggestion.first_day_error = 'Erster Schulungstag muss mindestens 7 Tage vor dem Zweiten Schulungstag liegen.';
             suggestion.second_day_error = 'Zweiter Schulungstag muss mindestens 7 Tage nach dem Ersten Schulungstag liegen.';
         }
@@ -434,7 +446,7 @@ watch(trainingSuggestions, (newVal) => {
                                 <template v-else>
                                     <v-radio-group v-model="registrationForm.kita.training_id">
                                         <v-radio v-for="training in availableKitasByParticipantCount" :key="training.id"
-                                                 :label="`${training.id}: ${formatDate(training.first_date)} und ${formatDate(training.second_date)}`"
+                                                 :label="`${formatDate(training.first_date)} und ${formatDate(training.second_date)}`"
                                                  :value="training?.id"
                                         ></v-radio>
                                     </v-radio-group>
