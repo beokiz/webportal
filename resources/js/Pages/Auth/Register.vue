@@ -204,73 +204,69 @@ const removeTrainingSuggestion = (index) => {
     }
 };
 
-const previousSuggestions = ref([]);  // Хранение предыдущего состояния дат
+const previousSuggestions = ref([]);  // Store the previous state of the dates
 
 watch(trainingSuggestions, (newVal) => {
-  newVal.forEach((suggestion, index) => {
-    // Проверяем, изменились ли даты по сравнению с предыдущим состоянием
-    const oldSuggestion = previousSuggestions.value[index] || {};
+    newVal.forEach((suggestion, index) => {
+        // Check if the dates have changed compared to the previous state
+        const oldSuggestion = previousSuggestions.value[index] || {};
 
-    if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
-      validateTrainingSuggestionDates(index);
-    }
-  });
+        if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
+            validateTrainingSuggestionDates(index);  // Trigger validation if dates have changed
+        }
+    });
 
-  // Обновляем предыдущее состояние после всех проверок
-  previousSuggestions.value = newVal.map(suggestion => ({
-    first_date: suggestion.first_date,
-    second_date: suggestion.second_date
-  }));
+    // Update the previous state after all checks
+    previousSuggestions.value = newVal.map(suggestion => ({
+        first_date: suggestion.first_date,
+        second_date: suggestion.second_date
+    }));
 }, { deep: true });
 
 const validateTrainingSuggestionDates = (index) => {
-  const suggestion = trainingSuggestions.value[index];
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    const suggestion = trainingSuggestions.value[index];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  let firstDayError = '';
-  let secondDayError = '';
+    let firstDayError = '';
+    let secondDayError = '';
 
-  if (suggestion.first_date) {
-    const firstDate = new Date(suggestion.first_date);
+    // Validation: Ensure the first date is not in the past
+    if (suggestion.first_date) {
+        const firstDate = new Date(suggestion.first_date);
 
-    if (firstDate < today) {
-      firstDayError = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';
+        if (firstDate < today) {
+            firstDayError = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';  // First training day cannot be in the past
+        }
     }
-  }
 
-  if (suggestion.second_date) {
-    const secondDate = new Date(suggestion.second_date);
+    // Validation: Ensure the second date is not in the past
+    if (suggestion.second_date) {
+        const secondDate = new Date(suggestion.second_date);
 
-    if (secondDate < today) {
-      secondDayError = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';
+        if (secondDate < today) {
+            secondDayError = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';  // Second training day cannot be in the past
+        }
     }
-  }
 
-  if (suggestion.first_date && suggestion.second_date) {
-    const firstDate = new Date(suggestion.first_date);
-    const secondDate = new Date(suggestion.second_date);
-    const differenceInDays = (secondDate - firstDate) / (1000 * 60 * 60 * 24);
+    // Validation: Ensure the second date is at least 7 days after the first date
+    if (suggestion.first_date && suggestion.second_date) {
+        const firstDate = new Date(suggestion.first_date);
+        const secondDate = new Date(suggestion.second_date);
+        const differenceInDays = (secondDate - firstDate) / (1000 * 60 * 60 * 24);
 
-    if (differenceInDays < 7) {
-      firstDayError = 'Erster Schulungstag muss mindestens 7 Tage vor dem Zweiten Schulungstag liegen.';
-      secondDayError = 'Zweiter Schulungstag muss mindestens 7 Tage nach dem Ersten Schulungstag liegen.';
+        if (differenceInDays < 7) {
+            firstDayError = 'Erster Schulungstag muss mindestens 7 Tage vor dem Zweiten Schulungstag liegen.';  // The first training day must be at least 7 days before the second
+            secondDayError = 'Zweiter Schulungstag muss mindestens 7 Tage nach dem Ersten Schulungstag liegen.';  // The second training day must be at least 7 days after the first
+        }
     }
-  }
 
-  // Обновляем ошибки после завершения валидации
-  nextTick(() => {
-    suggestion.first_day_error = firstDayError;
-    suggestion.second_day_error = secondDayError;
-  });
-};
-
-
-watch(trainingSuggestions, (newVal) => {
-    newVal.forEach((_, index) => {
-        validateTrainingSuggestionDates(index);
+    // Update error messages after validation is complete
+    nextTick(() => {
+        suggestion.first_day_error = firstDayError;
+        suggestion.second_day_error = secondDayError;
     });
-}, { deep: true });
+};
 </script>
 
 <template>
