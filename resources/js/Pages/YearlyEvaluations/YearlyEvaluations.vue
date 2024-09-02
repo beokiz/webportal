@@ -688,7 +688,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
             </v-dialog>
         </template>
 
-        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+        <div v-if="$page.props.auth.user.is_super_admin" class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <div class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
                 <div class="tw-w-full">
                     <v-row>
@@ -754,7 +754,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
         </div>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
-            <v-row class="flex justify-end mb-4">
+            <v-row v-if="$page.props.auth.user.is_super_admin" class="flex justify-end mb-4">
                 <v-hover v-slot:default="{ isHovering, props }">
                     <v-col cols="12" sm="4" class="text-right">
                         <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">

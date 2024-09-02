@@ -57,7 +57,7 @@
         <div class="result-evaluation-col result-evaluation-col-title">
             <p>
                 <span class="tw-font-black">Bezeichner des Screenings</span>:
-                {{$kita['formatted_name']}}_{{$item['custom_unique_id']}}
+                {{ $kita['formatted_name'] }}_{{ $item['custom_unique_id'] }}
             </p>
         </div>
 
@@ -66,7 +66,7 @@
                 @foreach($domains as $domain)
                     <div class="domains-list-container">
                         <h3 class="{{ !empty($ratingData[$domain['id']]['color']) ? $ratingData[$domain['id']]['color'] : '' }}">
-                            {{$domain['name']}}
+                            {{ $domain['name'] }}
                         </h3>
 
                         @foreach($domain['subdomains'] as $subdomain)
@@ -81,31 +81,32 @@
                                     @endforeach
                                 </div>
 
-                                @foreach($subdomain['milestones'] as $milestone)
-                                    <div class="milestone-list-container">
-                                        <h5>
-                                            {{$milestone['abbreviation']}}
-                                        </h5>
+                                @if(!empty($subdomain['milestones']))
+                                    @foreach($subdomain['milestones'] as $milestone)
+                                        <div class="milestone-list-container">
+                                            <h5>
+                                                {{$milestone['abbreviation']}}
+                                            </h5>
 
-                                        <div class="milestone-list-text">
-                                            <span>{{$milestone['title']}}</span>
-                                            <p>{{$milestone['text']}}</p>
+                                            <div class="milestone-list-text">
+                                                <span>{{$milestone['title']}}</span>
+                                                <p>{{$milestone['text']}}</p>
+                                            </div>
+
+                                            <fieldset>
+                                                @foreach([1, 2, 3, 4] as $rating)
+                                                    <div class="radio-wrap radio-content">
+                                                        @if(!empty($ratingData[$domain['id']]['milestones'][$milestone['id']]) && $ratingData[$domain['id']]['milestones'][$milestone['id']] == $rating)
+                                                            <input type="radio" value="{{$rating}}" checked/>
+                                                        @else
+                                                            <input type="radio" value="{{$rating}}" disabled="disabled"/>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </fieldset>
                                         </div>
-
-                                        <fieldset>
-                                            @foreach([1, 2, 3, 4] as $rating)
-                                                <div class="radio-wrap radio-content">
-                                                    @if($ratingData[$domain['id']]['milestones'][$milestone['id']] == $rating)
-                                                        <input type="radio" value="{{$rating}}" checked/>
-                                                    @else
-                                                        <input type="radio" value="{{$rating}}" disabled="disabled"/>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </fieldset>
-                                    </div>
-                                @endforeach
-
+                                    @endforeach
+                                @endif
                             </div>
                         @endforeach
 

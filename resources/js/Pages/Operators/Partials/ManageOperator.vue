@@ -686,15 +686,17 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
 
                                     <td>{{item.selectable?.zip_code}}</td>
 
-                                    <td class="text-right">
-                                          <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0" location="top">
-                                              <template v-slot:activator="{ props }">
-                                                  <a :href="`mailto:?bcc=${item.selectable?.users_emails.join(',')}`" v-bind="props">
-                                                      <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                                  </a>
-                                              </template>
-                                              <span>Schreibe E-Mail</span>
-                                          </v-tooltip>
+                                    <td class="text-center">
+                                          <template v-if="$page.props.auth.user.is_super_admin">
+                                              <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0" location="top">
+                                                  <template v-slot:activator="{ props }">
+                                                      <a :href="`mailto:?bcc=${item.selectable?.users_emails.join(',')}`" v-bind="props">
+                                                          <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                                      </a>
+                                                  </template>
+                                                  <span>Schreibe E-Mail</span>
+                                              </v-tooltip>
+                                          </template>
 
                                           <v-tooltip location="top">
                                               <template v-slot:activator="{ props }">
