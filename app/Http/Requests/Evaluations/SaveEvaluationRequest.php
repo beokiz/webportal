@@ -27,6 +27,7 @@ class SaveEvaluationRequest extends CreateEvaluationRequest
     public function rules() : array
     {
         $rules = [
+            'custom_unique_id'       => ['required', 'string'],
             'id'                     => ['nullable', 'numeric'],
             'uuid'                   => ['required', 'uuid'],
             'user_id'                => ['required', $this->userExistRule()],
