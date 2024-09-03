@@ -32,4 +32,13 @@ class OperatorFilter extends BaseFilter
     {
         //
     }
+
+    /**
+     * @param mixed $value
+     * @return ModelFilter
+     */
+    public function selfTraining($value) : ModelFilter
+    {
+        return parent::booleanFilter($value);
+    }
 }

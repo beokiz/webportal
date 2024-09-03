@@ -175,15 +175,15 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             >
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.name}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.name}}</td>
 
-                        <td>{{formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.created_at, 'sv-SE')}}</td>
 
                         <td>
-                            <v-tooltip v-if="item.selectable?.path" location="top">
+                            <v-tooltip v-if="item?.path" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <a :href="item.selectable.path" download>
+                                    <a :href="item.path" download>
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-download</v-icon>
                                     </a>
                                 </template>

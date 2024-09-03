@@ -866,52 +866,52 @@ const manageTrainingStatus = async (status) => {
                 @update:options="goToPage"
             >
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{!item.selectable.first_date || item.selectable.first_date === '-' ? item.selectable.first_date : formatDate(item.selectable.first_date, 'fr-CA')}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
 
-                        <td>{{!item.selectable.second_date || item.selectable.second_date === '-' ? item.selectable.second_date : formatDate(item.selectable.second_date, 'fr-CA')}}</td>
+                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
 
-                        <td>{{item.selectable.location}}</td>
+                        <td>{{item.location}}</td>
 
-                        <td>{{item.selectable.prepared_participant_count}}</td>
+                        <td>{{item.prepared_participant_count}}</td>
 
-                        <td>{{item.selectable.formatted_type}}</td>
+                        <td>{{item.formatted_type}}</td>
 
-                        <td>{{item.selectable.formatted_status}}</td>
+                        <td>{{item.formatted_status}}</td>
 
-                        <td>{{item.selectable?.multiplier ? item.selectable?.multiplier?.full_name : '-'}}</td>
+                        <td>{{item?.multiplier ? item?.multiplier?.full_name : '-'}}</td>
 
-                        <td>{{item.selectable.notes}}</td>
+                        <td>{{item.notes}}</td>
 
-                        <td>{{!item.selectable.created_at || item.selectable.created_at === '-' ? item.selectable.created_at : formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
+                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
 
-                        <td>{{!item.selectable.updated_at || item.selectable.updated_at === '-' ? item.selectable.updated_at : formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
+                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
 
                         <td class="text-center">
-                            <template v-if="item.selectable.status === 'planned'">
+                            <template v-if="item.status === 'planned'">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'confirmed')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item, 'confirmed')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-progress-check</v-icon>
                                         </span>
                                     </template>
                                     <span>Schulungstermin bestätigen</span>
                                 </v-tooltip>
                             </template>
-                            <template v-if="item.selectable.status === 'confirmed'">
+                            <template v-if="item.status === 'confirmed'">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'completed')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item, 'completed')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-check</v-icon>
                                         </span>
                                     </template>
                                     <span>Training abschließen und Einrichtungen zulassen</span>
                               </v-tooltip>
                             </template>
-                            <template v-if="item.selectable.status !== 'completed' && item.selectable.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
+                            <template v-if="item.status !== 'completed' && item.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'cancelled')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item, 'cancelled')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-close</v-icon>
                                         </span>
                                     </template>
@@ -921,7 +921,7 @@ const manageTrainingStatus = async (status) => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('trainings.show', { id: item.selectable.id })">
+                                    <Link :href="route('trainings.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>

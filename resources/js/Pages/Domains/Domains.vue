@@ -478,10 +478,10 @@ const saveNewOrder = (event) => {
             >
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.abbreviation}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.abbreviation}}</td>
 
-                        <td>{{item.selectable.name}}</td>
+                        <td>{{item.name}}</td>
 
                         <td>
                             <v-tooltip location="top">
@@ -494,10 +494,9 @@ const saveNewOrder = (event) => {
                                 <span>neu anordnen</span>
                             </v-tooltip>
 
-
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('domains.show', { id: item.selectable.id })">
+                                    <Link :href="route('domains.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
                                     </Link>
                                 </template>

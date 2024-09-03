@@ -290,26 +290,26 @@ const unfinishedEvaluation = async (id) => {
             >
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{`${item.selectable.kita.formatted_name}_${item.selectable.custom_unique_id}`}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{`${item.kita.formatted_name}_${item.custom_unique_id}`}}</td>
 
-                        <td>{{formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.updated_at, 'sv-SE')}}</td>
 
-                        <td>{{formatDateTime(item.selectable.finished_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.finished_at, 'sv-SE')}}</td>
 
-                        <td>{{formatDateTime(item.selectable.not_editable_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.not_editable_at, 'sv-SE')}}</td>
 
                         <td align="center">
-                            <v-tooltip v-if="item.selectable.editable && ($page.props.auth.user.is_manager || $page.props.auth.user.is_employer)" location="top">
+                            <v-tooltip v-if="item.editable && ($page.props.auth.user.is_manager || $page.props.auth.user.is_employer)" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('evaluations.edit', { id: item.selectable.id })">
+                                    <Link :href="route('evaluations.edit', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
                                 <span>Einschätzung bearbeiten</span>
                             </v-tooltip>
 
-                            <v-tooltip v-if="item.selectable.finished" location="top">
+                            <v-tooltip v-if="item.finished" location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2"
                                             @click="openEvaluationInfo(item.raw)">mdi-eye</v-icon>

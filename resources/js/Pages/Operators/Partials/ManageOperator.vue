@@ -672,24 +672,24 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                             @update:options="goToKitasPage"
                         >
                             <template v-slot:item="{ item }">
-                                <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                                    <td>{{item.selectable?.name}}</td>
+                                <tr :data-id="item.id" :data-order="item.order">
+                                    <td>{{item?.name}}</td>
 
-                                    <td>{{item.selectable?.has_yearly_evaluations ? 'Ja' : 'Nein'}}</td>
+                                    <td>{{item?.has_yearly_evaluations ? 'Ja' : 'Nein'}}</td>
 
-                                    <td>{{item.selectable?.approved ? 'Ja' : 'Nein'}}</td>
+                                    <td>{{item?.approved ? 'Ja' : 'Nein'}}</td>
 
-                                    <td>{{item.selectable?.operator?.name ?? '-'}}</td>
+                                    <td>{{item?.operator?.name ?? '-'}}</td>
 
-                                    <td>{{item.selectable?.formatted_type ?? item.selectable?.type}}</td>
+                                    <td>{{item?.formatted_type ?? item?.type}}</td>
 
-                                    <td>{{item.selectable?.zip_code}}</td>
+                                    <td>{{item?.zip_code}}</td>
 
                                     <td class="text-center">
                                           <template v-if="$page.props.auth.user.is_super_admin">
-                                              <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0" location="top">
+                                              <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                   <template v-slot:activator="{ props }">
-                                                      <a :href="`mailto:?bcc=${item.selectable?.users_emails.join(',')}`" v-bind="props">
+                                                      <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">
                                                           <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                                       </a>
                                                   </template>
@@ -699,7 +699,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
 
                                           <v-tooltip location="top">
                                               <template v-slot:activator="{ props }">
-                                                  <Link :href="route('kitas.show', { id: item.selectable.id })">
+                                                  <Link :href="route('kitas.show', { id: item.id })">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                   </Link>
                                               </template>
@@ -919,23 +919,23 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                             @update:options="goToUsersPage"
                         >
                             <template v-slot:item="{ item }">
-                                <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
+                                <tr :data-id="item.id" :data-order="item.order">
                                     <td align="center">
-                                        <v-icon size="medium" :class="{ active: item.selectable.is_online }">mdi-circle</v-icon>
+                                        <v-icon size="medium" :class="{ active: item.is_online }">mdi-circle</v-icon>
                                     </td>
 
-                                    <td>{{item.selectable.first_name}}</td>
+                                    <td>{{item.first_name}}</td>
 
-                                    <td>{{item.selectable.last_name}}</td>
+                                    <td>{{item.last_name}}</td>
 
-                                    <td>{{item.selectable.email}}</td>
+                                    <td>{{item.email}}</td>
 
-                                    <td>{{item.selectable.primary_role_human_name}}</td>
+                                    <td>{{item.primary_role_human_name}}</td>
 
                                     <td align="center">
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
-                                                <Link :href="`${route('users.edit', { id: item.selectable.id })}?from=operators.show;${operator.id}`">
+                                                <Link :href="`${route('users.edit', { id: item.id })}?from=operators.show;${operator.id}`">
                                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>

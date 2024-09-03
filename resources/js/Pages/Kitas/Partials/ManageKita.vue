@@ -777,23 +777,23 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 @update:options="goToPage"
                             >
                                 <template v-slot:item="{ item }">
-                                    <tr :data-id="item.selectable?.id" :data-order="item.selectable?.order">
+                                    <tr :data-id="item?.id" :data-order="item?.order">
                                         <td align="center">
-                                            <v-icon size="medium" :class="{ active: item?.selectable.is_online }">mdi-circle</v-icon>
+                                            <v-icon size="medium" :class="{ active: item.is_online }">mdi-circle</v-icon>
                                         </td>
 
-                                        <td>{{item.selectable?.first_name}}</td>
+                                        <td>{{item?.first_name}}</td>
 
-                                        <td>{{item.selectable?.last_name}}</td>
+                                        <td>{{item?.last_name}}</td>
 
-                                        <td>{{item.selectable?.email}}</td>
+                                        <td>{{item?.email}}</td>
 
-                                        <td>{{item.selectable?.primary_role_human_name}}</td>
+                                        <td>{{item?.primary_role_human_name}}</td>
 
                                         <td align="right">
-                                            <v-tooltip v-if="kita?.approved && item.selectable?.is_manager" location="top">
+                                            <v-tooltip v-if="kita?.approved && item?.is_manager" location="top">
                                                 <template v-slot:activator="{ props }">
-                                                    <a :href="`mailto:?bcc=${item.selectable.email}`" v-bind="props">
+                                                    <a :href="`mailto:?bcc=${item.email}`" v-bind="props">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                                     </a>
                                                 </template>
@@ -802,7 +802,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                             <v-tooltip location="top">
                                                 <template v-slot:activator="{ props }">
-                                                    <Link :href="`${route('users.edit', { id: item.selectable.id })}?from=kitas.show;${kita.id}`">
+                                                    <Link :href="`${route('users.edit', { id: item.id })}?from=kitas.show;${kita.id}`">
                                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                     </Link>
                                                 </template>

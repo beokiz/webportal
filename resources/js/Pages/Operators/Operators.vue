@@ -302,15 +302,15 @@ const manageOperator = async () => {
             >
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.name}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.name}}</td>
 
-                        <td>{{item.selectable.self_training ? 'Ja' : 'Nein' }}</td>
+                        <td>{{item.self_training ? 'Ja' : 'Nein' }}</td>
 
                         <td>
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('operators.show', { id: item.selectable.id })">
+                                    <Link :href="route('operators.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>

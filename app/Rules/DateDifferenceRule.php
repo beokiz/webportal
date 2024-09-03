@@ -32,18 +32,25 @@ class DateDifferenceRule implements Rule
     private $days;
 
     /**
+     * @var string
+     */
+    private $comparisonType;
+
+    /**
      * Create a new rule instance.
      *
      * @param string      $attribute
      * @param string|null $value
      * @param int         $days
+     * @param string      $comparisonType ('greater_than' or 'less_than')
      * @return void
      */
-    public function __construct(string $attribute, ?string $value, int $days = 1)
+    public function __construct(string $attribute, ?string $value, int $days = 1, string $comparisonType = 'less_than')
     {
-        $this->attribute = $attribute;
-        $this->value     = $value;
-        $this->days      = $days;
+        $this->attribute      = $attribute;
+        $this->value          = $value;
+        $this->days           = $days;
+        $this->comparisonType = $comparisonType;
     }
 
     /**
@@ -62,8 +69,20 @@ class DateDifferenceRule implements Rule
         $firstDate  = Carbon::parse($this->value);
         $secondDate = Carbon::parse($value);
 
-        dd();
-        return $secondDate->diffInDays($firstDate) >= $this->days;
+        // Ensure the difference is not negative
+        if ($secondDate->lt($firstDate)) {
+            return false;
+        }
+
+        $difference = $secondDate->diffInDays($firstDate);
+
+        if ($this->comparisonType === 'greater_than') {
+            return $difference >= $this->days;
+        } elseif ($this->comparisonType === 'less_than') {
+            return $difference <= $this->days;
+        }
+
+        return false;
     }
 
     /**
@@ -75,7 +94,11 @@ class DateDifferenceRule implements Rule
     {
         $otherField = __("validation.attributes.{$this->attribute}");
 
-        return __('validation.date_difference', [
+        $messageKey = $this->comparisonType === 'greater_than'
+            ? 'validation.date_difference_greater'
+            : 'validation.date_difference_less';
+
+        return __($messageKey, [
             'other_field' => $otherField,
             'days'        => $this->days,
         ]);

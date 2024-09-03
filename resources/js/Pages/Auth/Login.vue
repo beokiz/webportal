@@ -58,13 +58,13 @@ const submit = () => {
                         Passwort vergessen?
                     </Link>
 
-                    <Link
-                        v-if="canRegister"
-                        :href="route('auth.register')"
-                        class="tw-block tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"
-                    >
-                        Noch kein Konto?
-                    </Link>
+<!--                    <Link-->
+<!--                        v-if="canRegister"-->
+<!--                        :href="route('auth.register')"-->
+<!--                        class="tw-block tw-underline tw-text-sm tw-text-gray-600 hover:tw-text-gray-900 tw-rounded-md focus:tw-outline-none"-->
+<!--                    >-->
+<!--                        Noch kein Konto?-->
+<!--                    </Link>-->
                 </div>
 
                 <v-btn-primary type="submit" class="tw-ml-4">Anmelden</v-btn-primary>

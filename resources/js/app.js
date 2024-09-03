@@ -10,13 +10,14 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { createVuetify } from 'vuetify';
+import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n';
 import { VBtn } from 'vuetify/components/VBtn'
 import * as labsComponents from 'vuetify/labs/components'
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import AOS from 'aos';
 import { en, de } from 'vuetify/locale';
-import { createI18n } from 'vue-i18n';
+import { createI18n, useI18n } from 'vue-i18n';
 import { vuetifyProTipTap } from './tiptap';
 
 
@@ -45,10 +46,20 @@ AOS.init();
  * Setup Vuetify
  */
 const i18n = createI18n({
+    legacy: false,
     locale: 'de',
     fallbackLocale: 'en',
     messages: {
-        de, en,
+        de: {
+            $vuetify: {
+                ...de,
+            },
+        },
+        en: {
+            $vuetify: {
+                ...en,
+            },
+        },
     },
 });
 
@@ -130,7 +141,9 @@ const vuetify = createVuetify({
     icons: {
         iconfont: 'mdiSvg',
     },
-    i18n,
+    locale: {
+        adapter: createVueI18nAdapter({ i18n, useI18n }),
+    },
 })
 
 /*
@@ -145,6 +158,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(vuetify)
+            .use(i18n)
             .use(vuetifyProTipTap)
             .use(ZiggyVue)
             .mount(el);

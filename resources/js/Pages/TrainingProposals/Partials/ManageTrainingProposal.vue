@@ -103,45 +103,14 @@ watch(dialog, (val) => {
 });
 
 watch(firstDateField, (val) => {
-    rawFirstDateField.value = prepareDate(val);
+    rawFirstDateField.value = val ? prepareDate(val) : null;
 });
 
 watch(secondDateField, (val) => {
-    rawSecondDateField.value = prepareDate(val);
+    rawSecondDateField.value = val ? prepareDate(val) : null;
 });
 
 // Methods
-const close = () => {
-    dialog.value = false;
-    selectedKitaName.value = null;
-    addMultiplierToTrainingProposalDialog.value = false;
-    addKitaToTrainingProposalDialog.value = false;
-    removeKitaFromTrainingProposalDialog.value = false;
-    acceptTrainingProposalDialog.value = false;
-    revokeTrainingProposalDialog.value = false;
-
-    manageStatusForm.reset();
-    manageStatusForm.clearErrors();
-    addKitaToTrainingProposalForm.reset();
-    addKitaToTrainingProposalForm.clearErrors();
-    removeKitaFromTrainingProposalForm.reset();
-    removeKitaFromTrainingProposalForm.clearErrors();
-
-    errors.value = {};
-};
-
-const clear = () => {
-    manageForm.reset();
-    manageForm.clearErrors();
-
-    manageStatusForm.reset();
-    manageStatusForm.clearErrors();
-    addKitaToTrainingProposalForm.reset();
-    addKitaToTrainingProposalForm.clearErrors();
-    removeKitaFromTrainingProposalForm.reset();
-    removeKitaFromTrainingProposalForm.clearErrors();
-};
-
 const manageForm = useForm({
     id: editedTrainingProposal.value?.id,
     // multi_id: editedTrainingProposal.value?.multi_id,
@@ -315,6 +284,39 @@ const removeKitaFromTrainingProposal = async () => {
 };
 
 
+const close = () => {
+    dialog.value = false;
+    selectedKitaName.value = null;
+    addMultiplierToTrainingProposalDialog.value = false;
+    addKitaToTrainingProposalDialog.value = false;
+    removeKitaFromTrainingProposalDialog.value = false;
+    acceptTrainingProposalDialog.value = false;
+    revokeTrainingProposalDialog.value = false;
+
+    manageStatusForm.reset();
+    manageStatusForm.clearErrors();
+    addKitaToTrainingProposalForm.reset();
+    addKitaToTrainingProposalForm.clearErrors();
+    removeKitaFromTrainingProposalForm.reset();
+    removeKitaFromTrainingProposalForm.clearErrors();
+
+    errors.value = {};
+};
+
+const clear = () => {
+    manageForm.reset();
+    manageForm.clearErrors();
+
+    manageStatusForm.reset();
+    manageStatusForm.clearErrors();
+    addKitaToTrainingProposalForm.reset();
+    addKitaToTrainingProposalForm.clearErrors();
+    removeKitaFromTrainingProposalForm.reset();
+    removeKitaFromTrainingProposalForm.clearErrors();
+
+    firstDateField.value = null;
+    secondDateField.value = null;
+};
 
 /*
  * Kitas tables
@@ -765,24 +767,24 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 @update:options="goToPage"
                             >
                                 <template v-slot:item="{ item }">
-                                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                                        <td>{{item.selectable?.name}}</td>
+                                    <tr :data-id="item.id" :data-order="item.order">
+                                        <td>{{item?.name}}</td>
 
-                                        <td>{{item.selectable?.has_yearly_evaluations ? 'Ja' : 'Nein'}}</td>
+                                        <td>{{item?.has_yearly_evaluations ? 'Ja' : 'Nein'}}</td>
 
-                                        <td>{{item.selectable?.approved ? 'Ja' : 'Nein'}}</td>
+                                        <td>{{item?.approved ? 'Ja' : 'Nein'}}</td>
 
-                                        <td>{{item.selectable?.operator?.name ?? '-'}}</td>
+                                        <td>{{item?.operator?.name ?? '-'}}</td>
 
-                                        <td>{{item.selectable?.formatted_type ?? item.selectable?.type}}</td>
+                                        <td>{{item?.formatted_type ?? item?.type}}</td>
 
-                                        <td>{{item.selectable?.zip_code}}</td>
+                                        <td>{{item?.zip_code}}</td>
 
                                         <td class="text-center">
                                               <template v-if="$page.props.auth.user.is_super_admin">
-                                                  <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0" location="top">
+                                                  <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                       <template v-slot:activator="{ props }">
-                                                          <a :href="`mailto:?bcc=${item.selectable?.users_emails.join(',')}`" v-bind="props">
+                                                          <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">
                                                               <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                                           </a>
                                                       </template>
@@ -792,7 +794,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                               <v-tooltip location="top">
                                                   <template v-slot:activator="{ props }">
-                                                      <Link :href="route('kitas.show', { id: item.selectable.id })">
+                                                      <Link :href="route('kitas.show', { id: item.id })">
                                                           <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                       </Link>
                                                   </template>

@@ -155,7 +155,8 @@ return [
     'not_present_with'          => "Das Feld \":attribute\" darf nicht vorhanden sein, wenn \":value\" vorhanden ist.",
     'file_name'                 => "Das Feld \":attribute\" muss einen Dateinamen mit einem der folgenden Typen sein: :values.",
     'not_match_old_password'    => "Das Feld \":attribute\" darf nicht mit dem alten Passwort übereinstimmen.",
-    'date_difference'           => "Das Feld \":attribute\" muss mindestens :days Tage nach dem :other_field-Datum liegen.",
+    'date_difference_greater'   => "Das \":attribute\" muss mindestens :days Tage größer als das Datum von :other_field sein.",
+    'date_difference_less'      => "Das \":attribute\" muss höchstens :days Tage weniger als das Datum von :other_field sein.",
 
     /*
     |--------------------------------------------------------------------------
