@@ -794,7 +794,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
 
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingProposalDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingProposalDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Schulung löschen</span>
                             </v-tooltip>

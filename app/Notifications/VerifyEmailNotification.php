@@ -84,7 +84,8 @@ class VerifyEmailNotification extends Notification
                 'name' => $this->notifiable->full_name,
             ]))
             ->line(__('notifications.email_verification.first_line'))
-            ->action(__('notifications.email_verification.action_text'), $url);
+            ->action(__('notifications.email_verification.action_text'), $url)
+            ->line(__('notifications.email_verification.second_line'));
     }
 
     /**

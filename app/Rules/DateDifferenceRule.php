@@ -78,7 +78,7 @@ class DateDifferenceRule implements Rule
 
         if ($this->comparisonType === 'greater_than') {
             return $difference >= $this->days;
-        } elseif ($this->comparisonType === 'less_than') {
+        } else if ($this->comparisonType === 'less_than') {
             return $difference <= $this->days;
         }
 

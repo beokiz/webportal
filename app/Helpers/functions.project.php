@@ -26,7 +26,7 @@ if (!function_exists('generate_custom_unique_id')) {
         ];
 
         $nouns = [
-            "Ananas", "Apfel",  "Artischocke", "Avocado", "Birne", "Banane", "Brokkoli", "Knoblauch", "Lauch", "Möhre",
+            "Ananas", "Apfel", "Artischocke", "Avocado", "Birne", "Banane", "Brokkoli", "Knoblauch", "Lauch", "Möhre",
             "Olive", "Paprika", "Pilz", "Rhabarber", "Salat", "Sellerie", "Spinat", "Tomate", "Traube", "Zucchini",
         ];
 

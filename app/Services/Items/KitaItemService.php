@@ -209,7 +209,7 @@ class KitaItemService extends BaseItemService
     */
     /**
      * @param array $ids
-     * @param bool $withoutYearlyEvaluations
+     * @param bool  $withoutYearlyEvaluations
      * @return array
      */
     public function getUsersEmails(array $ids = [], bool $withoutYearlyEvaluations = false) : array

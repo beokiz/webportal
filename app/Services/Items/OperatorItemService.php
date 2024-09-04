@@ -7,9 +7,7 @@
 namespace App\Services\Items;
 
 use App\Models\Operator;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Operator Item Service

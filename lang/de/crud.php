@@ -30,17 +30,20 @@ return [
     */
 
     'users' => [
-        'create_success'  => "Der Benutzer wurde erfolgreich erstellt.",
-        'create_error'    => "Fehler! Beim Erstellen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'update_success'  => "Der Benutzer wurde erfolgreich aktualisiert.",
-        'update_error'    => "Fehler! Beim Aktualisieren des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'update_denied'   => "Fehler! Der ausgewählte Benutzer kann nicht aktualisiert werden.",
-        'delete_success'  => "Der Benutzer wurde erfolgreich gelöscht.",
-        'delete_error'    => "Fehler! Beim Löschen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'delete_denied'   => "Fehler! Der ausgewählte Benutzer kann nicht gelöscht werden.",
-        'restore_success' => "Der Benutzer wurde erfolgreich wiederhergestellt.",
-        'restore_error'   => "Fehler! Beim Wiederherstellen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'restore_denied'  => "Fehler! Der ausgewählte Benutzer kann nicht wiederhergestellt werden.",
+        'create_success'                 => "Der Benutzer wurde erfolgreich erstellt.",
+        'create_error'                   => "Fehler! Beim Erstellen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'                 => "Der Benutzer wurde erfolgreich aktualisiert.",
+        'update_error'                   => "Fehler! Beim Aktualisieren des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'                  => "Fehler! Der ausgewählte Benutzer kann nicht aktualisiert werden.",
+        'send_verification_link_success' => "Der Bestätigungslink wurde erfolgreich gesendet.",
+        'send_verification_link_error'   => "Fehler! Der Bestätigungslink konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
+        'send_verification_link_denied'  => "Fehler! Die E-Mail wurde bereits verifiziert.",
+        'delete_success'                 => "Der Benutzer wurde erfolgreich gelöscht.",
+        'delete_error'                   => "Fehler! Beim Löschen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'                  => "Fehler! Der ausgewählte Benutzer kann nicht gelöscht werden.",
+        'restore_success'                => "Der Benutzer wurde erfolgreich wiederhergestellt.",
+        'restore_error'                  => "Fehler! Beim Wiederherstellen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'                 => "Fehler! Der ausgewählte Benutzer kann nicht wiederhergestellt werden.",
     ],
 
     /*

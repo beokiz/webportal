@@ -6,7 +6,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\ModelFilters\UserFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
@@ -24,6 +23,7 @@ use App\Notifications\WelcomeNotification;
 use App\Notifications\YearlyEvaluationReminderNotification;
 use App\Services\TwoFactorAuthenticationService;
 use EloquentFilter\Filterable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

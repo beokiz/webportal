@@ -821,7 +821,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                             <v-tooltip location="top">
                                                 <template v-slot:activator="{ props }">
                                                     <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                            @click="openDeleteUserFromKitaDialog(item.raw)">mdi-delete
+                                                            @click="openDeleteUserFromKitaDialog(item)">mdi-delete
                                                     </v-icon>
                                                 </template>
                                                 <span>Benutzer löschen</span>

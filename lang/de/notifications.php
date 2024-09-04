@@ -46,10 +46,11 @@ return [
 
     'email_verification' => [
         'subject'     => sprintf("%s: Bitte bestätigen Sie Ihre E-Mail-Adresse", config('app.name')),
-        'greeting'    => "Sehr geehrte :name!",
+        'greeting'    => "Sehr geehrte Damen und Herren,", // OLD: Sehr geehrte :name!
         'action_text' => "Bestätigen",
-        'first_line'  => "Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:",
-        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
+        'first_line'  => "Vielen Dank für Ihr Interesse an der BeoKiz-Schulung. Bitte klicken Sie auf folgenden Link, um Ihre Terminvorschläge für die BeoKiz-Schulung zu übermitteln. Dieser Schritt stellt sicher, dass wir Sie unter Ihrer angegebenen E-Mail-Adresse erreichen können.", // OLD: Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:
+        'second_line' => "Zur finalen Bestätigung Ihres Schulungstermins wird sich ein BeoKiz-Multiplikator oder eine BeoKiz-Multiplikatorin mit Ihnen in Verbindung setzen.",
+        'salutation'  => sprintf("Herzlichen Dank und beste Grüße,,  \nIhr %s-Team", config('app.name')),
     ],
 
     /*

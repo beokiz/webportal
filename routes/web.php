@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\EmailVerifiedPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -79,6 +80,10 @@ Route::group(['middleware' => ['guest']], function () {
         Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('reset');
         Route::post('reset-password', [NewPasswordController::class, 'store'])->name('store');
     });
+
+    Route::group(['as' => 'verification.'], function () {
+        Route::get('verified', EmailVerifiedPromptController::class)->name('verified_notice');
+    });
 });
 
 Route::group(['middleware' => ['auth']], function () {
@@ -140,6 +145,7 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::post('/kita', [UsersController::class, 'storeFromKita'])->name('store_from_kita');
         Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
         Route::put('/{user}', [UsersController::class, 'update'])->name('update');
+        Route::post('/{user}/send-verification-link', [UsersController::class, 'sendVerificationLink'])->name('send_verification_link');
         Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
     });
 

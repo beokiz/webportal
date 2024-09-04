@@ -126,7 +126,7 @@ class TrainingItemService extends BaseItemService
             if ($removeKitas) {
                 $item->kitas()->detach($kitas);
             } else {
-                $trainingKitas    = $item->kitas->pluck('id');
+                $trainingKitas = $item->kitas->pluck('id');
 
                 foreach ($kitas as $userId) {
                     $userId = (int) $userId;

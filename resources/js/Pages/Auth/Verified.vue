@@ -4,18 +4,19 @@
   -->
 
 <script setup>
-import {Head, Link} from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { formatDate } from '@/Composables/common.js';
 
 const props = defineProps({
-    status: String,
+    trainingItems: Array,
 });
 </script>
 
 <template>
     <GuestLayout>
-        <Head title="E-Mail-Verifizierung"/>
+        <Head title="E-Mail bestätigt"/>
 
         <v-container>
             <v-row>
@@ -31,28 +32,25 @@ const props = defineProps({
             <v-row>
                 <v-col cols="12" class="tw-mb-8">
                     <h2 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight tw-mb-4">
-                        Anmeldung zur BeoKiz-Schulung
+                        Vielen Dank!
                     </h2>
 
-                    <p class="tw-mb-4">
-                        Vielen Dank für Ihre Anmeldung!
-                    </p>
+                    <template v-if="trainingItems && trainingItems.length > 0">
+                        <p class="tw-mb-4">
+                            Wir haben Ihre Zusage für die Schulung an folgenden Tagen erfolgreich erhalten:
+                        </p>
 
-                    <p class="tw-mb-4">
-                        Ihre Registrierung ist fast abgeschlossen. Um die Anmeldung abzuschließen, bestätigen Sie bitte Ihre E-Mail-Adresse. Eine E-Mail wurde an die von Ihnen angegebene Adresse gesendet. Bitte klicken Sie auf den Bestätigungslink in dieser E-Mail.
-                    </p>
-
-                    <p class="tw-mb-4">
-                        Falls Sie die E-Mail nicht erhalten haben, überprüfen Sie bitte Ihren Spam-Ordner oder versuchen Sie es erneut.
-                    </p>
-
-                    <p class="tw-mb-4">
-                        Wir freuen uns darauf, Sie bald bei der BeoKiz-Schulung willkommen zu heißen!
-                    </p>
-
-                    <p class="tw-mb-4">
-                        Mit freundlichen Grüßen, <br/>Ihr BeoKiz-Team
-                    </p>
+                        <ul>
+                            <li v-for="trainingItem in trainingItems" class="tw-list-disc tw-ml-5">
+                                {{ `${formatDate(trainingItem?.first_date, 'de-DE')} und ${formatDate(trainingItem?.second_date, 'de-DE')}` }}
+                            </li>
+                        </ul>
+                    </template>
+                    <template v-else>
+                        <p class="tw-mb-4">
+                            Wir haben Ihre Schulungszusage erfolgreich erhalten.
+                        </p>
+                    </template>
                 </v-col>
             </v-row>
         </v-container>

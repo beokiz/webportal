@@ -8,7 +8,7 @@ import { computed, ref, watch, nextTick } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import { formatDate } from '@/Composables/common.js';
+import { formatDate, prepareDate } from '@/Composables/common.js';
 import InfoMessage from "@/Components/InfoMessage.vue";
 
 const props = defineProps({
@@ -211,14 +211,15 @@ watch(trainingSuggestions, (newVal) => {
 
     // Update the previous state after all checks
     previousSuggestions.value = newVal.map(suggestion => ({
-        first_date: formatDate(suggestion.first_date, 'de-DE'),
-        second_date: formatDate(suggestion.second_date, 'de-DE'),
+        first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
+        second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
     }));
 }, { deep: true });
 
 const validateTrainingSuggestionDates = (index) => {
     const suggestion = trainingSuggestions.value[index];
     const today = new Date();
+
     today.setHours(0, 0, 0, 0);
 
     let firstDayError = '';
@@ -228,6 +229,10 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.first_date) {
         const firstDate = new Date(suggestion.first_date);
 
+        if (suggestion.first_date) {
+            trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
+        }
+
         if (firstDate < today) {
             firstDayError = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';  // First training day cannot be in the past
         }
@@ -236,6 +241,10 @@ const validateTrainingSuggestionDates = (index) => {
     // Validation: Ensure the second date is not in the past
     if (suggestion.second_date) {
         const secondDate = new Date(suggestion.second_date);
+
+        if (suggestion.second_date) {
+            trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
+        }
 
         if (secondDate < today) {
             secondDayError = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';  // Second training day cannot be in the past

@@ -6,10 +6,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Permission;
-use App\Models\Role;
-use Illuminate\Support\Str;
-
 /**
  * Setting Factory
  *

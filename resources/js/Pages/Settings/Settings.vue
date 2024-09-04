@@ -497,7 +497,7 @@ const deleteDownloadableFile = async () => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteSurveyTimePeriodDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteSurveyTimePeriodDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Einstellungen löschen</span>
                             </v-tooltip>
@@ -670,7 +670,7 @@ const deleteDownloadableFile = async () => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDownloadableFileDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDownloadableFileDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Datei löschen</span>
                             </v-tooltip>

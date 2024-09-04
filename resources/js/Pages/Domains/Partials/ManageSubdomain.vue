@@ -389,7 +389,7 @@ const manageCreateMilestone = async () => {
                                             <template v-slot:activator="{ props }">
                                                 <v-icon
                                                     draggable="true"
-                                                    @dragstart="draggableItem = item.raw"
+                                                    @dragstart="draggableItem = item"
                                                     color="primary" v-bind="props" size="small"
                                                     class="tw-me-2 glyphicon-move">mdi-arrow-collapse-vertical
                                                 </v-icon>
@@ -409,7 +409,7 @@ const manageCreateMilestone = async () => {
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                        @click="openDeleteSubdomainDialog(item.raw)">mdi-delete
+                                                        @click="openDeleteSubdomainDialog(item)">mdi-delete
                                                 </v-icon>
                                             </template>
                                             <span>Meilenstein löschen</span>

@@ -76,12 +76,12 @@ const lastSeenAtFilter = ref(null);
 
 const headers = [
     { title: 'Status', key: 'is_online', width: '5%', sortable: false, align: 'center' },
-    { title: 'Name', key: 'first_name', width: '25%', sortable: true },
-    { title: 'Email', key: 'email', width: '20%', sortable: true },
+    { title: 'Name', key: 'first_name', width: '20%', sortable: true },
+    { title: 'Email', key: 'email', width: '30%', sortable: true },
     { title: 'Rolle', key: 'primary_role_name', width: '10%', sortable: true },
     { title: 'Letzter Login', key: 'last_seen_at', width: '15%', sortable: true },
-    { title: 'Erster Login', key: 'first_login_at', width: '15%', sortable: true },
-    { title: 'Aktionen', key: 'actions', width: '10%', sortable: false },
+    { title: 'Erster Login', key: 'first_login_at', width: '10%', sortable: true },
+    { title: 'Aktionen', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
 
 const statusFilterValues = [
@@ -298,6 +298,28 @@ const manageUser = async () => {
     };
 
     manageForm.post(route('users.store'), formOptions);
+};
+
+const sendVerificationLinkForm = useForm({
+    //
+});
+
+const sendVerificationLink = async (item) => {
+    sendVerificationLinkForm.processing = true;
+
+    let formOptions = {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            manageForm.processing = false;
+        },
+    };
+
+    manageForm.post(route('users.send_verification_link', { user: item?.id }), formOptions);
 };
 </script>
 
@@ -517,7 +539,20 @@ const manageUser = async () => {
 
                         <td>{{item.full_name}}</td>
 
-                        <td>{{item.email}}</td>
+                        <td>
+                            <div class="tw-flex tw-items-center">
+                                <template v-if="!item.email_verified_at || item.email_verified_at === '-'">
+                                    <v-tooltip v-if="$page.props.auth.user.is_super_admin || ($page.props.auth.user.is_admin || $page.props.auth.user.is_manager && !item.is_super_admin && !item.is_admin)" location="top">
+                                        <template v-slot:activator="{ props }">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-alert-circle</v-icon>
+                                        </template>
+                                        <span>E-Mail wurde nicht verifiziert</span>
+                                    </v-tooltip>
+                                </template>
+
+                                <span>{{item.email}}</span>
+                            </div>
+                        </td>
 
                         <td>{{item.primary_role_human_name}}</td>
 
@@ -525,7 +560,14 @@ const manageUser = async () => {
 
                         <td>{{!item.first_login_at || item.first_login_at === '-' ? item.first_login_at : formatDate(item.first_login_at, 'fr-CA')}}</td>
 
-                        <td>
+                        <td class="tw-text-center">
+                            <v-tooltip v-if="($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin) && (!item.email_verified_at || item.email_verified_at === '-')" location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="sendVerificationLink(item)">mdi-email-sync-outline</v-icon>
+                                </template>
+                                <span>Verifikations-Email erneut senden</span>
+                            </v-tooltip>
+
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || (($page.props.auth.user.is_admin || $page.props.auth.user.is_manager) && !item.is_super_admin && !item.is_admin) || ($page.props.auth.user.is_admin && $page.props.auth.user.id === item.id)" location="top">
                                 <template v-slot:activator="{ props }">
                                     <Link :href="route('users.edit', { id: item.id })">
@@ -537,7 +579,7 @@ const manageUser = async () => {
 
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || ($page.props.auth.user.is_admin || $page.props.auth.user.is_manager && !item.is_super_admin && !item.is_admin)" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteUserDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteUserDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Benutzer löschen</span>
                             </v-tooltip>

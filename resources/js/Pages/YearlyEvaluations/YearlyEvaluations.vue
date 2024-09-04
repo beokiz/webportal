@@ -818,7 +818,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Jährliche Rückmeldung löschen</span>
                             </v-tooltip>

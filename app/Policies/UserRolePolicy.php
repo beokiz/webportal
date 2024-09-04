@@ -10,7 +10,6 @@ use App\Models\SurveyTimePeriod;
 use App\Models\TrainingProposal;
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 
 /**
  * User Role Policy

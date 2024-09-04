@@ -7,9 +7,7 @@
 namespace App\Http\Requests\TrainingProposals;
 
 use App\Http\Requests\BaseFormRequest;
-use App\Models\TrainingProposal;
 use App\Rules\DateDifferenceRule;
-use Illuminate\Validation\Rule;
 
 /**
  * Create Training Proposal Request

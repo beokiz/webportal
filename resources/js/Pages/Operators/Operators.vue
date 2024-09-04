@@ -319,7 +319,7 @@ const manageOperator = async () => {
 
                             <v-tooltip v-if="!$page.props.auth.user.is_manager" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteOperatorDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteOperatorDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Träger löschen</span>
                             </v-tooltip>

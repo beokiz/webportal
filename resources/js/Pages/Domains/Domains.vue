@@ -488,7 +488,7 @@ const saveNewOrder = (event) => {
                                 <template v-slot:activator="{ props }">
                                     <v-icon
                                         draggable="true"
-                                        @dragstart="draggableItem = item.raw"
+                                        @dragstart="draggableItem = item"
                                         color="primary" v-bind="props" size="small" class="tw-me-2 glyphicon-move">mdi-arrow-collapse-vertical</v-icon>
                                 </template>
                                 <span>neu anordnen</span>
@@ -505,7 +505,7 @@ const saveNewOrder = (event) => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDomainDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDomainDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Domäne löschen</span>
                             </v-tooltip>

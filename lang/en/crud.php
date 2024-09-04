@@ -30,17 +30,20 @@ return [
     */
 
     'users' => [
-        'create_success'  => "User has been created successfully.",
-        'create_error'    => "Error! Something went wrong while creating a user. Please try again later.",
-        'update_success'  => "User has been updated successfully.",
-        'update_error'    => "Error! Something went wrong while updating a user. Please try again later.",
-        'update_denied'   => "Error! Selected user cannot be updated.",
-        'delete_success'  => "User has been deleted successfully.",
-        'delete_error'    => "Error! Something went wrong while deleting a user. Please try again later.",
-        'delete_denied'   => "Error! Selected user cannot be deleted.",
-        'restore_success' => "User has been restored successfully.",
-        'restore_error'   => "Error! Something went wrong while restoring a user. Please try again later.",
-        'restore_denied'  => "Error! Selected user cannot be restored.",
+        'create_success'                 => "User has been created successfully.",
+        'create_error'                   => "Error! Something went wrong while creating a user. Please try again later.",
+        'update_success'                 => "User has been updated successfully.",
+        'update_error'                   => "Error! Something went wrong while updating a user. Please try again later.",
+        'update_denied'                  => "Error! Selected user cannot be updated.",
+        'send_verification_link_success' => "Verification link has been sent successfully.",
+        'send_verification_link_error'   => "Error! Failed to send verification link. Please try again later.",
+        'send_verification_link_denied'  => "Error! The email has already been verified.",
+        'delete_success'                 => "User has been deleted successfully.",
+        'delete_error'                   => "Error! Something went wrong while deleting a user. Please try again later.",
+        'delete_denied'                  => "Error! Selected user cannot be deleted.",
+        'restore_success'                => "User has been restored successfully.",
+        'restore_error'                  => "Error! Something went wrong while restoring a user. Please try again later.",
+        'restore_denied'                 => "Error! Selected user cannot be restored.",
     ],
 
     /*

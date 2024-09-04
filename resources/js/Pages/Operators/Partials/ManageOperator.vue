@@ -709,7 +709,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                           <v-tooltip v-if="!$page.props.auth.user.is_manager && !$page.props.auth.user.is_user_multiplier" location="top">
                                               <template v-slot:activator="{ props }">
                                                   <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                          @click="openDeleteKitaFromOperatorDialog(item.raw)">mdi-delete
+                                                          @click="openDeleteKitaFromOperatorDialog(item)">mdi-delete
                                                   </v-icon>
                                               </template>
                                               <span>Einrichtung löschen</span>
@@ -945,7 +945,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                        @click="openDeleteUserFromOperatorDialog(item.raw)">mdi-delete
+                                                        @click="openDeleteUserFromOperatorDialog(item)">mdi-delete
                                                 </v-icon>
                                             </template>
                                             <span>Benutzer löschen</span>

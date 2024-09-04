@@ -7,7 +7,6 @@
 declare(strict_types = 1);
 
 use App\Models\Evaluation;
-use App\Models\Kita;
 use DragonCode\LaravelActions\Action;
 
 return new class () extends Action {

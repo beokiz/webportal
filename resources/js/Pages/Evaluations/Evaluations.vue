@@ -312,14 +312,14 @@ const unfinishedEvaluation = async (id) => {
                             <v-tooltip v-if="item.finished" location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2"
-                                            @click="openEvaluationInfo(item.raw)">mdi-eye</v-icon>
+                                            @click="openEvaluationInfo(item)">mdi-eye</v-icon>
                                 </template>
                                 <span>Einschätzung ansehen</span>
                             </v-tooltip>
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Einschätzung löschen</span>
                             </v-tooltip>
