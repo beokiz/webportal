@@ -64,7 +64,7 @@ const deletingItemName = ref(null);
 
 const headers = [
     { title: 'Name', key: 'name', width: '45%', sortable: true},
-    { title: 'Selbschulend', key: 'self_training', width: '45%', sortable: true },
+    { title: 'Selbstschulend', key: 'self_training', width: '45%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
 
@@ -228,7 +228,7 @@ const manageOperator = async () => {
                                             <v-col cols="12" sm="6">
                                                 <v-checkbox
                                                     v-model="manageForm.self_training"
-                                                    label="Selbschulend"
+                                                    label="Selbstschulend"
                                                     :value="true"
                                                 ></v-checkbox>
                                             </v-col>

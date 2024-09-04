@@ -133,6 +133,7 @@ const manageForm = useForm({
     additional_info: editedKita.value?.additional_info,
     zip_code: editedKita.value?.zip_code,
     operator_id: editedKita.value?.operator_id,
+    other_operator: editedKita.value?.other_operator,
     city: editedKita.value?.city,
     num_pedagogical_staff: editedKita.value?.num_pedagogical_staff,
     approved: editedKita.value?.approved,
@@ -468,7 +469,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
 
                 <v-row>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-select
                             v-model="manageForm.operator_id"
                             :items="operators"
@@ -480,7 +481,15 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-select>
                     </v-col>
 
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
+                        <v-text-field v-model="manageForm.other_operator"
+                                      :error-messages="errors.other_operator"
+                                      label="Sonstiger Träger"
+                                      :disabled="$page.props.auth.user.is_user_multiplier || manageForm.operator_id"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.num_pedagogical_staff"
                                       :error-messages="errors.num_pedagogical_staff"
                                       label="Größe pädagogisches Team"
@@ -503,7 +512,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             v-model="manageForm.type"
                             :items="types"
                             :error-messages="errors.type"
-                            label="Typ*"
+                            label="Größe der Einrichtung*"
                             required
                         ></v-select>
                     </v-col>

@@ -61,7 +61,7 @@ class KitaController extends BaseController
 
         $args = $request->only([
             'page', 'per_page', 'sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id',
-            'type', 'zip_code',
+            'other_operator', 'type', 'zip_code',
         ]);
 
         if ($currentUser->is_manager) {
@@ -69,10 +69,13 @@ class KitaController extends BaseController
         } else if ($currentUser->is_user_multiplier) {
             $currentUser->loadMissing(['operators']);
 
-            $args['with_operators'] = $currentUser->operators->pluck('id')
+            $currentUserOperators = $currentUser->operators->pluck('id')
                 ->flatten()
                 ->unique()
                 ->toArray();
+
+            // If there are no operators, we don't return anything
+            $args['with_operators'] = !empty($currentUserOperators) ? $currentUserOperators : [-1];
         } else {
             //
         }
@@ -103,7 +106,7 @@ class KitaController extends BaseController
         if ($currentUser->is_super_admin || $currentUser->is_admin || $currentUser->is_manager) {
             $emptyOperator = tap(new Operator(), function ($model) {
                 $model->id   = null;
-                $model->name = 'Kein Träger';
+                $model->name = 'Sonstiger Träger';
             });
         }
 
@@ -146,7 +149,7 @@ class KitaController extends BaseController
         if ($currentUser->is_super_admin || $currentUser->is_admin || $currentUser->is_manager) {
             $emptyOperator = tap(new Operator(), function ($model) {
                 $model->id   = null;
-                $model->name = 'Kein Träger';
+                $model->name = 'Sonstiger Träger';
             });
         }
 

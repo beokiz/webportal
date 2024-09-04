@@ -26,6 +26,7 @@ class CreateKitaRequest extends BaseFormRequest
 
         return [
             'operator_id'           => [$user->is_user_multiplier ? 'required' : 'nullable', $this->operatorExistRule()],
+            'other_operator'        => array_merge($this->textRules(), ['nullable']),
             'name'                  => array_merge($this->textRules(), ['required']),
             'number'                => array_merge($this->bigIntegerRules(true), ['required']),
             'street'                => array_merge($this->textRules(), ['required']),

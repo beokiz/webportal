@@ -25,6 +25,7 @@ class UpdateKitaRequest extends CreateKitaRequest
 
         return [
             'operator_id'           => [$user->is_user_multiplier ? 'sometimes' : 'nullable', $this->operatorExistRule()],
+            'other_operator'        => array_merge($this->textRules(), ['nullable']),
             'name'                  => array_merge($this->textRules(), ['sometimes']),
             'number'                => array_merge($this->bigIntegerRules(true), ['sometimes']),
             'street'                => array_merge($this->textRules(), ['sometimes']),

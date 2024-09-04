@@ -49,6 +49,7 @@ class Kita extends Model
         'approved',
         'name',
         'operator_id',
+        'other_operator',
         'city',
         'district',
         'number',

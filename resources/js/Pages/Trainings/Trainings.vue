@@ -557,6 +557,7 @@ const manageTrainingStatus = async (status) => {
 
                                                 <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
                                                                 :hideClearButton="true"
+                                                                :format="'HH:mm'"
                                                                 :hourLabel="'Std.'"
                                                                 :minuteLabel="'Protokoll'"
                                                                 :disabled="loading">
@@ -591,8 +592,9 @@ const manageTrainingStatus = async (status) => {
                                             <v-col cols="12" sm="6">
                                                 <v-label class="tw-mt-6 tw-mr-2">Zeitraum zweiter Schulungstag*</v-label>
 
-                                                <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
+                                                <vue-timepicker v-model="manageForm.second_date_start_and_end_time"
                                                                 :hideClearButton="true"
+                                                                :format="'HH:mm'"
                                                                 :hourLabel="'Std.'"
                                                                 :minuteLabel="'Protokoll'"
                                                                 :disabled="loading">

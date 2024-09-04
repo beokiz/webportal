@@ -532,7 +532,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-col cols="12" sm="6">
                         <v-checkbox
                             v-model="manageForm.self_training"
-                            label="Selbschulend"
+                            label="Selbstschulend"
                             :value="true"
                         ></v-checkbox>
                     </v-col>

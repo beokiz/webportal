@@ -353,9 +353,10 @@ const modifyItems = (items) => {
 
 const headers = [
     { title: 'Name', key: 'name', width: '15%', sortable: true },
-    { title: `Jährliche Rückmeldung ${new Date().getFullYear()} abgeschlossen`, key: 'has_yearly_evaluations', width: '35%', sortable: true },
+    { title: `Jährliche Rückmeldung ${new Date().getFullYear()} abgeschlossen`, key: 'has_yearly_evaluations', width: '25%', sortable: true },
     { title: 'Zugelassen', key: 'approved', width: '10%', sortable: true },
     { title: 'Träger', key: 'operator_id', width: '10%', sortable: true },
+    { title: 'Sonstiger Träger', key: 'other_operator', width: '10%', sortable: true },
     { title: 'Typ', key: 'type', width: '10%', sortable: true },
     { title: 'Postleitzahl', key: 'zip_code', width: '10%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
@@ -373,6 +374,7 @@ const searchFilter = ref(props?.filters?.search ?? null);
 const hasYearlyEvaluationsFilter = ref(props?.filters?.has_yearly_evaluations ?? null);
 const approvedFilter = ref(props?.filters?.approved ?? null);
 const operatorIdFilter = ref(null);
+const otherOperatorFilter = ref(props.filters?.other_operator ?? null);
 const typeFilter = ref(props?.filters?.type ?? null);
 const zipCodeFilter = ref(props?.filters?.zip_code ?? null);
 
@@ -406,11 +408,11 @@ const modifiedItems = computed(() => {
 });
 
 const allFiltersEmpty = computed(() => {
-    return searchFilter.value === null && hasYearlyEvaluationsFilter.value === null && approvedFilter.value === null && operatorIdFilter.value === null && typeFilter.value === null && zipCodeFilter.value === null;
+    return searchFilter.value === null && hasYearlyEvaluationsFilter.value === null && approvedFilter.value === null && operatorIdFilter.value === null && otherOperatorFilter.value === null && typeFilter.value === null && zipCodeFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
-    return searchFilter.value !== null || hasYearlyEvaluationsFilter.value !== null || approvedFilter.value !== null || operatorIdFilter.value !== null || typeFilter.value !== null || zipCodeFilter.value !== null;
+    return searchFilter.value !== null || hasYearlyEvaluationsFilter.value !== null || approvedFilter.value !== null || operatorIdFilter.value !== null || otherOperatorFilter.value !== null || typeFilter.value !== null || zipCodeFilter.value !== null;
 });
 
 // Kitas filters
@@ -429,6 +431,10 @@ watch(approvedFilter, (val) => {
 watch(operatorIdFilter, (val) => {
     triggerSearch();
 });
+
+watch(otherOperatorFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
 
 watch(typeFilter, (val) => {
     triggerSearch();
@@ -454,6 +460,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         hasYearlyEvaluationsFilter.value = null;
         approvedFilter.value = null;
         operatorIdFilter.value = null;
+        otherOperatorFilter.value = null;
         typeFilter.value = null;
         zipCodeFilter.value = null;
     }
@@ -493,6 +500,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
         if (operatorIdFilter.value) {
             data.operator_id = operatorIdFilter.value;
+        }
+
+        if (otherOperatorFilter.value) {
+            data.other_operator = otherOperatorFilter.value;
         }
 
         if (typeFilter.value) {
@@ -598,6 +609,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                         <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
                                         :hideClearButton="true"
+                                        :format="'HH:mm'"
                                         :hourLabel="'Std.'"
                                         :minuteLabel="'Protokoll'"
                                         :disabled="loading || $page.props.auth.user.is_user_multiplier">
@@ -633,6 +645,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                         <vue-timepicker v-model="manageForm.second_date_start_and_end_time"
                                         :hideClearButton="true"
+                                        :format="'HH:mm'"
                                         :hourLabel="'Std.'"
                                         :minuteLabel="'Protokoll'"
                                         :disabled="loading || $page.props.auth.user.is_user_multiplier">
@@ -802,7 +815,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="6">
                             <v-select
                                 v-model="operatorIdFilter"
                                 :items="operators"
@@ -815,7 +828,17 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             ></v-select>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="6">
+                            <v-text-field v-model="otherOperatorFilter"
+                                          label="Sonstiger Träger"
+                                          :disabled="loading"
+                                          clearable
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12" sm="6">
                             <v-select
                                 v-model="typeFilter"
                                 :items="kitaTypes"
@@ -826,7 +849,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             ></v-select>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="6">
                             <v-select
                                 v-model="zipCodeFilter"
                                 :items="zipCodes"
@@ -868,6 +891,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <td>{{item?.approved ? 'Ja' : 'Nein'}}</td>
 
                                         <td>{{item?.operator?.name ?? '-'}}</td>
+
+                                        <td>{{!item?.operator?.name && item?.other_operator ? item?.other_operator : '-'}}</td>
 
                                         <td>{{item?.formatted_type ?? item?.type}}</td>
 

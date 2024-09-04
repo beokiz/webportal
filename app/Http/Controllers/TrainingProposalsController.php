@@ -106,9 +106,15 @@ class TrainingProposalsController extends BaseController
         $operatorItemService = app(OperatorItemService::class);
 
         // Get params for sorting & filtering TrainingProposal Kitas
-        $trainingProposalKitaArgs = $request->only(['sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']);
+        $trainingProposalKitaArgs = $request->only([
+            'sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'other_operator', 'type', 'zip_code',
+        ]);
 
-        $trainingProposalKitas = $kitaItemService->collection(array_merge($trainingProposalKitaArgs ?? [], ['paginated' => false, 'with_training_proposals' => [$trainingProposal->id], 'with' => ['users', 'currentYearlyEvaluations']]));
+        $trainingProposalKitas = $kitaItemService->collection(array_merge($trainingProposalKitaArgs ?? [], [
+            'paginated'               => false,
+            'with_training_proposals' => [$trainingProposal->id],
+            'with'                    => ['operator', 'users', 'currentYearlyEvaluations'],
+        ]));
 
         // Get params for sorting & filtering all Kitas
         $allKitaArgs = [];
@@ -116,10 +122,13 @@ class TrainingProposalsController extends BaseController
         if ($currentUser->is_user_multiplier) {
             $currentUser->loadMissing(['operators']);
 
-            $allKitaArgs['with_operators'] = $currentUser->operators->pluck('id')
+            $currentUserOperators = $currentUser->operators->pluck('id')
                 ->flatten()
                 ->unique()
                 ->toArray();
+
+            // If there are no operators, we don't return anything
+            $allKitaArgs['with_operators'] = !empty($currentUserOperators) ? $currentUserOperators : [-1];
         }
 
         $allKitas = $kitaItemService->collection(array_merge($allKitaArgs, [

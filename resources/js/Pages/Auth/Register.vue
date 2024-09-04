@@ -77,24 +77,9 @@ const submitRegistration = async () => {
 /*
  * Common
  */
-const otherOperators = ref([
-    {
-        id: 'operator_1',
-        name: 'Träger 1',
-    },
-    {
-        id: 'operator_2',
-        name: 'Träger 2',
-    },
-    {
-        id: 'operator_3',
-        name: 'Träger 3',
-    },
-]);
-
-const minTrainingtDate = ref('2025-01-01');
-const maxTrainingtDate = ref('2027-07-31');
-const initialDisplayDate = ref(new Date(minTrainingtDate.value));
+const minTrainingDate = ref('2025-01-01');
+const maxTrainingDate = ref('2027-07-31');
+const initialDisplayDate = ref(new Date(minTrainingDate.value));
 
 const showTrainingDisclaimer = ref(false);
 
@@ -380,15 +365,10 @@ const validateTrainingSuggestionDates = (index) => {
 
                         <v-col cols="12" sm="4">
                             <template v-if="!registrationForm.kita.operator_id">
-                                <v-select
-                                    v-model="registrationForm.kita.other_operator"
-                                    :items="otherOperators"
-                                    :error-messages="errors['kita.other_operator']"
-                                    item-title="name"
-                                    item-value="id"
-                                    label="Sonstiger Träger"
-                                    clearable
-                                ></v-select>
+                                <v-text-field v-model="registrationForm.kita.other_operator"
+                                              :error-messages="errors['kita.other_operator']"
+                                              label="Sonstiger Träger"
+                                ></v-text-field>
                             </template>
                         </v-col>
 
@@ -416,7 +396,7 @@ const validateTrainingSuggestionDates = (index) => {
                                     <h3 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight tw-mb-4">Terminvorschläge für Schulung</h3>
 
                                     <v-row v-for="(suggestion, index) in trainingSuggestions" :key="index" class="tw-mb-4">
-                                        <v-col cols="5">
+                                        <v-col cols="10" sm="5">
                                             <v-locale-provider locale="de">
                                                 <v-menu v-model="suggestion.isFirstDateFieldOpened"
                                                         :return-value.sync="suggestion.first_date"
@@ -434,15 +414,15 @@ const validateTrainingSuggestionDates = (index) => {
                                                     </template>
                                                     <v-date-picker @update:modelValue="suggestion.isFirstDateFieldOpened = false; validateTrainingSuggestionDates(index)"
                                                                    v-model="suggestion.first_date"
-                                                                   :min="minTrainingtDate"
-                                                                   :max="maxTrainingtDate"
+                                                                   :min="minTrainingDate"
+                                                                   :max="maxTrainingDate"
                                                                    :display-date="suggestion.first_date ? suggestion.first_date : initialDisplayDate"
                                                     ></v-date-picker>
                                                 </v-menu>
                                             </v-locale-provider>
                                         </v-col>
 
-                                        <v-col cols="5">
+                                        <v-col cols="10" sm="5">
                                             <v-locale-provider locale="de">
                                                 <v-menu v-model="suggestion.isSecondDateFieldOpened"
                                                         :return-value.sync="suggestion.second_date"
@@ -460,8 +440,8 @@ const validateTrainingSuggestionDates = (index) => {
                                                     </template>
                                                     <v-date-picker @update:modelValue="suggestion.isSecondDateFieldOpened = false; validateTrainingSuggestionDates(index)"
                                                                    v-model="suggestion.second_date"
-                                                                   :min="minTrainingtDate"
-                                                                   :max="maxTrainingtDate"
+                                                                   :min="minTrainingDate"
+                                                                   :max="maxTrainingDate"
                                                                    :display-date="suggestion.second_date ? suggestion.second_date : initialDisplayDate"
                                                     ></v-date-picker>
                                                 </v-menu>

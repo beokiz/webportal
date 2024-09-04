@@ -93,6 +93,16 @@ class KitaFilter extends BaseFilter
     }
 
     /**
+     * @param string $value
+     * @return ModelFilter
+     */
+    public function otherOperator(string $value) : ModelFilter
+    {
+        return $this->where('other_operator', 'LIKE', '%' . trim($value) . '%')
+            ->whereNull('operator_id');
+    }
+
+    /**
      * @param string|array $values
      * @return ModelFilter
      */
