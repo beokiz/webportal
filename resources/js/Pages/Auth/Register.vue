@@ -199,20 +199,29 @@ const removeTrainingSuggestion = (index) => {
 
 const previousSuggestions = ref([]);  // Store the previous state of the dates
 
+let isTrainingSuggestionsUpdating = false;
+
 watch(trainingSuggestions, (newVal) => {
-  nextTick(() => {
+    if (isTrainingSuggestionsUpdating) return; // Abort if already updating
+
+    isTrainingSuggestionsUpdating = true; // Set a flag to prevent re-triggering
+
     newVal.forEach((suggestion, index) => {
-      const oldSuggestion = previousSuggestions.value[index] || {};
-      if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
-        validateTrainingSuggestionDates(index);
-      }
+        // Check if the dates have changed compared to the previous state
+        const oldSuggestion = previousSuggestions.value[index] || {};
+
+        if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
+            validateTrainingSuggestionDates(index);  // Trigger validation if dates have changed
+        }
     });
 
+    // Update the previous state after all checks
     previousSuggestions.value = newVal.map(suggestion => ({
-      first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
-      second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
+        first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
+        second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
     }));
-  });
+
+    isTrainingSuggestionsUpdating = false;
 }, { deep: true });
 
 const validateTrainingSuggestionDates = (index) => {
