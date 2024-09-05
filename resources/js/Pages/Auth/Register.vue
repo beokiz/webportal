@@ -199,22 +199,13 @@ const removeTrainingSuggestion = (index) => {
 
 const previousSuggestions = ref([]);  // Store the previous state of the dates
 
-let isUpdatingManually = false;
-
 watch(trainingSuggestions, (newVal) => {
-  if (isUpdatingManually) {
-    // If manual update is in progress, do not trigger watch
-    return;
-  }
-
   newVal.forEach((suggestion, index) => {
     const oldSuggestion = previousSuggestions.value[index] || {};
 
     // Check if the dates have changed
     if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
-      isUpdatingManually = true;
       validateTrainingSuggestionDates(index);  // Validate dates when changed
-      isUpdatingManually = false;
     }
   });
 
@@ -431,7 +422,7 @@ const validateTrainingSuggestionDates = (index) => {
                                                             v-bind="props"
                                                       ></v-text-field>
                                                     </template>
-                                                    <v-date-picker @update:modelValue="suggestion.isFirstDateFieldOpened = false; validateTrainingSuggestionDates(index)"
+                                                    <v-date-picker @update:modelValue="suggestion.isFirstDateFieldOpened = false;"
                                                                    v-model="suggestion.first_date"
                                                                    :min="minTrainingDate"
                                                                    :max="maxTrainingDate"
@@ -457,7 +448,7 @@ const validateTrainingSuggestionDates = (index) => {
                                                             v-bind="props"
                                                         ></v-text-field>
                                                     </template>
-                                                    <v-date-picker @update:modelValue="suggestion.isSecondDateFieldOpened = false; validateTrainingSuggestionDates(index)"
+                                                    <v-date-picker @update:modelValue="suggestion.isSecondDateFieldOpened = false;"
                                                                    v-model="suggestion.second_date"
                                                                    :min="minTrainingDate"
                                                                    :max="maxTrainingDate"
