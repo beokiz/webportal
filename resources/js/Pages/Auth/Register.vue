@@ -199,19 +199,21 @@ const removeTrainingSuggestion = (index) => {
 
 const previousSuggestions = ref([]);  // Store the previous state of the dates
 
-nextTick(() => {
-  newVal.forEach((suggestion, index) => {
-    const oldSuggestion = previousSuggestions.value[index] || {};
-    if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
-      validateTrainingSuggestionDates(index);
-    }
-  });
+watch(trainingSuggestions, (newVal) => {
+  nextTick(() => {
+    newVal.forEach((suggestion, index) => {
+      const oldSuggestion = previousSuggestions.value[index] || {};
+      if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
+        validateTrainingSuggestionDates(index);
+      }
+    });
 
-  previousSuggestions.value = newVal.map(suggestion => ({
-    first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
-    second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
-  }));
-});
+    previousSuggestions.value = newVal.map(suggestion => ({
+      first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
+      second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
+    }));
+  });
+}, { deep: true });
 
 const validateTrainingSuggestionDates = (index) => {
     const suggestion = trainingSuggestions.value[index];
