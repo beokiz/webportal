@@ -7,10 +7,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Auth\EmailVerificationRequest;
 use App\Models\TrainingProposal;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -28,24 +29,32 @@ class VerifyEmailController extends BaseController
      */
     public function __invoke(EmailVerificationRequest $request) : RedirectResponse
     {
-        $currentUser = $request->user();
+        // Retrieve the user ID from the route
+        $userId = $request->route('id');
+
+        // Find the user by ID
+        $user = User::find($userId);
 
         $args = $request->all();
 
-        if ($currentUser->hasVerifiedEmail()) {
+        if (empty($user)) {
+            return redirect()->route('auth.login');
+        }
+
+        if ($user->hasVerifiedEmail()) {
             return redirect()->intended(RouteServiceProvider::HOME . '?verified=1');
         }
 
-        if ($currentUser->markEmailAsVerified()) {
-            event(new Verified($currentUser));
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
         }
 
         // Update kita Training proposals info
         $trainingType = null;
 
-        $currentUser->loadMissing(['kitas.trainingProposals', 'kitas.trainings']);
+        $user->loadMissing(['kitas.trainingProposals', 'kitas.trainings']);
 
-        $currentUser->kitas->each(function ($kita) use (&$trainingType) {
+        $user->kitas->each(function ($kita) use (&$trainingType) {
             if ($kita->trainings->isNotEmpty()) {
                 $trainingType = 'training';
             } else {
@@ -58,7 +67,7 @@ class VerifyEmailController extends BaseController
         });
 
         // Update user info
-        $currentUser->update([
+        $user->update([
             'first_login_at' => null,
         ]);
 
@@ -71,7 +80,7 @@ class VerifyEmailController extends BaseController
 //        return redirect()->route('auth.login');
 //        return redirect()->intended(RouteServiceProvider::HOME . '?verified=1');
         return redirect()->route('verification.verified_notice', [
-            'user_id'       => $currentUser->id,
+            'user_id'       => $user->id,
             'training_type' => $trainingType,
             'expires'       => $args['expires'],
             'signature'     => $args['signature'],

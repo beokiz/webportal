@@ -66,8 +66,24 @@ class DateDifferenceRule implements Rule
             return false;
         }
 
-        $firstDate  = Carbon::parse($this->value);
-        $secondDate = Carbon::parse($value);
+        // Possible date formats
+        $formats = [
+            'd/m/Y, H:i:s',   // Example: 18/01/2025, 01:00:00
+            'm/d/Y H:i:s',    // Example: 01/18/2025 01:00:00
+            'd.m.Y, H:i:s',   // Example: 18.01.2025 01:00:00
+            'd.m.Y H:i:s',    // Example: 18.01.2025 01:00:00
+            'Y-m-d H:i:s',    // Example: 2025-01-18 01:00:00
+            'Y-m-d',          // Example: 2025-01-18
+            'd/m/Y',          // Example: 18/01/2025
+        ];
+
+        $firstDate  = $this->tryParseDate($this->value, $formats);
+        $secondDate = $this->tryParseDate($value, $formats);
+
+        // If one of the dates wasn't successfully parsed, return false
+        if (!$firstDate || !$secondDate) {
+            return false;
+        }
 
         // Ensure the difference is not negative
         if ($secondDate->lt($firstDate)) {
@@ -102,5 +118,27 @@ class DateDifferenceRule implements Rule
             'other_field' => $otherField,
             'days'        => $this->days,
         ]);
+    }
+
+    /**
+     * Attempts to parse a date using multiple formats.
+     *
+     * @param string $date
+     * @param array  $formats
+     * @return \Carbon\Carbon|false
+     */
+    private function tryParseDate($date, array $formats) : \Carbon\Carbon|false
+    {
+        foreach ($formats as $format) {
+            try {
+                return Carbon::createFromFormat($format, $date);
+            } catch (\Exception $e) {
+                // Catch the exception and continue checking other formats
+                continue;
+            }
+        }
+
+        // If no format matches, return false
+        return false;
     }
 }
