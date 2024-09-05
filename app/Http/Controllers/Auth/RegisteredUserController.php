@@ -84,6 +84,7 @@ class RegisteredUserController extends BaseController
     {
         $attributes = $request->validated();
 
+        dd($attributes);
         $userItemService             = app(UserItemService::class);
         $kitaItemService             = app(KitaItemService::class);
         $trainingItemService         = app(TrainingItemService::class);
