@@ -230,7 +230,9 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.first_date) {
         const firstDate = new Date(suggestion.first_date);
 
-        if (suggestion.first_date && !suggestion.first_date instanceof Date) {
+        if (suggestion.first_date && suggestion.first_date instanceof Date && suggestion.first_date.getHours() !== 12) {
+        // if (suggestion.first_date) {
+          console.log(suggestion.first_date)
             trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
         }
 
@@ -243,7 +245,9 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.second_date) {
         const secondDate = new Date(suggestion.second_date);
 
-        if (suggestion.second_date && !suggestion.second_date instanceof Date) {
+        if (suggestion.second_date && !suggestion.second_date instanceof Date && suggestion.second_date.getHours() !== 12) {
+        // if (suggestion.second_date) {
+          console.log(suggestion.second_date)
             trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
         }
 
