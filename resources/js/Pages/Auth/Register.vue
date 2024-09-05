@@ -204,14 +204,26 @@ let isTrainingSuggestionsUpdating = false;
 watch(trainingSuggestions, (newVal) => {
     if (isTrainingSuggestionsUpdating) return; // Abort if already updating
 
-    isTrainingSuggestionsUpdating = true; // Set a flag to prevent re-triggering
-
     newVal.forEach((suggestion, index) => {
         // Check if the dates have changed compared to the previous state
         const oldSuggestion = previousSuggestions.value[index] || {};
 
         if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
             validateTrainingSuggestionDates(index);  // Trigger validation if dates have changed
+        }
+    });
+
+    isTrainingSuggestionsUpdating = true; // Set a flag to prevent re-triggering
+
+    // Update the current dates
+    newVal.forEach((suggestion, index) => {
+        if (suggestion.first_date) {
+            const firstDate = new Date(suggestion.first_date);
+            trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
+        }
+        if (suggestion.second_date) {
+            const secondDate = new Date(suggestion.second_date);
+            trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
         }
     });
 
@@ -237,9 +249,9 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.first_date) {
         const firstDate = new Date(suggestion.first_date);
 
-        if (suggestion.first_date) {
-            trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
-        }
+        // if (suggestion.first_date) {
+        //     trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
+        // }
 
         if (firstDate < today) {
             firstDayError = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';  // First training day cannot be in the past
@@ -250,9 +262,9 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.second_date) {
         const secondDate = new Date(suggestion.second_date);
 
-        if (suggestion.second_date) {
-            trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
-        }
+        // if (suggestion.second_date) {
+        //     trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
+        // }
 
         if (secondDate < today) {
             secondDayError = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';  // Second training day cannot be in the past
