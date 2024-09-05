@@ -199,42 +199,32 @@ const removeTrainingSuggestion = (index) => {
 
 const previousSuggestions = ref([]);  // Store the previous state of the dates
 
-let isTrainingSuggestionsUpdating = false;
+let isUpdatingManually = false;
 
 watch(trainingSuggestions, (newVal) => {
-    if (isTrainingSuggestionsUpdating) return; // Abort if already updating
+  if (isUpdatingManually) {
+    // If manual update is in progress, do not trigger watch
+    return;
+  }
 
-    newVal.forEach((suggestion, index) => {
-        // Check if the dates have changed compared to the previous state
-        const oldSuggestion = previousSuggestions.value[index] || {};
+  newVal.forEach((suggestion, index) => {
+    const oldSuggestion = previousSuggestions.value[index] || {};
 
-        if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
-            validateTrainingSuggestionDates(index);  // Trigger validation if dates have changed
-        }
-    });
+    // Check if the dates have changed
+    if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
+      isUpdatingManually = true;
+      validateTrainingSuggestionDates(index);  // Validate dates when changed
+      isUpdatingManually = false;
+    }
+  });
 
-    isTrainingSuggestionsUpdating = true; // Set a flag to prevent re-triggering
-
-    // Update the current dates
-    newVal.forEach((suggestion, index) => {
-        if (suggestion.first_date) {
-            const firstDate = new Date(suggestion.first_date);
-            trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
-        }
-        if (suggestion.second_date) {
-            const secondDate = new Date(suggestion.second_date);
-            trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
-        }
-    });
-
-    // Update the previous state after all checks
-    previousSuggestions.value = newVal.map(suggestion => ({
-        first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
-        second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
-    }));
-
-    isTrainingSuggestionsUpdating = false;
+  // Store the previous state of the suggestions
+  previousSuggestions.value = newVal.map(suggestion => ({
+    first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
+    second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
+  }));
 }, { deep: true });
+
 
 const validateTrainingSuggestionDates = (index) => {
     const suggestion = trainingSuggestions.value[index];
@@ -249,9 +239,9 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.first_date) {
         const firstDate = new Date(suggestion.first_date);
 
-        // if (suggestion.first_date) {
-        //     trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
-        // }
+        if (suggestion.first_date) {
+            trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
+        }
 
         if (firstDate < today) {
             firstDayError = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';  // First training day cannot be in the past
@@ -262,9 +252,9 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.second_date) {
         const secondDate = new Date(suggestion.second_date);
 
-        // if (suggestion.second_date) {
-        //     trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
-        // }
+        if (suggestion.second_date) {
+            trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
+        }
 
         if (secondDate < today) {
             secondDayError = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';  // Second training day cannot be in the past
