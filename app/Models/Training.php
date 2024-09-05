@@ -87,6 +87,7 @@ class Training extends Model
         'available_participant_count',
         'formatted_type',
         'formatted_status',
+        'kitas_list',
     ];
 
     /**
@@ -128,6 +129,16 @@ class Training extends Model
     {
         return Attribute::make(
             get: fn($value, $attributes) => __("validation.attributes.{$attributes['status']}"),
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function kitasList() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->relationLoaded('kitas') ? $this->kitas->pluck('name') : [],
         );
     }
 

@@ -57,10 +57,11 @@ class TrainingsController extends BaseController
         $currentUser = $request->user();
 
         $userItemService = app(UserItemService::class);
+        $kitaItemService = app(KitaItemService::class);
 
         $args = $request->only([
             'page', 'per_page', 'sort', 'order_by', 'first_date', 'second_date', 'location', 'participant_count',
-            'max_participant_count', 'type', 'with_multipliers', 'status',
+            'max_participant_count', 'type', 'with_multipliers', 'status', 'with_kitas',
         ]);
 
         if (!empty($args['order_by']) && $args['order_by'] === 'prepared_participant_count') {
@@ -86,9 +87,10 @@ class TrainingsController extends BaseController
         return Inertia::render('Trainings/Trainings', array_merge($preparedResult, [
             'filters'     => $request->only([
                 'first_date', 'second_date', 'location', 'participant_count', 'max_participant_count', 'type',
-                'with_multipliers', 'status',
+                'with_multipliers', 'status', 'with_kitas',
             ]),
             'multipliers' => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
+            'kitas'       => $kitaItemService->collection(['paginated' => false]),
             'statuses'    => array_map(function ($status) {
                 return [
                     'title' => __("validation.attributes.{$status}"),

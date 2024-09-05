@@ -315,11 +315,11 @@ const sendVerificationLink = async (item) => {
             errors.value = err;
         },
         onFinish: () => {
-            manageForm.processing = false;
+            sendVerificationLinkForm.processing = false;
         },
     };
 
-    manageForm.post(route('users.send_verification_link', { user: item?.id }), formOptions);
+    sendVerificationLinkForm.post(route('users.send_verification_link', { user: item?.id }), formOptions);
 };
 </script>
 
@@ -542,7 +542,7 @@ const sendVerificationLink = async (item) => {
                         <td>
                             <div class="tw-flex tw-items-center">
                                 <template v-if="!item.email_verified_at || item.email_verified_at === '-'">
-                                    <v-tooltip v-if="$page.props.auth.user.is_super_admin || ($page.props.auth.user.is_admin || $page.props.auth.user.is_manager && !item.is_super_admin && !item.is_admin)" location="top">
+                                    <v-tooltip>
                                         <template v-slot:activator="{ props }">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-alert-circle</v-icon>
                                         </template>

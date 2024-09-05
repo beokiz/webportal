@@ -305,6 +305,7 @@ return [
         'num_pedagogical_staff'                    => "Number of pedagogical staff",
         'combined'                                 => "Combined",
         'in-house'                                 => "In-house",
+        'email_not_confirmed'                      => "Email not confirmed",
         'planned'                                  => "Planned",
         'confirmed'                                => "Confirmed",
         'completed'                                => "Completed",

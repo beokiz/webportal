@@ -305,6 +305,7 @@ return [
         'num_pedagogical_staff'                    => "Größe pädagogisches Team",
         'combined'                                 => "Zusammengelegt",
         'in-house'                                 => "In-house",
+        'email_not_confirmed'                      => "E-Mail nicht bestätigt",
         'planned'                                  => "Geplant",
         'confirmed'                                => "Bestätigt",
         'completed'                                => "Abgeschlossen",

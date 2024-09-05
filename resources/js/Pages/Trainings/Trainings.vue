@@ -25,6 +25,7 @@ const props = defineProps({
     filters: Object,
     errors: Object,
     multipliers: Array,
+    kitas: Array,
     statuses: Array,
     types: Array,
 });
@@ -65,6 +66,7 @@ const maxParticipantCountFilter = ref(props.filters.max_participant_count ?? nul
 const typeFilter = ref(props.filters.type ?? null);
 const multiIdFilter = ref(props.filters.multi_id ?? null);
 const statusFilter = ref(props.filters.status ?? null);
+const kitaIdFilter = ref(props.filters.with_kitas ?? null);
 const search = ref('');
 const errors = ref(props.errors || {});
 
@@ -100,12 +102,13 @@ const headers = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '10%', sortable: true },
     { title: 'Teilnehmer ', key: 'prepared_participant_count', width: '5%', sortable: true },
+    { title: 'Kita', key: 'kitas_list', width: '17%', sortable: false },
     { title: 'Typ', key: 'type', width: '7%', sortable: true },
-    { title: 'Status', key: 'status', width: '10%', sortable: true },
-    { title: 'Multiplikator', key: 'multi_id', width: '10%', sortable: true },
-    { title: 'Notizen', key: 'notes', width: '20%', sortable: true },
-    { title: 'Erstellt am', key: 'created_at', width: '10%', sortable: true },
-    { title: 'Geändert am', key: 'updated_at', width: '10%', sortable: true },
+    { title: 'Status', key: 'status', width: '7%', sortable: true },
+    { title: 'Multiplikator', key: 'multi_id', width: '7%', sortable: true },
+    { title: 'Notizen', key: 'notes', width: '15%', sortable: true },
+    { title: 'Erstellt am', key: 'created_at', width: '7%', sortable: true },
+    { title: 'Geändert am', key: 'updated_at', width: '7%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
 
@@ -131,7 +134,8 @@ const allFiltersEmpty = computed(() => {
         maxParticipantCountFilter.value === null &&
         typeFilter.value === null &&
         multiIdFilter.value === null &&
-        statusFilter.value === null;
+        statusFilter.value === null &&
+        kitaIdFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
@@ -142,7 +146,8 @@ const someFiltersNotEmpty = computed(() => {
         maxParticipantCountFilter.value !== null ||
         typeFilter.value !== null ||
         multiIdFilter.value !== null ||
-        statusFilter.value !== null;
+        statusFilter.value !== null ||
+        kitaIdFilter.value !== null;
 });
 
 const completedTrainingInfo = computed(() => {
@@ -227,6 +232,10 @@ watch(secondDateField, (val) => {
     rawSecondDateField.value = prepareDate(val);
 });
 
+watch(kitaIdFilter, (val) => {
+    triggerSearch();
+});
+
 const triggerSearch = () => {
     loading.value = true;
     search.value = String(Date.now());
@@ -252,6 +261,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         typeFilter.value = null;
         multiIdFilter.value = null;
         statusFilter.value = null;
+        kitaIdFilter.value = null;
     }
 
     if (
@@ -305,6 +315,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
         if (statusFilter.value) {
             data.status = statusFilter.value;
+        }
+
+        if (kitaIdFilter.value) {
+            data.with_kitas = kitaIdFilter.value;
         }
 
         await router.get(route(route().current()), data, {
@@ -841,7 +855,16 @@ const manageTrainingStatus = async (status) => {
                         </v-col>
 
                         <v-col cols="12" sm="4">
-
+                            <v-select
+                                v-model="kitaIdFilter"
+                                :items="kitas"
+                                item-title="name"
+                                item-value="id"
+                                label="Kita"
+                                multiple
+                                :disabled="loading"
+                                clearable
+                            ></v-select>
                         </v-col>
                     </v-row>
                 </div>
@@ -876,6 +899,8 @@ const manageTrainingStatus = async (status) => {
                         <td>{{item.location}}</td>
 
                         <td>{{item.prepared_participant_count}}</td>
+
+                        <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
                         <td>{{item.formatted_type}}</td>
 

@@ -111,7 +111,7 @@ class KitaController extends BaseController
         }
 
         return Inertia::render('Kitas/Kitas', $this->prepareItemsCollection($result, [
-            'filters'     => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']),
+            'filters'     => $request->only(['search', 'has_yearly_evaluations', 'approved', 'operator_id', 'other_operator', 'type', 'zip_code']),
             'zipCodes'    => $zipCodesList,
             'operators'   => !empty($emptyOperator) ? $operators->prepend($emptyOperator) : $operators,
             'usersEmails' => $this->kitaItemService->getUsersEmails($result->pluck('id')->toArray()),

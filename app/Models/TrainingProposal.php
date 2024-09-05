@@ -28,7 +28,7 @@ class TrainingProposal extends Model
 
     // use SoftDeletes;
 
-    const STATUS_EMAIL_NOT_CONFIRMED  = 'email_not_confirmed ';
+    const STATUS_EMAIL_NOT_CONFIRMED  = 'email_not_confirmed';
     const STATUS_OPEN                 = 'open';
     const STATUS_OBSOLETE             = 'obsolete';
     const STATUS_RESERVED             = 'reserved';

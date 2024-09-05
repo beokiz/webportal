@@ -25,6 +25,7 @@ const props = defineProps({
     filters: Object,
     errors: Object,
     userTrainingProposals: Array,
+    kitas: Array,
     multipliers: Array,
     statuses: Array,
 });
@@ -64,6 +65,7 @@ const participantCountFilter = ref(props.filters.participant_count ?? null);
 const typeFilter = ref(props.filters.type ?? null);
 const multiIdFilter = ref(props.filters.multi_id ?? null);
 const statusFilter = ref(props.filters.status ?? null);
+const kitaIdFilter = ref(props.filters.with_kitas ?? null);
 const search = ref('');
 const errors = ref(props.errors || {});
 
@@ -145,7 +147,8 @@ const allFiltersEmpty = computed(() => {
         participantCountFilter.value === null &&
         typeFilter.value === null &&
         multiIdFilter.value === null &&
-        statusFilter.value === null;
+        statusFilter.value === null &&
+        kitaIdFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
@@ -155,7 +158,8 @@ const someFiltersNotEmpty = computed(() => {
         participantCountFilter.value !== null ||
         typeFilter.value !== null ||
         multiIdFilter.value !== null ||
-        statusFilter.value !== null;
+        statusFilter.value !== null ||
+        kitaIdFilter.value !== null;
 });
 
 const completedTrainingInfo = computed(() => {
@@ -228,6 +232,10 @@ watch(statusFilter, (val) => {
     triggerSearch();
 });
 
+watch(kitaIdFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
 watch(firstDateField, (val) => {
     rawFirstDateField.value = val ? prepareDate(val) : null;
 });
@@ -260,6 +268,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         typeFilter.value = null;
         multiIdFilter.value = null;
         statusFilter.value = null;
+        kitaIdFilter.value = null;
     }
 
     if (
@@ -309,6 +318,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
         if (statusFilter.value) {
             data.status = statusFilter.value;
+        }
+
+        if (kitaIdFilter.value) {
+            data.with_kitas = kitaIdFilter.value;
         }
 
         await router.get(route(route().current()), data, {
@@ -676,7 +689,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="3">
                             <v-text-field
                                 type="number"
                                 v-model="participantCountFilter"
@@ -685,7 +698,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                             ></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="3">
                             <v-select
                                 v-model="statusFilter"
                                 :items="statuses"
@@ -698,7 +711,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                             ></v-select>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="3">
                             <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
                                 <v-select
                                     v-model="multiIdFilter"
@@ -706,6 +719,21 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                     item-title="full_name"
                                     item-value="id"
                                     label="Multiplikator"
+                                    multiple
+                                    :disabled="loading"
+                                    clearable
+                                ></v-select>
+                            </template>
+                        </v-col>
+
+                        <v-col cols="12" sm="3">
+                            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                <v-select
+                                    v-model="kitaIdFilter"
+                                    :items="kitas"
+                                    item-title="name"
+                                    item-value="id"
+                                    label="Kita"
                                     multiple
                                     :disabled="loading"
                                     clearable
