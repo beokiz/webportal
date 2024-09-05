@@ -200,20 +200,20 @@ const removeTrainingSuggestion = (index) => {
 const previousSuggestions = ref([]);  // Store the previous state of the dates
 
 watch(trainingSuggestions, (newVal) => {
-  newVal.forEach((suggestion, index) => {
-    const oldSuggestion = previousSuggestions.value[index] || {};
+    newVal.forEach((suggestion, index) => {
+        const oldSuggestion = previousSuggestions.value[index] || {};
 
-    // Check if the dates have changed
-    if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
-      validateTrainingSuggestionDates(index);  // Validate dates when changed
-    }
-  });
+        // Check if the dates have changed
+        if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
+            validateTrainingSuggestionDates(index);  // Validate dates when changed
+        }
+    });
 
-  // Store the previous state of the suggestions
-  previousSuggestions.value = newVal.map(suggestion => ({
-    first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
-    second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
-  }));
+    // Store the previous state of the suggestions
+    previousSuggestions.value = newVal.map(suggestion => ({
+        first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
+        second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
+    }));
 }, { deep: true });
 
 
@@ -230,7 +230,7 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.first_date) {
         const firstDate = new Date(suggestion.first_date);
 
-        if (suggestion.first_date) {
+        if (suggestion.first_date && !suggestion.first_date instanceof Date) {
             trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
         }
 
@@ -243,7 +243,7 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.second_date) {
         const secondDate = new Date(suggestion.second_date);
 
-        if (suggestion.second_date) {
+        if (suggestion.second_date && !suggestion.second_date instanceof Date) {
             trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
         }
 
