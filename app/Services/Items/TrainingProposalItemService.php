@@ -120,6 +120,8 @@ class TrainingProposalItemService extends BaseItemService
     public function confirm(int $id, string $token) : bool
     {
         if (!empty($token)) {
+            $trainingItemService = app(TrainingItemService::class);
+
             $item = $this->find($id)->loadMissing(['kitas', 'trainingProposalConfirmations']);
 
             $trainingProposalConfirmation = $item->trainingProposalConfirmations->where('token', $token)->first();
@@ -129,6 +131,19 @@ class TrainingProposalItemService extends BaseItemService
                     $item->update(['status' => TrainingProposal::STATUS_CONFIRMED]);
                 }
 
+                // If the Kita manager has confirmed his participation, we add the Kita to the training
+                $trainings = $trainingItemService->collection([
+                    'paginated'         => false,
+                    'training_proposal' => $item->id,
+                ]);
+
+                if (!empty($trainings) && $trainings->isNotEmpty()) {
+                    $trainingItemService->updateAttachedKitas(
+                        $trainings->first()->id,
+                        [$trainingProposalConfirmation->kita_id],
+                        false
+                    );
+                }
 
                 return $trainingProposalConfirmation->update(['confirmed' => true]);
             }

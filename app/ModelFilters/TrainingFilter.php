@@ -151,4 +151,13 @@ class TrainingFilter extends BaseFilter
             $query->where('name', 'LIKE', '%' . trim($value) . '%');
         });
     }
+
+    /**
+     * @param mixed $value
+     * @return ModelFilter
+     */
+    public function trainingProposal($value) : ModelFilter
+    {
+        return $this->where('training_proposal_id', $value);
+    }
 }

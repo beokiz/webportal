@@ -35,22 +35,26 @@ const props = defineProps({
                         Vielen Dank!
                     </h2>
 
-                    <template v-if="trainingItems && trainingItems.length > 0">
-                        <p class="tw-mb-4">
-                            Wir haben Ihre Zusage für die Schulung an folgenden Tagen erfolgreich erhalten:
-                        </p>
+                    <p class="tw-mb-4">
+                        Ihre E-Mailadresse ist hiermit bestätigt. Sie können das Fenster nun schließen.
+                    </p>
 
-                        <ul>
-                            <li v-for="trainingItem in trainingItems" class="tw-list-disc tw-ml-5">
-                                {{ `${formatDate(trainingItem?.first_date, 'de-DE')} und ${formatDate(trainingItem?.second_date, 'de-DE')}` }}
-                            </li>
-                        </ul>
-                    </template>
-                    <template v-else>
-                        <p class="tw-mb-4">
-                            Wir haben Ihre Schulungszusage erfolgreich erhalten.
-                        </p>
-                    </template>
+<!--                    <template v-if="trainingItems && trainingItems.length > 0">-->
+<!--                        <p class="tw-mb-4">-->
+<!--                            Wir haben Ihre Zusage für die Schulung an folgenden Tagen erfolgreich erhalten:-->
+<!--                        </p>-->
+
+<!--                        <ul>-->
+<!--                            <li v-for="trainingItem in trainingItems" class="tw-list-disc tw-ml-5">-->
+<!--                                {{ `${formatDate(trainingItem?.first_date, 'de-DE')} und ${formatDate(trainingItem?.second_date, 'de-DE')}` }}-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </template>-->
+<!--                    <template v-else>-->
+<!--                        <p class="tw-mb-4">-->
+<!--                            Wir haben Ihre Schulungszusage erfolgreich erhalten.-->
+<!--                        </p>-->
+<!--                    </template>-->
                 </v-col>
             </v-row>
         </v-container>

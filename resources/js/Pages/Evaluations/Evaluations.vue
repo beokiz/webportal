@@ -356,22 +356,22 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="8" offset="2">
                                 <div class="tw-text-center">
                                     <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
-                                        Screening wurde eingereicht
+                                        Einschätzung wurde eingereicht
                                     </h1>
 
                                     <p class="tw-mb-8">
-                                        Folgendes Screening wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, klicke Sie auf 'Abgabe zurückziehen. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
+                                        Folgendes Einschätzung wurde eingereicht und kann nur bis 15 Minuten nach Einreichung bearbeitet werden. Danach verschwindet es aus Ihrer Übersicht. Sollten Sie es zurückziehen oder bearbeiten wollen, klicke Sie auf 'Abgabe zurückziehen. Nachfolgend erhalten Sie eine Übersicht des eingereichten Screenings, welches Sie über den Download-Button als PDF herunterladen können.
                                     </p>
 
                                     <v-hover v-slot:default="{ isHovering, props }">
                                         <v-btn :href="route('evaluations.pdf', { id: evaluationResultItem.id })" class="tw-px-2 tw-py-3 tw-mb-4 tw-mr-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
-                                          Screening als PDF downloaden
+                                            Einschätzung als PDF downloaden
                                         </v-btn>
                                     </v-hover>
 
                                     <v-hover v-slot:default="{ isHovering, props }">
                                         <v-btn @click="unfinishedEvaluation(evaluationResultItem.id)" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'accent' : 'primary'">
-                                          Abgabe zurückziehen
+                                            Abgabe zurückziehen
                                         </v-btn>
                                     </v-hover>
                                 </div>
@@ -379,7 +379,7 @@ const unfinishedEvaluation = async (id) => {
 
                             <v-col cols="12">
                                 <p>
-                                    <span class="tw-font-black">Bezeichner des Screenings</span>:
+                                    <span class="tw-font-black">Bezeichner des Einschätzung</span>:
                                     {{`${evaluationResultItem.kita.formatted_name}_${evaluationResultItem.custom_unique_id}`}}
                                 </p>
                             </v-col>
