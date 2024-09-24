@@ -419,6 +419,10 @@ const manageForm = useForm({
     // participant_count: null,
     type: null,
     // status: null,
+    street: null,
+    house_number: null,
+    zip_code: null,
+    city: null,
     notes: null,
 });
 
@@ -669,6 +673,48 @@ const manageTrainingStatus = async (status) => {
                                         </v-row>
 
                                         <v-row>
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.street"
+                                                    :error-messages="errors.street"
+                                                    label="Straße*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.house_number"
+                                                    :error-messages="errors.house_number"
+                                                    label="Hausnummer*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.zip_code"
+                                                    :error-messages="errors.zip_code"
+                                                    label="Postleitzahl*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.city"
+                                                    :error-messages="errors.city"
+                                                    label="Stadt*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
                                             <v-col cols="12" sm="6">
                                                 <v-textarea v-model="manageForm.location"
                                                             :error-messages="errors.location"
@@ -896,7 +942,7 @@ const manageTrainingStatus = async (status) => {
 
                         <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'de-DE')}}</td>
 
-                        <td>{{item.location}}</td>
+                        <td>{{item.formatted_location}}</td>
 
                         <td>{{item.prepared_participant_count}}</td>
 

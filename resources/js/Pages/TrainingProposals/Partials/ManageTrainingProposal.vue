@@ -119,6 +119,10 @@ const manageForm = useForm({
     location: editedTrainingProposal.value?.location,
     participant_count: editedTrainingProposal.value?.participant_count,
     // status: editedTrainingProposal.value?.status,
+    street: editedTrainingProposal.value?.street,
+    house_number: editedTrainingProposal.value?.house_number,
+    zip_code: editedTrainingProposal.value?.zip_code,
+    city: editedTrainingProposal.value?.city,
     notes: editedTrainingProposal.value?.notes,
 });
 
@@ -617,6 +621,48 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             clearable
                             :readonly="notEditable"
                             :disabled="loading"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.street"
+                            :error-messages="errors.street"
+                            label="Straße*"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.house_number"
+                            :error-messages="errors.house_number"
+                            label="Hausnummer*"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.zip_code"
+                            :error-messages="errors.zip_code"
+                            label="Postleitzahl*"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.city"
+                            :error-messages="errors.city"
+                            label="Stadt*"
+                            :disabled="loading"
+                            clearable
                         ></v-text-field>
                     </v-col>
                 </v-row>

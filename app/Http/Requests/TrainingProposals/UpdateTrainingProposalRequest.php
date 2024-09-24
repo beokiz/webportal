@@ -29,6 +29,10 @@ class UpdateTrainingProposalRequest extends CreateTrainingProposalRequest
             'location'          => array_merge($this->textRules(), ['sometimes']),
             'participant_count' => array_merge($this->bigIntegerRules(), ['sometimes']),
             'status'            => ['sometimes', Rule::in(TrainingProposal::STATUSES)],
+            'street'            => array_merge($this->textRules(), ['sometimes']),
+            'house_number'      => array_merge($this->textRules(true), ['sometimes']),
+            'zip_code'          => array_merge($this->textRules(10), ['sometimes']),
+            'city'              => array_merge($this->textRules(), ['sometimes']),
             'notes'             => array_merge($this->bigTextRules(), ['nullable']),
         ];
     }

@@ -115,6 +115,10 @@ class RegisteredUserController extends BaseController
                     'second_date'       => $trainingData['second_date'],
                     'participant_count' => $attributes['kita']['participant_count'],
                     'status'            => TrainingProposal::STATUS_EMAIL_NOT_CONFIRMED,
+                    'street'            => $attributes['kita']['street'],
+                    'house_number'      => $attributes['kita']['house_number'],
+                    'zip_code'          => $attributes['kita']['zip_code'],
+                    'city'              => $attributes['kita']['city'],
                 ]);
 
                 $trainingProposal->kitas()->attach($kita->id);

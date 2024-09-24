@@ -58,9 +58,13 @@ class TrainingProposal extends Model
         'multi_id',
         'first_date',
         'second_date',
-        'location',
         'participant_count',
         'status',
+        'location',
+        'street',
+        'house_number',
+        'zip_code',
+        'city',
         'notes',
     ];
 
@@ -84,8 +88,28 @@ class TrainingProposal extends Model
      */
     protected $appends = [
         'formatted_status',
+        'formatted_location',
         'kitas_list',
     ];
+
+    /**
+     * @return Attribute
+     */
+    public function formattedLocation() : Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                $address = implode(' ', [
+                    trim($attributes['street']),
+                    trim($attributes['house_number']),
+                    trim($attributes['zip_code']),
+                    trim($attributes['city']),
+                ]);
+
+                return !empty($attributes['location']) ? "{$attributes['location']} - {$address}" : $address;
+            },
+        );
+    }
 
     /**
      * @return Attribute
@@ -113,9 +137,9 @@ class TrainingProposal extends Model
     public function getNotificationsData() : array
     {
         return [
-            'first_date'      => $this->first_date->format('Y-m-d'),
-            'second_date'     => $this->second_date->format('Y-m-d'),
-            'location'        => $this->location,
+            'first_date'      => $this->first_date->format('d.m.Y'),
+            'second_date'     => $this->second_date->format('d.m.Y'),
+            'location'        => $this->formatted_location,
             'multiplier_name' => optional($this->multiplier)->full_name,
         ];
     }
