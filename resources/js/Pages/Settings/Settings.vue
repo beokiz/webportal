@@ -481,9 +481,9 @@ const deleteDownloadableFile = async () => {
                     <tr :data-id="item.id" :data-order="item.order">
                         <td>{{item.year}}</td>
 
-                        <td>{{ formatDate(item.survey_start_date, 'sv-SE') }}</td>
+                        <td>{{ formatDate(item.survey_start_date, 'de-DE') }}</td>
 
-                        <td>{{ formatDate(item.survey_end_date, 'sv-SE') }}</td>
+                        <td>{{ formatDate(item.survey_end_date, 'de-DE') }}</td>
 
                         <td align="center">
                             <v-tooltip location="top">
@@ -647,7 +647,7 @@ const deleteDownloadableFile = async () => {
                     <tr :data-id="item.id" :data-order="item.order">
                         <td>{{item.name}}</td>
 
-                        <td>{{formatDateTime(item.created_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.created_at, 'de-DE')}}</td>
 
                         <td align="center">
                             <v-tooltip v-if="item?.path" location="top">

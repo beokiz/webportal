@@ -178,7 +178,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <tr :data-id="item.id" :data-order="item.order">
                         <td>{{item.name}}</td>
 
-                        <td>{{formatDateTime(item.created_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.created_at, 'de-DE')}}</td>
 
                         <td>
                             <v-tooltip v-if="item?.path" location="top">

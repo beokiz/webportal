@@ -892,9 +892,9 @@ const manageTrainingStatus = async (status) => {
             >
                 <template v-slot:item="{ item }">
                     <tr :data-id="item.id" :data-order="item.order">
-                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
+                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'de-DE')}}</td>
 
-                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
+                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'de-DE')}}</td>
 
                         <td>{{item.location}}</td>
 
@@ -910,9 +910,9 @@ const manageTrainingStatus = async (status) => {
 
                         <td>{{item.notes}}</td>
 
-                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
+                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'de-DE')}}</td>
 
-                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
+                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
                         <td class="text-center">
                             <template v-if="item.status === 'planned'">
