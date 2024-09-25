@@ -8,10 +8,9 @@ import { computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import VueTimepicker from 'vue3-timepicker';
 import { tr } from 'vuetify/locale';
 import { debounce } from 'lodash';
-import { formatDate, formatDateTime, prepareDate } from '@/Composables/common.js';
+import { formatDate, formatDateTime, prepareDate, getTrainingProposalStatusIcon } from '@/Composables/common.js';
 
 const props = defineProps({
     items: Array,
@@ -97,11 +96,10 @@ const selectedTrainingProposalKitas = ref([]);
 const mainTableHeaders = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: true },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
-    { title: 'Ort', key: 'location', width: '10%', sortable: true },
+    { title: 'Ort', key: 'location', width: '25%', sortable: true },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: true },
-    { title: 'Kita', key: 'kitas_list', width: '20%', sortable: false },
-    { title: 'Status', key: 'status', width: '10%', sortable: true },
-    { title: 'Erstellt am', key: 'created_at', width: '16%', sortable: true },
+    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
@@ -109,11 +107,10 @@ const mainTableHeaders = [
 const additionalTableHeaders = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: false },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: false },
-    { title: 'Ort', key: 'location', width: '10%', sortable: false },
+    { title: 'Ort', key: 'location', width: '25%', sortable: false },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: false },
-    { title: 'Kita', key: 'kitas_list', width: '20%', sortable: false },
-    { title: 'Status', key: 'status', width: '10%', sortable: false },
-    { title: 'Erstellt am', key: 'created_at', width: '16%', sortable: false },
+    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'Status', key: 'status', width: '5%', sortable: false },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
@@ -804,9 +801,16 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
 
                         <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-                        <td>{{item.formatted_status}}</td>
-
-                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'de-DE')}}</td>
+                        <td>
+                            <v-tooltip location="top">
+                                <template v-slot:activator="{ props }">
+                                    <span class="tw-cursor-pointer">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>
+                                    </span>
+                                </template>
+                                <span>{{item.formatted_status}}</span>
+                            </v-tooltip>
+                        </td>
 
                         <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
@@ -818,7 +822,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-plus-circle-outline</v-icon>
                                         </span>
                                     </template>
-                                    <span>Termin bestätigen</span>
+                                    <span>Termin reservieren</span>
                                 </v-tooltip>
                             </template>
                             <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
@@ -903,9 +907,16 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
 
                             <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-                            <td>{{item.formatted_status}}</td>
-
-                            <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'de-DE')}}</td>
+                            <td>
+                                <v-tooltip location="top">
+                                    <template v-slot:activator="{ props }">
+                                        <span class="tw-cursor-pointer">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>
+                                        </span>
+                                    </template>
+                                    <span>{{item.formatted_status}}</span>
+                                </v-tooltip>
+                            </td>
 
                             <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 

@@ -79,7 +79,7 @@ const secondDateField = ref(new Date(props.trainingProposal.second_date).toStrin
 
 const confirmedTrainingProposalInfo = ref([
     {
-      label: 'Erster Schukungstag',
+      label: 'Erster Schulungstag',
       value: `${prepareDate(editedTrainingProposal.value?.first_date)}`,
     },
     {
@@ -88,10 +88,10 @@ const confirmedTrainingProposalInfo = ref([
     },
     {
       label: 'Ort',
-      value: editedTrainingProposal.value?.location,
+      value: editedTrainingProposal.value?.formatted_location,
     },
     {
-      label: 'Teinhemheranzahl',
+      label: 'Teilnehmerzahl',
       value: editedTrainingProposal.value?.participant_count,
     },
 ]);
@@ -549,7 +549,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <template v-if="showConfirmationPopupButton">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'success'" dark @click="openConfirmTrainingProposalDialog">
-                                    <span>Termin bestätigen</span>
+                                    <span>Termin reservieren</span>
                                 </v-btn>
                             </v-hover>
                         </template>
@@ -713,7 +713,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             </v-container>
 
             <!-- Kitas table -->
-            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_user_multiplier">
                 <v-container>
                     <v-row class="tw-border-t-8 tw-mt-8 tw-pt-8">
                         <v-col cols="12" sm="6">
@@ -721,11 +721,13 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         </v-col>
 
                         <v-col cols="12" sm="6" class="text-right">
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openAddKitaToTrainingProposalDialog">
-                                    <span>Einrichtung hinzufügen</span>
-                                </v-btn>
-                            </v-hover>
+                            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openAddKitaToTrainingProposalDialog">
+                                        <span>Einrichtung hinzufügen</span>
+                                    </v-btn>
+                                </v-hover>
+                            </template>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -811,14 +813,16 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" class="text-right">
-                            <v-hover v-if="usersEmails && usersEmails.length > 0" v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                    <span>Schreibe E-Mail an Auswahl</span>
-                                </v-btn>
-                            </v-hover>
-                        </v-col>
+                        <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                            <v-col cols="12" class="text-right">
+                                <v-hover v-if="usersEmails && usersEmails.length > 0" v-slot:default="{ isHovering, props }">
+                                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                        <span>Schreibe E-Mail an Auswahl</span>
+                                    </v-btn>
+                                </v-hover>
+                            </v-col>
+                        </template>
 
                         <v-col cols="12">
                             <v-data-table-server
@@ -848,7 +852,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <td>{{item?.zip_code}}</td>
 
                                         <td class="text-center">
-                                              <template v-if="$page.props.auth.user.is_super_admin">
+                                              <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
                                                   <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                       <template v-slot:activator="{ props }">
                                                           <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">
@@ -859,16 +863,28 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                   </v-tooltip>
                                               </template>
 
-                                              <v-tooltip location="top">
-                                                  <template v-slot:activator="{ props }">
-                                                      <Link :href="route('kitas.show', { id: item.id })">
-                                                          <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
-                                                      </Link>
-                                                  </template>
-                                                  <span>Einrichtung bearbeiten</span>
-                                              </v-tooltip>
+                                              <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                                  <v-tooltip location="top">
+                                                      <template v-slot:activator="{ props }">
+                                                          <Link :href="route('kitas.show', { id: item.id })">
+                                                              <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
+                                                          </Link>
+                                                      </template>
+                                                      <span>Einrichtung bearbeiten</span>
+                                                  </v-tooltip>
+                                              </template>
+                                              <template v-else>
+                                                  <v-tooltip location="top">
+                                                      <template v-slot:activator="{ props }">
+                                                          <Link :href="route('kitas.show', { id: item.id })">
+                                                              <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
+                                                          </Link>
+                                                      </template>
+                                                      <span>Einrichtung zeigen</span>
+                                                  </v-tooltip>
+                                              </template>
 
-                                              <v-tooltip v-if="!$page.props.auth.user.is_manager && !$page.props.auth.user.is_user_multiplier" location="top">
+                                              <v-tooltip v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" location="top">
                                                   <template v-slot:activator="{ props }">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2"
                                                               @click="openRemoveKitaFromTrainingProposalDialog(item)">mdi-delete
@@ -921,7 +937,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                     <v-row v-if="trainingProposalKitas && trainingProposalKitas.length">
                                         <v-col cols="12">
-                                            <p>Are you sure you want to confirm the appointments with the following daycare centers? An email will be sent to the managers of the daycare centers to confirm the proposal.</p>
+                                            <p>Sind Sie sicher, dass Sie den Schulungstermin mit der/den Einrichtung(en) bestätigen wollen? Eine E-Mail wird an die verantwortliche(n) Person(en) der Einrichtung(en) versendet, um den Termin zu bestätigen.</p>
                                         </v-col>
 
                                         <v-col cols="12" class="tw--mt-6">

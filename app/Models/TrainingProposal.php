@@ -99,12 +99,7 @@ class TrainingProposal extends Model
     {
         return Attribute::make(
             get: function($value, $attributes) {
-                $address = implode(' ', [
-                    trim($attributes['street']),
-                    trim($attributes['house_number']),
-                    trim($attributes['zip_code']),
-                    trim($attributes['city']),
-                ]);
+                $address = trim($attributes['street']) . ' ' . trim($attributes['house_number']) . ' ' . trim($attributes['zip_code']) . ', ' . trim($attributes['city']);
 
                 return !empty($attributes['location']) ? "{$attributes['location']} - {$address}" : $address;
             },

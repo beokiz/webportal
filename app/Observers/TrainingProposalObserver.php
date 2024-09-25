@@ -92,6 +92,7 @@ class TrainingProposalObserver extends BaseObserver
                             $query->where('name', $roles['manager']);
                         })->get()->each(function (User $user) use ($trainingProposal, $notificationData, $trainingProposalConfirmation) {
                             $user->sendTrainingProposalConfirmationPendingNotification(array_merge($notificationData, [
+                                'is_copy'           => false,
                                 'confirmation_link' => route('training_proposals.confirm', [$trainingProposal->id, 'token' => $trainingProposalConfirmation->token]),
                             ]));
                         });
@@ -100,6 +101,7 @@ class TrainingProposalObserver extends BaseObserver
                     // Additionally, we send a notification to the multiplier user
                     if (!empty($trainingProposal->multiplier) && !empty($trainingProposalConfirmation)) {
                         $trainingProposal->multiplier->sendTrainingProposalConfirmationPendingNotification(array_merge($notificationData, [
+                            'is_copy'           => true,
                             'confirmation_link' => route('training_proposals.confirm', [$trainingProposal->id, 'token' => $trainingProposalConfirmation->token]),
                         ]));
                     }

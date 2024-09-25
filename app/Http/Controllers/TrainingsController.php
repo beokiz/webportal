@@ -114,6 +114,7 @@ class TrainingsController extends BaseController
     public function show(Request $request, Training $training)
     {
         $this->authorize('authorizeAccessToTrainings', User::class);
+        $this->authorize('authorizeAccessToSingleTraining', [User::class, $training]);
 
         $training->loadMissing(['multiplier']);
 
@@ -226,6 +227,7 @@ class TrainingsController extends BaseController
     public function update(UpdateTrainingRequest $request, Training $training)
     {
         $this->authorize('authorizeAccessToTrainings', User::class);
+//        $this->authorize('authorizeAccessToSingleTraining', [User::class, $training]);
 
         $attributes = $request->validated();
         $result     = $this->trainingItemService->update($training->id, $attributes);
@@ -311,6 +313,7 @@ class TrainingsController extends BaseController
     public function destroy(Request $request, Training $training)
     {
         $this->authorize('authorizeAccessToTrainings', User::class);
+        $this->authorize('authorizeAccessToSingleTraining', [User::class, $training]);
 
         $result = $this->trainingItemService->delete($training->id);
 

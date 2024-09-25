@@ -187,6 +187,7 @@ return [
         'first_line'  => "Please confirm the proposed training date by clicking on the following link: :confirmation_link",
         'second_line' => "Training days: :first_date and :second_date from 9 a.m. to 3 p.m. \nLocation: :location \nMultiplier: :multiplier_name",
         'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+        'copy_label'  => 'Copy',
     ],
 
 ];

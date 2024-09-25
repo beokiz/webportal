@@ -7,6 +7,7 @@
 namespace App\Policies;
 
 use App\Models\SurveyTimePeriod;
+use App\Models\Training;
 use App\Models\TrainingProposal;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -179,12 +180,24 @@ class UserRolePolicy extends BasePolicy
         }
 
         if ($this->authorizeRoleAccess($user, [$roles['user_multiplier']])) {
-            $user->loadMissing(['operators.kitas']);
+            $user->loadMissing(['operators.kitas', 'trainings.kitas', 'trainingProposals.kitas']);
 
-            return optional($user->operators)->pluck('kitas.*.id')
+            $isMultiOperatorKita = optional($user->operators)->pluck('kitas.*.id')
                 ->flatten()
                 ->unique()
                 ->contains($kitaId);
+
+            $isMultiTrainingKita = optional($user->trainings)->pluck('kitas.*.id')
+                ->flatten()
+                ->unique()
+                ->contains($kitaId);
+
+            $isMultiTrainingProposalKita = optional($user->trainingProposals)->pluck('kitas.*.id')
+                ->flatten()
+                ->unique()
+                ->contains($kitaId);
+
+            return $isMultiOperatorKita || $isMultiTrainingKita || $isMultiTrainingProposalKita;
         }
 
         return false;
@@ -372,6 +385,26 @@ class UserRolePolicy extends BasePolicy
         $roles = config('permission.project_roles');
 
         return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['user_multiplier']]);
+    }
+
+    /**
+     * @param User     $user
+     * @param Training $training
+     * @return bool
+     */
+    public function authorizeAccessToSingleTraining(User $user, Training $training) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        if ($this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']])) {
+            return true;
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['user_multiplier']])) {
+            return $training->multi_id === $user->id;
+        }
+
+        return false;
     }
 
     /**

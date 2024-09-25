@@ -55,11 +55,17 @@ class TrainingProposalConfirmationPendingNotification extends Notification
      */
     public function toMail($notifiable)
     {
+        $subject = __('notifications.training_proposal_confirmation_pending.subject', [
+            'first_date'  => $this->args['first_date'],
+            'second_date' => $this->args['second_date'],
+        ]);
+
+        if (!empty($this->args['is_copy'])) {
+            $subject .= ' [' . __('notifications.training_proposal_confirmation_pending.copy_label') . ']';
+        }
+
         return (new CustomMailMessage)
-            ->subject(__('notifications.training_proposal_confirmation_pending.subject', [
-                'first_date'  => $this->args['first_date'],
-                'second_date' => $this->args['second_date'],
-            ]))
+            ->subject($subject)
             ->greeting(__('notifications.training_proposal_confirmation_pending.greeting'))
             ->line(__('notifications.training_proposal_confirmation_pending.first_line', [
                 'confirmation_link' => $this->args['confirmation_link'],

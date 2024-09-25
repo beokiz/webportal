@@ -258,7 +258,7 @@ const validateTrainingSuggestionDates = (index) => {
         const firstDate = new Date(suggestion.first_date);
         const secondDate = new Date(suggestion.second_date);
 
-        if (secondDate <= firstDate) {
+        if (secondDate < firstDate) {
             firstDayError = 'Der zweite Schulungstag darf nicht am gleichen Tag oder vor dem ersten Schulungstag liegen.';  // The second training day cannot be on the same day or before the first
             secondDayError = 'Der zweite Schulungstag darf nicht am gleichen Tag oder vor dem ersten Schulungstag liegen.';  // The second training day cannot be on the same day or before the first
         } else {
@@ -419,7 +419,7 @@ const validateTrainingSuggestionDates = (index) => {
                                                             label="Erster Schulungstag*"
                                                             class="tw-cursor-pointer"
                                                             :model-value="suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null"
-                                                            :error-messages="suggestion.first_day_error"
+                                                            :error-messages="errors[`kita.trainings.${index}.first_date`] ?? suggestion.first_day_error"
                                                             prepend-icon="mdi-calendar"
                                                             readonly
                                                             v-bind="props"
@@ -445,7 +445,7 @@ const validateTrainingSuggestionDates = (index) => {
                                                             label="Zweiter Schulungstag*"
                                                             class="tw-cursor-pointer"
                                                             :model-value="suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null"
-                                                            :error-messages="suggestion.second_day_error"
+                                                            :error-messages="errors[`kita.trainings.${index}.second_date`] ?? suggestion.second_day_error"
                                                             prepend-icon="mdi-calendar"
                                                             readonly
                                                             v-bind="props"

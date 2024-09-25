@@ -22,6 +22,7 @@ use App\Services\Items\TrainingProposalItemService;
 use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 /**
@@ -68,7 +69,7 @@ class TrainingProposalsController extends BaseController
         if ($currentUser->is_user_multiplier) {
             $args['status'] = TrainingProposal::STATUS_OPEN;
 
-            $currentUser->loadMissing(['trainingProposals']);
+            $currentUser->loadMissing(['trainingProposals.kitas']);
         }
 
         $result = $this->trainingProposalItemService->collection(array_merge($args, [
@@ -208,12 +209,38 @@ class TrainingProposalsController extends BaseController
         $this->authorize('authorizeAccessToTrainingProposals', User::class);
 //        $this->authorize('authorizeAccessToSingleTrainingProposal', [User::class, $trainingProposal]);
 
+        $currentUser = $request->user();
+
         $attributes = $request->validated();
         $result     = $this->trainingProposalItemService->update($trainingProposal->id, $attributes);
 
-        return $result
-            ? Redirect::back()->withSuccesses(__('crud.training_proposals.update_success'))
-            : Redirect::back()->withErrors(__('crud.training_proposals.update_error'));
+        if ($currentUser->is_user_multiplier && !empty($attributes['status']) && $attributes['status'] === TrainingProposal::STATUS_OPEN) {
+            // Get the previous URL (the page from which the request came)
+            $previousUrl = url()->previous();
+
+            // Parse the URL to get the path component (excluding domain and query parameters)
+            $previousPath = parse_url($previousUrl, PHP_URL_PATH);
+
+            // Match the route based on the path to get the corresponding Route object
+            $previousRoute = Route::getRoutes()->match(Request::create($previousPath));
+
+            // Now $previousRoute contains the Route object if a match is found
+            $previousRouteName = $previousRoute->getName(); // Get the name of the previous route
+
+            if ($previousRouteName === 'training_proposals.index') {
+                return $result
+                    ? Redirect::back()->withSuccesses(__('crud.training_proposals.update_success'))
+                    : Redirect::back()->withErrors(__('crud.training_proposals.update_error'));
+            } else {
+                return $result
+                    ? Redirect::route('training_proposals.index')
+                    : Redirect::route('training_proposals.index');
+            }
+        } else {
+            return $result
+                ? Redirect::back()->withSuccesses(__('crud.training_proposals.update_success'))
+                : Redirect::back()->withErrors(__('crud.training_proposals.update_error'));
+        }
     }
 
     /**

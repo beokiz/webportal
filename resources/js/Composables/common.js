@@ -79,3 +79,37 @@ export const prepareDate = (inputDateString) => {
 
     return `${dayOfWeek}, ${day}. ${month} ${year}`;
 };
+
+export const getTrainingStatusIcon = (status) => {
+    switch (status) {
+        case 'planned':
+            return 'mdi-calendar-month-outline';
+        case 'confirmed':
+            return 'mdi-check-circle-outline';
+        case 'completed':
+            return 'mdi-flag-checkered';
+        case 'cancelled':
+            return 'mdi-close-circle-outline';
+        default:
+            return 'mdi-help';
+    }
+};
+
+export const getTrainingProposalStatusIcon = (status) => {
+    switch (status) {
+        case 'email_not_confirmed':
+            return 'mdi-email-open-outline';
+        case 'open':
+            return 'mdi-clock-outline';
+        case 'obsolete':
+            return 'mdi-cancel';
+        case 'reserved':
+            return 'mdi-bookmark-outline';
+        case 'confirmation_pending':
+            return 'mdi-timer-sand';
+        case 'confirmed':
+            return 'mdi-check-circle-outline';
+        default:
+            return 'mdi-help';
+    }
+};
