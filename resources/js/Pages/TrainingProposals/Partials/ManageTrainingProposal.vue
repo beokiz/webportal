@@ -289,11 +289,12 @@ const removeKitaFromTrainingProposal = async () => {
 const close = () => {
     dialog.value = false;
     selectedKitaName.value = null;
+    acceptTrainingProposalDialog.value = false;
+    revokeTrainingProposalDialog.value = false;
+    confirmTrainingProposalDialog.value = false;
     addMultiplierToTrainingProposalDialog.value = false;
     addKitaToTrainingProposalDialog.value = false;
     removeKitaFromTrainingProposalDialog.value = false;
-    acceptTrainingProposalDialog.value = false;
-    revokeTrainingProposalDialog.value = false;
 
     manageStatusForm.reset();
     manageStatusForm.clearErrors();

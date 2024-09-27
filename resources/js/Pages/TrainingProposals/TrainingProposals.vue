@@ -351,9 +351,12 @@ const deleteTrainingProposal = async () => {
 
 const close = () => {
     dialog.value = false;
-    dialogDeleteTrainingProposal.value = false;
     acceptTrainingProposalDialog.value = false;
     revokeTrainingProposalDialog.value = false;
+    confirmTrainingProposalDialog.value = false;
+    addMultiplierToTrainingProposalDialog.value = false;
+    addKitaToTrainingProposalDialog.value = false;
+    removeKitaFromTrainingProposalDialog.value = false;
 
     manageForm.reset();
     manageForm.clearErrors();

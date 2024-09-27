@@ -374,10 +374,10 @@ const deleteTraining = async () => {
 
 const close = () => {
     dialog.value = false;
-    dialogDeleteTraining.value = false;
     confirmTrainingDialog.value = false;
     completeTrainingDialog.value = false;
     cancelTrainingDialog.value = false;
+    dialogDeleteTraining.value = false;
 
     manageForm.reset();
     manageForm.clearErrors();

@@ -118,11 +118,12 @@ watch(secondDateField, (val) => {
 const close = () => {
     dialog.value = false;
     selectedKitaName.value = null;
-    addKitaToTrainingDialog.value = false;
-    removeKitaFromTrainingDialog.value = false;
+
     confirmTrainingDialog.value = false;
     completeTrainingDialog.value = false;
     cancelTrainingDialog.value = false;
+    addKitaToTrainingDialog.value = false;
+    removeKitaFromTrainingDialog.value = false;
 
     manageStatusForm.reset();
     manageStatusForm.clearErrors();
