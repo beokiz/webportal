@@ -129,9 +129,9 @@ return [
     'new_operator_kita' => [
         'subject'     => sprintf("%s: Training request from the daycare center :kita_name", config('app.name')),
         'greeting'    => "Hello dear multipliers from the provider :operator_name,",
-        'first_line'  => "in the BeoKiz registration portal, the daycare center :kita_name has submitted the following date suggestions for a BeoKiz training course: :trainings",
-        'second_line' => "We don't know whether this was agreed with you. The daycare center automatically received an email from the system informing them that you - in your role as provider multipliers - will contact the daycare center to coordinate further steps.",
-        'third_line'  => "If you have agreed the training date with the daycare center in this way, please create a training date yourself in the portal. If not, please contact the daycare center and discuss how you want to proceed. The daycare's suggested dates are not stored in the registration system.",
+        'first_line'  => "in the BeoKiz registration portal, the :kita_name daycare center wanted to register for a BeoKiz training course.",
+        'second_line' => "The daycare center automatically received an email from the system informing them that you - in your role as provider multipliers - will contact the daycare center to coordinate further steps.",
+        'third_line'  => "If you have agreed on a training date with the daycare center, please create it yourself in the portal.",
         'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
     ],
 

@@ -128,9 +128,9 @@ return [
     'new_operator_kita' => [
         'subject'     => sprintf("%s: Schulungswunsch der Kita :kita_name", config('app.name')),
         'greeting'    => "Hallo liebe Multiplikator*innen vom Träger :operator_name,",
-        'first_line'  => "im BeoKiz-Anmeldeportal hat sich die Kita :kita_name für eine BeoKiz Schulung folgende Terminvorschläge übermittelt: :trainings",
-        'second_line' => "Wir wissen nicht, ob dies mit Euch so abgesprochen war. Die Kita hat vom System automatisch eine Mail erhalten, in der sie darauf hingewiesen wurde, dass Ihr Euch – in Eurer Funktion als Träger-Multis- bei der Kita melden werden, um weitere Schritte abzustimmen.",
-        'third_line'  => "Wenn ihr den Schulungstermin mit der Kita so abgesprochen habt, legt bitte im Portal selbst einen Schulungstermin an. Falls nicht, kontaktiert bitte die Kita und besprecht, wie ihr weiter vorgehen wollt. Die Terminvorschläge der Kita werden nicht im Anmeldesystem hinterlegt.",
+        'first_line'  => "im BeoKiz-Anmeldeportal hat sich die Kita :kita_name für eine BeoKiz Schulung anmelden wollen.",
+        'second_line' => "Die Kita hat vom System automatisch eine Mail erhalten, in der sie darauf hingewiesen wurde, dass Ihr Euch – in Eurer Funktion als Träger-Multis - bei der Kita melden werden, um weitere Schritte abzustimmen.",
+        'third_line'  => "Wenn ihr einen Schulungstermin mit der Kita abgesprochen habt, legt diesen bitte selbst im Portal an.",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
 
