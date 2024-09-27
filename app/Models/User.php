@@ -11,6 +11,7 @@ use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use App\Notifications\ConnectedToKitasNotification;
 use App\Notifications\EmailVerifiedNotification;
+use App\Notifications\NewOperatorKitaNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TrainingCancelledNotification;
@@ -414,6 +415,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendTrainingProposalConfirmationPendingNotification(array $args) : void
     {
         $this->notify(new TrainingProposalConfirmationPendingNotification($args));
+    }
+
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendNewOperatorKitaNotification(array $args) : void
+    {
+        $this->notify(new NewOperatorKitaNotification($args));
     }
 
     /*

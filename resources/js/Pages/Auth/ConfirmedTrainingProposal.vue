@@ -10,7 +10,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { formatDate } from '@/Composables/common.js';
 
 const props = defineProps({
-    //
+    trainingProposal: Array,
 });
 </script>
 
@@ -36,7 +36,7 @@ const props = defineProps({
                     </h2>
 
                     <p class="tw-mb-4">
-                        Ihre E-Mailadresse ist hiermit bestätigt. Sie können das Fenster nun schließen.
+                        Wir haben Ihre Bestätigung der Schulung am {{ `${formatDate(trainingProposal?.first_date, 'de-DE')} und ${formatDate(trainingProposal?.second_date, 'de-DE')}` }} erhalten.
                     </p>
                 </v-col>
             </v-row>

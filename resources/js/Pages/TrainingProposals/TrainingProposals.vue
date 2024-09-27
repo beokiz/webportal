@@ -399,8 +399,8 @@ const manageForm = useForm({
 const manageTrainingProposal = async () => {
     manageForm.processing = true;
 
-    manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
-    manageForm.second_date = secondDateField.value ? new Date(secondDateField.value).toLocaleString() : null;
+    manageForm.first_date = firstDateField.value ? new Date(new Date(firstDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
+    manageForm.second_date = secondDateField.value ? new Date(new Date(secondDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
 
     manageForm.post(route('training_proposals.store'), {
         onSuccess: (page) => {

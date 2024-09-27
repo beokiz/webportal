@@ -85,6 +85,11 @@ Route::group([], function () {
         Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verify');
         Route::get('verified', EmailVerifiedPromptController::class)->name('verified_notice');
     });
+
+    // Custom verification
+    Route::group(['prefix' => 'training-proposals', 'as' => 'training_proposals.'], function () {
+        Route::get('/{trainingProposal}/confirm', [TrainingProposalsController::class, 'confirm'])->name('confirm');
+    });
 });
 
 Route::group(['middleware' => ['auth']], function () {
@@ -332,7 +337,6 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
     Route::group(['prefix' => 'training-proposals', 'as' => 'training_proposals.'], function () {
         Route::get('/', [TrainingProposalsController::class, 'index'])->name('index');
         Route::get('/{trainingProposal}', [TrainingProposalsController::class, 'show'])->name('show');
-        Route::get('/{trainingProposal}/confirm', [TrainingProposalsController::class, 'confirm'])->name('confirm');
         Route::post('/', [TrainingProposalsController::class, 'store'])->name('store');
         Route::put('/{trainingProposal}', [TrainingProposalsController::class, 'update'])->name('update');
         Route::post('/{trainingProposal}/add-multiplier', [TrainingProposalsController::class, 'addMultiplier'])->name('add_multiplier');

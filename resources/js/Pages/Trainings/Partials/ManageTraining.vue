@@ -150,9 +150,9 @@ const manageForm = useForm({
     id: editedTraining.value?.id,
     multi_id: editedTraining.value?.multi_id,
     first_date: editedTraining.value?.first_date,
-    first_date_start_and_end_time: editedTraining.value?.first_date_start_and_end_time,
+    first_date_start_and_end_time: editedTraining.value?.first_date_start_and_end_time ?? '',
     second_date: editedTraining.value?.second_date,
-    second_date_start_and_end_time: editedTraining.value?.second_date_start_and_end_time,
+    second_date_start_and_end_time: editedTraining.value?.second_date_start_and_end_time ?? '',
     location: editedTraining.value?.location,
     max_participant_count: editedTraining.value?.max_participant_count,
     // participant_count: currentParticipantCount,
@@ -168,8 +168,8 @@ const manageForm = useForm({
 const manageTraining = async () => {
     manageForm.processing = true;
 
-    manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
-    manageForm.second_date = secondDateField.value ? new Date(secondDateField.value).toLocaleString() : null;
+    manageForm.first_date = firstDateField.value ? new Date(new Date(firstDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
+    manageForm.second_date = secondDateField.value ? new Date(new Date(secondDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
 
     let formOptions = {
         // preserveState: false,

@@ -11,11 +11,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 /**
- * Email Verified Notification
+ * New Operator Kita Notification
  *
  * @package \App\Notifications
  */
-class EmailVerifiedNotification extends Notification
+class NewOperatorKitaNotification extends Notification
 {
     use Queueable;
 
@@ -54,26 +54,19 @@ class EmailVerifiedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        if (!empty($this->data) && is_array($this->data)) {
-            $trainingProposals = count($this->data) > 1
-                ? "\n &#x2022; " . implode("\n &#x2022; ", (array) $this->data)
-                : "\n &#x2022; {$this->data[0]}";
-        } else {
-            $trainingProposals = "-";
-        }
-
-        $trainingProposals = nl2br($trainingProposals);
-
         return (new CustomMailMessage)
-            ->subject(__('notifications.email_verified.subject'))
-            ->greeting(__('notifications.email_verified.greeting', [
-                'name' => $notifiable->full_name,
+            ->subject(__('notifications.new_operator_kita.subject', [
+                'kita_name' => $this->data['kita_name'],
             ]))
-            ->line(__('notifications.email_verified.first_line', [
-                'training_proposals' => $trainingProposals,
+            ->greeting(__('notifications.new_operator_kita.greeting', [
+                'operator_name' => $this->data['operator_name'],
             ]))
-            ->line(__('notifications.email_verified.second_line'))
-            ->salutation(__('notifications.email_verified.salutation'));
+            ->line(__('notifications.new_operator_kita.first_line', [
+                'kita_name' => $this->data['kita_name'],
+            ]))
+            ->line(__('notifications.new_operator_kita.second_line'))
+            ->line(__('notifications.new_operator_kita.third_line'))
+            ->salutation(__('notifications.new_operator_kita.salutation'));
     }
 
     /**

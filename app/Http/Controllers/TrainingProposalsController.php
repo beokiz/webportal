@@ -116,7 +116,7 @@ class TrainingProposalsController extends BaseController
         $trainingProposalKitas = $kitaItemService->collection(array_merge($trainingProposalKitaArgs ?? [], [
             'paginated'               => false,
             'with_training_proposals' => [$trainingProposal->id],
-            'with'                    => ['operator', 'users', 'currentYearlyEvaluations'],
+            'with'                    => ['operator', 'users', 'currentYearlyEvaluations', 'trainingProposalConfirmations'],
         ]));
 
         // Get params for sorting & filtering all Kitas
@@ -246,7 +246,7 @@ class TrainingProposalsController extends BaseController
     /**
      * @param Request          $request
      * @param TrainingProposal $trainingProposal
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Inertia\Response|\Illuminate\Http\RedirectResponse
      */
     public function confirm(Request $request, TrainingProposal $trainingProposal)
     {
@@ -258,7 +258,7 @@ class TrainingProposalsController extends BaseController
         $result = $this->trainingProposalItemService->confirm($trainingProposal->id, $token);
 
         return $result
-            ? Redirect::route('profile.edit')->withSuccesses(__('crud.training_proposals.confirm_success'))
+            ? Inertia::render('Auth/ConfirmedTrainingProposal', ['trainingProposal' => $trainingProposal])
             : Redirect::route('profile.edit')->withErrors(__('crud.training_proposals.confirm_error'));
     }
 

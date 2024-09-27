@@ -129,8 +129,8 @@ const manageForm = useForm({
 const manageTrainingProposal = async () => {
     manageForm.processing = true;
 
-    manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
-    manageForm.second_date = secondDateField.value ? new Date(secondDateField.value).toLocaleString() : null;
+    manageForm.first_date = firstDateField.value ? new Date(new Date(firstDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
+    manageForm.second_date = secondDateField.value ? new Date(new Date(secondDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
 
     let formOptions = {
         // preserveState: false,
@@ -336,14 +336,15 @@ const modifyItems = (items) => {
 };
 
 const headers = [
-    { title: 'Name', key: 'name', width: '15%', sortable: true },
+    { title: 'Name', key: 'name', width: '10%', sortable: true },
+    { title: 'Bestätigt', key: 'training_proposal_confirmed', width: '10%', sortable: false },
     { title: `Jährliche Rückmeldung ${new Date().getFullYear()} abgeschlossen`, key: 'has_yearly_evaluations', width: '25%', sortable: true },
     { title: 'Zugelassen', key: 'approved', width: '10%', sortable: true },
     { title: 'Träger', key: 'operator_id', width: '10%', sortable: true },
     { title: 'Sonstiger Träger', key: 'other_operator', width: '10%', sortable: true },
-    { title: 'Typ', key: 'type', width: '10%', sortable: true },
-    { title: 'Postleitzahl', key: 'zip_code', width: '10%', sortable: true },
-    { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
+    { title: 'Typ', key: 'type', width: '9%', sortable: true },
+    { title: 'Postleitzahl', key: 'zip_code', width: '8%', sortable: true },
+    { title: 'Aktion', key: 'actions', width: '8%', sortable: false, align: 'center' },
 ];
 
 const currentPage = ref(props?.currentPage); // Track the current page number
@@ -388,7 +389,15 @@ const selectedUsersEmails = ref([]);
 const dialogUsersEmails = ref(false);
 
 const modifiedItems = computed(() => {
-    return modifyItems(props.trainingProposalKitas);
+    let modifiedItems = modifyItems(props.trainingProposalKitas);
+
+    return modifiedItems.map(item => {
+        const modifiedItem = {...item};
+
+        modifiedItem.training_proposal_confirmed = item?.training_proposal_confirmations?.some(item => item.confirmed === true && item.training_proposal_id === editedTrainingProposal.value?.id);
+
+        return modifiedItem;
+    });
 });
 
 const allFiltersEmpty = computed(() => {
@@ -838,6 +847,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 <template v-slot:item="{ item }">
                                     <tr :data-id="item.id" :data-order="item.order">
                                         <td>{{item?.name}}</td>
+
+                                        <td>{{item?.training_proposal_confirmed ? 'Ja' : 'Nein'}}</td>
 
                                         <td>{{item?.has_yearly_evaluations ? 'Ja' : 'Nein'}}</td>
 
