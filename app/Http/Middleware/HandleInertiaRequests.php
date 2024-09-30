@@ -59,7 +59,7 @@ class HandleInertiaRequests extends Middleware
             'auth'           => [
                 'canLogin'    => Route::has('auth.login'),
                 'canRegister' => Route::has('auth.register'),
-                'user'        => optional($request->user())->toArray(),
+                'user'        => optional($request->user())->loadMissing(['operators'])->toArray(),
             ],
             'appVersion'     => config('app.version'),
             'successes'      => $successes,

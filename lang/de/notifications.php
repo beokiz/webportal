@@ -46,7 +46,7 @@ return [
 
     'email_verification' => [
         'subject'     => sprintf("%s: Bitte bestätigen Sie Ihre E-Mail-Adresse", config('app.name')),
-        'greeting'    => "Sehr geehrte Damen und Herren,", // OLD: Sehr geehrte :name!
+        'greeting'    => "Sehr geehrte:r Damen und Herren,",
         'action_text' => "Bestätigen",
         'first_line'  => "Vielen Dank für Ihr Interesse an der BeoKiz-Schulung. Bitte klicken Sie auf folgenden Link, um Ihre Terminvorschläge für die BeoKiz-Schulung zu übermitteln. Dieser Schritt stellt sicher, dass wir Sie unter Ihrer angegebenen E-Mail-Adresse erreichen können.", // OLD: Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:
         'second_line' => "Zur finalen Bestätigung Ihres Schulungstermins wird sich ein BeoKiz-Multiplikator oder eine BeoKiz-Multiplikatorin mit Ihnen in Verbindung setzen.",
@@ -60,8 +60,8 @@ return [
     */
 
     'email_verified' => [
-        'subject'             => sprintf("%s: Bestätigung Ihrer Anmeldung zur BeoKiz-Schulung", config('app.name')),
-        'greeting'            => "Sehr geehrte :name!",
+        'subject'             => sprintf("%s: Bestätigung Ihrer Terminvorschläge zur BeoKiz-Schulung", config('app.name')),
+        'greeting'            => "Sehr geehrte:r :name!",
         'first_line'          => "Ihre Terminanfrage(n) zur BeoKiz-Schulung: \n :training_proposals",
         'second_line'         => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator: innen bald mit Ihnen in Verbindung setzen.",
         'salutation'          => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
@@ -142,7 +142,7 @@ return [
 
     'yearly_evaluation_reminder'             => [
         'subject'     => sprintf("%s: Jährliche Evaluierungserinnerung", config('app.name')),
-        'greeting'    => "Sehr geehrte Einrichtungsleitung,",
+        'greeting'    => "Sehr geehrte:r Einrichtungsleitung,",
         'first_line'  => "die jährliche Rückmeldung zur Statistischen Auswertung des Sprachstandsfeststellung für Kinder in Kindertageseinrichtungen und Kindertagespflege (Statuserhebung) für das Kita-Jahr :evaluation_year  muss bis zum :survey_end_date erfolgen.",
         'second_line' => "Bisher haben wir aus Ihrer Einrichtung noch keine Statuserhebung erhalten. Daher bitten wir Sie mit dieser Mail darum diese bis zum :survey_end_date einzureichen. Die entsprechende Funktion ist in ihrem Nutzer*innenkonto auf <a href=':site'>:site</a> verfügbar.",
         'third_line'  => "Vielen Dank und beste Grüße",

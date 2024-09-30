@@ -50,7 +50,6 @@ class UpdateUserRequest extends CreateUserRequest
         if (!empty($this->input('password'))) {
             array_overwrite($rules, [
                 'password' => array_merge($this->passwordRules(), ['required']),
-
             ]);
         }
 

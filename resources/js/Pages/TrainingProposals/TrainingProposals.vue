@@ -818,6 +818,17 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                         <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
                         <td class="text-center">
+                            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">
+                                    <template v-slot:activator="{ props }">
+                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                        </a>
+                                    </template>
+                                    <span>Mail an Kita(s) schreiben</span>
+                                </v-tooltip>
+                            </template>
+
                             <template v-if="item.status === 'open' && ($page.props.auth.user.is_user_multiplier)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
@@ -828,6 +839,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                     <span>Termin reservieren</span>
                                 </v-tooltip>
                             </template>
+
                             <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
@@ -924,15 +936,24 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                             <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
                             <td class="text-center">
-                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
-                                  <v-tooltip location="top">
+                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">
                                     <template v-slot:activator="{ props }">
+                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                        </a>
+                                    </template>
+                                    <span>Mail an Kita(s) schreiben</span>
+                                </v-tooltip>
+
+                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
+                                    <v-tooltip location="top">
+                                        <template v-slot:activator="{ props }">
                                             <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">
                                                 <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>
                                             </span>
-                                    </template>
-                                    <span>Reservierung aufheben</span>
-                                  </v-tooltip>
+                                        </template>
+                                        <span>Reservierung aufheben</span>
+                                    </v-tooltip>
                                 </template>
 
                                 <v-tooltip location="top">

@@ -117,6 +117,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_manager',
         'is_user_multiplier',
         'is_employer',
+        'has_self_training_operator',
     ];
 
     /**
@@ -266,6 +267,22 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return Attribute::make(
             get: fn($value, $attributes) => $this->hasRole(config('permission.project_roles.employer')),
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function hasSelfTrainingOperator() : Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                if ($this->relationLoaded('operators')) {
+                    return $this->operators->where('self_training', true)->count() > 0;
+                } else {
+                    return null;
+                }
+            },
         );
     }
 

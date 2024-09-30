@@ -510,21 +510,23 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
 
                 <v-row>
-                    <v-col cols="12" sm="6">
-                        <v-checkbox
-                            v-model="manageForm.approved"
-                            label="Kita zur Ampel zugelassen"
-                            :value="true"
-                            :readonly="!canBeEdited"
-                        ></v-checkbox>
-                    </v-col>
+                    <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                        <v-col cols="12" sm="6">
+                            <v-checkbox
+                                v-model="manageForm.approved"
+                                label="Kita zur Ampel zugelassen"
+                                :value="true"
+                                :readonly="!canBeEdited"
+                            ></v-checkbox>
+                        </v-col>
+                    </template>
 
                     <v-col cols="12" sm="6">
                         <v-select
                             v-model="manageForm.type"
                             :items="types"
                             :error-messages="errors.type"
-                            label="Größe der Einrichtung*"
+                            label="Größe der Einrichtung (1-10: klein, 11+: groß)*"
                             required
                             :readonly="!canBeEdited"
                         ></v-select>

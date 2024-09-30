@@ -47,7 +47,12 @@ onMounted(() => {
         menuGroupsList.value['domains.index'] = 'domains.*';
     }
 
-    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_manager || currentUser.is_user_multiplier) {
+    if (
+        currentUser.is_super_admin ||
+        currentUser.is_admin ||
+        currentUser.is_manager ||
+        (currentUser.is_user_multiplier && currentUser.has_self_training_operator)
+    ) {
         menuItemsList.value['kitas.index'] = 'Einrichtungen';
         menuGroupsList.value['kitas.index'] = 'kitas.*';
     }

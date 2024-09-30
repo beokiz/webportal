@@ -131,7 +131,7 @@ class KitaController extends BaseController
      */
     public function show(Request $request, Kita $kita)
     {
-        $this->authorize('authorizeAccessToKitas', User::class);
+//        $this->authorize('authorizeAccessToKitas', User::class);
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
         $currentUser = $request->user();
@@ -168,7 +168,8 @@ class KitaController extends BaseController
         } else {
             $currentUser->loadMissing(['operators.kitas']);
 
-            $canBeEdited = optional($currentUser->operators)->pluck('kitas.*.id')
+            $canBeEdited = optional($currentUser->operators)->where('self_training', true)
+                ->pluck('kitas.*.id')
                 ->flatten()
                 ->unique()
                 ->contains($kita->id);
