@@ -55,11 +55,17 @@ class HandleInertiaRequests extends Middleware
             ->where('year', $today->year)
             ->count();
 
+        $currentUser = $request->user();
+
+        if (!empty($currentUser)) {
+            $currentUser->loadMissing(['operators']);
+        }
+
         $shared = [
             'auth'           => [
                 'canLogin'    => Route::has('auth.login'),
                 'canRegister' => Route::has('auth.register'),
-                'user'        => optional($request->user())->loadMissing(['operators'])->toArray(),
+                'user'        => optional($currentUser)->toArray(),
             ],
             'appVersion'     => config('app.version'),
             'successes'      => $successes,
