@@ -54,17 +54,17 @@ class DatabaseImportCommand extends Command
 
         if ($path) {
             try {
-                $this->info(__('artisan.database_import.start_message'));
+                $this->info(__('commands.database_import.start_message'));
 
                 MysqlDatabaseHelper::import(config('database.default'), $path);
 
-                $this->info(__('artisan.database_import.success_message'));
+                $this->info(__('commands.database_import.success_message'));
             } catch (\Exception $exception) {
-                $this->error(__('artisan.common.error'));
-                $this->error(__('artisan.common.exception', ['exception' => $exception->getMessage()]));
+                $this->error(__('commands.common.error'));
+                $this->error(__('commands.common.exception', ['exception' => $exception->getMessage()]));
             }
         } else {
-            $this->error(__('artisan.database_import.missing_path_argument'));
+            $this->error(__('commands.database_import.missing_path_argument'));
         }
     }
 }

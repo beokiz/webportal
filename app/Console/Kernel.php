@@ -6,6 +6,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CleanOldBackups;
 use App\Jobs\MakeDatabaseBackupJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -34,10 +35,11 @@ class Kernel extends ConsoleKernel
         // $schedule->job(new ResetKitasYearlyEvaluationReminderJob())->dailyAt('12:00');
 
         // Remove project temporary files
-        $schedule->command('temp:files:clear')->hourly();
+        $schedule->command('temp:files:clean')->hourly();
 
-        // Make daily backup
+        // Make daily DB backup & clean old DB backups
         $schedule->job(new MakeDatabaseBackupJob())->dailyAt('01:00');
+        $schedule->command('clean:old-backups')->dailyAt('01:30');
     }
 
     /**

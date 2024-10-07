@@ -50,8 +50,8 @@ class IdeFullMetaCommand extends Command
             $this->call('ide-helper:model', ['--nowrite' => true]);
             $this->call('ide-helper:meta');
         } catch (\Exception $exception) {
-            $this->error(__('artisan.common.error'));
-            $this->error(__('artisan.common.exception', ['exception' => $exception->getMessage()]));
+            $this->error(__('commands.common.error'));
+            $this->error(__('commands.common.exception', ['exception' => $exception->getMessage()]));
         }
     }
 }

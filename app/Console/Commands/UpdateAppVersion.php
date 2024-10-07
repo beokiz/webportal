@@ -73,13 +73,13 @@ class UpdateAppVersion extends Command
                         file_get_contents($envPath)
                     ));
                 } else {
-                    $this->warn(__('artisan.version_update.file_error_message', ['filepath' => $envPath]));
+                    $this->warn(__('commands.version_update.file_error_message', ['filepath' => $envPath]));
                 }
             }
 
-            $this->info(__('artisan.version_update.success_message', ['version' => $newVersion]));
+            $this->info(__('commands.version_update.success_message', ['version' => $newVersion]));
         } else {
-            $this->error(__('artisan.version_update.version_error_message'));
+            $this->error(__('commands.version_update.version_error_message'));
         }
     }
 }

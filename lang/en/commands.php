@@ -38,13 +38,23 @@ return [
         'version_error_message' => "Error! Invalid version format",
     ],
 
-    'gk_supervisor' => [
+    'supervisor' => [
         'success_message'         => "Success! The command was executed successfully.",
         'invalid_action_argument' => "Error! The \"action\" option is invalid.",
     ],
 
-    'gk_temp' => [
+    'temp' => [
         'clear_tmp_message' => ":count project temporary file(s) deleted!",
+    ],
+
+    'clean' => [
+        'start_message'       => "Starting cleanup of old backup folders...",
+        'folder_deleted'      => "Deleted backup folder: :folder.",
+        'folder_delete_fail'  => "Failed to delete backup folder: :folder.",
+        'empty_month_deleted' => "Deleted empty month folder: :folder.",
+        'empty_year_deleted'  => "Deleted empty year folder: :folder.",
+        'cleanup_complete'    => "Old backup folders have been cleaned up.",
+        'no_backup_found'     => "Backup directory does not exist.",
     ],
 
 ];

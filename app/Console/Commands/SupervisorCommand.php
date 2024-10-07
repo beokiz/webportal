@@ -54,14 +54,14 @@ class SupervisorCommand extends Command
 
                 $result = $shellCommandService->executeCommand(explode(' ', $command));
 
-                $this->info(__('artisan.gk_supervisor.success_message'));
+                $this->info(__('commands.supervisor.success_message'));
                 $this->info($result);
             } else {
-                $this->error(__('artisan.gk_supervisor.invalid_action_argument', ['action' => $action]));
+                $this->error(__('commands.supervisor.invalid_action_argument', ['action' => $action]));
             }
         } catch (\Exception $exception) {
-            $this->error(__('artisan.common.error'));
-            $this->error(__('artisan.common.exception', ['exception' => $exception->getMessage()]));
+            $this->error(__('commands.common.error'));
+            $this->error(__('commands.common.exception', ['exception' => $exception->getMessage()]));
         }
     }
 }

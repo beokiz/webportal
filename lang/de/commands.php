@@ -38,13 +38,23 @@ return [
         'version_error_message' => "Fehler! Ungültiges Versionsformat",
     ],
 
-    'gk_supervisor' => [
+    'supervisor' => [
         'success_message'         => "Erfolg! Der Befehl erfolgreich ausgeführt.",
         'invalid_action_argument' => "Fehler! Die Option \"action\" ist ungültig.",
     ],
 
-    'gk_temp' => [
+    'temp' => [
         'clear_tmp_message' => ":count temporäre Datei(en) des Projekts gelöscht!",
+    ],
+
+    'clean' => [
+        'start_message'       => "Bereinigung alter Backup-Ordner wird gestartet...",
+        'folder_deleted'      => "Backup-Ordner gelöscht: :folder.",
+        'folder_delete_fail'  => "Fehler beim Löschen des Backup-Ordners: :folder.",
+        'empty_month_deleted' => "Leerer Monatsordner gelöscht: :folder.",
+        'empty_year_deleted'  => "Leerer Jahresordner gelöscht: :folder.",
+        'cleanup_complete'    => "Alte Backup-Ordner wurden bereinigt.",
+        'no_backup_found'     => "Backup-Verzeichnis existiert nicht.",
     ],
 
 ];
