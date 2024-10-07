@@ -14,11 +14,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Reset Kitas Yearly Evaluation Reminder
+ * Reset Kitas Yearly Evaluation Reminder Job
  *
  * @package \App\Jobs
  */
-class ResetKitasYearlyEvaluationReminder implements ShouldQueue
+class ResetKitasYearlyEvaluationReminderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

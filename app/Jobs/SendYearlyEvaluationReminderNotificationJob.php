@@ -17,11 +17,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Send Yearly Evaluation Reminder Notification
+ * Send Yearly Evaluation Reminder Notification Job
  *
  * @package \App\Jobs
  */
-class SendYearlyEvaluationReminderNotification implements ShouldQueue
+class SendYearlyEvaluationReminderNotificationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

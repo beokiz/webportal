@@ -66,7 +66,7 @@ class MysqlDatabaseHelper
 
         // Prepare export command
         $command = sprintf(
-            'mysqldump -h %s -u %s -p%s %s > %s',
+            'mysqldump -h %s -u %s -p%s --databases %s > "%s"',
             $connectionData['host'], $connectionData['username'], $connectionData['password'], $connectionData['database'], $filePath
         );
 

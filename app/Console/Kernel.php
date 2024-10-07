@@ -6,6 +6,7 @@
 
 namespace App\Console;
 
+use App\Jobs\MakeDatabaseBackupJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,12 +27,17 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        // $schedule->job(new ResetKitasYearlyEvaluationReminder())->dailyAt('12:00');
+        // $schedule->job(new ResetKitasYearlyEvaluationReminderJob())->dailyAt('12:00');
 
-        // $schedule->job(new SendYearlyEvaluationReminderNotification())->hourly();
+        // $schedule->job(new SendYearlyEvaluationReminderNotificationJob())->hourly();
+
+        // $schedule->job(new ResetKitasYearlyEvaluationReminderJob())->dailyAt('12:00');
 
         // Remove project temporary files
         $schedule->command('temp:files:clear')->hourly();
+
+        // Make daily backup
+        $schedule->job(new MakeDatabaseBackupJob())->dailyAt('01:00');
     }
 
     /**

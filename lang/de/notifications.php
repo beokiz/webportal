@@ -140,13 +140,25 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'yearly_evaluation_reminder'             => [
+    'yearly_evaluation_reminder' => [
         'subject'     => sprintf("%s: Jährliche Evaluierungserinnerung", config('app.name')),
         'greeting'    => "Sehr geehrte:r Einrichtungsleitung,",
         'first_line'  => "die jährliche Rückmeldung zur Statistischen Auswertung des Sprachstandsfeststellung für Kinder in Kindertageseinrichtungen und Kindertagespflege (Statuserhebung) für das Kita-Jahr :evaluation_year  muss bis zum :survey_end_date erfolgen.",
         'second_line' => "Bisher haben wir aus Ihrer Einrichtung noch keine Statuserhebung erhalten. Daher bitten wir Sie mit dieser Mail darum diese bis zum :survey_end_date einzureichen. Die entsprechende Funktion ist in ihrem Nutzer*innenkonto auf <a href=':site'>:site</a> verfügbar.",
         'third_line'  => "Vielen Dank und beste Grüße",
         'salutation'  => sprintf('Ihr %s-Team', config('app.name')) . " \nim Auftrag der Senatsverwaltung für Bildung, Jugend und Familie",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database Backup Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'database_backup'                        => [
+        'subject'    => sprintf("%s: Tägliches Datenbank-Backup", config('app.name')),
+        'greeting'   => "Hallo,",
+        'first_line' => "ein tägliches Backup der Datenbank befindet sich in den angehängten Dateien.",
     ],
 
     /*

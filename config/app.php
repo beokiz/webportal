@@ -82,6 +82,7 @@ return [
 
     'emails' => [
         'support' => env('APP_SUPPORT_EMAIL', null),
+        'backup'  => env('APP_BACKUP_EMAIL', null),
     ],
 
     /*
