@@ -8,7 +8,12 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class UpdateAppVersion extends Command
+/**
+ * Update App Version Command
+ *
+ * @package \App\Console\Commands
+ */
+class UpdateAppVersionCommand extends Command
 {
     /**
      * @var string

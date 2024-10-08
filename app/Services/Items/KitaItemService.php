@@ -93,6 +93,20 @@ class KitaItemService extends BaseItemService
     }
 
     /**
+     * @param string|int $number
+     * @param bool   $throwExceptionIfFail
+     * @return mixed
+     */
+    public function findByNumber(string|int $number, bool $throwExceptionIfFail = false) : mixed
+    {
+        $query = Kita::where('number', $number);
+
+        return $throwExceptionIfFail
+            ? $query->firstOrFail()
+            : $query->first();
+    }
+
+    /**
      * @param array $attributes
      * @return ?Kita
      */
@@ -139,9 +153,10 @@ class KitaItemService extends BaseItemService
      * @param int   $id
      * @param array $users
      * @param bool  $removeUsers
+     * @param bool  $sendNotification
      * @return bool|null
      */
-    public function updateAttachedUsers(int $id, array $users, bool $removeUsers = false) : ?bool
+    public function updateAttachedUsers(int $id, array $users, bool $removeUsers = false, bool $sendNotification = true) : ?bool
     {
         $item = $this->find($id);
 
@@ -164,13 +179,15 @@ class KitaItemService extends BaseItemService
                 if (!empty($kitaUsers)) {
                     $item->users()->sync($kitaUsers);
 
-                    $item->users()->whereIn('id', $kitaUsersNtf)->get()->map(function ($user) use ($item) {
-                        $user->sendConnectedToKitasNotification(
-                            $user->kitas()
-                                ->pluck('name')
-                                ->toArray()
-                        );
-                    });
+                    if (!empty($sendNotification)) {
+                        $item->users()->whereIn('id', $kitaUsersNtf)->get()->map(function ($user) use ($item) {
+                            $user->sendConnectedToKitasNotification(
+                                $user->kitas()
+                                    ->pluck('name')
+                                    ->toArray()
+                            );
+                        });
+                    }
                 }
             }
 

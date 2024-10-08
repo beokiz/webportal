@@ -65,6 +65,7 @@ class TrainingProposal extends Model
         'house_number',
         'zip_code',
         'city',
+        'district',
         'notes',
     ];
 

@@ -89,6 +89,20 @@ class UserItemService extends BaseItemService
     }
 
     /**
+     * @param string $email
+     * @param bool   $throwExceptionIfFail
+     * @return mixed
+     */
+    public function findByEmail(string $email, bool $throwExceptionIfFail = false) : mixed
+    {
+        $query = User::where('email', $email);
+
+        return $throwExceptionIfFail
+            ? $query->firstOrFail()
+            : $query->first();
+    }
+
+    /**
      * @param array $attributes
      * @return ?User
      */

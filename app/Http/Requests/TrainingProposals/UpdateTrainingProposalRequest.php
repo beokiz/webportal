@@ -33,6 +33,7 @@ class UpdateTrainingProposalRequest extends CreateTrainingProposalRequest
             'house_number'      => array_merge($this->textRules(true), ['sometimes']),
             'zip_code'          => array_merge($this->textRules(10), ['sometimes']),
             'city'              => array_merge($this->textRules(), ['sometimes']),
+            'district'          => array_merge($this->textRules(), ['sometimes']),
             'notes'             => array_merge($this->bigTextRules(), ['nullable']),
         ];
     }

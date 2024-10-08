@@ -26,11 +26,11 @@ class RegistrationRequest extends BaseFormRequest
         $rules = [
             // Kita fields
             'kita'                   => ['required', 'array'],
-            'kita.number'            => array_merge($this->bigIntegerRules(true), ['required']),
+            'kita.number'            => array_merge($this->textRules(), ['required']),
             'kita.name'              => array_merge($this->textRules(), ['required']),
             'kita.district'          => array_merge($this->textRules(), ['nullable']),
             'kita.street'            => array_merge($this->textRules(), ['required']),
-            'kita.house_number'      => array_merge($this->textRules(true), ['required']),
+            'kita.house_number'      => array_merge($this->textRules(), ['required']),
             'kita.zip_code'          => array_merge($this->textRules(10), ['required']),
             'kita.city'              => array_merge($this->textRules(), ['required']),
             'kita.additional_info'   => array_merge($this->textRules(8096), ['nullable']),

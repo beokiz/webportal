@@ -41,6 +41,7 @@ class TrainingFactory extends BaseFactory
             'house_number'                   => $this->faker->randomNumber(),
             'zip_code'                       => $this->faker->randomNumber(6),
             'city'                           => $this->faker->city,
+            'district'                       => $this->faker->randomElement(['Zentral', 'Nord', 'Süd', 'Ost', 'West', 'Innenstadt', 'Oberstadt', 'Stadtmitte']),
             'max_participant_count'          => $participantCount + $this->faker->randomNumber(2),
             'participant_count'              => $participantCount,
             'type'                           => $this->faker->randomElement(Training::TYPES),

@@ -10,7 +10,12 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 
-class CleanOldBackups extends Command
+/**
+ * Clean Old Backups Command
+ *
+ * @package \App\Console\Commands
+ */
+class CleanOldBackupsCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -38,7 +43,7 @@ class CleanOldBackups extends Command
 
         // Check if the backup directory exists
         if (!File::exists($backupPath)) {
-            $this->info(__('commands.clean.no_backup_found'));
+            $this->info(__('commands.clean.no_backup_found_message'));
             return;
         }
 
@@ -56,9 +61,9 @@ class CleanOldBackups extends Command
                     // Delete the folder if its date is older than two weeks
                     if ($folderDate->lessThan($twoWeeksAgo)) {
                         if (File::deleteDirectory($dayDir)) {
-                            $this->info(__('commands.clean.folder_deleted', ['folder' => $dayDir]));
+                            $this->info(__('commands.clean.folder_deleted_message', ['folder' => $dayDir]));
                         } else {
-                            $this->error(__('commands.clean.folder_delete_fail', ['folder' => $dayDir]));
+                            $this->error(__('commands.clean.folder_delete_fail_message', ['folder' => $dayDir]));
                         }
                     }
                 }
@@ -66,17 +71,17 @@ class CleanOldBackups extends Command
                 // Check if the month directory is now empty and delete it if it is
                 if (empty(File::directories($monthDir)) && empty(File::files($monthDir))) {
                     File::deleteDirectory($monthDir);
-                    $this->info(__('commands.clean.empty_month_deleted', ['folder' => $monthDir]));
+                    $this->info(__('commands.clean.empty_month_deleted_message', ['folder' => $monthDir]));
                 }
             }
 
             // Check if the year directory is now empty and delete it if it is
             if (empty(File::directories($yearDir)) && empty(File::files($yearDir))) {
                 File::deleteDirectory($yearDir);
-                $this->info(__('commands.clean.empty_year_deleted', ['folder' => $yearDir]));
+                $this->info(__('commands.clean.empty_year_deleted_message', ['folder' => $yearDir]));
             }
         }
 
-        $this->info(__('commands.clean.cleanup_complete'));
+        $this->info(__('commands.clean.cleanup_complete_message'));
     }
 }

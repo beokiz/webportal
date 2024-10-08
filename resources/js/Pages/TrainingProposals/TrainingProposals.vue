@@ -353,10 +353,6 @@ const close = () => {
     dialog.value = false;
     acceptTrainingProposalDialog.value = false;
     revokeTrainingProposalDialog.value = false;
-    confirmTrainingProposalDialog.value = false;
-    addMultiplierToTrainingProposalDialog.value = false;
-    addKitaToTrainingProposalDialog.value = false;
-    removeKitaFromTrainingProposalDialog.value = false;
 
     manageForm.reset();
     manageForm.clearErrors();
@@ -396,6 +392,7 @@ const manageForm = useForm({
     house_number: null,
     zip_code: null,
     city: null,
+    district: null,
     notes: null,
 });
 
@@ -543,7 +540,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                         </v-row>
 
                                         <v-row>
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.street"
                                                     :error-messages="errors.street"
@@ -553,7 +550,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.house_number"
                                                     :error-messages="errors.house_number"
@@ -563,7 +560,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.zip_code"
                                                     :error-messages="errors.zip_code"
@@ -572,8 +569,20 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                                     clearable
                                                 ></v-text-field>
                                             </v-col>
+                                        </v-row>
 
-                                            <v-col cols="12" sm="3">
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field
+                                                    v-model="manageForm.district"
+                                                    :error-messages="errors.district"
+                                                    label="Bezirk"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="6">
                                                 <v-text-field
                                                     v-model="manageForm.city"
                                                     :error-messages="errors.city"

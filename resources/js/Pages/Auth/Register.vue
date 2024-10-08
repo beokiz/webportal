@@ -506,7 +506,6 @@ const validateTrainingSuggestionDates = (index) => {
                             <v-text-field v-model="registrationForm.kita.number"
                                           :error-messages="errors['kita.number']"
                                           label="Kitanummer / 8-stellige Einrichtungsnummer *"
-                                          type="number"
                                           required
                             ></v-text-field>
                         </v-col>

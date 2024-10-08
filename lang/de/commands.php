@@ -26,10 +26,10 @@ return [
     ],
 
     'database_import' => [
-        'start_message'         => "Starte DB-Import...",
-        'success_message'       => "Erfolg! Die ausgewählte Datei wurde erfolgreich importiert.",
-        'missing_path_argument' => "Fehler! Die Option \"path\" ist erforderlich.",
-        'error_message'         => "Fehler! Die ausgewählte Datei wurde nicht importiert.",
+        'start_message'                 => "Starte DB-Import...",
+        'success_message'               => "Erfolg! Die ausgewählte Datei wurde erfolgreich importiert.",
+        'missing_path_argument_message' => "Fehler! Die Option \"path\" ist erforderlich.",
+        'error_message'                 => "Fehler! Die ausgewählte Datei wurde nicht importiert.",
     ],
 
     'version_update' => [
@@ -39,8 +39,8 @@ return [
     ],
 
     'supervisor' => [
-        'success_message'         => "Erfolg! Der Befehl erfolgreich ausgeführt.",
-        'invalid_action_argument' => "Fehler! Die Option \"action\" ist ungültig.",
+        'success_message'                 => "Erfolg! Der Befehl erfolgreich ausgeführt.",
+        'invalid_action_argument_message' => "Fehler! Die Option \"action\" ist ungültig.",
     ],
 
     'temp' => [
@@ -48,13 +48,19 @@ return [
     ],
 
     'clean' => [
-        'start_message'       => "Bereinigung alter Backup-Ordner wird gestartet...",
-        'folder_deleted'      => "Backup-Ordner gelöscht: :folder.",
-        'folder_delete_fail'  => "Fehler beim Löschen des Backup-Ordners: :folder.",
-        'empty_month_deleted' => "Leerer Monatsordner gelöscht: :folder.",
-        'empty_year_deleted'  => "Leerer Jahresordner gelöscht: :folder.",
-        'cleanup_complete'    => "Alte Backup-Ordner wurden bereinigt.",
-        'no_backup_found'     => "Backup-Verzeichnis existiert nicht.",
+        'start_message'               => "Bereinigung alter Backup-Ordner wird gestartet...",
+        'folder_deleted_message'      => "Backup-Ordner gelöscht: :folder.",
+        'folder_delete_fail_message'  => "Fehler beim Löschen des Backup-Ordners: :folder.",
+        'empty_month_deleted_message' => "Leerer Monatsordner gelöscht: :folder.",
+        'empty_year_deleted_message'  => "Leerer Jahresordner gelöscht: :folder.",
+        'cleanup_complete_message'    => "Alte Backup-Ordner wurden bereinigt.",
+        'no_backup_found_message'     => "Backup-Verzeichnis existiert nicht.",
+    ],
+
+    'import_trainings' => [
+        'start_message'          => "Die Datei ':filename' existiert nicht",
+        'file_not_exist_message' => "Fehler! Der Import der Datei ':filename' wird gestartet...",
+        'success_message'        => "Erfolg! Das Training wurde erfolgreich aus der Datei ':filename' importiert.",
     ],
 
 ];

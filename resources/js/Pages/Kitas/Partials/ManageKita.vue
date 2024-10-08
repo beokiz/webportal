@@ -411,7 +411,6 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <v-text-field v-model="manageForm.number"
                                       :error-messages="errors.number"
                                       label="Kita Nummer*"
-                                      type="number"
                                       required
                                       :readonly="!canBeEdited"
                         ></v-text-field>

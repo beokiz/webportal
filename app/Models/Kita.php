@@ -72,7 +72,6 @@ class Kita extends Model
         'approved'                               => 'boolean',
         'num_pedagogical_staff'                  => 'integer',
         'order'                                  => 'integer',
-        'number'                                 => 'integer',
         'is_yearly_evaluation_reminder_ntf_sent' => 'boolean',
         'has_yearly_evaluations'                 => 'boolean',
         'users_emails'                           => 'array',

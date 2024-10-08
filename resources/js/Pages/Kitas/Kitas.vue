@@ -376,7 +376,6 @@ const manageKita = async () => {
                                                 <v-text-field v-model="manageForm.number"
                                                               :error-messages="errors.number"
                                                               label="Kita Nummer*"
-                                                              type="number"
                                                               required
                                                 ></v-text-field>
                                             </v-col>

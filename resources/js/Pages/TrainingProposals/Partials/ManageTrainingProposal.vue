@@ -123,6 +123,7 @@ const manageForm = useForm({
     house_number: editedTrainingProposal.value?.house_number,
     zip_code: editedTrainingProposal.value?.zip_code,
     city: editedTrainingProposal.value?.city,
+    district: editedTrainingProposal.value?.district,
     notes: editedTrainingProposal.value?.notes,
 });
 
@@ -647,7 +648,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
 
                 <v-row>
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.street"
                             :error-messages="errors.street"
@@ -657,7 +658,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.house_number"
                             :error-messages="errors.house_number"
@@ -667,7 +668,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.zip_code"
                             :error-messages="errors.zip_code"
@@ -676,8 +677,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             clearable
                         ></v-text-field>
                     </v-col>
+                </v-row>
 
-                    <v-col cols="12" sm="3">
+                <v-row>
+                    <v-col cols="12" sm="6">
+                        <v-text-field
+                            v-model="manageForm.district"
+                            :error-messages="errors.district"
+                            label="Bezirk"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="6">
                         <v-text-field
                             v-model="manageForm.city"
                             :error-messages="errors.city"

@@ -26,10 +26,10 @@ return [
     ],
 
     'database_import' => [
-        'start_message'         => "Starting DB import...",
-        'success_message'       => "Success! The selected file was successfully imported.",
-        'missing_path_argument' => "Error! The \"path\" option is required.",
-        'error_message'         => "Error! The selected file was not imported.",
+        'start_message'                 => "Starting DB import...",
+        'success_message'               => "Success! The selected file was successfully imported.",
+        'missing_path_argument_message' => "Error! The \"path\" option is required.",
+        'error_message'                 => "Error! The selected file was not imported.",
     ],
 
     'version_update' => [
@@ -39,8 +39,8 @@ return [
     ],
 
     'supervisor' => [
-        'success_message'         => "Success! The command was executed successfully.",
-        'invalid_action_argument' => "Error! The \"action\" option is invalid.",
+        'success_message'                 => "Success! The command was executed successfully.",
+        'invalid_action_argument_message' => "Error! The \"action\" option is invalid.",
     ],
 
     'temp' => [
@@ -48,13 +48,19 @@ return [
     ],
 
     'clean' => [
-        'start_message'       => "Starting cleanup of old backup folders...",
-        'folder_deleted'      => "Deleted backup folder: :folder.",
-        'folder_delete_fail'  => "Failed to delete backup folder: :folder.",
-        'empty_month_deleted' => "Deleted empty month folder: :folder.",
-        'empty_year_deleted'  => "Deleted empty year folder: :folder.",
-        'cleanup_complete'    => "Old backup folders have been cleaned up.",
-        'no_backup_found'     => "Backup directory does not exist.",
+        'start_message'               => "Starting cleanup of old backup folders...",
+        'folder_deleted_message'      => "Deleted backup folder: :folder.",
+        'folder_delete_fail_message'  => "Failed to delete backup folder: :folder.",
+        'empty_month_deleted_message' => "Deleted empty month folder: :folder.",
+        'empty_year_deleted_message'  => "Deleted empty year folder: :folder.",
+        'cleanup_complete_message'    => "Old backup folders have been cleaned up.",
+        'no_backup_found_message'     => "Backup directory does not exist.",
+    ],
+
+    'import_trainings' => [
+        'start_message'          => "The file ':filename' does not exist",
+        'file_not_exist_message' => "Error! Starting the import of file ':filename'...",
+        'success_message'        => "Success! Training imported successfully from ':filename'.",
     ],
 
 ];

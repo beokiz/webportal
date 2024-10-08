@@ -90,6 +90,21 @@ return [
             ],
         ],
 
+        'import_files' => [
+            'driver'      => 'local',
+            'root'        => storage_path('app/import'),
+            'permissions' => [
+                'file' => [
+                    'public'  => 0664,
+                    'private' => 0600,
+                ],
+                'dir'  => [
+                    'public'  => 0755,
+                    'private' => 0700,
+                ],
+            ],
+        ],
+
     ],
 
     /*

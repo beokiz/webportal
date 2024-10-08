@@ -57,7 +57,7 @@ class SupervisorCommand extends Command
                 $this->info(__('commands.supervisor.success_message'));
                 $this->info($result);
             } else {
-                $this->error(__('commands.supervisor.invalid_action_argument', ['action' => $action]));
+                $this->error(__('commands.supervisor.invalid_action_argument_message', ['action' => $action]));
             }
         } catch (\Exception $exception) {
             $this->error(__('commands.common.error'));

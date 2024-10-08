@@ -59,4 +59,18 @@ class RoleItemService extends BaseItemService
             ? Role::findOrFail($id)
             : Role::find($id);
     }
+
+    /**
+     * @param string $name
+     * @param bool   $throwExceptionIfFail
+     * @return mixed
+     */
+    public function findByName(string $name, bool $throwExceptionIfFail = false) : mixed
+    {
+        $query = Role::where('name', $name);
+
+        return $throwExceptionIfFail
+            ? $query->firstOrFail()
+            : $query->first();
+    }
 }

@@ -64,7 +64,7 @@ class DatabaseImportCommand extends Command
                 $this->error(__('commands.common.exception', ['exception' => $exception->getMessage()]));
             }
         } else {
-            $this->error(__('commands.database_import.missing_path_argument'));
+            $this->error(__('commands.database_import.missing_path_argument_message'));
         }
     }
 }
