@@ -578,7 +578,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             <v-hover v-if="editedTrainingProposal?.kitas_users_emails && editedTrainingProposal?.kitas_users_emails.length > 0" v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" :href="`mailto:?bcc=${editedTrainingProposal?.kitas_users_emails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                    <span>Mail an Kita(s) schreiben</span>
+                                    <span>Mail an KiTa(s) schreiben</span>
                                 </v-btn>
                             </v-hover>
                         </template>
@@ -950,7 +950,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-dialog v-model="confirmTrainingProposalDialog" width="80vw">
                         <v-card height="80vw">
                             <v-card-title>
-                                <span class="tw-text-h5">Schulung gegenüber den Kitas bestätigen?</span>
+                                <span class="tw-text-h5">Schulung gegenüber den KiTas bestätigen?</span>
                             </v-card-title>
 
                             <v-card-text>
@@ -1125,7 +1125,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                 :error-messages="errors.kitas"
                                                 item-title="name"
                                                 item-value="id"
-                                                label="Kita"
+                                                label="KiTa"
                                                 multiple
                                                 required
                                             ></v-autocomplete>

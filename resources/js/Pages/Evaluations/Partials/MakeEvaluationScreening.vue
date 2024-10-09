@@ -122,11 +122,11 @@ const screeningEvaluation = async () => {
 </script>
 
 <template>
-    <Head title="Screening-prüfung"/>
+    <Head title="Ampel-Prüfung"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Screening-prüfung</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Ampel-Prüfung</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">

@@ -21,6 +21,7 @@ use App\Http\Controllers\DownloadAreaController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationScreeningController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImprintAndSupportController;
 use App\Http\Controllers\KitaController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\OperatorsController;
@@ -345,5 +346,12 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::post('/{trainingProposal}/remove-kita', [TrainingProposalsController::class, 'removeKita'])->name('remove_kita');
         Route::post('/{trainingProposal}/remove-kitas', [TrainingProposalsController::class, 'removeKitas'])->name('remove_kitas');
         Route::delete('/{trainingProposal}', [TrainingProposalsController::class, 'destroy'])->name('destroy');
+    });
+
+    /*
+     * Other routes
+     */
+    Route::group(['as' => 'other.'], function () {
+        Route::get('/imprint-and-support', [ImprintAndSupportController::class, 'index'])->name('imprint_and_support_index');
     });
 });

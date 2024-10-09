@@ -36,7 +36,7 @@ class CreateTrainingRequest extends BaseFormRequest
             'house_number'                   => array_merge($this->textRules(true), ['required']),
             'zip_code'                       => array_merge($this->textRules(10), ['required']),
             'city'                           => array_merge($this->textRules(), ['required']),
-            'district'                       => array_merge($this->textRules(), ['required']),
+            'district'                       => array_merge($this->textRules(), ['nullable']),
             'notes'                          => ['nullable', $this->bigTextRules()],
         ];
     }

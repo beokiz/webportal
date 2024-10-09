@@ -375,7 +375,7 @@ const manageKita = async () => {
                                             <v-col cols="12" sm="6">
                                                 <v-text-field v-model="manageForm.number"
                                                               :error-messages="errors.number"
-                                                              label="Kita Nummer*"
+                                                              label="KiTa Nummer*"
                                                               required
                                                 ></v-text-field>
                                             </v-col>
@@ -469,7 +469,7 @@ const manageKita = async () => {
                                                 <v-col cols="12" sm="6">
                                                     <v-checkbox
                                                         v-model="manageForm.approved"
-                                                        label="Kita zur Ampel zugelassen"
+                                                        label="KiTa zur Ampel zugelassen"
                                                         :value="true"
                                                     ></v-checkbox>
                                                 </v-col>

@@ -35,7 +35,7 @@ return [
         'speech_therapy_status'             => "Speech therapy status",
         'postal_label'                      => "Postal",
         'uuid_label'                        => "UUID",
-        'kita_label'                        => "Kita",
+        'kita_label'                        => "KiTa",
         'child_duration_in_kita_label'      => "Child duration in kita",
         'upToOneYear_label'                 => "Up to one year",
         'up_to_two_years_label'             => "Up to two years",

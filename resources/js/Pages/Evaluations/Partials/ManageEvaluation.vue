@@ -305,7 +305,7 @@ const unfinishedEvaluation = async (id) => {
                             :error-messages="errors.kita_id"
                             item-title="name"
                             item-value="id"
-                            label="Kita"
+                            label="KiTa"
                         ></v-select>
                     </v-col>
 
@@ -316,7 +316,7 @@ const unfinishedEvaluation = async (id) => {
                             :error-messages="errors.child_duration_in_kita"
                             item-title="name"
                             item-value="id"
-                            label="Zeitraum in der Kita"
+                            label="Zeitraum in der KiTa"
                         ></v-select>
                     </v-col>
 
@@ -389,9 +389,7 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="12">
                                 <v-hover v-slot:default="{ isHovering, props }">
                                     <div class="tw-text-right">
-                                        <a :href="route('evaluations.pdf', { id: evaluationResultData.item.id })" @click="close" title="Fenster schließen">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2" @click="">mdi-close</v-icon>
-                                        </a>
+                                        <v-icon v-bind="props" size="small" class="tw-me-2" @click="close" title="Fenster schließen">mdi-close</v-icon>
                                     </div>
                                 </v-hover>
                             </v-col>

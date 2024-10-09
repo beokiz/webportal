@@ -62,7 +62,7 @@ return [
     'email_verified' => [
         'subject'             => sprintf("%s: Confirmation of your suggested dates for BeoKiz training", config('app.name')),
         'greeting'            => "Dear :name!",
-        'first_line'          => "Your training request(s) for BeoKiz: \n :trainings_list",
+        'first_line'          => "Your training request(s) for BeoKiz: \n :trainings_list <br/> have been received.",
         'second_line'         => "One of our BeoKiz multipliers will soon contact you to confirm the appointment.",
         'salutation'          => sprintf("Best regards,  \n your %s team", config('app.name')),
         'first_training_item' => "on :first_date and :second_date",
@@ -119,7 +119,7 @@ return [
     */
 
     'connected_to_kitas' => [
-        'subject'     => sprintf("%s: Connected to Kitas", config('app.name')),
+        'subject'     => sprintf("%s: Connected to KiTas", config('app.name')),
         'greeting'    => "Hello :name,",
         'first_line'  => "you have just been assigned to another facility in the BeoKiz traffic light portal. You are now assigned to the following facilities: \n :kitas",
         'second_line' => "Your access data has not changed as a result.",

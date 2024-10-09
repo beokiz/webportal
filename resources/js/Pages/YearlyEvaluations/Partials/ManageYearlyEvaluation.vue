@@ -267,7 +267,7 @@ const validateChildrensAmount = (age) => {
                             :error-messages="errors.kita_id"
                             item-title="name"
                             item-value="id"
-                            label="Kita*"
+                            label="KiTa*"
                         ></v-select>
                     </v-col>
                 </v-row>

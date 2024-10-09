@@ -1011,7 +1011,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-dialog v-model="confirmTrainingDialog" width="80vw">
                         <v-card height="80vw">
                             <v-card-title>
-                                <span class="tw-text-h5">Schulung gegenüber den Kitas bestätigen?</span>
+                                <span class="tw-text-h5">Schulung gegenüber den KiTas bestätigen?</span>
                             </v-card-title>
 
                             <v-card-text>
@@ -1034,8 +1034,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                     <v-row v-if="trainingKitas && trainingKitas.length">
                                         <v-col cols="12">
-                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
-                                            <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
+                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden KiTas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede KiTa.</p>
+                                            <p>Bitte klicken Sie auf den Namen der KiTa, um diesen zu erhalten.</p>
                                         </v-col>
 
                                         <v-col cols="12" class="tw--mt-6">
@@ -1139,7 +1139,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                 :error-messages="errors.kitas"
                                                 item-title="name"
                                                 item-value="id"
-                                                label="Kita"
+                                                label="KiTa"
                                                 multiple
                                                 required
                                             ></v-autocomplete>

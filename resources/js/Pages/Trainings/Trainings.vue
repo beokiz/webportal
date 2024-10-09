@@ -102,7 +102,7 @@ const headers = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '19%', sortable: true },
     { title: 'Teilnehmer ', key: 'prepared_participant_count', width: '5%', sortable: true },
-    { title: 'Kita', key: 'kitas_list', width: '17%', sortable: false },
+    { title: 'KiTa', key: 'kitas_list', width: '17%', sortable: false },
     { title: 'Typ', key: 'type', width: '7%', sortable: true },
     { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Multiplikator', key: 'multi_id', width: '7%', sortable: true },
@@ -917,7 +917,7 @@ const manageTrainingStatus = async (status) => {
                                 :items="kitas"
                                 item-title="name"
                                 item-value="id"
-                                label="Kita"
+                                label="KiTa"
                                 multiple
                                 :disabled="loading"
                                 clearable
@@ -1048,7 +1048,7 @@ const manageTrainingStatus = async (status) => {
                     <v-dialog v-model="confirmTrainingDialog" width="80vw">
                         <v-card height="80vw">
                             <v-card-title>
-                                <span class="tw-text-h5">Schulung gegenüber den Kitas bestätigen?</span>
+                                <span class="tw-text-h5">Schulung gegenüber den KiTas bestätigen?</span>
                             </v-card-title>
 
                             <v-card-text>
@@ -1071,8 +1071,8 @@ const manageTrainingStatus = async (status) => {
 
                                     <v-row v-if="selectedTrainingKitas  && selectedTrainingKitas.length">
                                         <v-col cols="12">
-                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
-                                            <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
+                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden KiTas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede KiTa.</p>
+                                            <p>Bitte klicken Sie auf den Namen der KiTa, um diesen zu erhalten.</p>
                                         </v-col>
 
                                         <v-col cols="12" class="tw--mt-6">

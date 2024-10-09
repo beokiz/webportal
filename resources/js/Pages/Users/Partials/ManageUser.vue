@@ -138,7 +138,7 @@ const sendVerificationLink = async (item) => {
                         <template v-if="!editedUser.email_verified_at || editedUser.email_verified_at === '-'">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="sendVerificationLink" :disabled="manageForm.processing || sendVerificationLinkForm.processing">
-                                    <span>E-Mail wurde nicht verifiziert</span>
+                                    <span>Verifizierungsmail erneut senden</span>
                                 </v-btn>
                             </v-hover>
                         </template>

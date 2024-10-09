@@ -41,20 +41,24 @@ class MakeDatabaseBackupJob implements ShouldQueue
      */
     public function handle() : void
     {
-        $backupEmail = config('app.emails.backup');
+        $isDevMode = config('app.env') !== 'production';
 
-        if (!empty($backupEmail)) {
-            $filePath = MysqlDatabaseHelper::export(config('database.default'), [
-                '--no-tablespaces',
-                '--column-statistics=0',
-            ]);
+        if (!$isDevMode) {
+            $backupEmail = config('app.emails.backup');
 
-            if (!empty($filePath)) {
-                Mail::to($backupEmail)->send(
-                    new DatabaseBackupMail([
-                        'file_path' => $filePath,
-                    ])
-                );
+            if (!empty($backupEmail)) {
+                $filePath = MysqlDatabaseHelper::export(config('database.default'), [
+                    '--no-tablespaces',
+                    '--column-statistics=0',
+                ]);
+
+                if (!empty($filePath)) {
+                    Mail::to($backupEmail)->send(
+                        new DatabaseBackupMail([
+                            'file_path' => $filePath,
+                        ])
+                    );
+                }
             }
         }
     }

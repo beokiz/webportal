@@ -98,7 +98,7 @@ const mainTableHeaders = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '25%', sortable: true },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: true },
-    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
     { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
@@ -109,7 +109,7 @@ const additionalTableHeaders = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: false },
     { title: 'Ort', key: 'location', width: '25%', sortable: false },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: false },
-    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
     { title: 'Status', key: 'status', width: '5%', sortable: false },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
@@ -763,7 +763,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                     :items="kitas"
                                     item-title="name"
                                     item-value="id"
-                                    label="Kita"
+                                    label="KiTa"
                                     multiple
                                     :disabled="loading"
                                     clearable
@@ -834,7 +834,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                         </a>
                                     </template>
-                                    <span>Mail an Kita(s) schreiben</span>
+                                    <span>Mail an KiTa(s) schreiben</span>
                                 </v-tooltip>
                             </template>
 
@@ -951,7 +951,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                         </a>
                                     </template>
-                                    <span>Mail an Kita(s) schreiben</span>
+                                    <span>Mail an KiTa(s) schreiben</span>
                                 </v-tooltip>
 
                                 <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
