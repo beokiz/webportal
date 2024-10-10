@@ -164,7 +164,7 @@ watch(dialogIssues, (val) => {
 // Methods
 const openUsersEmailsDialog = () => {
     dialogUsersEmails.value = true;
-    selectedUsersEmails.value = props.usersEmails;
+    selectedUsersEmails.value = props.usersEmails.map(item => item.value);
 };
 
 const triggerSearch = () => {
@@ -700,6 +700,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                                 clearable
                             ></v-text-field>
                         </v-col>
+
                         <v-col cols="12" sm="6">
                             <v-select
                                 v-model="withKitasFilter"
@@ -713,6 +714,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                             ></v-select>
                         </v-col>
                     </v-row>
+
                     <v-row>
                         <v-col cols="12" sm="6">
                             <v-text-field
@@ -722,6 +724,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                                 clearable
                             ></v-text-field>
                         </v-col>
+
                         <v-col cols="12" sm="6">
                             <v-text-field
                                 type="number"
@@ -731,6 +734,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                             ></v-text-field>
                         </v-col>
                     </v-row>
+
                     <v-row>
                         <v-col cols="12" sm="6">
                             <v-text-field
@@ -740,6 +744,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                                 clearable
                             ></v-text-field>
                         </v-col>
+
                         <v-col cols="12" sm="6">
                             <v-text-field
                                 type="number"

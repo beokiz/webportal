@@ -54,6 +54,7 @@
         "sortablejs": "^1.15.0",
         "uuid": "^9.0.1",
         "vue-i18n": "^9.8.0",
+        "vue3-timepicker": "^1.0.0-beta.2",
         "vuetify": "3.3.13",
         "vuetify-pro-tiptap": "^2.5.1"
     }

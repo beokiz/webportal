@@ -28,7 +28,7 @@ abstract class BaseController extends Controller
      * @param array                           $additionalData
      * @return array
      */
-    protected function prepareItemsCollection($collection, array $additionalData)
+    protected function prepareItemsCollection($collection, array $additionalData = [])
     {
         return array_merge(
             BaseInertiaResourceCollection::make($collection)->resolve(),

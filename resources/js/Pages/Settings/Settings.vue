@@ -217,6 +217,7 @@ const deleteSurveyTimePeriodForm = useForm({
 
 const manageSurveyTimePeriod = async () => {
     manageSurveyTimePeriodForm.processing = true;
+
     manageSurveyTimePeriodForm.survey_start_date = new Date(surveyStart.value).toLocaleString()
     manageSurveyTimePeriodForm.survey_end_date = new Date(surveyEnd.value).toLocaleString()
 

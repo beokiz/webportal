@@ -9,6 +9,7 @@ namespace App\Policies;
 use App\Models\SurveyTimePeriod;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * User Role Policy
@@ -23,8 +24,8 @@ class UserRolePolicy extends BasePolicy
     |--------------------------------------------------------------------------
     */
     /**
-     * @param User                             $user
-     * @param array|Collection|int|Role|string $roles
+     * @param User  $user
+     * @param mixed $roles
      * @return bool
      */
     public function authorizeRoleAccess(User $user, $roles) : bool
@@ -150,7 +151,12 @@ class UserRolePolicy extends BasePolicy
     {
         $roles = config('permission.project_roles');
 
-        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['manager']]);
+        return $this->authorizeRoleAccess($user, [
+            $roles['super_admin'],
+            $roles['admin'],
+            $roles['manager'],
+            $roles['user_multiplier'],
+        ]);
     }
 
     /**
@@ -167,7 +173,18 @@ class UserRolePolicy extends BasePolicy
         }
 
         if ($this->authorizeRoleAccess($user, [$roles['manager']])) {
+            $user->loadMissing(['kitas']);
+
             return $user->kitas->contains('id', $kitaId);
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['user_multiplier']])) {
+            $user->loadMissing(['operators.kitas']);
+
+            return optional($user->operators)->pluck('kitas.*.id')
+                ->flatten()
+                ->unique()
+                ->contains($kitaId);
         }
 
         return false;
@@ -344,5 +361,16 @@ class UserRolePolicy extends BasePolicy
         $roles = config('permission.project_roles');
 
         return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']]);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToTrainings(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['user_multiplier']]);
     }
 }

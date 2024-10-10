@@ -161,7 +161,7 @@ watch(zipCodeFilter, (val) => {
 // Methods
 const openUsersEmailsDialog = () => {
     dialogUsersEmails.value = true;
-    selectedUsersEmails.value = props.usersEmails;
+    selectedUsersEmails.value = props.usersEmails.map(item => item.value);
 };
 
 const triggerSearch = () => {
@@ -173,6 +173,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
     if (clearFilters) {
         searchFilter.value = null;
         hasYearlyEvaluationsFilter.value = null;
+        approvedFilter.value = null;
         operatorIdFilter.value = null;
         typeFilter.value = null;
         zipCodeFilter.value = null;
@@ -652,7 +653,7 @@ const manageKita = async () => {
                                 <span>Einrichtung bearbeiten</span>
                             </v-tooltip>
 
-                            <v-tooltip v-if="!$page.props.auth.user.is_manager" location="top">
+                            <v-tooltip v-if="!$page.props.auth.user.is_manager && !$page.props.auth.user.is_user_multiplier" location="top">
                                 <template v-slot:activator="{ props }">
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteKitaDialog(item.raw)">mdi-delete</v-icon>
                                 </template>

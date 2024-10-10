@@ -4,23 +4,15 @@
  * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
  */
 
-namespace App\Http\Requests\Operators;
+namespace App\Http\Requests\Trainings;
 
 /**
- * Update Downloadable File Request
+ * Remove Kita From Training Request
  *
- * @package \App\Http\Requests\Operators
+ * @package \App\Http\Requests\Trainings
  */
-class UpdateOperatorFileRequest extends CreateOperatorRequest
+class RemoveKitaFromTrainingRequest extends AddKitaToTrainingRequest
 {
-    /**
-     * @return void
-     */
-    protected function prepareForValidation() : void
-    {
-        parent::prepareForValidation();
-    }
-
     /**
      * @return array
      */

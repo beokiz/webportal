@@ -9,7 +9,7 @@ namespace App\Http\Requests\Operators;
 use App\Http\Requests\BaseFormRequest;
 
 /**
- * Cconnect Kita To Operator Request
+ * Connect Kita To Operator Request
  *
  * @package \App\Http\Requests\Operators
  */
@@ -21,7 +21,7 @@ class ConnectKitaToOperatorRequest extends BaseFormRequest
     public function rules() : array
     {
         return [
-            'kita' => ['required', $this->userExistRule()],
+            'kita' => ['required', $this->kitaExistRule()],
         ];
     }
 

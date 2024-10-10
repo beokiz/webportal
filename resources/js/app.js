@@ -25,6 +25,7 @@ import '../sass/app.scss';
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
 import 'aos/dist/aos.css';
+import 'vue3-timepicker/dist/VueTimepicker.css';
 
 /*
  * Setup Vite

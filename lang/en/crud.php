@@ -252,4 +252,24 @@ return [
         'restore_denied'  => "Error! Selected operator cannot be restored.",
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Trainings CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'trainings' => [
+        'create_success'  => "Training has been created successfully.",
+        'create_error'    => "Error! Something went wrong while creating a training. Please try again later.",
+        'update_success'  => "Training has been updated successfully.",
+        'update_error'    => "Error! Something went wrong while updating a training. Please try again later.",
+        'update_denied'   => "Error! Selected training cannot be updated.",
+        'delete_success'  => "Training has been deleted successfully.",
+        'delete_error'    => "Error! Something went wrong while deleting a training. Please try again later.",
+        'delete_denied'   => "Error! Selected training cannot be deleted.",
+        'restore_success' => "Training has been restored successfully.",
+        'restore_error'   => "Error! Something went wrong while restoring a training. Please try again later.",
+        'restore_denied'  => "Error! Selected training cannot be restored.",
+    ],
+
 ];

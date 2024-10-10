@@ -13,6 +13,9 @@ use App\Models\Traits\HasOrderScope;
 use App\Notifications\ConnectedToKitasNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\TrainingCancelledNotification;
+use App\Notifications\TrainingCompletedNotification;
+use App\Notifications\TrainingConfirmedNotification;
 use App\Notifications\TwoFactorVerificationNotification;
 use App\Notifications\VerifyEmailNotification;
 use App\Notifications\WelcomeNotification;
@@ -345,6 +348,33 @@ class User extends Authenticatable
         $this->notify(new YearlyEvaluationReminderNotification($args));
     }
 
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendTrainingConfirmedNotification(array $args) : void
+    {
+        $this->notify(new TrainingConfirmedNotification($args));
+    }
+
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendTrainingCompletedNotification(array $args) : void
+    {
+        $this->notify(new TrainingCompletedNotification($args));
+    }
+
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendTrainingCancelledNotification(array $args) : void
+    {
+        $this->notify(new TrainingCancelledNotification($args));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Define Model Relations
@@ -372,5 +402,13 @@ class User extends Authenticatable
     public function evaluations() : HasMany
     {
         return $this->hasMany(Evaluation::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function trainings() : HasMany
+    {
+        return $this->hasMany(Training::class, 'multi_id', 'id');
     }
 }

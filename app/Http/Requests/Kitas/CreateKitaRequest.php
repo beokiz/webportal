@@ -22,7 +22,10 @@ class CreateKitaRequest extends BaseFormRequest
      */
     public function rules() : array
     {
+        $user = $this->user();
+
         return [
+            'operator_id'           => [$user->is_user_multiplier ? 'required' : 'nullable', $this->operatorExistRule()],
             'name'                  => array_merge($this->textRules(), ['required']),
             'number'                => array_merge($this->bigIntegerRules(true), ['required']),
             'street'                => array_merge($this->textRules(), ['required']),
@@ -30,7 +33,6 @@ class CreateKitaRequest extends BaseFormRequest
             'additional_info'       => array_merge($this->textRules(8096), ['nullable']),
             'zip_code'              => array_merge($this->textRules(10), ['required']),
             'city'                  => array_merge($this->textRules(), ['required']),
-            'operator_id'           => ['nullable', $this->operatorExistRule()],
             'num_pedagogical_staff' => array_merge($this->bigIntegerRules(), ['nullable']),
             'approved'              => ['required', 'boolean'],
             'type'                  => ['required', Rule::in(Kita::TYPES)],
