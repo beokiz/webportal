@@ -666,7 +666,6 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                             :headers="kitaHeaders"
                             :items="kitasModifiedItems"
                             :search="kitasSearch"
-                            v-sortable-data-table
                             :loading="loading"
                             class="data-table-container data-table-container-hide-footer elevation-1"
                             item-value="name"
@@ -914,7 +913,6 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                             :headers="usersHeaders"
                             :items="usersModifiedItems"
                             :search="usersSearch"
-                            v-sortable-data-table
                             :loading="loading"
                             class="data-table-container data-table-container-hide-footer elevation-1"
                             item-value="name"

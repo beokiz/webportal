@@ -45,11 +45,27 @@ return [
     */
 
     'email_verification' => [
-        'subject'     => sprintf("%s: Email verification", config('app.name')),
-        'greeting'    => "Hello!",
+        'subject'     => sprintf("%s: Please confirm your email address", config('app.name')),
+        'greeting'    => "Dear :name!",
         'action_text' => "Confirm",
-        'first_line'  => "Confirm your email address to complete account registration. If you have not created an account in our system, please ignore this message.",
+        'first_line'  => "Please confirm your email address by clicking on the following link:",
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Email Verified Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'email_verified' => [
+        'subject'     => sprintf("%s: Confirmation of your registration for the BeoKiz training", config('app.name')),
+        'greeting'    => "Dear :name!",
+        'first_line'  => "Your registration for the BeoKiz training was successful!",
+        'second_line' => "One of our BeoKiz multipliers will soon contact you to confirm the appointment.",
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+    ],
+
 
     /*
     |--------------------------------------------------------------------------

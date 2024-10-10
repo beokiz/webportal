@@ -17,15 +17,16 @@ return [
     |
     */
 
-    'failed'     => "These credentials do not match our records.",
-    'password'   => "The provided password is incorrect.",
-    'throttle'   => "Too many login attempts. Please try again in :seconds seconds.",
-    'logged_in'  => "You are successfully logged in!",
-    'logged_out' => "You are successfully logged out!",
+    'failed'             => "These credentials do not match our records.",
+    'password'           => "The provided password is incorrect.",
+    'throttle'           => "Too many login attempts. Please try again in :seconds seconds.",
+    'logged_in'          => "You are successfully logged in!",
+    'logged_out'         => "You are successfully logged out!",
+    'email_not_verified' => "Your email address is not verified!",
 
-    '2fa_error'   => '2FA has failed! Please login again.',
-    '2fa_failed'  => 'The provided 2FA verification code is incorrect.',
-    '2fa_expired' => '2FA verification code has expired! Please login again.',
-    '2fa_resend'  => 'The 2FA verification code has been sent again.',
+    '2fa_error'   => "2FA has failed! Please login again.",
+    '2fa_failed'  => "The provided 2FA verification code is incorrect.",
+    '2fa_expired' => "2FA verification code has expired! Please login again.",
+    '2fa_resend'  => "The 2FA verification code has been sent again.",
 
 ];

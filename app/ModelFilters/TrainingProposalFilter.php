@@ -69,6 +69,24 @@ class TrainingProposalFilter extends BaseFilter
 
     /**
      * @param string $value
+     * @return mixed
+     */
+    public function afterFirstDate(string $value) : mixed
+    {
+        return $this->whereDate('first_date', '>', $value);
+    }
+
+    /**
+     * @param string $value
+     * @return mixed
+     */
+    public function afterSecondDate(string $value) : mixed
+    {
+        return $this->whereDate('second_date', '>', $value);
+    }
+
+    /**
+     * @param string $value
      * @return ModelFilter
      */
     public function location(string $value) : ModelFilter

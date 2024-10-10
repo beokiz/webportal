@@ -33,8 +33,12 @@ class TriggerUserVerifiedEmailEvent
      */
     public function handle($event)
     {
-        UserVerifiedEmailEvent::dispatch([
-            'user_id' => $event->user->id,
-        ]);
+        if (!empty($event->user)) {
+//            UserVerifiedEmailEvent::dispatch([
+//                'user_id' => $event->user->id,
+//            ]);
+
+            $event->user->sendEmailVerifiedNotification();
+        }
     }
 }

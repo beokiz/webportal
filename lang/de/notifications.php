@@ -45,10 +45,25 @@ return [
     */
 
     'email_verification' => [
-        'subject'     => sprintf("%s: E-Mail-Bestätigung", config('app.name')),
-        'greeting'    => "Hallo!",
+        'subject'     => sprintf("%s: Bitte bestätigen Sie Ihre E-Mail-Adresse", config('app.name')),
+        'greeting'    => "Sehr geehrte :name!",
         'action_text' => "Bestätigen",
-        'first_line'  => "Bestätigen Sie Ihre E-Mail-Adresse, um die Registrierung Ihres Kontos abzuschließen. Wenn Sie kein Konto in unserem System erstellt haben, ignorieren Sie bitte diese Nachricht.",
+        'first_line'  => "Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:",
+        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Email Verified Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'email_verified' => [
+        'subject'     => sprintf("%s: Bestätigung Ihrer Anmeldung zur BeoKiz-Schulung", config('app.name')),
+        'greeting'    => "Sehr geehrte :name!",
+        'first_line'  => "Ihre Anmeldung zur BeoKiz-Schulung war erfolgreich! ",
+        'second_line' => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator:innen bald mit Ihnen in Verbindung setzen.",
+        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
 
     /*
@@ -113,7 +128,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'yearly_evaluation_reminder' => [
+    'yearly_evaluation_reminder'             => [
         'subject'     => sprintf("%s: Jährliche Evaluierungserinnerung", config('app.name')),
         'greeting'    => "Sehr geehrte Einrichtungsleitung,",
         'first_line'  => "die jährliche Rückmeldung zur Statistischen Auswertung des Sprachstandsfeststellung für Kinder in Kindertageseinrichtungen und Kindertagespflege (Statuserhebung) für das Kita-Jahr :evaluation_year  muss bis zum :survey_end_date erfolgen.",
@@ -129,7 +144,7 @@ return [
     */
 
     // 'confirmed' status notification
-    'training_confirmed'         => [
+    'training_confirmed'                     => [
         'subject'     => sprintf("%s: Bestätigung des Schulungstermine am :first_date und :second_date", config('app.name')),
         'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita,",
         'first_line'  => "Wir freuen uns, Ihnen mitteilen zu können, dass Ihr gewählter Schulungstermin bestätigt werden konnte.",
@@ -138,7 +153,7 @@ return [
     ],
 
     // 'completed' status notification
-    'training_completed'         => [
+    'training_completed'                     => [
         'subject'     => sprintf("%s: Schulung erfolgreich abgeschlossen", config('app.name')),
         'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita,",
         'first_line'  => "Wir freuen uns, Ihnen mitzuteilen, dass Ihre Schulung am :first_date und :second_date erfolgreich abgeschlossen wurde.",
@@ -147,7 +162,7 @@ return [
     ],
 
     // 'cancelled' status notification
-    'training_cancelled'         => [
+    'training_cancelled'                     => [
         'subject'     => sprintf("%s: Absage des Schulungstermine am :first_date und :second_date", config('app.name')),
         'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita,",
         'first_line'  => "Leider müssen wir Ihnen mitteilen, dass der Schulungstermin am :first_date und :second_date abgesagt werden musste.",

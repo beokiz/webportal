@@ -31,8 +31,6 @@ const submit = () => {
     <GuestLayout :additionalHtml="loginFormHtml">
         <Head title="Anmeldung"/>
 
-<!--        <BreezeValidationErrors class="tw-mb-4"/>-->
-
         <div v-if="status" class="tw-mb-4 tw-font-medium tw-text-sm tw-text-green-600">
             {{ status }}
         </div>
@@ -68,7 +66,6 @@ const submit = () => {
                         Noch kein Konto?
                     </Link>
                 </div>
-
 
                 <v-btn-primary type="submit" class="tw-ml-4">Anmelden</v-btn-primary>
             </div>

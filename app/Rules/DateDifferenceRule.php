@@ -62,6 +62,7 @@ class DateDifferenceRule implements Rule
         $firstDate  = Carbon::parse($this->value);
         $secondDate = Carbon::parse($value);
 
+        dd();
         return $secondDate->diffInDays($firstDate) >= $this->days;
     }
 

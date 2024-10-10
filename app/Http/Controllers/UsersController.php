@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -152,7 +153,8 @@ class UsersController extends BaseController
 
         $attributes = $request->validated();
         $result     = $this->userItemService->create(array_merge($attributes, [
-            'password' => Str::random(20),
+            'email_verified_at' => Carbon::now(),
+            'password'          => Str::random(20),
         ]));
 
         return $result

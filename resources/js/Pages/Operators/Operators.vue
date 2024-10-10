@@ -195,7 +195,6 @@ const manageOperator = async () => {
         },
     });
 };
-
 </script>
 
 <template>
@@ -225,6 +224,7 @@ const manageOperator = async () => {
                                                               label="Name" required
                                                 ></v-text-field>
                                             </v-col>
+
                                             <v-col cols="12" sm="6">
                                                 <v-checkbox
                                                     v-model="manageForm.self_training"
@@ -295,7 +295,6 @@ const manageOperator = async () => {
                 :items-length="totalItems"
                 :items="modifiedItems"
                 :search="search"
-                v-sortable-data-table
                 :loading="loading"
                 class="data-table-container elevation-1"
                 item-value="name"

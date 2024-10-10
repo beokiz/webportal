@@ -6,6 +6,7 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use App\Notifications\Messages\CustomMailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -19,6 +20,11 @@ use Illuminate\Support\Facades\URL;
 class VerifyEmailNotification extends Notification
 {
     use Queueable;
+
+    /**
+     * @var User
+     */
+    public $notifiable;
 
     /**
      * The callback that should be used to create the verify email URL.
@@ -55,6 +61,8 @@ class VerifyEmailNotification extends Notification
     {
         $verificationUrl = $this->verificationUrl($notifiable);
 
+        $this->notifiable = $notifiable;
+
         if (static::$toMailCallback) {
             return call_user_func(static::$toMailCallback, $notifiable, $verificationUrl);
         }
@@ -72,7 +80,9 @@ class VerifyEmailNotification extends Notification
     {
         return (new CustomMailMessage)
             ->subject(__('notifications.email_verification.subject'))
-            ->greeting(__('notifications.email_verification.greeting'))
+            ->greeting(__('notifications.email_verification.greeting', [
+                'name' => $this->notifiable->full_name,
+            ]))
             ->line(__('notifications.email_verification.first_line'))
             ->action(__('notifications.email_verification.action_text'), $url);
     }

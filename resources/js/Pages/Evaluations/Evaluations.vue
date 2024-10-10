@@ -283,7 +283,6 @@ const unfinishedEvaluation = async (id) => {
                 :items-length="totalItems"
                 :items="modifiedItems"
                 :search="search"
-                v-sortable-data-table
                 :loading="loading"
                 class="data-table-container elevation-1"
                 item-value="name"
