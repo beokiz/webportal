@@ -48,6 +48,7 @@ class Training extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'training_proposal_id',
         'multi_id',
         'first_date',
         'first_date_start_and_end_time',
@@ -208,6 +209,14 @@ class Training extends Model
     | Define Model Relations
     |--------------------------------------------------------------------------
     */
+    /**
+     * @return BelongsTo
+     */
+    public function parentTrainingProposal() : BelongsTo
+    {
+        return $this->belongsTo(TrainingProposal::class, 'training_proposal_id', 'id');
+    }
+
     /**
      * @return BelongsTo
      */

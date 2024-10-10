@@ -28,8 +28,13 @@ class EmailVerificationPromptController extends BaseController
      */
     public function __invoke(Request $request) : RedirectResponse|Response
     {
-        return $request->user()->hasVerifiedEmail()
+        $user = $request->user();
+
+        return $user->hasVerifiedEmail()
             ? redirect()->intended(RouteServiceProvider::HOME)
-            : Inertia::render('Auth/VerifyEmail', ['status' => session('status')]);
+            : Inertia::render('Auth/VerifyEmail', [
+                'user'   => !empty($user) ? $user->loadMissing(['kitas']) : null,
+                'status' => session('status')],
+            );
     }
 }

@@ -209,6 +209,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         }
 
         if (lastSeenAtFilter.value) {
+          console.log(lastSeenAtFilter.value.toLocaleString())
             data.last_seen_at = lastSeenAtFilter.value.toLocaleString();
         }
 
@@ -482,7 +483,7 @@ const sendVerificationLink = async (item) => {
                                           :close-on-content-click="false">
                                       <template v-slot:activator="{ props }">
                                           <v-text-field
-                                              label="Letzter Login"
+                                              label="Erster Login"
                                               class="tw-cursor-pointer"
                                               :model-value="rawFirstLoginAtFilter"
                                               prepend-icon="mdi-calendar"
@@ -502,7 +503,7 @@ const sendVerificationLink = async (item) => {
                                           :close-on-content-click="false">
                                       <template v-slot:activator="{ props }">
                                           <v-text-field
-                                              label="Erster Login"
+                                              label="Letzter Login"
                                               class="tw-cursor-pointer"
                                               :model-value="rawLastSeenAtFilter"
                                               prepend-icon="mdi-calendar"

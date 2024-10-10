@@ -49,14 +49,14 @@
         <div class="result-evaluation-col result-evaluation-col-head">
             <div class="tw-text-center">
                 <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
-                    Screening wurde eingereicht
+                    Einschätzung wurde eingereicht
                 </h1>
             </div>
         </div>
 
         <div class="result-evaluation-col result-evaluation-col-title">
             <p>
-                <span class="tw-font-black">Bezeichner des Screenings</span>:
+                <span class="tw-font-black">Bezeichner des Einschätzung</span>:
                 {{ $kita['formatted_name'] }}_{{ $item['custom_unique_id'] }}
             </p>
         </div>

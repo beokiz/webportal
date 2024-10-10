@@ -60,11 +60,13 @@ return [
     */
 
     'email_verified' => [
-        'subject'     => sprintf("%s: Confirmation of your registration for the BeoKiz training", config('app.name')),
-        'greeting'    => "Dear :name!",
-        'first_line'  => "Your registration for the BeoKiz training was successful!",
-        'second_line' => "One of our BeoKiz multipliers will soon contact you to confirm the appointment.",
-        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+        'subject'             => sprintf("%s: Confirmation of your registration for the BeoKiz training", config('app.name')),
+        'greeting'            => "Dear :name!",
+        'first_line'          => "Your training request(s) for BeoKiz: \n :trainings_list",
+        'second_line'         => "One of our BeoKiz multipliers will soon contact you to confirm the appointment.",
+        'salutation'          => sprintf("Best regards,  \n your %s team", config('app.name')),
+        'first_training_item' => "on :first_date and :second_date",
+        'other_training_item' => "or on :first_date and :second_date",
     ],
 
 

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * TrainingProposal Model
@@ -132,6 +133,14 @@ class TrainingProposal extends Model
     | Define Model Relations
     |--------------------------------------------------------------------------
     */
+    /**
+     * @return HasOne
+     */
+    public function childTraining() : HasOne
+    {
+        return $this->hasOne(Training::class, 'training_proposal_id', 'id');
+    }
+
     /**
      * @return HasMany
      */

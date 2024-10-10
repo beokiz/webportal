@@ -80,6 +80,7 @@ const submitRegistration = async () => {
 const minTrainingDate = ref('2025-01-01');
 const maxTrainingDate = ref('2027-07-31');
 const initialDisplayDate = ref(new Date(minTrainingDate.value));
+const maxDisplayDate = ref(new Date(maxTrainingDate.value));
 
 const showTrainingDisclaimer = ref(false);
 
@@ -307,7 +308,7 @@ const validateTrainingSuggestionDates = (index) => {
                             </p>
 
                             <p class="tw-mb-4">
-                                die BeoKiz-Schulungen finden als Team-Schulung statt. Das heißt, alle pädagogischen Mitarbeitenden (Azubis, Quereinsteiger und Kitaleitungen) nehmen gemeinsam teil. In dem folgenden Formular können Sie Ihre Daten hinterlegen und Termine für die Schulungen Ihrer pädagogischen Fachkräfte auswählen.
+                                die BeoKiz-Schulungen finden als Team-Schulung statt. Das heißt, alle pädagogischen Mitarbeitenden (Azubis, Quereinsteiger und Kitaleitungen) nehmen gemeinsam teil. In dem folgenden Formular können Sie Ihre Daten hinterlegen und Termine für die Schulungen Ihrer pädagogischen Fachkräfte auswählen bzw. Terminvorschläge für Ihre Schulungen an uns übermitteln.
                             </p>
 
                             <p class="tw-mb-4">
@@ -351,7 +352,7 @@ const validateTrainingSuggestionDates = (index) => {
                             </template>
                             <template v-else>
                                 <p class="tw-mb-4">
-                                    Die BeoKiz-Schulungen finden für Einrichtungen mit <b>bis zu 10</b> pädagogischen Fachkräften an bereits terminierten Zeiträumen in der Nähe des Anhalter Bahnhofs statt und werden gemeinsam mit Fachkräften aus anderen Einrichtungen durchgeführt.
+                                    Die BeoKiz-Schulungen finden für Einrichtungen mit <b>bis zu 10</b> pädagogischen Fachkräften an bereits terminierten Zeiträumen in der KiTeAro Akademie (Stromstrasse 38, 10551 Berlin) statt und werden gemeinsam mit Fachkräften aus anderen Einrichtungen durchgeführt.
                                 </p>
                             </template>
 
@@ -403,7 +404,9 @@ const validateTrainingSuggestionDates = (index) => {
 
                             <v-col cols="12" md="6">
                                 <template v-if="isNewKitaWasLarge">
-                                    <h3 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight tw-mb-4">Terminvorschläge für Schulung</h3>
+                                    <h3 class="registration-training-heading tw-font-semibold tw-text-lg tw-text-gray-800 tw-leading-tight tw-mb-4">
+                                        {{ `Terminvorschläge für Schulung (ab ${formatDate(initialDisplayDate, 'de-DE')} bis ${formatDate(maxDisplayDate, 'de-DE')})` }}
+                                    </h3>
 
                                     <v-row v-for="(suggestion, index) in trainingSuggestions" :key="index" class="tw-mb-4">
                                         <v-col cols="10" sm="5">
@@ -481,7 +484,7 @@ const validateTrainingSuggestionDates = (index) => {
                             </v-col>
 
                             <v-col cols="12" md="6">
-                                <InfoMessage :text="isNewKitaWasLarge ? 'Wählen Sie bitte nachfolgend zwei direkt aufeinanderfolgende Schulungstermine aus. Wenn für Sie zwei aufeinanderfolgende Termine nicht möglich sind, wählen Sie bitte zwei Tage aus, die weniger als 7 Tage auseinander liegen.' : 'Bitte wählen Sie ein Schulungszeitraum aus, an welchen Tagen eine Durchführung mit Ihrem gesamten pädagogischen Team möglich ist. Schulungsort ist voraussichtlich in der Nähe des Anhalter Bahnhofs.'"/>
+                                <InfoMessage :text="isNewKitaWasLarge ? 'Wählen Sie bitte nachfolgend zwei direkt aufeinanderfolgende Schulungstermine aus. Wenn für Sie zwei aufeinanderfolgende Termine nicht möglich sind, wählen Sie bitte zwei Tage aus, die weniger als 7 Tage auseinander liegen. Es handelt sich dabei um Terminvorschläge, die Sie einreichen. Eine Bestätigung der Schulungstermine findet erst statt, wenn sich ein BeoKiz-Multiplikator für Ihren Terminvorschlag gefunden hat und dieser Kontakt mit Ihnen aufgenommen hat.' : 'Bitte wählen Sie ein Schulungszeitraum aus, an welchen Tagen eine Durchführung mit Ihrem gesamten pädagogischen Team möglich ist. Schulungsort ist voraussichtlich in der Nähe des KiTeAro Akademie - Stromstr. 38 - 10551 Berlin.'"/>
                             </v-col>
                         </v-row>
                     </v-fade-transition>

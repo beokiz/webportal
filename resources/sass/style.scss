@@ -59,7 +59,7 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-h3{
+h3:not(.registration-training-heading){
     margin-bottom: 20px !important;
     font-size: 22px !important;
 }
@@ -116,4 +116,8 @@ div#stripe-cardElement {
 
 .guest-layout-custom-html p:not(:nth-last-of-type(1)) {
     margin-bottom: 20px;
+}
+
+.v-date-picker-header__append {
+    display: none !important;
 }

@@ -106,7 +106,16 @@ class TrainingProposalObserver extends BaseObserver
                     break;
                 case TrainingProposal::STATUS_CONFIRMED:
                     // Create a new Training proposal confirmation if it has not been created before
-                    $trainingProposal->kitas->each(function (Kita $kita) use ($trainingProposal) {
+                    $kitaLocations = [];
+
+                    $trainingProposal->kitas->each(function (Kita $kita) use ($trainingProposal, &$kitaLocations) {
+                        $kitaLocations[] = implode(', ', array_filter([
+                            trim("{$kita->street} {$kita->house_number}"),
+                            $kita->district,
+                            $kita->zip_code,
+                            $kita->city,
+                        ]));
+
                         $trainingProposalConfirmation = $trainingProposal->trainingProposalConfirmations
                             ->where('training_proposal_id', $trainingProposal->id)
                             ->where('kita_id', $kita->id)
@@ -119,20 +128,27 @@ class TrainingProposalObserver extends BaseObserver
                                 'token'                => Str::random(20),
                             ]);
                         } else {
-                            $trainingProposalConfirmation->update([
-                                'confirmed' => true,
-                            ]);
+//                            $trainingProposalConfirmation->update([
+//                                'confirmed' => true,
+//                            ]);
                         }
                     });
 
                     // Create new Training based on Training proposal
+                    if (!empty($kitaLocations)) {
+                        $location = count($kitaLocations) === 1 ? $kitaLocations[0] : __('crud.trainings.choose_location');
+                    } else {
+                        $location = __('crud.trainings.choose_location');
+                    }
+
                     $training = $trainingItemService->create([
+                        'training_proposal_id'           => $trainingProposal->id,
                         'multi_id'                       => $trainingProposal->multiplier->id,
                         'first_date'                     => $trainingProposal->first_date,
                         'first_date_start_and_end_time'  => null,
                         'second_date'                    => $trainingProposal->second_date,
                         'second_date_start_and_end_time' => null,
-                        'location'                       => $trainingProposal->location,
+                        'location'                       => !empty($trainingProposal->location) ? $trainingProposal->location : $location,
                         'max_participant_count'          => $trainingProposal->participant_count,
                         'participant_count'              => $trainingProposal->participant_count,
                         'type'                           => Training::TYPE_IN_HOUSE,
@@ -140,12 +156,12 @@ class TrainingProposalObserver extends BaseObserver
                         'notes'                          => $trainingProposal->notes,
                     ]);
 
-                    if (!empty($training)) {
-                        $trainingItemService->updateAttachedKitas(
-                            $training->id,
-                            $trainingProposal->kitas->pluck('id')->toArray()
-                        );
-                    }
+//                    if (!empty($training)) {
+//                        $trainingItemService->updateAttachedKitas(
+//                            $training->id,
+//                            $trainingProposal->kitas->pluck('id')->toArray()
+//                        );
+//                    }
                     break;
             }
         }

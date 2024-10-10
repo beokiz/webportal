@@ -8,6 +8,7 @@ namespace App\Services\Items;
 
 use App\Models\User;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -119,7 +120,8 @@ class UserItemService extends BaseItemService
                 return $this->update($user->id, $attributes);
             } else {
                 return $this->create(array_merge($attributes, [
-                    'password' => Str::random(20),
+                    'email_verified_at' => Carbon::now(),
+                    'password'          => Str::random(20),
                 ]));
             }
         } else {

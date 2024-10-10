@@ -189,7 +189,9 @@ class TrainingProposalsController extends BaseController
         $this->authorize('authorizeAccessToTrainingProposals', User::class);
 
         $attributes = $request->validated();
-        $result     = $this->trainingProposalItemService->create($attributes);
+        $result     = $this->trainingProposalItemService->create(array_merge($attributes, [
+            'status' => TrainingProposal::STATUS_OPEN,
+        ]));
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.training_proposals.create_success'))

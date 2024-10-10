@@ -303,7 +303,29 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendEmailVerifiedNotification() : void
     {
-        $this->notify(new EmailVerifiedNotification());
+        $this->loadMissing(['kitas.trainingProposals']);
+
+        $trainingProposalsData = [];
+
+        $this->kitas->each(function ($kita) use (&$trainingProposalsData) {
+            if ($kita->trainingProposals->isNotEmpty()) {
+                $counter = 0;
+
+                $kita->trainingProposals->each(function ($trainingProposal) use (&$trainingProposalsData, &$counter, $kita) {
+                    $counter++;
+
+                    $trainingProposalsData[] = __(
+                        $counter > 1 ? 'notifications.email_verified.other_training_item' : 'notifications.email_verified.first_training_item',
+                        [
+                            'first_date'  => $trainingProposal->first_date->format('d.m.Y'),
+                            'second_date' => $trainingProposal->second_date->format('d.m.Y'),
+                        ]
+                    );
+                });
+            }
+        });
+
+        $this->notify(new EmailVerifiedNotification($trainingProposalsData));
     }
 
     /**

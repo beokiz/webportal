@@ -60,11 +60,13 @@ return [
     */
 
     'email_verified' => [
-        'subject'     => sprintf("%s: Bestätigung Ihrer Anmeldung zur BeoKiz-Schulung", config('app.name')),
-        'greeting'    => "Sehr geehrte :name!",
-        'first_line'  => "Ihre Anmeldung zur BeoKiz-Schulung war erfolgreich! ",
-        'second_line' => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator:innen bald mit Ihnen in Verbindung setzen.",
-        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
+        'subject'             => sprintf("%s: Bestätigung Ihrer Anmeldung zur BeoKiz-Schulung", config('app.name')),
+        'greeting'            => "Sehr geehrte :name!",
+        'first_line'          => "Ihre Terminanfrage(n) zur BeoKiz-Schulung: \n :training_proposals",
+        'second_line'         => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator: innen bald mit Ihnen in Verbindung setzen.",
+        'salutation'          => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
+        'first_training_item' => "am :first_date und :second_date",
+        'other_training_item' => "oder am :first_date und :second_date",
     ],
 
     /*

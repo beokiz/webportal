@@ -273,6 +273,8 @@ return [
         'restore_success' => "The training has been restored successfully.",
         'restore_error'   => "Error! Something went wrong while restoring the training. Please try again later.",
         'restore_denied'  => "Error! The selected training cannot be restored.",
+
+        'choose_location'  => "[Ask for location at one of the daycare centers!]",
     ],
 
     /*

@@ -62,15 +62,15 @@ Route::group(['as' => 'main.', 'middleware' => []], function () {
 | Authentication, 2FA & verification routes
 |--------------------------------------------------------------------------
 */
-Route::group(['middleware' => ['guest']], function () {
-    Route::group(['as' => 'auth.'], function () {
+Route::group([], function () {
+    Route::group(['as' => 'auth.', 'middleware' => ['guest']], function () {
         Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
         Route::post('register', [RegisteredUserController::class, 'store'])->name('register_submit');
         Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
     });
 
-    Route::group(['as' => 'password.'], function () {
+    Route::group(['as' => 'password.', 'middleware' => ['guest']], function () {
         Route::get('reset-password', function () {
             return redirect()->route('auth.login');
         });
