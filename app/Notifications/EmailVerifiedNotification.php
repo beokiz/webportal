@@ -54,7 +54,7 @@ class EmailVerifiedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        if (is_array($this->data)) {
+        if (!empty($this->data) && is_array($this->data)) {
             $trainingProposals = count($this->data) > 1
                 ? "\n &#x2022; " . implode("\n &#x2022; ", (array) $this->data)
                 : "\n &#x2022; {$this->data[0]}";
@@ -69,7 +69,9 @@ class EmailVerifiedNotification extends Notification
             ->greeting(__('notifications.email_verified.greeting', [
                 'name' => $notifiable->full_name,
             ]))
-            ->line(__('notifications.email_verified.first_line', ['training_proposals' => $trainingProposals]))
+            ->line(__('notifications.email_verified.first_line', [
+                'training_proposals' => $trainingProposals,
+            ]))
             ->line(__('notifications.email_verified.second_line'))
             ->salutation(__('notifications.email_verified.salutation'));
     }

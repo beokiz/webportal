@@ -32,6 +32,10 @@ class CreateTrainingRequest extends BaseFormRequest
             'max_participant_count'          => array_merge($this->bigIntegerRules(), ['required']),
             'type'                           => ['required', Rule::in(Training::TYPES)],
 //            'status'                         => ['required', Rule::in(Training::STATUSES)],
+            'street'                         => array_merge($this->textRules(), ['required']),
+            'house_number'                   => array_merge($this->textRules(true), ['required']),
+            'zip_code'                       => array_merge($this->textRules(10), ['required']),
+            'city'                           => array_merge($this->textRules(), ['required']),
             'notes'                          => ['nullable', $this->bigTextRules()],
         ];
     }

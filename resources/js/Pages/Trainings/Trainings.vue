@@ -11,7 +11,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import VueTimepicker from 'vue3-timepicker';
 import { tr } from 'vuetify/locale';
 import { debounce } from 'lodash';
-import { formatDate, formatDateTime, prepareDate } from '@/Composables/common.js';
+import { formatDate, formatDateTime, prepareDate, getTrainingStatusIcon } from '@/Composables/common.js';
 
 const props = defineProps({
     items: Array,
@@ -100,14 +100,12 @@ const ntfKitas = ref([]);
 const headers = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: true },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
-    { title: 'Ort', key: 'location', width: '10%', sortable: true },
+    { title: 'Ort', key: 'location', width: '19%', sortable: true },
     { title: 'Teilnehmer ', key: 'prepared_participant_count', width: '5%', sortable: true },
     { title: 'Kita', key: 'kitas_list', width: '17%', sortable: false },
     { title: 'Typ', key: 'type', width: '7%', sortable: true },
-    { title: 'Status', key: 'status', width: '7%', sortable: true },
+    { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Multiplikator', key: 'multi_id', width: '7%', sortable: true },
-    { title: 'Notizen', key: 'notes', width: '15%', sortable: true },
-    { title: 'Erstellt am', key: 'created_at', width: '7%', sortable: true },
     { title: 'Geändert am', key: 'updated_at', width: '7%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
@@ -153,7 +151,7 @@ const someFiltersNotEmpty = computed(() => {
 const completedTrainingInfo = computed(() => {
     return [
         {
-            label: 'Erster Schukungstag',
+            label: 'Erster Schulungstag',
             value: `${prepareDate(selectedTraining.value?.first_date)} ${selectedTraining.value?.first_date_start_and_end_time}`,
         },
         {
@@ -162,14 +160,14 @@ const completedTrainingInfo = computed(() => {
         },
         {
             label: 'Ort',
-            value: selectedTraining.value?.location,
+            value: selectedTraining.value?.formatted_location,
         },
         {
             label: 'Typ',
             value: selectedTraining.value?.type,
         },
         {
-            label: 'Teinhemheranzahl',
+            label: 'Teilnehmerzahl',
             value: selectedTraining.value?.participant_count,
         },
     ];
@@ -376,10 +374,10 @@ const deleteTraining = async () => {
 
 const close = () => {
     dialog.value = false;
-    dialogDeleteTraining.value = false;
     confirmTrainingDialog.value = false;
     completeTrainingDialog.value = false;
     cancelTrainingDialog.value = false;
+    dialogDeleteTraining.value = false;
 
     manageForm.reset();
     manageForm.clearErrors();
@@ -409,7 +407,7 @@ const clear = () => {
 
 
 const manageForm = useForm({
-    multi_id: null,
+    multi_id: currentUser?.is_user_multiplier ? currentUser.id : null,
     first_date: null,
     first_date_start_and_end_time: '12:00',
     second_date: null,
@@ -419,14 +417,18 @@ const manageForm = useForm({
     // participant_count: null,
     type: null,
     // status: null,
+    street: null,
+    house_number: null,
+    zip_code: null,
+    city: null,
     notes: null,
 });
 
 const manageTraining = async () => {
     manageForm.processing = true;
 
-    manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
-    manageForm.second_date = secondDateField.value ? new Date(secondDateField.value).toLocaleString() : null;
+    manageForm.first_date = firstDateField.value ? new Date(new Date(firstDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
+    manageForm.second_date = secondDateField.value ? new Date(new Date(secondDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
 
     manageForm.post(route('trainings.store'), {
         onSuccess: (page) => {
@@ -530,7 +532,7 @@ const manageTrainingStatus = async (status) => {
             <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Schulungen</h2>
 
             <div class="tw-flex tw-items-center tw-justify-end">
-                <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
+                <v-hover v-slot:default="{ isHovering, props }">
                     <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
                         Anlegen
 
@@ -649,7 +651,7 @@ const manageTrainingStatus = async (status) => {
                                                     item-title="full_name"
                                                     item-value="id"
                                                     label="Multiplikator*"
-                                                    :disabled="loading"
+                                                    :disabled="loading || $page.props.auth.user.is_user_multiplier"
                                                     clearable
                                                 ></v-select>
                                             </v-col>
@@ -666,6 +668,48 @@ const manageTrainingStatus = async (status) => {
 <!--                                                  clearable-->
 <!--                                              ></v-select>-->
 <!--                                            </v-col>-->
+                                        </v-row>
+
+                                        <v-row>
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.street"
+                                                    :error-messages="errors.street"
+                                                    label="Straße*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.house_number"
+                                                    :error-messages="errors.house_number"
+                                                    label="Hausnummer*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.zip_code"
+                                                    :error-messages="errors.zip_code"
+                                                    label="Postleitzahl*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.city"
+                                                    :error-messages="errors.city"
+                                                    label="Stadt*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
                                         </v-row>
 
                                         <v-row>
@@ -708,7 +752,7 @@ const manageTrainingStatus = async (status) => {
                 </v-hover>
             </div>
 
-            <v-dialog v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-model="dialogDeleteTraining" width="20vw">
+            <v-dialog v-model="dialogDeleteTraining" width="20vw">
                 <v-card height="30vh">
                     <v-card-text>
                         <v-container>
@@ -892,11 +936,11 @@ const manageTrainingStatus = async (status) => {
             >
                 <template v-slot:item="{ item }">
                     <tr :data-id="item.id" :data-order="item.order">
-                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
+                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'de-DE')}}</td>
 
-                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
+                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'de-DE')}}</td>
 
-                        <td>{{item.location}}</td>
+                        <td>{{item.formatted_location}}</td>
 
                         <td>{{item.prepared_participant_count}}</td>
 
@@ -904,15 +948,20 @@ const manageTrainingStatus = async (status) => {
 
                         <td>{{item.formatted_type}}</td>
 
-                        <td>{{item.formatted_status}}</td>
+                        <td>
+                            <v-tooltip location="top">
+                                <template v-slot:activator="{ props }">
+                                    <span class="tw-cursor-pointer">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingStatusIcon(item.status)}}</v-icon>
+                                    </span>
+                                </template>
+                                <span>{{item.formatted_status}}</span>
+                            </v-tooltip>
+                        </td>
 
                         <td>{{item?.multiplier ? item?.multiplier?.full_name : '-'}}</td>
 
-                        <td>{{item.notes}}</td>
-
-                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
-
-                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
+                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
                         <td class="text-center">
                             <template v-if="item.status === 'planned'">

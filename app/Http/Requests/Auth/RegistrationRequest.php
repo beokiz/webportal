@@ -56,7 +56,7 @@ class RegistrationRequest extends BaseFormRequest
 
             if ($kitaType === Kita::TYPE_LARGE) {
                 $rules['kita.trainings.*.first_date']  = ['required', 'date'];
-                $rules['kita.trainings.*.second_date'] = ['required', 'date', 'different:kita.trainings.*.first_date']; // OLD: , new DateDifferenceRule('first_date', $this->input('first_date'), 7, 'less_than')
+                $rules['kita.trainings.*.second_date'] = ['required', 'date']; // OLD: 'different:kita.trainings.*.first_date', new DateDifferenceRule('first_date', $this->input('first_date'), 7, 'less_than')
             } else {
                 $rules['kita.training_id'] = ['required', $this->trainingExistRule()];
             }

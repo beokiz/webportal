@@ -531,7 +531,7 @@ const manageKita = async () => {
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
-            <div v-if="$page.props.auth.user.is_super_admin" class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
+            <div v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" class="tw-bg-white tw-flex tw-justify-between tw-px-6 tw-py-6">
                 <div class="tw-w-full">
                     <v-row>
                         <v-col cols="12" sm="4">
@@ -614,7 +614,7 @@ const manageKita = async () => {
                 </div>
             </div>
 
-            <div v-if="$page.props.auth.user.is_super_admin">
+            <div v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
                 <v-row class="flex justify-end mb-4">
                     <v-hover v-slot:default="{ isHovering, props }">
                         <v-col cols="12" sm="4" class="text-right">
@@ -664,7 +664,7 @@ const manageKita = async () => {
                         <td>{{item?.zip_code}}</td>
 
                         <td class="text-center">
-                            <template v-if="$page.props.auth.user.is_super_admin">
+                            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
                                 <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                     <template v-slot:activator="{ props }">
                                         <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">

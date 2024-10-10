@@ -18,6 +18,7 @@ const props = defineProps({
     types: Array,
     operators: Array,
     users: Array,
+    canBeEdited: Boolean,
     // Users table
     currentPage: Number,
     perPage: Number,
@@ -402,6 +403,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       :error-messages="errors.name"
                                       label="Name der Einrichtung / Einrichtung*"
                                       required
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
 
@@ -411,6 +413,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       label="Kita Nummer*"
                                       type="number"
                                       required
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -421,6 +424,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       :error-messages="errors.street"
                                       label="Straße*"
                                       required
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
 
@@ -429,6 +433,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       :error-messages="errors.house_number"
                                       label="Hausnummer*"
                                       required
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -439,6 +444,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       :error-messages="errors.additional_info"
                                       label="Sonstiges"
                                       required
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -450,6 +456,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       label="Postleitzahl*"
                                       type="number"
                                       required
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
 
@@ -458,6 +465,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       :error-messages="errors.city"
                                       label="Stadt*"
                                       required
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -478,6 +486,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             item-value="id"
                             label="Träger der Einrichtung*"
                             required
+                            :readonly="!canBeEdited"
                         ></v-select>
                     </v-col>
 
@@ -486,6 +495,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       :error-messages="errors.other_operator"
                                       label="Sonstiger Träger"
                                       :disabled="$page.props.auth.user.is_user_multiplier || manageForm.operator_id"
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
 
@@ -494,6 +504,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                       :error-messages="errors.num_pedagogical_staff"
                                       label="Größe pädagogisches Team"
                                       type="number"
+                                      :readonly="!canBeEdited"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -504,6 +515,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             v-model="manageForm.approved"
                             label="Kita zur Ampel zugelassen"
                             :value="true"
+                            :readonly="!canBeEdited"
                         ></v-checkbox>
                     </v-col>
 
@@ -514,15 +526,18 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             :error-messages="errors.type"
                             label="Größe der Einrichtung*"
                             required
+                            :readonly="!canBeEdited"
                         ></v-select>
                     </v-col>
                 </v-row>
 
                 <v-row>
                     <v-col cols="12" sm="6">
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
-                        </v-hover>
+                        <template v-if="canBeEdited">
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
+                            </v-hover>
+                        </template>
                     </v-col>
 
                     <v-col cols="12" sm="6" align="right">
@@ -531,11 +546,15 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>
-                        <v-hover v-slot:default="{ isHovering, props }">
-                            <v-btn-primary @click="manageKita" v-bind="props"
-                                           :color="isHovering ? 'accent' : 'primary'">Speichern
-                            </v-btn-primary>
-                        </v-hover>
+
+                        <template v-if="canBeEdited">
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn-primary @click="manageKita" v-bind="props"
+                                               :color="isHovering ? 'accent' : 'primary'">
+                                    Speichern
+                                </v-btn-primary>
+                            </v-hover>
+                        </template>
                     </v-col>
                 </v-row>
             </v-container>

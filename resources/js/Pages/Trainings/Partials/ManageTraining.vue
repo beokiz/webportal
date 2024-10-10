@@ -79,7 +79,7 @@ const ntfKitas = ref([]);
 
 const completedTrainingInfo = ref([
     {
-        label: 'Erster Schukungstag',
+        label: 'Erster Schulungstag',
         value: `${prepareDate(editedTraining.value?.first_date)} ${editedTraining.value?.first_date_start_and_end_time}`,
     },
     {
@@ -88,14 +88,14 @@ const completedTrainingInfo = ref([
     },
     {
         label: 'Ort',
-        value: editedTraining.value?.location,
+        value: editedTraining.value?.formatted_location,
     },
     {
         label: 'Typ',
         value: editedTraining.value?.type,
     },
     {
-        label: 'Teinhemheranzahl',
+        label: 'Teilnehmerzahl',
         value: editedTraining.value?.participant_count,
     },
 ]);
@@ -118,11 +118,12 @@ watch(secondDateField, (val) => {
 const close = () => {
     dialog.value = false;
     selectedKitaName.value = null;
-    addKitaToTrainingDialog.value = false;
-    removeKitaFromTrainingDialog.value = false;
+
     confirmTrainingDialog.value = false;
     completeTrainingDialog.value = false;
     cancelTrainingDialog.value = false;
+    addKitaToTrainingDialog.value = false;
+    removeKitaFromTrainingDialog.value = false;
 
     manageStatusForm.reset();
     manageStatusForm.clearErrors();
@@ -150,22 +151,26 @@ const manageForm = useForm({
     id: editedTraining.value?.id,
     multi_id: editedTraining.value?.multi_id,
     first_date: editedTraining.value?.first_date,
-    first_date_start_and_end_time: editedTraining.value?.first_date_start_and_end_time,
+    first_date_start_and_end_time: editedTraining.value?.first_date_start_and_end_time ?? '',
     second_date: editedTraining.value?.second_date,
-    second_date_start_and_end_time: editedTraining.value?.second_date_start_and_end_time,
+    second_date_start_and_end_time: editedTraining.value?.second_date_start_and_end_time ?? '',
     location: editedTraining.value?.location,
     max_participant_count: editedTraining.value?.max_participant_count,
     // participant_count: currentParticipantCount,
     type: editedTraining.value?.type,
     // status: editedTraining.value?.status,
+    street: editedTraining.value?.street,
+    house_number: editedTraining.value?.house_number,
+    zip_code: editedTraining.value?.zip_code,
+    city: editedTraining.value?.city,
     notes: editedTraining.value?.notes,
 });
 
 const manageTraining = async () => {
     manageForm.processing = true;
 
-    manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
-    manageForm.second_date = secondDateField.value ? new Date(secondDateField.value).toLocaleString() : null;
+    manageForm.first_date = firstDateField.value ? new Date(new Date(firstDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
+    manageForm.second_date = secondDateField.value ? new Date(new Date(secondDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
 
     let formOptions = {
         // preserveState: false,
@@ -596,7 +601,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                                        :disabled="loading"
                                     ></v-text-field>
                                 </template>
                                 <v-date-picker @update:modelValue="isFirstDateFieldOpened = false" v-model="firstDateField"></v-date-picker>
@@ -612,7 +617,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         :format="'HH:mm'"
                                         :hourLabel="'Std.'"
                                         :minuteLabel="'Protokoll'"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier">
+                                        :disabled="loading">
                         </vue-timepicker>
                     </v-col>
                 </v-row>
@@ -632,7 +637,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         prepend-icon="mdi-calendar"
                                         readonly
                                         v-bind="props"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                                        :disabled="loading"
                                     ></v-text-field>
                                 </template>
                                 <v-date-picker @update:modelValue="isSecondDateFieldOpened = false" v-model="secondDateField"></v-date-picker>
@@ -648,7 +653,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         :format="'HH:mm'"
                                         :hourLabel="'Std.'"
                                         :minuteLabel="'Protokoll'"
-                                        :disabled="loading || $page.props.auth.user.is_user_multiplier">
+                                        :disabled="loading">
                         </vue-timepicker>
                     </v-col>
                 </v-row>
@@ -660,7 +665,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             v-model="editedTraining.participant_count"
                             :error-messages="errors.participant_count"
                             label="Teilnehmerzahl*"
-                            :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                            :disabled="loading"
                             readonly
                         ></v-text-field>
                     </v-col>
@@ -676,7 +681,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             :error-messages="errors.max_participant_count"
                             label="Max. Teilnehmerzahl*"
                             clearable
-                            :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                            :disabled="loading"
                         ></v-text-field>
                     </v-col>
 
@@ -688,7 +693,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             item-title="title"
                             item-value="value"
                             label="Typ*"
-                            :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                            :disabled="loading"
                             clearable
                         ></v-select>
                     </v-col>
@@ -721,12 +726,54 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
 
                 <v-row>
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.street"
+                            :error-messages="errors.street"
+                            label="Straße*"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.house_number"
+                            :error-messages="errors.house_number"
+                            label="Hausnummer*"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.zip_code"
+                            :error-messages="errors.zip_code"
+                            label="Postleitzahl*"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="3">
+                        <v-text-field
+                            v-model="manageForm.city"
+                            :error-messages="errors.city"
+                            label="Stadt*"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+
+                <v-row>
                     <v-col cols="12" sm="6">
                         <v-textarea v-model="manageForm.location"
                                     :error-messages="errors.location"
                                     label="Ort*"
                                     required
-                                    :disabled="loading || $page.props.auth.user.is_user_multiplier">
+                                    :disabled="loading">
                         </v-textarea>
                     </v-col>
 
@@ -735,14 +782,14 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                     :error-messages="errors.notes"
                                     label="Notizen"
                                     required
-                                    :disabled="loading || $page.props.auth.user.is_user_multiplier">
+                                    :disabled="loading">
                         </v-textarea>
                     </v-col>
                 </v-row>
 
                 <v-row>
                     <v-col cols="12" sm="6">
-                        <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
+                        <v-hover v-slot:default="{ isHovering, props }">
                             <v-btn @click="clear" v-bind="props" :color="isHovering ? 'primary' : 'accent'">Zurücksetzen</v-btn>
                         </v-hover>
                     </v-col>
@@ -754,7 +801,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             </Link>
                         </v-hover>
 
-                        <v-hover v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" v-slot:default="{ isHovering, props }">
+                        <v-hover v-slot:default="{ isHovering, props }">
                             <v-btn-primary @click="manageTraining" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
                                 Speichern
                             </v-btn-primary>
@@ -899,7 +946,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <td>{{item?.zip_code}}</td>
 
                                         <td class="text-center">
-                                              <template v-if="$page.props.auth.user.is_super_admin">
+                                              <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
                                                   <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                       <template v-slot:activator="{ props }">
                                                           <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">

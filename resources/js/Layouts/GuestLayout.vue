@@ -14,6 +14,7 @@ const props = defineProps({
 const isRegisterPage = route().current('auth.register');
 const isVerifyEmailPage = route().current('verification.notice');
 const isVerifiedNoticePage = route().current('verification.verified_notice');
+const isVerifiedTrainingProposalPage = route().current('training_proposals.confirm');
 </script>
 
 <template>
@@ -22,7 +23,7 @@ const isVerifiedNoticePage = route().current('verification.verified_notice');
             <div class="guest-layout-custom-html" v-html="additionalHtml"></div>
         </div>
 
-        <div v-if="!isRegisterPage && !isVerifyEmailPage && !isVerifiedNoticePage">
+        <div v-if="!isRegisterPage && !isVerifyEmailPage && !isVerifiedNoticePage && !isVerifiedTrainingProposalPage">
             <Link href="/">
                 <ApplicationLogo class="tw-h-20 tw-fill-current tw-text-gray-500" />
             </Link>
@@ -30,9 +31,9 @@ const isVerifiedNoticePage = route().current('verification.verified_notice');
 
         <div class="tw-w-full tw-mt-6 tw-px-6 tw-py-4 tw-bg-white tw-shadow-md tw-overflow-hidden sm:tw-rounded-lg"
              :class="{
-                 'sm:tw-max-w-md': !isRegisterPage && !isVerifyEmailPage && !isVerifiedNoticePage,
+                 'sm:tw-max-w-md': !isRegisterPage && !isVerifyEmailPage && !isVerifiedNoticePage && !isVerifiedTrainingProposalPage,
                  'sm:tw-max-w-7xl': isRegisterPage || isVerifyEmailPage,
-                 'sm:tw-max-w-3xl': isVerifiedNoticePage,
+                 'sm:tw-max-w-3xl': isVerifiedNoticePage || isVerifiedTrainingProposalPage,
              }"
         >
             <slot />

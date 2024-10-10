@@ -686,7 +686,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                     <td>{{item?.zip_code}}</td>
 
                                     <td class="text-center">
-                                          <template v-if="$page.props.auth.user.is_super_admin">
+                                          <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
                                               <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                   <template v-slot:activator="{ props }">
                                                       <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">

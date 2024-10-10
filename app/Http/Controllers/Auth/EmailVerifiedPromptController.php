@@ -44,21 +44,29 @@ class EmailVerifiedPromptController extends BaseController
             $user = User::find($args['user_id']);
 
             if (!empty($user)) {
-                $user->loadMissing(['kitas.trainingProposals', 'kitas.trainings']);
+                $user->loadMissing(['kitas.operator.users', 'kitas.trainingProposals', 'kitas.trainings']);
 
                 $trainingItems = collect();
 
-                $user->kitas->each(function ($kita) use (&$trainingItems) {
+                $user->kitas->each(function ($kita) use (&$trainingItems, &$operatorItems) {
                     if ($kita->trainings->isNotEmpty()) {
                         $trainingItems->push(...$kita->trainings);
                     } else {
                         $trainingItems->push(...$kita->trainingProposals);
                     }
+
+                    // Send operator multipliers notifications
+                    if (!empty($kita->operator->users) && $kita->operator->users->isNotEmpty()) {
+                        $kita->operator->users->each(function ($user) use ($kita) {
+                            $user->sendNewOperatorKitaNotification([
+                                'kita_name'     => $kita->name,
+                                'operator_name' => $kita->operator->name,
+                            ]);
+                        });
+                    }
                 });
 
-                return Inertia::render('Auth/Verified', [
-                    'trainingItems' => $trainingItems,
-                ]);
+                return Inertia::render('Auth/Verified');
             }
         }
 

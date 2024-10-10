@@ -125,6 +125,15 @@ return [
         'third_line'  => "Falls Diese Zuordnung Ihrer Meinung nach ein Fehler ist, kontaktieren Sie bitte unseren Support unter <:support_email>",
     ],
 
+    'new_operator_kita' => [
+        'subject'     => sprintf("%s: Schulungswunsch der Kita :kita_name", config('app.name')),
+        'greeting'    => "Hallo liebe Multiplikator*innen vom Träger :operator_name,",
+        'first_line'  => "im BeoKiz-Anmeldeportal hat sich die Kita :kita_name für eine BeoKiz Schulung anmelden wollen.",
+        'second_line' => "Die Kita hat vom System automatisch eine Mail erhalten, in der sie darauf hingewiesen wurde, dass Ihr Euch – in Eurer Funktion als Träger-Multis - bei der Kita melden werden, um weitere Schritte abzustimmen.",
+        'third_line'  => "Wenn ihr einen Schulungstermin mit der Kita abgesprochen habt, legt diesen bitte selbst im Portal an.",
+        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Yearly Evaluation Reminder Notification Lines
@@ -184,8 +193,9 @@ return [
         'subject'     => sprintf("%s: Bestätigung des Terminvorschlags am :first_date und :second_date", config('app.name')),
         'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita, ",
         'first_line'  => "Bitte bestätigen Sie den vorgeschlagenen Schulungstermin durch Klicken auf den folgenden Link: :confirmation_link",
-        'second_line' => "Schulungstage: :first_date und :second_date jeweils von 09 bis 15 Uhr  \nOrt: :location  <br/> Ihr Multiplikator: :multiplier_name ",
+        'second_line' => "Schulungstage: :first_date und :second_date jeweils von 09 bis 17 Uhr  \nOrt: :location  <br/> Ihr Multiplikator: :multiplier_name ",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
+        'copy_label'  => 'Kopie',
     ],
 
 ];

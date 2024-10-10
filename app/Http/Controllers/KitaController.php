@@ -162,6 +162,18 @@ class KitaController extends BaseController
             $operators = $operatorItemService->collection();
         }
 
+        //
+        if ($currentUser->is_super_admin || $currentUser->is_admin || $currentUser->is_manager) {
+            $canBeEdited = true;
+        } else {
+            $currentUser->loadMissing(['operators.kitas']);
+
+            $canBeEdited = optional($currentUser->operators)->pluck('kitas.*.id')
+                ->flatten()
+                ->unique()
+                ->contains($kita->id);
+        }
+
         return Inertia::render('Kitas/Partials/ManageKita', [
             'filters'     => $request->only(['status', 'first_name', 'last_name', 'email', 'with_roles']),
             'kita'        => $kita,
@@ -176,6 +188,7 @@ class KitaController extends BaseController
                     'value' => $type,
                 ];
             }, Kita::TYPES),
+            'canBeEdited' => $canBeEdited,
         ]);
     }
 

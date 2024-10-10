@@ -126,6 +126,15 @@ return [
         'third_line'  => "If you believe this assignment is an error, please contact our support at <:support_email>",
     ],
 
+    'new_operator_kita' => [
+        'subject'     => sprintf("%s: Training request from the daycare center :kita_name", config('app.name')),
+        'greeting'    => "Hello dear multipliers from the provider :operator_name,",
+        'first_line'  => "in the BeoKiz registration portal, the :kita_name daycare center wanted to register for a BeoKiz training course.",
+        'second_line' => "The daycare center automatically received an email from the system informing them that you - in your role as provider multipliers - will contact the daycare center to coordinate further steps.",
+        'third_line'  => "If you have agreed on a training date with the daycare center, please create it yourself in the portal.",
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Yearly Evaluation Reminder Notification Lines
@@ -187,6 +196,7 @@ return [
         'first_line'  => "Please confirm the proposed training date by clicking on the following link: :confirmation_link",
         'second_line' => "Training days: :first_date and :second_date from 9 a.m. to 3 p.m. \nLocation: :location \nMultiplier: :multiplier_name",
         'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+        'copy_label'  => 'Copy',
     ],
 
 ];

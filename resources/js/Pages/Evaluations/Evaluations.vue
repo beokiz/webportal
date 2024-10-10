@@ -293,11 +293,11 @@ const unfinishedEvaluation = async (id) => {
                     <tr :data-id="item.id" :data-order="item.order">
                         <td>{{`${item.kita.formatted_name}_${item.custom_unique_id}`}}</td>
 
-                        <td>{{formatDateTime(item.updated_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.updated_at, 'de-DE')}}</td>
 
-                        <td>{{formatDateTime(item.finished_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.finished_at, 'de-DE')}}</td>
 
-                        <td>{{formatDateTime(item.not_editable_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.not_editable_at, 'de-DE')}}</td>
 
                         <td align="center">
                             <v-tooltip v-if="item.editable && ($page.props.auth.user.is_manager || $page.props.auth.user.is_employer)" location="top">

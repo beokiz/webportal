@@ -91,7 +91,10 @@ class TrainingFilter extends BaseFilter
      */
     public function location(string $value) : ModelFilter
     {
-        return parent::stringFilter('location', $value);
+//        return parent::stringFilter('location', $value);
+        return $this->whereRaw("CONCAT(location, ' - ', street, ' ', house_number, ' ', zip_code, ' ', city) LIKE ?",
+            ["%{$value}%"]
+        );
     }
 
     /**

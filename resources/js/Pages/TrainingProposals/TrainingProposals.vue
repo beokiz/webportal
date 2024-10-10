@@ -8,10 +8,9 @@ import { computed, ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import VueTimepicker from 'vue3-timepicker';
 import { tr } from 'vuetify/locale';
 import { debounce } from 'lodash';
-import { formatDate, formatDateTime, prepareDate } from '@/Composables/common.js';
+import { formatDate, formatDateTime, prepareDate, getTrainingProposalStatusIcon } from '@/Composables/common.js';
 
 const props = defineProps({
     items: Array,
@@ -97,11 +96,10 @@ const selectedTrainingProposalKitas = ref([]);
 const mainTableHeaders = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: true },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
-    { title: 'Ort', key: 'location', width: '10%', sortable: true },
+    { title: 'Ort', key: 'location', width: '25%', sortable: true },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: true },
-    { title: 'Kita', key: 'kitas_list', width: '20%', sortable: false },
-    { title: 'Status', key: 'status', width: '10%', sortable: true },
-    { title: 'Erstellt am', key: 'created_at', width: '16%', sortable: true },
+    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
@@ -109,11 +107,10 @@ const mainTableHeaders = [
 const additionalTableHeaders = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: false },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: false },
-    { title: 'Ort', key: 'location', width: '10%', sortable: false },
+    { title: 'Ort', key: 'location', width: '25%', sortable: false },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: false },
-    { title: 'Kita', key: 'kitas_list', width: '20%', sortable: false },
-    { title: 'Status', key: 'status', width: '10%', sortable: false },
-    { title: 'Erstellt am', key: 'created_at', width: '16%', sortable: false },
+    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'Status', key: 'status', width: '5%', sortable: false },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
@@ -160,31 +157,6 @@ const someFiltersNotEmpty = computed(() => {
         multiIdFilter.value !== null ||
         statusFilter.value !== null ||
         kitaIdFilter.value !== null;
-});
-
-const completedTrainingInfo = computed(() => {
-    return [
-        {
-            label: 'Erster Schukungstag',
-            value: `${prepareDate(selectedTrainingProposal.value?.first_date)} ${selectedTrainingProposal.value?.first_date_start_and_end_time}`,
-        },
-        {
-            label: 'Zweiter Schulungstag',
-            value: `${prepareDate(selectedTrainingProposal.value?.second_date)} ${selectedTrainingProposal.value?.second_date_start_and_end_time}`,
-        },
-        {
-            label: 'Ort',
-            value: selectedTrainingProposal.value?.location,
-        },
-        {
-            label: 'Typ',
-            value: selectedTrainingProposal.value?.type,
-        },
-        {
-            label: 'Teinhemheranzahl',
-            value: selectedTrainingProposal.value?.participant_count,
-        },
-    ];
 });
 
 // Watch
@@ -379,9 +351,12 @@ const deleteTrainingProposal = async () => {
 
 const close = () => {
     dialog.value = false;
-    dialogDeleteTrainingProposal.value = false;
     acceptTrainingProposalDialog.value = false;
     revokeTrainingProposalDialog.value = false;
+    confirmTrainingProposalDialog.value = false;
+    addMultiplierToTrainingProposalDialog.value = false;
+    addKitaToTrainingProposalDialog.value = false;
+    removeKitaFromTrainingProposalDialog.value = false;
 
     manageForm.reset();
     manageForm.clearErrors();
@@ -417,14 +392,18 @@ const manageForm = useForm({
     location: null,
     participant_count: null,
     // status: null,
+    street: null,
+    house_number: null,
+    zip_code: null,
+    city: null,
     notes: null,
 });
 
 const manageTrainingProposal = async () => {
     manageForm.processing = true;
 
-    manageForm.first_date = firstDateField.value ? new Date(firstDateField.value).toLocaleString() : null;
-    manageForm.second_date = secondDateField.value ? new Date(secondDateField.value).toLocaleString() : null;
+    manageForm.first_date = firstDateField.value ? new Date(new Date(firstDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
+    manageForm.second_date = secondDateField.value ? new Date(new Date(secondDateField.value).setHours(12, 0, 0, 0)).toISOString() : null;
 
     manageForm.post(route('training_proposals.store'), {
         onSuccess: (page) => {
@@ -557,6 +536,48 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                                     v-model="manageForm.participant_count"
                                                     :error-messages="errors.participant_count"
                                                     label="Teilnehmerzahl*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.street"
+                                                    :error-messages="errors.street"
+                                                    label="Straße*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.house_number"
+                                                    :error-messages="errors.house_number"
+                                                    label="Hausnummer*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.zip_code"
+                                                    :error-messages="errors.zip_code"
+                                                    label="Postleitzahl*"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="3">
+                                                <v-text-field
+                                                    v-model="manageForm.city"
+                                                    :error-messages="errors.city"
+                                                    label="Stadt*"
                                                     :disabled="loading"
                                                     clearable
                                                 ></v-text-field>
@@ -773,21 +794,28 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
             >
                 <template v-slot:item="{ item }">
                     <tr :data-id="item.id" :data-order="item.order">
-                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
+                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'de-DE')}}</td>
 
-                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
+                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'de-DE')}}</td>
 
-                        <td>{{item.location}}</td>
+                        <td>{{item.formatted_location}}</td>
 
                         <td>{{item.participant_count}}</td>
 
                         <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-                        <td>{{item.formatted_status}}</td>
+                        <td>
+                            <v-tooltip location="top">
+                                <template v-slot:activator="{ props }">
+                                    <span class="tw-cursor-pointer">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>
+                                    </span>
+                                </template>
+                                <span>{{item.formatted_status}}</span>
+                            </v-tooltip>
+                        </td>
 
-                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
-
-                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
+                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
                         <td class="text-center">
                             <template v-if="item.status === 'open' && ($page.props.auth.user.is_user_multiplier)">
@@ -797,7 +825,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-plus-circle-outline</v-icon>
                                         </span>
                                     </template>
-                                    <span>Termin bestätigen</span>
+                                    <span>Termin reservieren</span>
                                 </v-tooltip>
                             </template>
                             <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
@@ -872,21 +900,28 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                 >
                     <template v-slot:item="{ item }">
                         <tr :data-id="item.id" :data-order="item.order">
-                            <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
+                            <td>{{!item.first_date || item.first_date === '-' ? 'item.first_date' : formatDate(item.first_date, 'de-DE')}}</td>
 
-                            <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
+                            <td>{{!item.second_date || item.second_date === '-' ? 'item.second_date' : formatDate(item.second_date, 'de-DE')}}</td>
 
-                            <td>{{item.location}}</td>
+                            <td>{{item.formatted_location}}</td>
 
                             <td>{{item.participant_count}}</td>
 
                             <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-                            <td>{{item.formatted_status}}</td>
+                            <td>
+                                <v-tooltip location="top">
+                                    <template v-slot:activator="{ props }">
+                                        <span class="tw-cursor-pointer">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>
+                                        </span>
+                                    </template>
+                                    <span>{{item.formatted_status}}</span>
+                                </v-tooltip>
+                            </td>
 
-                            <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
-
-                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
+                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
                             <td class="text-center">
                                 <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">

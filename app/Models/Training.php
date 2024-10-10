@@ -54,11 +54,15 @@ class Training extends Model
         'first_date_start_and_end_time',
         'second_date',
         'second_date_start_and_end_time',
-        'location',
         'max_participant_count',
         'participant_count',
         'type',
         'status',
+        'location',
+        'street',
+        'house_number',
+        'zip_code',
+        'city',
         'notes',
     ];
 
@@ -88,6 +92,7 @@ class Training extends Model
         'available_participant_count',
         'formatted_type',
         'formatted_status',
+        'formatted_location',
         'kitas_list',
     ];
 
@@ -126,6 +131,31 @@ class Training extends Model
     /**
      * @return Attribute
      */
+    public function formattedLocation() : Attribute
+    {
+        return Attribute::make(
+            get: function($value, $attributes) {
+                if (!empty($attributes['location']) || !empty($attributes['street']) || !empty($attributes['house_number']) || !empty($attributes['zip_code']) || !empty($attributes['city'])) {
+                    $address = implode(', ', array_filter([
+                        trim(trim($attributes['street']) . ' ' . trim($attributes['house_number']) . ' ' . trim($attributes['zip_code'])),
+                        trim($attributes['city']),
+                    ]));
+
+                    if (!empty($attributes['location']) && !empty($address)) {
+                        return "{$attributes['location']} - {$address}";
+                    } else {
+                        return !empty($attributes['location']) ? $attributes['location'] : $address;
+                    }
+                } else {
+                    return null;
+                }
+            },
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
     public function formattedStatus() : Attribute
     {
         return Attribute::make(
@@ -149,11 +179,11 @@ class Training extends Model
     public function getNotificationsData() : array
     {
         return [
-            'first_date'                     => $this->first_date->format('Y-m-d'),
+            'first_date'                     => $this->first_date->format('d.m.Y'),
             'first_date_start_and_end_time'  => $this->first_date_start_and_end_time,
-            'second_date'                    => $this->second_date->format('Y-m-d'),
+            'second_date'                    => $this->second_date->format('d.m.Y'),
             'second_date_start_and_end_time' => $this->second_date_start_and_end_time,
-            'location'                       => $this->location,
+            'location'                       => $this->formatted_location,
             'multiplier_name'                => optional($this->multiplier)->full_name,
         ];
     }

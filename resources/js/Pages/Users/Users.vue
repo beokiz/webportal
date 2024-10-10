@@ -557,9 +557,9 @@ const sendVerificationLink = async (item) => {
 
                         <td>{{item.primary_role_human_name}}</td>
 
-                        <td>{{!item.last_seen_at || item.last_seen_at === '-' ? item.last_seen_at : formatDateTime(item.last_seen_at, 'sv-SE')}}</td>
+                        <td>{{!item.last_seen_at || item.last_seen_at === '-' ? item.last_seen_at : formatDateTime(item.last_seen_at, 'de-DE')}}</td>
 
-                        <td>{{!item.first_login_at || item.first_login_at === '-' ? item.first_login_at : formatDate(item.first_login_at, 'fr-CA')}}</td>
+                        <td>{{!item.first_login_at || item.first_login_at === '-' ? item.first_login_at : formatDate(item.first_login_at, 'de-DE')}}</td>
 
                         <td class="tw-text-center">
                             <v-tooltip v-if="($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin) && (!item.email_verified_at || item.email_verified_at === '-')" location="top">
