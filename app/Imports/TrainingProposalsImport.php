@@ -45,7 +45,7 @@ class TrainingProposalsImport implements ToCollection
      */
     private function processRow(array $row)
     {
-        $isDevMode = config('app.env') !== 'production';
+        $isDevMode = true; // OLD: config('app.env') !== 'production'
 
         $kitaItemService             = app(KitaItemService::class);
         $roleItemService             = app(RoleItemService::class);
