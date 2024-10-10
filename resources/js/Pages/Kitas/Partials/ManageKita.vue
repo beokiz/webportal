@@ -857,11 +857,11 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         </v-card-text>
 
                         <v-card-actions>
-                            <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
-                                    Abbrechen
-                                </v-btn>
-                            </v-hover>
+<!--                            <v-hover v-slot:default="{ isHovering, props }">-->
+<!--                                <v-btn @click="close" v-bind="props" :color="isHovering ? 'accent' : 'primary'">-->
+<!--                                    Abbrechen-->
+<!--                                </v-btn>-->
+<!--                            </v-hover>-->
                             <v-spacer></v-spacer>
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn-primary :href="`mailto:?bcc=${selectedUsersEmails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="!selectedUsersEmails.length">

@@ -32,7 +32,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                $targetUrl = redirect()->intended()->getTargetUrl();
+
+                return !empty($targetUrl)
+                    ? redirect()->intended(prepare_intended_path($targetUrl))
+                    : redirect(RouteServiceProvider::HOME);
             }
         }
 

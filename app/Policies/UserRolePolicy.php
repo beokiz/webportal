@@ -7,6 +7,7 @@
 namespace App\Policies;
 
 use App\Models\SurveyTimePeriod;
+use App\Models\TrainingProposal;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -372,5 +373,36 @@ class UserRolePolicy extends BasePolicy
         $roles = config('permission.project_roles');
 
         return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['user_multiplier']]);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToTrainingProposals(User $user) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        return $this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['user_multiplier']]);
+    }
+
+    /**
+     * @param User             $user
+     * @param TrainingProposal $trainingProposal
+     * @return bool
+     */
+    public function authorizeAccessToSingleTrainingProposal(User $user, TrainingProposal $trainingProposal) : bool
+    {
+        $roles = config('permission.project_roles');
+
+        if ($this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin']])) {
+            return true;
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['user_multiplier']])) {
+            return $trainingProposal->multi_id === $user->id;
+        }
+
+        return false;
     }
 }

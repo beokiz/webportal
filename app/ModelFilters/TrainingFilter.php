@@ -35,6 +35,17 @@ class TrainingFilter extends BaseFilter
     }
 
     /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withMultipliers($values) : ModelFilter
+    {
+        return $this->whereHas('multiplier', function ($query) use ($values) {
+            $query->whereIn('id', (array) $values);
+        });
+    }
+
+    /**
      * @param string $value
      * @return mixed
      */
@@ -90,17 +101,6 @@ class TrainingFilter extends BaseFilter
     public function type($values) : ModelFilter
     {
         return $this->whereIn('type', (array) $values);
-    }
-
-    /**
-     * @param string|array $values
-     * @return ModelFilter
-     */
-    public function withMultipliers($values) : ModelFilter
-    {
-        return $this->whereHas('multiplier', function ($query) use ($values) {
-            $query->whereIn('id', (array) $values);
-        });
     }
 
     /**

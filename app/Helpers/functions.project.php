@@ -38,3 +38,14 @@ if (!function_exists('generate_custom_unique_id')) {
         return "{$adjectives[$adjectiveIndex]}_{$colors[$colorIndex]}_{$nouns[$nounIndex]}_{$nonceNumber}";
     }
 }
+
+if (!function_exists('prepare_intended_path')) {
+    /**
+     * @param string $targetUrl
+     * @return string
+     */
+    function prepare_intended_path(string $targetUrl) : string
+    {
+        return str_replace(config('app.url'), '', $targetUrl);
+    }
+}

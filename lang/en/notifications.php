@@ -113,7 +113,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'yearly_evaluation_reminder' => [
+    'yearly_evaluation_reminder'             => [
         'subject'     => sprintf("%s: Yearly evaluation reminder", config('app.name')),
         'greeting'    => "Dear facility manager,",
         'first_line'  => "The annual feedback on the statistical evaluation of the language proficiency assessment for children in daycare centers and childcare (status survey) for the daycare year :evaluation_year must be provided by :survey_end_date.",
@@ -129,16 +129,16 @@ return [
     */
 
     // 'confirmed' status notification
-    'training_confirmed'         => [
+    'training_confirmed'                     => [
         'subject'     => sprintf("%s: Confirmation of training dates on :first_date and :second_date", config('app.name')),
         'greeting'    => "Dear educational team of the daycare center,",
         'first_line'  => "We are pleased to inform you that your chosen training date has been confirmed.",
-        'second_line' => "1st training day: :first_date from :first_date_start_and_end_time  \n 2nd training day: :second_date from :second_date_start_and_end_time  \n Location: :location  \n Your facilitator: :multiplier_name",
+        'second_line' => "1st training day: :first_date from :first_date_start_and_end_time  \n2nd training day: :second_date from :second_date_start_and_end_time  \nLocation: :location  \nYour facilitator: :multiplier_name",
         'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
     ],
 
     // 'completed' status notification
-    'training_completed'         => [
+    'training_completed'                     => [
         'subject'     => sprintf("%s: Training successfully completed", config('app.name')),
         'greeting'    => "Dear educational team of the daycare center,",
         'first_line'  => "We are pleased to inform you that your training on :first_date and :second_date has been successfully completed.",
@@ -147,7 +147,7 @@ return [
     ],
 
     // 'cancelled' status notification
-    'training_cancelled'         => [
+    'training_cancelled'                     => [
         'subject'     => sprintf("%s: Cancellation of training dates on :first_date and :second_date", config('app.name')),
         'greeting'    => "Dear educational team of the daycare center,",
         'first_line'  => "Unfortunately, we have to inform you that the training dates on :first_date and :second_date have been cancelled.",
@@ -155,5 +155,19 @@ return [
         'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Training Proposal Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    // 'confirmation_pending' status notification
+    'training_proposal_confirmation_pending' => [
+        'subject'     => sprintf("%s: Confirmation of the date proposal on :first_date and :second_date", config('app.name')),
+        'greeting'    => "Dear educational team of the daycare center, ",
+        'first_line'  => "Please confirm the proposed training date by clicking on the following link: :confirmation_link",
+        'second_line' => "Training days: :first_date and :second_date from 9 a.m. to 3 p.m. \nLocation: :location \nMultiplier: :multiplier_name",
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+    ],
 
 ];

@@ -16,6 +16,7 @@ use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TrainingCancelledNotification;
 use App\Notifications\TrainingCompletedNotification;
 use App\Notifications\TrainingConfirmedNotification;
+use App\Notifications\TrainingProposalConfirmationPendingNotification;
 use App\Notifications\TwoFactorVerificationNotification;
 use App\Notifications\VerifyEmailNotification;
 use App\Notifications\WelcomeNotification;
@@ -375,6 +376,15 @@ class User extends Authenticatable
         $this->notify(new TrainingCancelledNotification($args));
     }
 
+    /**
+     * @param array $args
+     * @return void
+     */
+    public function sendTrainingProposalConfirmationPendingNotification(array $args) : void
+    {
+        $this->notify(new TrainingProposalConfirmationPendingNotification($args));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Define Model Relations
@@ -410,5 +420,13 @@ class User extends Authenticatable
     public function trainings() : HasMany
     {
         return $this->hasMany(Training::class, 'multi_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function trainingProposals() : HasMany
+    {
+        return $this->hasMany(TrainingProposal::class, 'multi_id', 'id');
     }
 }

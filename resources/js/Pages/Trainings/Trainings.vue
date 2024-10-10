@@ -866,7 +866,6 @@ const manageTrainingStatus = async (status) => {
                 item-value="name"
                 @update:options="goToPage"
             >
-
                 <template v-slot:item="{ item }">
                     <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
                         <td>{{!item.selectable.first_date || item.selectable.first_date === '-' ? item.selectable.first_date : formatDate(item.selectable.first_date, 'fr-CA')}}</td>
@@ -877,9 +876,9 @@ const manageTrainingStatus = async (status) => {
 
                         <td>{{item.selectable.prepared_participant_count}}</td>
 
-                        <td>{{item.selectable.type}}</td>
+                        <td>{{item.selectable.formatted_type}}</td>
 
-                        <td>{{item.selectable.status}}</td>
+                        <td>{{item.selectable.formatted_status}}</td>
 
                         <td>{{item.selectable?.multiplier ? item.selectable?.multiplier?.full_name : '-'}}</td>
 

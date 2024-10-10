@@ -260,16 +260,38 @@ return [
 
     'trainings' => [
         'create_success'  => "Das Training wurde erfolgreich erstellt.",
-        'create_error'    => "Fehler! Bei der Erstellung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'create_error'    => "Fehler! Bei der Erstellung des Trainings ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'update_success'  => "Das Training wurde erfolgreich aktualisiert.",
-        'update_error'    => "Fehler! Bei der Aktualisierung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'update_error'    => "Fehler! Bei der Aktualisierung des Trainings ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'update_denied'   => "Fehler! Das ausgewählte Training kann nicht aktualisiert werden.",
         'delete_success'  => "Das Training wurde erfolgreich gelöscht.",
-        'delete_error'    => "Fehler! Bei der Löschung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'delete_error'    => "Fehler! Bei der Löschung des Trainings ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'delete_denied'   => "Fehler! Das ausgewählte Training kann nicht gelöscht werden.",
         'restore_success' => "Das Training wurde erfolgreich wiederhergestellt.",
-        'restore_error'   => "Fehler! Bei der Wiederherstellung des Trainings ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+        'restore_error'   => "Fehler! Bei der Wiederherstellung des Trainings ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'restore_denied'  => "Fehler! Das ausgewählte Training kann nicht wiederhergestellt werden.",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Training Proposals CRUD Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'training_proposals' => [
+        'create_success'  => "Der Trainingsvorschlag wurde erfolgreich erstellt.",
+        'create_error'    => "Fehler! Bei der Erstellung des Trainingsvorschlags ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'  => "Der Trainingsvorschlag wurde erfolgreich aktualisiert.",
+        'update_error'    => "Fehler! Bei der Aktualisierung des Trainingsvorschlags ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'   => "Fehler! Der ausgewählte Trainingsvorschlag kann nicht aktualisiert werden.",
+        'confirm_success' => "Der Trainingsvorschlag wurde erfolgreich bestätigt.",
+        'confirm_error'   => "Fehler! Bei der Bestätigung des Trainingsvorschlags ist etwas schiefgelaufen. Bitte versuchen Sie es später erneut.",
+        'delete_success'  => "Der Trainingsvorschlag wurde erfolgreich gelöscht.",
+        'delete_error'    => "Fehler! Bei der Löschung des Trainingsvorschlags ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'   => "Fehler! Der ausgewählte Trainingsvorschlag kann nicht gelöscht werden.",
+        'restore_success' => "Der Trainingsvorschlag wurde erfolgreich wiederhergestellt.",
+        'restore_error'   => "Fehler! Bei der Wiederherstellung des Trainingsvorschlags ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'  => "Fehler! Der ausgewählte Trainingsvorschlag kann nicht wiederhergestellt werden.",
     ],
 
 

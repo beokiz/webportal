@@ -54,14 +54,16 @@ class AuthenticatedSessionController extends BaseController
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+//        $request->session()->regenerate();
 
         $user = $request->user();
 
         if ($user && $user->two_factor_auth_enabled) {
             return redirect()->route('2fa.create');
         } else {
-            return redirect()->intended(RouteServiceProvider::HOME);
+            $targetUrl = redirect()->intended()->getTargetUrl();
+
+            return redirect()->intended(prepare_intended_path($targetUrl));
         }
     }
 
@@ -83,6 +85,6 @@ class AuthenticatedSessionController extends BaseController
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect(RouteServiceProvider::HOME);
     }
 }
