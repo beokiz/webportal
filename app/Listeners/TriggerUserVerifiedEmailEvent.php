@@ -6,8 +6,6 @@
 
 namespace App\Listeners;
 
-use App\Events\Broadcast\UserVerifiedEmailEvent;
-
 /**
  * Trigger User Verified Email Event
  *

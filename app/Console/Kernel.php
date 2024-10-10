@@ -6,8 +6,6 @@
 
 namespace App\Console;
 
-use App\Jobs\ResetKitasYearlyEvaluationReminder;
-use App\Jobs\SendYearlyEvaluationReminderNotification;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

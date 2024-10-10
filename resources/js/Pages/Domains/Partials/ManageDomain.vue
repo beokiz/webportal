@@ -458,15 +458,15 @@ const manageCreateSubdomain = async () => {
                             item-value="name">
 
                             <template v-slot:item="{ item }">
-                                <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                                    <td>{{ item.selectable.name }}</td>
+                                <tr :data-id="item.id" :data-order="item.order">
+                                    <td>{{ item.name }}</td>
 
                                     <td>
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <v-icon
                                                     draggable="true"
-                                                    @dragstart="draggableItem = item.raw"
+                                                    @dragstart="draggableItem = item"
                                                     color="primary" v-bind="props" size="small"
                                                     class="tw-me-2 glyphicon-move">mdi-arrow-collapse-vertical
                                                 </v-icon>
@@ -474,10 +474,9 @@ const manageCreateSubdomain = async () => {
                                             <span>Neu anordnen</span>
                                         </v-tooltip>
 
-
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
-                                                <Link :href="route('subdomains.show', { id: item.selectable.id })">
+                                                <Link :href="route('subdomains.show', { id: item.id })">
                                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>
@@ -487,7 +486,7 @@ const manageCreateSubdomain = async () => {
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
                                                 <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                        @click="openDeleteSubdomainDialog(item.raw)">mdi-delete
+                                                        @click="openDeleteSubdomainDialog(item)">mdi-delete
                                                 </v-icon>
                                             </template>
                                             <span>Subdomäne löschen</span>

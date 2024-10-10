@@ -478,17 +478,17 @@ const deleteDownloadableFile = async () => {
                 @update:options="reloadPage"
             >
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.year}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.year}}</td>
 
-                        <td>{{ formatDate(item.selectable.survey_start_date, 'sv-SE') }}</td>
+                        <td>{{ formatDate(item.survey_start_date, 'sv-SE') }}</td>
 
-                        <td>{{ formatDate(item.selectable.survey_end_date, 'sv-SE') }}</td>
+                        <td>{{ formatDate(item.survey_end_date, 'sv-SE') }}</td>
 
                         <td align="center">
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('survey_time_periods.show', { id: item.selectable.id })">
+                                    <Link :href="route('survey_time_periods.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -497,7 +497,7 @@ const deleteDownloadableFile = async () => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteSurveyTimePeriodDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteSurveyTimePeriodDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Einstellungen löschen</span>
                             </v-tooltip>
@@ -644,15 +644,15 @@ const deleteDownloadableFile = async () => {
                 @update:options="reloadPage"
             >
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.name}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.name}}</td>
 
-                        <td>{{formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
+                        <td>{{formatDateTime(item.created_at, 'sv-SE')}}</td>
 
                         <td align="center">
-                            <v-tooltip v-if="item.selectable?.path" location="top">
+                            <v-tooltip v-if="item?.path" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <a :href="item.selectable.path" download>
+                                    <a :href="item.path" download>
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-download</v-icon>
                                     </a>
                                 </template>
@@ -661,7 +661,7 @@ const deleteDownloadableFile = async () => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('downloadable_files.show', { id: item.selectable.id })">
+                                    <Link :href="route('downloadable_files.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -670,7 +670,7 @@ const deleteDownloadableFile = async () => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDownloadableFileDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteDownloadableFileDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Datei löschen</span>
                             </v-tooltip>

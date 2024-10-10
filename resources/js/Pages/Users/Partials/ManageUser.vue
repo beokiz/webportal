@@ -57,6 +57,8 @@ const backRoute = computed(() => {
 const close = () => {
     manageForm.reset();
     manageForm.clearErrors();
+    sendVerificationLinkForm.reset();
+    sendVerificationLinkForm.clearErrors();
 
     errors.value = {};
 };
@@ -97,6 +99,28 @@ const manageUser = async () => {
         },
     });
 };
+
+const sendVerificationLinkForm = useForm({
+    id: editedUser.value.id,
+});
+
+const sendVerificationLink = async (item) => {
+    sendVerificationLinkForm.processing = true;
+
+    let formOptions = {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            sendVerificationLinkForm.processing = false;
+        },
+    };
+
+    sendVerificationLinkForm.post(route('users.send_verification_link', { user: sendVerificationLinkForm.id }), formOptions);
+};
 </script>
 
 <template>
@@ -108,6 +132,20 @@ const manageUser = async () => {
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+            <v-container>
+                <v-row>
+                    <v-col cols="12" class="text-right">
+                        <template v-if="!editedUser.email_verified_at || editedUser.email_verified_at === '-'">
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="sendVerificationLink" :disabled="manageForm.processing || sendVerificationLinkForm.processing">
+                                    <span>E-Mail wurde nicht verifiziert</span>
+                                </v-btn>
+                            </v-hover>
+                        </template>
+                    </v-col>
+                </v-row>
+            </v-container>
+
             <v-container>
                 <v-row>
                     <v-col cols="12" sm="4">
@@ -139,16 +177,16 @@ const manageUser = async () => {
 
                 <v-row>
                     <v-col cols="12" sm="4">
-                      <v-select
-                          :disabled="$page.props.auth.user.id === editedUser.id"
-                          v-model="manageForm.role"
-                          :items="roles"
-                          :error-messages="errors.role"
-                          item-title="human_name"
-                          item-value="id"
-                          label="Rolle"
-                          required
-                      ></v-select>
+                        <v-select
+                            :disabled="$page.props.auth.user.id === editedUser.id"
+                            v-model="manageForm.role"
+                            :items="roles"
+                            :error-messages="errors.role"
+                            item-title="human_name"
+                            item-value="id"
+                            label="Rolle"
+                            required
+                        ></v-select>
                     </v-col>
 
                     <v-col cols="12" sm="4">
@@ -172,7 +210,9 @@ const manageUser = async () => {
                                 </Link>
                             </v-hover>
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Speichern</v-btn-primary>
+                                <v-btn-primary @click="manageUser" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :disabled="manageForm.processing || sendVerificationLinkForm.processing">
+                                    Speichern
+                                </v-btn-primary>
                             </v-hover>
                         </div>
                     </v-col>

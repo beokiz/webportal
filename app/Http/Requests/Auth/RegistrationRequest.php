@@ -9,9 +9,7 @@ namespace App\Http\Requests\Auth;
 use App\Http\Requests\BaseFormRequest;
 use App\Models\Kita;
 use App\Models\User;
-use App\Rules\DateDifferenceRule;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
 
 /**
  * Registration Request
@@ -30,7 +28,7 @@ class RegistrationRequest extends BaseFormRequest
             'kita'                   => ['required', 'array'],
             'kita.number'            => array_merge($this->bigIntegerRules(true), ['required']),
             'kita.name'              => array_merge($this->textRules(), ['required']),
-            'kita.district'          => array_merge($this->textRules(), ['required']),
+            'kita.district'          => array_merge($this->textRules(), ['nullable']),
             'kita.street'            => array_merge($this->textRules(), ['required']),
             'kita.house_number'      => array_merge($this->textRules(true), ['required']),
             'kita.zip_code'          => array_merge($this->textRules(10), ['required']),
@@ -58,7 +56,7 @@ class RegistrationRequest extends BaseFormRequest
 
             if ($kitaType === Kita::TYPE_LARGE) {
                 $rules['kita.trainings.*.first_date']  = ['required', 'date'];
-                $rules['kita.trainings.*.second_date'] = ['required', 'date']; // OLD: , new DateDifferenceRule('first_date', $this->input('first_date'), 7)
+                $rules['kita.trainings.*.second_date'] = ['required', 'date', 'different:kita.trainings.*.first_date']; // OLD: , new DateDifferenceRule('first_date', $this->input('first_date'), 7, 'less_than')
             } else {
                 $rules['kita.training_id'] = ['required', $this->trainingExistRule()];
             }

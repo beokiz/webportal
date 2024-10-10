@@ -4,9 +4,9 @@
   -->
 
 <script setup>
-import {Head, Link} from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
 const props = defineProps({
     status: String,

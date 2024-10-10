@@ -6,7 +6,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Kita;
 use App\Models\Training;
 use App\Models\User;
 

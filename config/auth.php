@@ -95,7 +95,7 @@ return [
             'provider' => 'users',
             'table'    => 'password_resets',
             'expire'   => 60 * 24 * 30, // 30 days
-            'throttle' => 60, // 60 seconds
+            'throttle' => 60,           // 60 seconds
         ],
     ],
 

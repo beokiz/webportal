@@ -25,6 +25,7 @@ const props = defineProps({
     filters: Object,
     errors: Object,
     userTrainingProposals: Array,
+    kitas: Array,
     multipliers: Array,
     statuses: Array,
 });
@@ -64,6 +65,7 @@ const participantCountFilter = ref(props.filters.participant_count ?? null);
 const typeFilter = ref(props.filters.type ?? null);
 const multiIdFilter = ref(props.filters.multi_id ?? null);
 const statusFilter = ref(props.filters.status ?? null);
+const kitaIdFilter = ref(props.filters.with_kitas ?? null);
 const search = ref('');
 const errors = ref(props.errors || {});
 
@@ -145,7 +147,8 @@ const allFiltersEmpty = computed(() => {
         participantCountFilter.value === null &&
         typeFilter.value === null &&
         multiIdFilter.value === null &&
-        statusFilter.value === null;
+        statusFilter.value === null &&
+        kitaIdFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
@@ -155,7 +158,8 @@ const someFiltersNotEmpty = computed(() => {
         participantCountFilter.value !== null ||
         typeFilter.value !== null ||
         multiIdFilter.value !== null ||
-        statusFilter.value !== null;
+        statusFilter.value !== null ||
+        kitaIdFilter.value !== null;
 });
 
 const completedTrainingInfo = computed(() => {
@@ -228,12 +232,16 @@ watch(statusFilter, (val) => {
     triggerSearch();
 });
 
+watch(kitaIdFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
+
 watch(firstDateField, (val) => {
-    rawFirstDateField.value = prepareDate(val);
+    rawFirstDateField.value = val ? prepareDate(val) : null;
 });
 
 watch(secondDateField, (val) => {
-    rawSecondDateField.value = prepareDate(val);
+    rawSecondDateField.value = val ? prepareDate(val) : null;
 });
 
 const triggerSearch = () => {
@@ -260,6 +268,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         typeFilter.value = null;
         multiIdFilter.value = null;
         statusFilter.value = null;
+        kitaIdFilter.value = null;
     }
 
     if (
@@ -309,6 +318,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
         if (statusFilter.value) {
             data.status = statusFilter.value;
+        }
+
+        if (kitaIdFilter.value) {
+            data.with_kitas = kitaIdFilter.value;
         }
 
         await router.get(route(route().current()), data, {
@@ -676,7 +689,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="3">
                             <v-text-field
                                 type="number"
                                 v-model="participantCountFilter"
@@ -685,7 +698,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                             ></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="3">
                             <v-select
                                 v-model="statusFilter"
                                 :items="statuses"
@@ -698,7 +711,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                             ></v-select>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="3">
                             <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
                                 <v-select
                                     v-model="multiIdFilter"
@@ -706,6 +719,21 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                     item-title="full_name"
                                     item-value="id"
                                     label="Multiplikator"
+                                    multiple
+                                    :disabled="loading"
+                                    clearable
+                                ></v-select>
+                            </template>
+                        </v-col>
+
+                        <v-col cols="12" sm="3">
+                            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                <v-select
+                                    v-model="kitaIdFilter"
+                                    :items="kitas"
+                                    item-title="name"
+                                    item-value="id"
+                                    label="Kita"
                                     multiple
                                     :disabled="loading"
                                     clearable
@@ -744,38 +772,38 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                 @update:options="goToPage"
             >
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{!item.selectable.first_date || item.selectable.first_date === '-' ? item.selectable.first_date : formatDate(item.selectable.first_date, 'fr-CA')}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
 
-                        <td>{{!item.selectable.second_date || item.selectable.second_date === '-' ? item.selectable.second_date : formatDate(item.selectable.second_date, 'fr-CA')}}</td>
+                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
 
-                        <td>{{item.selectable.location}}</td>
+                        <td>{{item.location}}</td>
 
-                        <td>{{item.selectable.participant_count}}</td>
+                        <td>{{item.participant_count}}</td>
 
-                        <td>{{item.selectable?.kitas_list && item.selectable?.kitas_list.length ? item.selectable?.kitas_list.join(',') : '-'}}</td>
+                        <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-                        <td>{{item.selectable.formatted_status}}</td>
+                        <td>{{item.formatted_status}}</td>
 
-                        <td>{{!item.selectable.created_at || item.selectable.created_at === '-' ? item.selectable.created_at : formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
+                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
 
-                        <td>{{!item.selectable.updated_at || item.selectable.updated_at === '-' ? item.selectable.updated_at : formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
+                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
 
                         <td class="text-center">
-                            <template v-if="item.selectable.status === 'open' && ($page.props.auth.user.is_user_multiplier)">
+                            <template v-if="item.status === 'open' && ($page.props.auth.user.is_user_multiplier)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item.selectable, 'reserved')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'reserved')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-plus-circle-outline</v-icon>
                                         </span>
                                     </template>
                                     <span>Termin bestätigen</span>
                                 </v-tooltip>
                             </template>
-                            <template v-if="item.selectable.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
+                            <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item.selectable, 'open')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>
                                         </span>
                                     </template>
@@ -785,7 +813,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
 
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('training_proposals.show', { id: item.selectable.id })">
+                                    <Link :href="route('training_proposals.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -794,7 +822,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
 
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingProposalDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingProposalDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Schulung löschen</span>
                             </v-tooltip>
@@ -843,28 +871,28 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                     item-value="name"
                 >
                     <template v-slot:item="{ item }">
-                        <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                            <td>{{!item.selectable.first_date || item.selectable.first_date === '-' ? item.selectable.first_date : formatDate(item.selectable.first_date, 'fr-CA')}}</td>
+                        <tr :data-id="item.id" :data-order="item.order">
+                            <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
 
-                            <td>{{!item.selectable.second_date || item.selectable.second_date === '-' ? item.selectable.second_date : formatDate(item.selectable.second_date, 'fr-CA')}}</td>
+                            <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
 
-                            <td>{{item.selectable.location}}</td>
+                            <td>{{item.location}}</td>
 
-                            <td>{{item.selectable.participant_count}}</td>
+                            <td>{{item.participant_count}}</td>
 
-                            <td>{{item.selectable?.kitas_list && item.selectable?.kitas_list.length ? item.selectable?.kitas_list.join(',') : '-'}}</td>
+                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-                            <td>{{item.selectable.formatted_status}}</td>
+                            <td>{{item.formatted_status}}</td>
 
-                            <td>{{!item.selectable.created_at || item.selectable.created_at === '-' ? item.selectable.created_at : formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
+                            <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
 
-                            <td>{{!item.selectable.updated_at || item.selectable.updated_at === '-' ? item.selectable.updated_at : formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
+                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
 
                             <td class="text-center">
-                                <template v-if="item.selectable.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
+                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
                                   <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item.selectable, 'open')">
+                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">
                                                 <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>
                                             </span>
                                     </template>
@@ -874,7 +902,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
 
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <Link :href="route('training_proposals.show', { id: item.selectable.id })">
+                                        <Link :href="route('training_proposals.show', { id: item.id })">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                         </Link>
                                     </template>

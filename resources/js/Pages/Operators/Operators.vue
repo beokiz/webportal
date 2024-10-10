@@ -64,7 +64,7 @@ const deletingItemName = ref(null);
 
 const headers = [
     { title: 'Name', key: 'name', width: '45%', sortable: true},
-    { title: 'Selbschulend', key: 'self_training', width: '45%', sortable: true },
+    { title: 'Selbstschulend', key: 'self_training', width: '45%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
 
@@ -228,7 +228,7 @@ const manageOperator = async () => {
                                             <v-col cols="12" sm="6">
                                                 <v-checkbox
                                                     v-model="manageForm.self_training"
-                                                    label="Selbschulend"
+                                                    label="Selbstschulend"
                                                     :value="true"
                                                 ></v-checkbox>
                                             </v-col>
@@ -302,15 +302,15 @@ const manageOperator = async () => {
             >
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.name}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.name}}</td>
 
-                        <td>{{item.selectable.self_training ? 'Ja' : 'Nein' }}</td>
+                        <td>{{item.self_training ? 'Ja' : 'Nein' }}</td>
 
                         <td>
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('operators.show', { id: item.selectable.id })">
+                                    <Link :href="route('operators.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -319,7 +319,7 @@ const manageOperator = async () => {
 
                             <v-tooltip v-if="!$page.props.auth.user.is_manager" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteOperatorDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteOperatorDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Träger löschen</span>
                             </v-tooltip>

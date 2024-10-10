@@ -229,6 +229,26 @@ class UsersController extends BaseController
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
+    public function sendVerificationLink(Request $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        if (empty($user->email_verified_at)) {
+            $user->sendEmailVerificationNotification();
+
+            return Redirect::back()->withSuccesses(__('crud.users.send_verification_link_success'));
+        }
+
+        return Redirect::back()->withErrors(__('crud.users.send_verification_link_denied'));
+    }
+
+    /**
+     * @param Request $request
+     * @param User    $user
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, User $user)
     {
         $this->authorize('authorizeAdminAccess', User::class);

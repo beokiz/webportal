@@ -66,10 +66,10 @@ const modifiedItems = computed(() => {
                         item-value="name">
 
                         <template v-slot:item="{ item }">
-                            <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                                <td>{{ item.selectable.name }}</td>
+                            <tr :data-id="item.id" :data-order="item.order">
+                                <td>{{ item.name }}</td>
 
-                                <td>{{ item.selectable.zip_code }}</td>
+                                <td>{{ item.zip_code }}</td>
                             </tr>
                         </template>
 

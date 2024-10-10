@@ -155,7 +155,8 @@ return [
     'not_present_with'          => "The \":attribute\" must not be present if \":value\" is present.",
     'file_name'                 => "The \":attribute\" must be a file name with one of following type: :values.",
     'not_match_old_password'    => "The \":attribute\" should not be same as old password.",
-    'date_difference'           => "The \":attribute\" must be at least :days days greater than the :other_field date.",
+    'date_difference_greater'   => "The \":attribute\" must be at least :days days greater than the :other_field date.",
+    'date_difference_less'      => "The \":attribute\" must be at most :days days less than the :other_field date.",
 
     /*
     |--------------------------------------------------------------------------
@@ -304,6 +305,7 @@ return [
         'num_pedagogical_staff'                    => "Number of pedagogical staff",
         'combined'                                 => "Combined",
         'in-house'                                 => "In-house",
+        'email_not_confirmed'                      => "Email not confirmed",
         'planned'                                  => "Planned",
         'confirmed'                                => "Confirmed",
         'completed'                                => "Completed",

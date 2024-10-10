@@ -133,6 +133,7 @@ const manageForm = useForm({
     additional_info: editedKita.value?.additional_info,
     zip_code: editedKita.value?.zip_code,
     operator_id: editedKita.value?.operator_id,
+    other_operator: editedKita.value?.other_operator,
     city: editedKita.value?.city,
     num_pedagogical_staff: editedKita.value?.num_pedagogical_staff,
     approved: editedKita.value?.approved,
@@ -468,7 +469,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
 
                 <v-row>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-select
                             v-model="manageForm.operator_id"
                             :items="operators"
@@ -480,7 +481,15 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-select>
                     </v-col>
 
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
+                        <v-text-field v-model="manageForm.other_operator"
+                                      :error-messages="errors.other_operator"
+                                      label="Sonstiger Träger"
+                                      :disabled="$page.props.auth.user.is_user_multiplier || manageForm.operator_id"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="4">
                         <v-text-field v-model="manageForm.num_pedagogical_staff"
                                       :error-messages="errors.num_pedagogical_staff"
                                       label="Größe pädagogisches Team"
@@ -503,7 +512,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             v-model="manageForm.type"
                             :items="types"
                             :error-messages="errors.type"
-                            label="Typ*"
+                            label="Größe der Einrichtung*"
                             required
                         ></v-select>
                     </v-col>
@@ -777,23 +786,23 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 @update:options="goToPage"
                             >
                                 <template v-slot:item="{ item }">
-                                    <tr :data-id="item.selectable?.id" :data-order="item.selectable?.order">
+                                    <tr :data-id="item?.id" :data-order="item?.order">
                                         <td align="center">
-                                            <v-icon size="medium" :class="{ active: item?.selectable.is_online }">mdi-circle</v-icon>
+                                            <v-icon size="medium" :class="{ active: item.is_online }">mdi-circle</v-icon>
                                         </td>
 
-                                        <td>{{item.selectable?.first_name}}</td>
+                                        <td>{{item?.first_name}}</td>
 
-                                        <td>{{item.selectable?.last_name}}</td>
+                                        <td>{{item?.last_name}}</td>
 
-                                        <td>{{item.selectable?.email}}</td>
+                                        <td>{{item?.email}}</td>
 
-                                        <td>{{item.selectable?.primary_role_human_name}}</td>
+                                        <td>{{item?.primary_role_human_name}}</td>
 
                                         <td align="right">
-                                            <v-tooltip v-if="kita?.approved && item.selectable?.is_manager" location="top">
+                                            <v-tooltip v-if="kita?.approved && item?.is_manager" location="top">
                                                 <template v-slot:activator="{ props }">
-                                                    <a :href="`mailto:?bcc=${item.selectable.email}`" v-bind="props">
+                                                    <a :href="`mailto:?bcc=${item.email}`" v-bind="props">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                                     </a>
                                                 </template>
@@ -802,7 +811,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                             <v-tooltip location="top">
                                                 <template v-slot:activator="{ props }">
-                                                    <Link :href="`${route('users.edit', { id: item.selectable.id })}?from=kitas.show;${kita.id}`">
+                                                    <Link :href="`${route('users.edit', { id: item.id })}?from=kitas.show;${kita.id}`">
                                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                     </Link>
                                                 </template>
@@ -812,7 +821,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                             <v-tooltip location="top">
                                                 <template v-slot:activator="{ props }">
                                                     <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                            @click="openDeleteUserFromKitaDialog(item.raw)">mdi-delete
+                                                            @click="openDeleteUserFromKitaDialog(item)">mdi-delete
                                                     </v-icon>
                                                 </template>
                                                 <span>Benutzer löschen</span>

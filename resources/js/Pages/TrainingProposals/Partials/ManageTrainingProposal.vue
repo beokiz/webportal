@@ -103,45 +103,14 @@ watch(dialog, (val) => {
 });
 
 watch(firstDateField, (val) => {
-    rawFirstDateField.value = prepareDate(val);
+    rawFirstDateField.value = val ? prepareDate(val) : null;
 });
 
 watch(secondDateField, (val) => {
-    rawSecondDateField.value = prepareDate(val);
+    rawSecondDateField.value = val ? prepareDate(val) : null;
 });
 
 // Methods
-const close = () => {
-    dialog.value = false;
-    selectedKitaName.value = null;
-    addMultiplierToTrainingProposalDialog.value = false;
-    addKitaToTrainingProposalDialog.value = false;
-    removeKitaFromTrainingProposalDialog.value = false;
-    acceptTrainingProposalDialog.value = false;
-    revokeTrainingProposalDialog.value = false;
-
-    manageStatusForm.reset();
-    manageStatusForm.clearErrors();
-    addKitaToTrainingProposalForm.reset();
-    addKitaToTrainingProposalForm.clearErrors();
-    removeKitaFromTrainingProposalForm.reset();
-    removeKitaFromTrainingProposalForm.clearErrors();
-
-    errors.value = {};
-};
-
-const clear = () => {
-    manageForm.reset();
-    manageForm.clearErrors();
-
-    manageStatusForm.reset();
-    manageStatusForm.clearErrors();
-    addKitaToTrainingProposalForm.reset();
-    addKitaToTrainingProposalForm.clearErrors();
-    removeKitaFromTrainingProposalForm.reset();
-    removeKitaFromTrainingProposalForm.clearErrors();
-};
-
 const manageForm = useForm({
     id: editedTrainingProposal.value?.id,
     // multi_id: editedTrainingProposal.value?.multi_id,
@@ -315,6 +284,39 @@ const removeKitaFromTrainingProposal = async () => {
 };
 
 
+const close = () => {
+    dialog.value = false;
+    selectedKitaName.value = null;
+    addMultiplierToTrainingProposalDialog.value = false;
+    addKitaToTrainingProposalDialog.value = false;
+    removeKitaFromTrainingProposalDialog.value = false;
+    acceptTrainingProposalDialog.value = false;
+    revokeTrainingProposalDialog.value = false;
+
+    manageStatusForm.reset();
+    manageStatusForm.clearErrors();
+    addKitaToTrainingProposalForm.reset();
+    addKitaToTrainingProposalForm.clearErrors();
+    removeKitaFromTrainingProposalForm.reset();
+    removeKitaFromTrainingProposalForm.clearErrors();
+
+    errors.value = {};
+};
+
+const clear = () => {
+    manageForm.reset();
+    manageForm.clearErrors();
+
+    manageStatusForm.reset();
+    manageStatusForm.clearErrors();
+    addKitaToTrainingProposalForm.reset();
+    addKitaToTrainingProposalForm.clearErrors();
+    removeKitaFromTrainingProposalForm.reset();
+    removeKitaFromTrainingProposalForm.clearErrors();
+
+    firstDateField.value = null;
+    secondDateField.value = null;
+};
 
 /*
  * Kitas tables
@@ -333,9 +335,10 @@ const modifyItems = (items) => {
 
 const headers = [
     { title: 'Name', key: 'name', width: '15%', sortable: true },
-    { title: `Jährliche Rückmeldung ${new Date().getFullYear()} abgeschlossen`, key: 'has_yearly_evaluations', width: '35%', sortable: true },
+    { title: `Jährliche Rückmeldung ${new Date().getFullYear()} abgeschlossen`, key: 'has_yearly_evaluations', width: '25%', sortable: true },
     { title: 'Zugelassen', key: 'approved', width: '10%', sortable: true },
     { title: 'Träger', key: 'operator_id', width: '10%', sortable: true },
+    { title: 'Sonstiger Träger', key: 'other_operator', width: '10%', sortable: true },
     { title: 'Typ', key: 'type', width: '10%', sortable: true },
     { title: 'Postleitzahl', key: 'zip_code', width: '10%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
@@ -353,6 +356,7 @@ const searchFilter = ref(props?.filters?.search ?? null);
 const hasYearlyEvaluationsFilter = ref(props?.filters?.has_yearly_evaluations ?? null);
 const approvedFilter = ref(props?.filters?.approved ?? null);
 const operatorIdFilter = ref(null);
+const otherOperatorFilter = ref(props.filters?.other_operator ?? null);
 const typeFilter = ref(props?.filters?.type ?? null);
 const zipCodeFilter = ref(props?.filters?.zip_code ?? null);
 
@@ -386,11 +390,11 @@ const modifiedItems = computed(() => {
 });
 
 const allFiltersEmpty = computed(() => {
-    return searchFilter.value === null && hasYearlyEvaluationsFilter.value === null && approvedFilter.value === null && operatorIdFilter.value === null && typeFilter.value === null && zipCodeFilter.value === null;
+    return searchFilter.value === null && hasYearlyEvaluationsFilter.value === null && approvedFilter.value === null && operatorIdFilter.value === null && otherOperatorFilter.value === null && typeFilter.value === null && zipCodeFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
-    return searchFilter.value !== null || hasYearlyEvaluationsFilter.value !== null || approvedFilter.value !== null || operatorIdFilter.value !== null || typeFilter.value !== null || zipCodeFilter.value !== null;
+    return searchFilter.value !== null || hasYearlyEvaluationsFilter.value !== null || approvedFilter.value !== null || operatorIdFilter.value !== null || otherOperatorFilter.value !== null || typeFilter.value !== null || zipCodeFilter.value !== null;
 });
 
 // Kitas filters
@@ -409,6 +413,10 @@ watch(approvedFilter, (val) => {
 watch(operatorIdFilter, (val) => {
     triggerSearch();
 });
+
+watch(otherOperatorFilter, debounce((val) => {
+    triggerSearch();
+}, 500));
 
 watch(typeFilter, (val) => {
     triggerSearch();
@@ -434,6 +442,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         hasYearlyEvaluationsFilter.value = null;
         approvedFilter.value = null;
         operatorIdFilter.value = null;
+        otherOperatorFilter.value = null;
         typeFilter.value = null;
         zipCodeFilter.value = null;
     }
@@ -473,6 +482,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
         if (operatorIdFilter.value) {
             data.operator_id = operatorIdFilter.value;
+        }
+
+        if (otherOperatorFilter.value) {
+            data.other_operator = otherOperatorFilter.value;
         }
 
         if (typeFilter.value) {
@@ -707,7 +720,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="6">
                             <v-select
                                 v-model="operatorIdFilter"
                                 :items="operators"
@@ -720,7 +733,17 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             ></v-select>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="6">
+                            <v-text-field v-model="otherOperatorFilter"
+                                          label="Sonstiger Träger"
+                                          :disabled="loading"
+                                          clearable
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12" sm="6">
                             <v-select
                                 v-model="typeFilter"
                                 :items="kitaTypes"
@@ -731,7 +754,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             ></v-select>
                         </v-col>
 
-                        <v-col cols="12" sm="4">
+                        <v-col cols="12" sm="6">
                             <v-select
                                 v-model="zipCodeFilter"
                                 :items="zipCodes"
@@ -765,24 +788,26 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 @update:options="goToPage"
                             >
                                 <template v-slot:item="{ item }">
-                                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                                        <td>{{item.selectable?.name}}</td>
+                                    <tr :data-id="item.id" :data-order="item.order">
+                                        <td>{{item?.name}}</td>
 
-                                        <td>{{item.selectable?.has_yearly_evaluations ? 'Ja' : 'Nein'}}</td>
+                                        <td>{{item?.has_yearly_evaluations ? 'Ja' : 'Nein'}}</td>
 
-                                        <td>{{item.selectable?.approved ? 'Ja' : 'Nein'}}</td>
+                                        <td>{{item?.approved ? 'Ja' : 'Nein'}}</td>
 
-                                        <td>{{item.selectable?.operator?.name ?? '-'}}</td>
+                                        <td>{{item?.operator?.name ?? '-'}}</td>
 
-                                        <td>{{item.selectable?.formatted_type ?? item.selectable?.type}}</td>
+                                        <td>{{!item?.operator?.name && item?.other_operator ? item?.other_operator : '-'}}</td>
 
-                                        <td>{{item.selectable?.zip_code}}</td>
+                                        <td>{{item?.formatted_type ?? item?.type}}</td>
+
+                                        <td>{{item?.zip_code}}</td>
 
                                         <td class="text-center">
                                               <template v-if="$page.props.auth.user.is_super_admin">
-                                                  <v-tooltip v-if="item.selectable?.approved && item.selectable?.users_emails.length > 0" location="top">
+                                                  <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                       <template v-slot:activator="{ props }">
-                                                          <a :href="`mailto:?bcc=${item.selectable?.users_emails.join(',')}`" v-bind="props">
+                                                          <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">
                                                               <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                                           </a>
                                                       </template>
@@ -792,7 +817,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                               <v-tooltip location="top">
                                                   <template v-slot:activator="{ props }">
-                                                      <Link :href="route('kitas.show', { id: item.selectable.id })">
+                                                      <Link :href="route('kitas.show', { id: item.id })">
                                                           <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                       </Link>
                                                   </template>
@@ -802,7 +827,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                               <v-tooltip v-if="!$page.props.auth.user.is_manager && !$page.props.auth.user.is_user_multiplier" location="top">
                                                   <template v-slot:activator="{ props }">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2"
-                                                              @click="openRemoveKitaFromTrainingProposalDialog(item.raw)">mdi-delete
+                                                              @click="openRemoveKitaFromTrainingProposalDialog(item)">mdi-delete
                                                       </v-icon>
                                                   </template>
                                                   <span>Einrichtung löschen</span>

@@ -8,7 +8,7 @@ import { computed, ref, watch, nextTick } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import { formatDate } from '@/Composables/common.js';
+import { formatDate, prepareDate } from '@/Composables/common.js';
 import InfoMessage from "@/Components/InfoMessage.vue";
 
 const props = defineProps({
@@ -77,20 +77,9 @@ const submitRegistration = async () => {
 /*
  * Common
  */
-const otherOperators = ref([
-    {
-        id: 'operator_1',
-        name: 'Träger 1',
-    },
-    {
-        id: 'operator_2',
-        name: 'Träger 2',
-    },
-    {
-        id: 'operator_3',
-        name: 'Träger 3',
-    },
-]);
+const minTrainingDate = ref('2025-01-01');
+const maxTrainingDate = ref('2027-07-31');
+const initialDisplayDate = ref(new Date(minTrainingDate.value));
 
 const showTrainingDisclaimer = ref(false);
 
@@ -99,6 +88,10 @@ const smallKitasOperators = computed(() => {
 });
 
 const largeKitasOperators = computed(() => {
+    return props.operators.filter(operator => operator?.self_training === true || operator?.self_training === undefined);
+});
+
+const selfTrainingOperators = computed(() => {
     return props.operators.filter(operator => operator?.self_training === true || operator?.self_training === undefined);
 });
 
@@ -208,24 +201,26 @@ const previousSuggestions = ref([]);  // Store the previous state of the dates
 
 watch(trainingSuggestions, (newVal) => {
     newVal.forEach((suggestion, index) => {
-        // Check if the dates have changed compared to the previous state
         const oldSuggestion = previousSuggestions.value[index] || {};
 
+        // Check if the dates have changed
         if (suggestion.first_date !== oldSuggestion.first_date || suggestion.second_date !== oldSuggestion.second_date) {
-            validateTrainingSuggestionDates(index);  // Trigger validation if dates have changed
+            validateTrainingSuggestionDates(index);  // Validate dates when changed
         }
     });
 
-    // Update the previous state after all checks
+    // Store the previous state of the suggestions
     previousSuggestions.value = newVal.map(suggestion => ({
-        first_date: suggestion.first_date,
-        second_date: suggestion.second_date
+        first_date: suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null,
+        second_date: suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null,
     }));
 }, { deep: true });
+
 
 const validateTrainingSuggestionDates = (index) => {
     const suggestion = trainingSuggestions.value[index];
     const today = new Date();
+
     today.setHours(0, 0, 0, 0);
 
     let firstDayError = '';
@@ -234,6 +229,10 @@ const validateTrainingSuggestionDates = (index) => {
     // Validation: Ensure the first date is not in the past
     if (suggestion.first_date) {
         const firstDate = new Date(suggestion.first_date);
+
+        if (suggestion.first_date && suggestion.first_date instanceof Date && suggestion.first_date.getHours() !== 12) {
+            trainingSuggestions.value[index].first_date = new Date(firstDate.setHours(12, 0, 0, 0));
+        }
 
         if (firstDate < today) {
             firstDayError = 'Erster Schulungstag darf nicht in der Vergangenheit liegen.';  // First training day cannot be in the past
@@ -244,20 +243,31 @@ const validateTrainingSuggestionDates = (index) => {
     if (suggestion.second_date) {
         const secondDate = new Date(suggestion.second_date);
 
+        if (suggestion.second_date && suggestion.second_date instanceof Date && suggestion.second_date.getHours() !== 12) {
+            trainingSuggestions.value[index].second_date = new Date(secondDate.setHours(12, 0, 0, 0));
+        }
+
         if (secondDate < today) {
             secondDayError = 'Zweiter Schulungstag darf nicht in der Vergangenheit liegen.';  // Second training day cannot be in the past
         }
     }
 
-    // Validation: Ensure the second date is at least 7 days after the first date
+    // Validation: Ensure the second date is not less than or equal to the first date
     if (suggestion.first_date && suggestion.second_date) {
         const firstDate = new Date(suggestion.first_date);
         const secondDate = new Date(suggestion.second_date);
-        const differenceInDays = (secondDate - firstDate) / (1000 * 60 * 60 * 24);
 
-        if (differenceInDays < 7) {
-            firstDayError = 'Erster Schulungstag muss mindestens 7 Tage vor dem Zweiten Schulungstag liegen.';  // The first training day must be at least 7 days before the second
-            secondDayError = 'Zweiter Schulungstag muss mindestens 7 Tage nach dem Ersten Schulungstag liegen.';  // The second training day must be at least 7 days after the first
+        if (secondDate <= firstDate) {
+            firstDayError = 'Der zweite Schulungstag darf nicht am gleichen Tag oder vor dem ersten Schulungstag liegen.';  // The second training day cannot be on the same day or before the first
+            secondDayError = 'Der zweite Schulungstag darf nicht am gleichen Tag oder vor dem ersten Schulungstag liegen.';  // The second training day cannot be on the same day or before the first
+        } else {
+            const differenceInDays = Math.abs((secondDate - firstDate) / (1000 * 60 * 60 * 24));
+
+            // Validation: Ensure the two dates are within 7 days of each other
+            if (differenceInDays > 7) {
+                firstDayError = 'Der erste und der zweite Schulungstag müssen innerhalb von 7 Tagen liegen.';  // The first and second training days must be within 7 days of each other
+                secondDayError = 'Der zweite und der erste Schulungstag müssen innerhalb von 7 Tagen liegen.';  // The second and first training days must be within 7 days of each other
+            }
         }
     }
 
@@ -334,9 +344,16 @@ const validateTrainingSuggestionDates = (index) => {
                 <v-container>
                     <v-row class="tw-mb-8">
                         <v-col cols="12">
-                            <p class="tw-mb-4">
-                                Die BeoKiz-Schulungen finden für Einrichtungen mit <b>bis zu 10</b> pädagogischen Fachkräften an bereits terminierten Zeiträumen in der Nähe des Anhalter Bahnhofs statt und werden gemeinsam mit Fachkräften aus anderen Einrichtungen durchgeführt.
-                            </p>
+                            <template v-if="isNewKitaWasLarge">
+                                <p class="tw-mb-4">
+                                    Die BeoKiz-Schulungen finden für Einrichtungen ab <b>11</b> pädagogischen Fachkräften als Schulung in ihrer Einrichtung statt.
+                                </p>
+                            </template>
+                            <template v-else>
+                                <p class="tw-mb-4">
+                                    Die BeoKiz-Schulungen finden für Einrichtungen mit <b>bis zu 10</b> pädagogischen Fachkräften an bereits terminierten Zeiträumen in der Nähe des Anhalter Bahnhofs statt und werden gemeinsam mit Fachkräften aus anderen Einrichtungen durchgeführt.
+                                </p>
+                            </template>
 
                             <p class="tw-mb-4">
                                 Die Schulungen werden von zertifizierten und vom Land Berlin anerkannten BeoKiz-Multiplikator:innen durchgeführt. Einige Träger haben bereits ihre eigenen Fachberatungen als BeoKiz-Mulitiplikator:innen ausbilden lassen. Bitte geben Sie aus diesem Grund an, welchem Träger ihre Einrichtung angehört.
@@ -348,7 +365,7 @@ const validateTrainingSuggestionDates = (index) => {
                         <v-col cols="12" sm="4">
                             <v-select
                                 v-model="registrationForm.kita.operator_id"
-                                :items="isNewKitaWasLarge ? smallKitasOperators : largeKitasOperators"
+                                :items="selfTrainingOperators"
                                 :error-messages="errors['kita.operator_id']"
                                 item-title="name"
                                 item-value="id"
@@ -358,15 +375,10 @@ const validateTrainingSuggestionDates = (index) => {
 
                         <v-col cols="12" sm="4">
                             <template v-if="!registrationForm.kita.operator_id">
-                                <v-select
-                                    v-model="registrationForm.kita.other_operator"
-                                    :items="otherOperators"
-                                    :error-messages="errors['kita.other_operator']"
-                                    item-title="name"
-                                    item-value="id"
-                                    label="Sonstiger Träger"
-                                    clearable
-                                ></v-select>
+                                <v-text-field v-model="registrationForm.kita.other_operator"
+                                              :error-messages="errors['kita.other_operator']"
+                                              label="Sonstiger Träger"
+                                ></v-text-field>
                             </template>
                         </v-col>
 
@@ -389,12 +401,12 @@ const validateTrainingSuggestionDates = (index) => {
                                 </template>
                             </v-col>
 
-                            <v-col cols="12" sm="5">
+                            <v-col cols="12" md="6">
                                 <template v-if="isNewKitaWasLarge">
                                     <h3 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight tw-mb-4">Terminvorschläge für Schulung</h3>
 
                                     <v-row v-for="(suggestion, index) in trainingSuggestions" :key="index" class="tw-mb-4">
-                                        <v-col cols="5">
+                                        <v-col cols="10" sm="5">
                                             <v-locale-provider locale="de">
                                                 <v-menu v-model="suggestion.isFirstDateFieldOpened"
                                                         :return-value.sync="suggestion.first_date"
@@ -403,21 +415,24 @@ const validateTrainingSuggestionDates = (index) => {
                                                         <v-text-field
                                                             label="Erster Schulungstag*"
                                                             class="tw-cursor-pointer"
-                                                            :model-value="suggestion.first_date"
+                                                            :model-value="suggestion.first_date ? formatDate(suggestion.first_date, 'de-DE') : null"
                                                             :error-messages="suggestion.first_day_error"
                                                             prepend-icon="mdi-calendar"
                                                             readonly
                                                             v-bind="props"
                                                       ></v-text-field>
                                                     </template>
-                                                    <v-date-picker @update:modelValue="suggestion.isFirstDateFieldOpened = false; validateTrainingSuggestionDates(index)"
+                                                    <v-date-picker @update:modelValue="suggestion.isFirstDateFieldOpened = false;"
                                                                    v-model="suggestion.first_date"
+                                                                   :min="minTrainingDate"
+                                                                   :max="maxTrainingDate"
+                                                                   :display-date="suggestion.first_date ? suggestion.first_date : initialDisplayDate"
                                                     ></v-date-picker>
                                                 </v-menu>
                                             </v-locale-provider>
                                         </v-col>
 
-                                        <v-col cols="5">
+                                        <v-col cols="10" sm="5">
                                             <v-locale-provider locale="de">
                                                 <v-menu v-model="suggestion.isSecondDateFieldOpened"
                                                         :return-value.sync="suggestion.second_date"
@@ -426,15 +441,18 @@ const validateTrainingSuggestionDates = (index) => {
                                                         <v-text-field
                                                             label="Zweiter Schulungstag*"
                                                             class="tw-cursor-pointer"
-                                                            :model-value="suggestion.second_date"
+                                                            :model-value="suggestion.second_date ? formatDate(suggestion.second_date, 'de-DE') : null"
                                                             :error-messages="suggestion.second_day_error"
                                                             prepend-icon="mdi-calendar"
                                                             readonly
                                                             v-bind="props"
                                                         ></v-text-field>
                                                     </template>
-                                                    <v-date-picker @update:modelValue="suggestion.isSecondDateFieldOpened = false; validateTrainingSuggestionDates(index)"
+                                                    <v-date-picker @update:modelValue="suggestion.isSecondDateFieldOpened = false;"
                                                                    v-model="suggestion.second_date"
+                                                                   :min="minTrainingDate"
+                                                                   :max="maxTrainingDate"
+                                                                   :display-date="suggestion.second_date ? suggestion.second_date : initialDisplayDate"
                                                     ></v-date-picker>
                                                 </v-menu>
                                             </v-locale-provider>
@@ -455,14 +473,14 @@ const validateTrainingSuggestionDates = (index) => {
                                 <template v-else>
                                     <v-radio-group v-model="registrationForm.kita.training_id">
                                         <v-radio v-for="training in availableKitasByParticipantCount" :key="training.id"
-                                                 :label="`${formatDate(training.first_date)} und ${formatDate(training.second_date)}`"
+                                                 :label="`${formatDate(training.first_date, 'de-DE')} und ${formatDate(training.second_date, 'de-DE')}`"
                                                  :value="training?.id"
                                         ></v-radio>
                                     </v-radio-group>
                                 </template>
                             </v-col>
 
-                            <v-col cols="12" sm="7">
+                            <v-col cols="12" md="6">
                                 <InfoMessage :text="isNewKitaWasLarge ? 'Wählen Sie bitte nachfolgend zwei direkt aufeinanderfolgende Schulungstermine aus. Wenn für Sie zwei aufeinanderfolgende Termine nicht möglich sind, wählen Sie bitte zwei Tage aus, die weniger als 7 Tage auseinander liegen.' : 'Bitte wählen Sie ein Schulungszeitraum aus, an welchen Tagen eine Durchführung mit Ihrem gesamten pädagogischen Team möglich ist. Schulungsort ist voraussichtlich in der Nähe des Anhalter Bahnhofs.'"/>
                             </v-col>
                         </v-row>
@@ -585,7 +603,7 @@ const validateTrainingSuggestionDates = (index) => {
                     <v-row class="tw-mb-8">
                         <v-col cols="12">
                             <h2 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight">
-                                Ansprechpartner in Ihrer Einrichtung für die BeoKiz-Schulung
+                                Sonstiges
                             </h2>
                         </v-col>
 

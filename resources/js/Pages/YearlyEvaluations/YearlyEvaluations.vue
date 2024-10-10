@@ -792,24 +792,24 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
             >
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.year}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.year}}</td>
 
-                        <td>{{item.selectable?.kita?.formatted_name}}</td>
+                        <td>{{item?.kita?.formatted_name}}</td>
 
-                        <td>{{ item.selectable.children_2_born_per_year }}</td>
+                        <td>{{ item.children_2_born_per_year }}</td>
 
-                        <td>{{ item.selectable.children_4_born_per_year }}</td>
+                        <td>{{ item.children_4_born_per_year }}</td>
 
 
-                        <td>{{ item.selectable.evaluations_with_daz_2_total_per_year + item.selectable.evaluations_without_daz_2_total_per_year }}</td>
+                        <td>{{ item.evaluations_with_daz_2_total_per_year + item.evaluations_without_daz_2_total_per_year }}</td>
 
-                        <td>{{ item.selectable.evaluations_with_daz_4_total_per_year + item.selectable.evaluations_without_daz_4_total_per_year }}</td>
+                        <td>{{ item.evaluations_with_daz_4_total_per_year + item.evaluations_without_daz_4_total_per_year }}</td>
 
                         <td align="center">
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('yearly_evaluations.show', { id: item.selectable.id })">
+                                    <Link :href="route('yearly_evaluations.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -818,7 +818,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteEvaluationDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Jährliche Rückmeldung löschen</span>
                             </v-tooltip>

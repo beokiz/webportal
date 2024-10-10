@@ -25,6 +25,7 @@ const props = defineProps({
     filters: Object,
     errors: Object,
     multipliers: Array,
+    kitas: Array,
     statuses: Array,
     types: Array,
 });
@@ -65,6 +66,7 @@ const maxParticipantCountFilter = ref(props.filters.max_participant_count ?? nul
 const typeFilter = ref(props.filters.type ?? null);
 const multiIdFilter = ref(props.filters.multi_id ?? null);
 const statusFilter = ref(props.filters.status ?? null);
+const kitaIdFilter = ref(props.filters.with_kitas ?? null);
 const search = ref('');
 const errors = ref(props.errors || {});
 
@@ -100,12 +102,13 @@ const headers = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '10%', sortable: true },
     { title: 'Teilnehmer ', key: 'prepared_participant_count', width: '5%', sortable: true },
+    { title: 'Kita', key: 'kitas_list', width: '17%', sortable: false },
     { title: 'Typ', key: 'type', width: '7%', sortable: true },
-    { title: 'Status', key: 'status', width: '10%', sortable: true },
-    { title: 'Multiplikator', key: 'multi_id', width: '10%', sortable: true },
-    { title: 'Notizen', key: 'notes', width: '20%', sortable: true },
-    { title: 'Erstellt am', key: 'created_at', width: '10%', sortable: true },
-    { title: 'Geändert am', key: 'updated_at', width: '10%', sortable: true },
+    { title: 'Status', key: 'status', width: '7%', sortable: true },
+    { title: 'Multiplikator', key: 'multi_id', width: '7%', sortable: true },
+    { title: 'Notizen', key: 'notes', width: '15%', sortable: true },
+    { title: 'Erstellt am', key: 'created_at', width: '7%', sortable: true },
+    { title: 'Geändert am', key: 'updated_at', width: '7%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '10%', sortable: false, align: 'center' },
 ];
 
@@ -131,7 +134,8 @@ const allFiltersEmpty = computed(() => {
         maxParticipantCountFilter.value === null &&
         typeFilter.value === null &&
         multiIdFilter.value === null &&
-        statusFilter.value === null;
+        statusFilter.value === null &&
+        kitaIdFilter.value === null;
 });
 
 const someFiltersNotEmpty = computed(() => {
@@ -142,7 +146,8 @@ const someFiltersNotEmpty = computed(() => {
         maxParticipantCountFilter.value !== null ||
         typeFilter.value !== null ||
         multiIdFilter.value !== null ||
-        statusFilter.value !== null;
+        statusFilter.value !== null ||
+        kitaIdFilter.value !== null;
 });
 
 const completedTrainingInfo = computed(() => {
@@ -227,6 +232,10 @@ watch(secondDateField, (val) => {
     rawSecondDateField.value = prepareDate(val);
 });
 
+watch(kitaIdFilter, (val) => {
+    triggerSearch();
+});
+
 const triggerSearch = () => {
     loading.value = true;
     search.value = String(Date.now());
@@ -252,6 +261,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         typeFilter.value = null;
         multiIdFilter.value = null;
         statusFilter.value = null;
+        kitaIdFilter.value = null;
     }
 
     if (
@@ -305,6 +315,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
         if (statusFilter.value) {
             data.status = statusFilter.value;
+        }
+
+        if (kitaIdFilter.value) {
+            data.with_kitas = kitaIdFilter.value;
         }
 
         await router.get(route(route().current()), data, {
@@ -557,6 +571,7 @@ const manageTrainingStatus = async (status) => {
 
                                                 <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
                                                                 :hideClearButton="true"
+                                                                :format="'HH:mm'"
                                                                 :hourLabel="'Std.'"
                                                                 :minuteLabel="'Protokoll'"
                                                                 :disabled="loading">
@@ -591,8 +606,9 @@ const manageTrainingStatus = async (status) => {
                                             <v-col cols="12" sm="6">
                                                 <v-label class="tw-mt-6 tw-mr-2">Zeitraum zweiter Schulungstag*</v-label>
 
-                                                <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
+                                                <vue-timepicker v-model="manageForm.second_date_start_and_end_time"
                                                                 :hideClearButton="true"
+                                                                :format="'HH:mm'"
                                                                 :hourLabel="'Std.'"
                                                                 :minuteLabel="'Protokoll'"
                                                                 :disabled="loading">
@@ -839,7 +855,16 @@ const manageTrainingStatus = async (status) => {
                         </v-col>
 
                         <v-col cols="12" sm="4">
-
+                            <v-select
+                                v-model="kitaIdFilter"
+                                :items="kitas"
+                                item-title="name"
+                                item-value="id"
+                                label="Kita"
+                                multiple
+                                :disabled="loading"
+                                clearable
+                            ></v-select>
                         </v-col>
                     </v-row>
                 </div>
@@ -866,52 +891,54 @@ const manageTrainingStatus = async (status) => {
                 @update:options="goToPage"
             >
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{!item.selectable.first_date || item.selectable.first_date === '-' ? item.selectable.first_date : formatDate(item.selectable.first_date, 'fr-CA')}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{!item.first_date || item.first_date === '-' ? item.first_date : formatDate(item.first_date, 'fr-CA')}}</td>
 
-                        <td>{{!item.selectable.second_date || item.selectable.second_date === '-' ? item.selectable.second_date : formatDate(item.selectable.second_date, 'fr-CA')}}</td>
+                        <td>{{!item.second_date || item.second_date === '-' ? item.second_date : formatDate(item.second_date, 'fr-CA')}}</td>
 
-                        <td>{{item.selectable.location}}</td>
+                        <td>{{item.location}}</td>
 
-                        <td>{{item.selectable.prepared_participant_count}}</td>
+                        <td>{{item.prepared_participant_count}}</td>
 
-                        <td>{{item.selectable.formatted_type}}</td>
+                        <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-                        <td>{{item.selectable.formatted_status}}</td>
+                        <td>{{item.formatted_type}}</td>
 
-                        <td>{{item.selectable?.multiplier ? item.selectable?.multiplier?.full_name : '-'}}</td>
+                        <td>{{item.formatted_status}}</td>
 
-                        <td>{{item.selectable.notes}}</td>
+                        <td>{{item?.multiplier ? item?.multiplier?.full_name : '-'}}</td>
 
-                        <td>{{!item.selectable.created_at || item.selectable.created_at === '-' ? item.selectable.created_at : formatDateTime(item.selectable.created_at, 'sv-SE')}}</td>
+                        <td>{{item.notes}}</td>
 
-                        <td>{{!item.selectable.updated_at || item.selectable.updated_at === '-' ? item.selectable.updated_at : formatDateTime(item.selectable.updated_at, 'sv-SE')}}</td>
+                        <td>{{!item.created_at || item.created_at === '-' ? item.created_at : formatDateTime(item.created_at, 'sv-SE')}}</td>
+
+                        <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'sv-SE')}}</td>
 
                         <td class="text-center">
-                            <template v-if="item.selectable.status === 'planned'">
+                            <template v-if="item.status === 'planned'">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'confirmed')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item, 'confirmed')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-progress-check</v-icon>
                                         </span>
                                     </template>
                                     <span>Schulungstermin bestätigen</span>
                                 </v-tooltip>
                             </template>
-                            <template v-if="item.selectable.status === 'confirmed'">
+                            <template v-if="item.status === 'confirmed'">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'completed')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item, 'completed')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-check</v-icon>
                                         </span>
                                     </template>
                                     <span>Training abschließen und Einrichtungen zulassen</span>
                               </v-tooltip>
                             </template>
-                            <template v-if="item.selectable.status !== 'completed' && item.selectable.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
+                            <template v-if="item.status !== 'completed' && item.status !== 'cancelled' && ($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)">
                                 <v-tooltip location="top">
                                     <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item.selectable, 'cancelled')">
+                                        <span class="tw-cursor-pointer" @click="openChangeTrainingStatusDialog(item, 'cancelled')">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-close</v-icon>
                                         </span>
                                     </template>
@@ -921,7 +948,7 @@ const manageTrainingStatus = async (status) => {
 
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('trainings.show', { id: item.selectable.id })">
+                                    <Link :href="route('trainings.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                     </Link>
                                 </template>
@@ -930,7 +957,7 @@ const manageTrainingStatus = async (status) => {
 
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin" location="top">
                                 <template v-slot:activator="{ props }">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingDialog(item.raw)">mdi-delete</v-icon>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="openDeleteTrainingDialog(item)">mdi-delete</v-icon>
                                 </template>
                                 <span>Schulung löschen</span>
                             </v-tooltip>

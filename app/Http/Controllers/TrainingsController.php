@@ -57,10 +57,11 @@ class TrainingsController extends BaseController
         $currentUser = $request->user();
 
         $userItemService = app(UserItemService::class);
+        $kitaItemService = app(KitaItemService::class);
 
         $args = $request->only([
             'page', 'per_page', 'sort', 'order_by', 'first_date', 'second_date', 'location', 'participant_count',
-            'max_participant_count', 'type', 'with_multipliers', 'status',
+            'max_participant_count', 'type', 'with_multipliers', 'status', 'with_kitas',
         ]);
 
         if (!empty($args['order_by']) && $args['order_by'] === 'prepared_participant_count') {
@@ -86,9 +87,10 @@ class TrainingsController extends BaseController
         return Inertia::render('Trainings/Trainings', array_merge($preparedResult, [
             'filters'     => $request->only([
                 'first_date', 'second_date', 'location', 'participant_count', 'max_participant_count', 'type',
-                'with_multipliers', 'status',
+                'with_multipliers', 'status', 'with_kitas',
             ]),
             'multipliers' => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
+            'kitas'       => $kitaItemService->collection(['paginated' => false]),
             'statuses'    => array_map(function ($status) {
                 return [
                     'title' => __("validation.attributes.{$status}"),
@@ -122,9 +124,15 @@ class TrainingsController extends BaseController
         $operatorItemService = app(OperatorItemService::class);
 
         // Get params for sorting & filtering Training Kitas
-        $trainingKitaArgs = $request->only(['sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']);
+        $trainingKitaArgs = $request->only([
+            'sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'other_operator', 'type', 'zip_code',
+        ]);
 
-        $trainingKitas = $kitaItemService->collection(array_merge($trainingKitaArgs ?? [], ['paginated' => false, 'with_trainings' => [$training->id], 'with' => ['users', 'currentYearlyEvaluations']]));
+        $trainingKitas = $kitaItemService->collection(array_merge($trainingKitaArgs ?? [], [
+            'paginated'      => false,
+            'with_trainings' => [$training->id],
+            'with'           => ['users', 'currentYearlyEvaluations'],
+        ]));
 
         // Get params for sorting & filtering all Kitas
         $allKitaArgs = [];
@@ -132,10 +140,13 @@ class TrainingsController extends BaseController
         if ($currentUser->is_user_multiplier) {
             $currentUser->loadMissing(['operators']);
 
-            $allKitaArgs['with_operators'] = $currentUser->operators->pluck('id')
+            $currentUserOperators = $currentUser->operators->pluck('id')
                 ->flatten()
                 ->unique()
                 ->toArray();
+
+            // If there are no operators, we don't return anything
+            $allKitaArgs['with_operators'] = !empty($currentUserOperators) ? $currentUserOperators : [-1];
         }
 
         $allKitas = $kitaItemService->collection(array_merge($allKitaArgs, [

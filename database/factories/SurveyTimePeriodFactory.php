@@ -6,9 +6,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Kita;
-use App\Models\User;
-
 /**
  * SurveyTimePeriodFactory Factory
  *

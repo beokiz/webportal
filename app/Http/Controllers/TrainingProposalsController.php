@@ -58,10 +58,11 @@ class TrainingProposalsController extends BaseController
         $currentUser = $request->user();
 
         $userItemService = app(UserItemService::class);
+        $kitaItemService = app(KitaItemService::class);
 
         $args = $request->only([
             'page', 'per_page', 'sort', 'order_by', 'first_date', 'second_date', 'location', 'participant_count',
-            'with_multipliers', 'status',
+            'with_multipliers', 'status', 'with_kitas',
         ]);
 
         if ($currentUser->is_user_multiplier) {
@@ -76,8 +77,9 @@ class TrainingProposalsController extends BaseController
 
         return Inertia::render('TrainingProposals/TrainingProposals', array_merge($this->prepareItemsCollection($result), [
             'userTrainingProposals' => $currentUser->is_user_multiplier ? $currentUser->trainingProposals : null,
-            'filters'               => $request->only(['first_date', 'second_date', 'location', 'participant_count', 'with_multipliers', 'status']),
+            'filters'               => $request->only(['first_date', 'second_date', 'location', 'participant_count', 'with_multipliers', 'status', 'with_kitas',]),
             'multipliers'           => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
+            'kitas'                 => $kitaItemService->collection(['paginated' => false]),
             'statuses'              => array_map(function ($status) {
                 return [
                     'title' => __("validation.attributes.{$status}"),
@@ -106,9 +108,15 @@ class TrainingProposalsController extends BaseController
         $operatorItemService = app(OperatorItemService::class);
 
         // Get params for sorting & filtering TrainingProposal Kitas
-        $trainingProposalKitaArgs = $request->only(['sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'type', 'zip_code']);
+        $trainingProposalKitaArgs = $request->only([
+            'sort', 'order_by', 'search', 'has_yearly_evaluations', 'approved', 'operator_id', 'other_operator', 'type', 'zip_code',
+        ]);
 
-        $trainingProposalKitas = $kitaItemService->collection(array_merge($trainingProposalKitaArgs ?? [], ['paginated' => false, 'with_training_proposals' => [$trainingProposal->id], 'with' => ['users', 'currentYearlyEvaluations']]));
+        $trainingProposalKitas = $kitaItemService->collection(array_merge($trainingProposalKitaArgs ?? [], [
+            'paginated'               => false,
+            'with_training_proposals' => [$trainingProposal->id],
+            'with'                    => ['operator', 'users', 'currentYearlyEvaluations'],
+        ]));
 
         // Get params for sorting & filtering all Kitas
         $allKitaArgs = [];
@@ -116,10 +124,13 @@ class TrainingProposalsController extends BaseController
         if ($currentUser->is_user_multiplier) {
             $currentUser->loadMissing(['operators']);
 
-            $allKitaArgs['with_operators'] = $currentUser->operators->pluck('id')
+            $currentUserOperators = $currentUser->operators->pluck('id')
                 ->flatten()
                 ->unique()
                 ->toArray();
+
+            // If there are no operators, we don't return anything
+            $allKitaArgs['with_operators'] = !empty($currentUserOperators) ? $currentUserOperators : [-1];
         }
 
         $allKitas = $kitaItemService->collection(array_merge($allKitaArgs, [

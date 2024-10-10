@@ -74,13 +74,13 @@ const modifiedItems = computed(() => {
                 item-value="name">
 
                 <template v-slot:item="{ item }">
-                    <tr :data-id="item.selectable.id" :data-order="item.selectable.order">
-                        <td>{{item.selectable.name}}</td>
+                    <tr :data-id="item.id" :data-order="item.order">
+                        <td>{{item.name}}</td>
 
                         <td align="center">
                             <v-tooltip location="top">
                                 <template v-slot:activator="{ props }">
-                                    <Link :href="route('screening.show', { id: item.selectable.id })">
+                                    <Link :href="route('screening.show', { id: item.id })">
                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-arrow-right-bold</v-icon>
                                     </Link>
                                 </template>

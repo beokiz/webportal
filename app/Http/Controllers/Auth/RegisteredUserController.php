@@ -11,17 +11,15 @@ use App\Http\Requests\Auth\RegistrationRequest;
 use App\Models\Operator;
 use App\Models\Role;
 use App\Models\Training;
+use App\Models\TrainingProposal;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use App\Services\Items\KitaItemService;
 use App\Services\Items\OperatorItemService;
 use App\Services\Items\TrainingItemService;
+use App\Services\Items\TrainingProposalItemService;
 use App\Services\Items\UserItemService;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -86,9 +84,10 @@ class RegisteredUserController extends BaseController
     {
         $attributes = $request->validated();
 
-        $userItemService     = app(UserItemService::class);
-        $kitaItemService     = app(KitaItemService::class);
-        $trainingItemService = app(TrainingItemService::class);
+        $userItemService             = app(UserItemService::class);
+        $kitaItemService             = app(KitaItemService::class);
+        $trainingItemService         = app(TrainingItemService::class);
+        $trainingProposalItemService = app(TrainingProposalItemService::class);
 
         // Disable observer to prevent email notifications from being sent
         User::flushEventListeners();
@@ -108,19 +107,17 @@ class RegisteredUserController extends BaseController
         // Connect manager user to the kita
         $kita->users()->sync([$user->id]);
 
-        // Create training for kita or connect kita to existed training
+        // Create training proposal for kita or connect kita to existed training
         if (!empty($attributes['kita']['trainings'])) {
             foreach ($attributes['kita']['trainings'] as $trainingData) {
-                $training = $trainingItemService->create([
-                    'first_date'            => $trainingData['first_date'],
-                    'second_date'           => $trainingData['second_date'],
-                    'max_participant_count' => $attributes['kita']['participant_count'],
-                    'participant_count'     => $attributes['kita']['participant_count'],
-                    'type'                  => Training::TYPE_IN_HOUSE,
-                    'status'                => Training::STATUS_PLANNED,
+                $trainingProposal = $trainingProposalItemService->create([
+                    'first_date'        => $trainingData['first_date'],
+                    'second_date'       => $trainingData['second_date'],
+                    'participant_count' => $attributes['kita']['participant_count'],
+                    'status'            => TrainingProposal::STATUS_EMAIL_NOT_CONFIRMED,
                 ]);
 
-                $training->kitas()->attach($kita->id);
+                $trainingProposal->kitas()->attach($kita->id);
             }
         }
 

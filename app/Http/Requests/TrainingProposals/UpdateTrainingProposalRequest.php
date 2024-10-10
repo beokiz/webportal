@@ -25,7 +25,7 @@ class UpdateTrainingProposalRequest extends CreateTrainingProposalRequest
         return [
             'multi_id'          => ['nullable', $this->userExistRule()],
             'first_date'        => ['sometimes', 'date'],
-            'second_date'       => ['sometimes', 'date', new DateDifferenceRule('first_date', $this->input('first_date'), 7)],
+            'second_date'       => ['sometimes', 'date', 'different:first_date', new DateDifferenceRule('first_date', $this->input('first_date'), 7, 'less_than')],
             'location'          => array_merge($this->textRules(), ['sometimes']),
             'participant_count' => array_merge($this->bigIntegerRules(), ['sometimes']),
             'status'            => ['sometimes', Rule::in(TrainingProposal::STATUSES)],

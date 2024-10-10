@@ -55,6 +55,9 @@ class TrainingProposalObserver extends BaseObserver
             $roles = config('permission.project_roles');
 
             switch ($trainingProposal->status) {
+                case TrainingProposal::STATUS_EMAIL_NOT_CONFIRMED:
+                    //
+                    break;
                 case TrainingProposal::STATUS_OPEN:
                     $trainingProposal->kitas->each(function ($kita) use ($trainingProposal) {
                         $kita->trainingProposals()

@@ -129,4 +129,26 @@ class TrainingFilter extends BaseFilter
     {
         return $this->whereIn('status', (array) $values);
     }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withKitas($values) : ModelFilter
+    {
+        return $this->whereHas('kitas', function ($query) use ($values) {
+            $query->whereIn('id', (array) $values);
+        });
+    }
+
+    /**
+     * @param string $values
+     * @return ModelFilter
+     */
+    public function searchKita(string $value) : ModelFilter
+    {
+        return $this->whereHas('kitas', function ($query) use ($value) {
+            $query->where('name', 'LIKE', '%' . trim($value) . '%');
+        });
+    }
 }

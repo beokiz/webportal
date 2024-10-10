@@ -46,10 +46,11 @@ return [
 
     'email_verification' => [
         'subject'     => sprintf("%s: Please confirm your email address", config('app.name')),
-        'greeting'    => "Dear :name!",
+        'greeting'    => "Dear Sir or Madam,",
         'action_text' => "Confirm",
-        'first_line'  => "Please confirm your email address by clicking on the following link:",
-        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
+        'first_line'  => "Thank you for your interest in the BeoKiz training. Please click on the following link to submit your appointment suggestions for the BeoKiz training. This step ensures that we can reach you at your provided email address.",
+        'second_line' => "A BeoKiz trainer will contact you to finalize the confirmation of your training appointment.",
+        'salutation'  => sprintf("Thank you very much and best regards,,  \nYour %s team", config('app.name')),
     ],
 
     /*

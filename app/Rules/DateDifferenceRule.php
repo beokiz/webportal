@@ -32,18 +32,25 @@ class DateDifferenceRule implements Rule
     private $days;
 
     /**
+     * @var string
+     */
+    private $comparisonType;
+
+    /**
      * Create a new rule instance.
      *
      * @param string      $attribute
      * @param string|null $value
      * @param int         $days
+     * @param string      $comparisonType ('greater_than' or 'less_than')
      * @return void
      */
-    public function __construct(string $attribute, ?string $value, int $days = 1)
+    public function __construct(string $attribute, ?string $value, int $days = 1, string $comparisonType = 'less_than')
     {
-        $this->attribute = $attribute;
-        $this->value     = $value;
-        $this->days      = $days;
+        $this->attribute      = $attribute;
+        $this->value          = $value;
+        $this->days           = $days;
+        $this->comparisonType = $comparisonType;
     }
 
     /**
@@ -59,11 +66,39 @@ class DateDifferenceRule implements Rule
             return false;
         }
 
-        $firstDate  = Carbon::parse($this->value);
-        $secondDate = Carbon::parse($value);
+        // Possible date formats
+        $formats = [
+            'd/m/Y, H:i:s',   // Example: 18/01/2025, 01:00:00
+            'm/d/Y H:i:s',    // Example: 01/18/2025 01:00:00
+            'd.m.Y, H:i:s',   // Example: 18.01.2025 01:00:00
+            'd.m.Y H:i:s',    // Example: 18.01.2025 01:00:00
+            'Y-m-d H:i:s',    // Example: 2025-01-18 01:00:00
+            'Y-m-d',          // Example: 2025-01-18
+            'd/m/Y',          // Example: 18/01/2025
+        ];
 
-        dd();
-        return $secondDate->diffInDays($firstDate) >= $this->days;
+        $firstDate  = $this->tryParseDate($this->value, $formats);
+        $secondDate = $this->tryParseDate($value, $formats);
+
+        // If one of the dates wasn't successfully parsed, return false
+        if (!$firstDate || !$secondDate) {
+            return false;
+        }
+
+        // Ensure the difference is not negative
+        if ($secondDate->lt($firstDate)) {
+            return false;
+        }
+
+        $difference = $secondDate->diffInDays($firstDate);
+
+        if ($this->comparisonType === 'greater_than') {
+            return $difference >= $this->days;
+        } else if ($this->comparisonType === 'less_than') {
+            return $difference <= $this->days;
+        }
+
+        return false;
     }
 
     /**
@@ -75,9 +110,35 @@ class DateDifferenceRule implements Rule
     {
         $otherField = __("validation.attributes.{$this->attribute}");
 
-        return __('validation.date_difference', [
+        $messageKey = $this->comparisonType === 'greater_than'
+            ? 'validation.date_difference_greater'
+            : 'validation.date_difference_less';
+
+        return __($messageKey, [
             'other_field' => $otherField,
             'days'        => $this->days,
         ]);
+    }
+
+    /**
+     * Attempts to parse a date using multiple formats.
+     *
+     * @param string $date
+     * @param array  $formats
+     * @return \Carbon\Carbon|false
+     */
+    private function tryParseDate($date, array $formats) : \Carbon\Carbon|false
+    {
+        foreach ($formats as $format) {
+            try {
+                return Carbon::createFromFormat($format, $date);
+            } catch (\Exception $e) {
+                // Catch the exception and continue checking other formats
+                continue;
+            }
+        }
+
+        // If no format matches, return false
+        return false;
     }
 }

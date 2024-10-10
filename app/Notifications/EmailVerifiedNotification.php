@@ -9,7 +9,6 @@ namespace App\Notifications;
 use App\Notifications\Messages\CustomMailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\URL;
 
 /**
  * Email Verified Notification
