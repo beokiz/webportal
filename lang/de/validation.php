@@ -184,6 +184,10 @@ return [
             'unique' => "Die Emailadresse ist schon einem anderen Nutzer zugeordnet.",
         ],
 
+        'user.email' => [
+            'unique' => "Die angegebene E-Mail-Adresse ist bereits einem Konto zugeordnet.",
+        ],
+
         'attribute-name' => [
             'rule-name' => "Benutzerdefinierte Nachricht",
         ],

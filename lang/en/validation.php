@@ -184,6 +184,10 @@ return [
             'unique' => "The email address is already assigned to another user.",
         ],
 
+        'user.email' => [
+            'unique' => "The email address you provided is already associated with an account.",
+        ],
+
         'attribute-name' => [
             'rule-name' => "custom-message",
         ],

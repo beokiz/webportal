@@ -152,12 +152,17 @@ class UserRolePolicy extends BasePolicy
     {
         $roles = config('permission.project_roles');
 
-        return $this->authorizeRoleAccess($user, [
-            $roles['super_admin'],
-            $roles['admin'],
-            $roles['manager'],
-            $roles['user_multiplier'],
-        ]);
+        if ($this->authorizeRoleAccess($user, [$roles['super_admin'], $roles['admin'], $roles['manager']])) {
+            return true;
+        }
+
+        if ($this->authorizeRoleAccess($user, [$roles['user_multiplier']])) {
+            $user->loadMissing(['operators']);
+
+            return $user->operators->where('self_training', true)->count() > 0;
+        }
+
+        return false;
     }
 
     /**
@@ -182,7 +187,9 @@ class UserRolePolicy extends BasePolicy
         if ($this->authorizeRoleAccess($user, [$roles['user_multiplier']])) {
             $user->loadMissing(['operators.kitas', 'trainings.kitas', 'trainingProposals.kitas']);
 
-            $isMultiOperatorKita = optional($user->operators)->pluck('kitas.*.id')
+            $isMultiOperatorKita = optional($user->operators)
+                ->where('self_training', true)
+                ->pluck('kitas.*.id')
                 ->flatten()
                 ->unique()
                 ->contains($kitaId);

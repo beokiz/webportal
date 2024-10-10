@@ -316,7 +316,7 @@ const manageForm = useForm({
     operator_id: null,
     other_operator: null,
     num_pedagogical_staff: null,
-    approved: true,
+    approved: currentUser?.is_super_admin || currentUser?.is_admin,
     type: null,
 });
 
@@ -466,20 +466,22 @@ const manageKita = async () => {
                                         </v-row>
 
                                         <v-row>
-                                            <v-col cols="12" sm="6">
-                                                <v-checkbox
-                                                    v-model="manageForm.approved"
-                                                    label="Kita zur Ampel zugelassen"
-                                                    :value="true"
-                                                ></v-checkbox>
-                                            </v-col>
+                                            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                                <v-col cols="12" sm="6">
+                                                    <v-checkbox
+                                                        v-model="manageForm.approved"
+                                                        label="Kita zur Ampel zugelassen"
+                                                        :value="true"
+                                                    ></v-checkbox>
+                                                </v-col>
+                                            </template>
 
                                             <v-col cols="12" sm="6">
                                                 <v-select
                                                     v-model="manageForm.type"
                                                     :items="types"
                                                     :error-messages="errors.type"
-                                                    label="Größe der Einrichtung*"
+                                                    label="Größe der Einrichtung (1-10: klein, 11+: groß)*"
                                                     required
                                                 ></v-select>
                                             </v-col>

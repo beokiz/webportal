@@ -556,6 +556,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 </v-btn>
                             </v-hover>
                         </template>
+
                         <template v-if="showConfirmationPopupButton">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'success'" dark @click="openConfirmTrainingProposalDialog">
@@ -563,10 +564,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 </v-btn>
                             </v-hover>
                         </template>
+
                         <template v-if="editedTrainingProposal.status === 'reserved'">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'error'" dark @click="openRevokeTrainingProposalDialog">
                                     <span>Reservierung aufheben</span>
+                                </v-btn>
+                            </v-hover>
+                        </template>
+
+                        <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_user_multiplier">
+                            <v-hover v-if="editedTrainingProposal?.kitas_users_emails && editedTrainingProposal?.kitas_users_emails.length > 0" v-slot:default="{ isHovering, props }">
+                                <v-btn class="tw-ml-4 tw-mb-4" :href="`mailto:?bcc=${editedTrainingProposal?.kitas_users_emails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
+                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                    <span>Mail an Kita(s) schreiben</span>
                                 </v-btn>
                             </v-hover>
                         </template>
@@ -864,7 +875,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <td>{{item?.zip_code}}</td>
 
                                         <td class="text-center">
-                                              <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                              <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_user_multiplier">
                                                   <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                       <template v-slot:activator="{ props }">
                                                           <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">

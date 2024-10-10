@@ -61,7 +61,9 @@ class TrainingProposalConfirmationPendingNotification extends Notification
         ]);
 
         if (!empty($this->args['is_copy'])) {
-            $subject .= ' [' . __('notifications.training_proposal_confirmation_pending.copy_label') . ']';
+            $copyLabel = __('notifications.training_proposal_confirmation_pending.copy_label');
+
+            $subject = "[{$copyLabel}] {$subject} [{$copyLabel}]";
         }
 
         return (new CustomMailMessage)

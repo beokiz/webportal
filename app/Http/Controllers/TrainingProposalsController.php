@@ -69,7 +69,7 @@ class TrainingProposalsController extends BaseController
         if ($currentUser->is_user_multiplier) {
             $args['status'] = TrainingProposal::STATUS_OPEN;
 
-            $currentUser->loadMissing(['trainingProposals.kitas']);
+            $currentUser->loadMissing(['trainingProposals.kitas.users']);
         }
 
         $result = $this->trainingProposalItemService->collection(array_merge($args, [
@@ -100,7 +100,7 @@ class TrainingProposalsController extends BaseController
         $this->authorize('authorizeAccessToTrainingProposals', User::class);
         $this->authorize('authorizeAccessToSingleTrainingProposal', [User::class, $trainingProposal]);
 
-        $trainingProposal->loadMissing(['multiplier']);
+        $trainingProposal->loadMissing(['multiplier', 'kitas.users']);
 
         $currentUser = $request->user();
 

@@ -90,6 +90,7 @@ class TrainingProposal extends Model
         'formatted_status',
         'formatted_location',
         'kitas_list',
+        'kitas_users_emails',
     ];
 
     /**
@@ -98,11 +99,16 @@ class TrainingProposal extends Model
     public function formattedLocation() : Attribute
     {
         return Attribute::make(
-            get: function($value, $attributes) {
+            get: function ($value, $attributes) {
                 if (!empty($attributes['location']) || !empty($attributes['street']) || !empty($attributes['house_number']) || !empty($attributes['zip_code']) || !empty($attributes['city'])) {
+//                    $address = implode(', ', array_filter([
+//                        trim(trim($attributes['street']) . ' ' . trim($attributes['house_number']) . ' ' . trim($attributes['zip_code'])),
+//                        trim($attributes['city']),
+//                    ]));
+
                     $address = implode(', ', array_filter([
-                        trim(trim($attributes['street']) . ' ' . trim($attributes['house_number']) . ' ' . trim($attributes['zip_code'])),
-                        trim($attributes['city']),
+                        trim($attributes['zip_code']),
+                        trim(trim($attributes['street']) . ' ' . trim($attributes['house_number'])),
                     ]));
 
                     if (!empty($attributes['location']) && !empty($address)) {
@@ -134,6 +140,28 @@ class TrainingProposal extends Model
     {
         return Attribute::make(
             get: fn($value, $attributes) => $this->relationLoaded('kitas') ? $this->kitas->pluck('name') : [],
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function kitasUsersEmails() : Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                if ($this->relationLoaded('kitas')) {
+                    $emails = collect([]);
+
+                    $this->kitas->each(function ($kita) use (&$emails) {
+                        $emails = $emails->merge($kita->users_emails);
+                    });
+
+                    return $emails->unique()->values();
+                } else {
+                    return [];
+                }
+            },
         );
     }
 

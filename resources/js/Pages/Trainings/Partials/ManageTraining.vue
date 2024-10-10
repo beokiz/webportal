@@ -909,14 +909,16 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" class="text-right">
-                            <v-hover v-if="usersEmails && usersEmails.length > 0" v-slot:default="{ isHovering, props }">
-                                <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">
-                                    <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                    <span>Schreibe E-Mail an Auswahl</span>
-                                </v-btn>
-                            </v-hover>
-                        </v-col>
+                        <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                            <v-col cols="12" class="text-right">
+                                <v-hover v-if="usersEmails && usersEmails.length > 0" v-slot:default="{ isHovering, props }">
+                                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openUsersEmailsDialog">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                        <span>Schreibe E-Mail an Auswahl</span>
+                                    </v-btn>
+                                </v-hover>
+                            </v-col>
+                        </template>
 
                         <v-col cols="12">
                             <v-data-table-server
@@ -946,7 +948,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <td>{{item?.zip_code}}</td>
 
                                         <td class="text-center">
-                                              <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                                              <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_user_multiplier">
                                                   <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
                                                       <template v-slot:activator="{ props }">
                                                           <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">
