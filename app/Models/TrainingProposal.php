@@ -113,7 +113,7 @@ class TrainingProposal extends Model
                     ]));
 
                     if (!empty($attributes['location']) && !empty($address)) {
-                        return "{$attributes['location']} - {$address}";
+                        return "{$address} - {$attributes['location']}";
                     } else {
                         return !empty($attributes['location']) ? $attributes['location'] : $address;
                     }
