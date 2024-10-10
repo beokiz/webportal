@@ -123,6 +123,7 @@ const manageForm = useForm({
     house_number: editedTrainingProposal.value?.house_number,
     zip_code: editedTrainingProposal.value?.zip_code,
     city: editedTrainingProposal.value?.city,
+    district: editedTrainingProposal.value?.district,
     notes: editedTrainingProposal.value?.notes,
 });
 
@@ -577,7 +578,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             <v-hover v-if="editedTrainingProposal?.kitas_users_emails && editedTrainingProposal?.kitas_users_emails.length > 0" v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" :href="`mailto:?bcc=${editedTrainingProposal?.kitas_users_emails.join(',')}`" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark>
                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                    <span>Mail an Kita(s) schreiben</span>
+                                    <span>Mail an KiTa(s) schreiben</span>
                                 </v-btn>
                             </v-hover>
                         </template>
@@ -647,7 +648,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
 
                 <v-row>
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.street"
                             :error-messages="errors.street"
@@ -657,7 +658,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.house_number"
                             :error-messages="errors.house_number"
@@ -667,7 +668,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.zip_code"
                             :error-messages="errors.zip_code"
@@ -676,8 +677,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             clearable
                         ></v-text-field>
                     </v-col>
+                </v-row>
 
-                    <v-col cols="12" sm="3">
+                <v-row>
+                    <v-col cols="12" sm="6">
+                        <v-text-field
+                            v-model="manageForm.district"
+                            :error-messages="errors.district"
+                            label="Bezirk"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="6">
                         <v-text-field
                             v-model="manageForm.city"
                             :error-messages="errors.city"
@@ -937,7 +950,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-dialog v-model="confirmTrainingProposalDialog" width="80vw">
                         <v-card height="80vw">
                             <v-card-title>
-                                <span class="tw-text-h5">Schulung gegenüber den Kitas bestätigen?</span>
+                                <span class="tw-text-h5">Schulung gegenüber den KiTas bestätigen?</span>
                             </v-card-title>
 
                             <v-card-text>
@@ -1112,7 +1125,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                 :error-messages="errors.kitas"
                                                 item-title="name"
                                                 item-value="id"
-                                                label="Kita"
+                                                label="KiTa"
                                                 multiple
                                                 required
                                             ></v-autocomplete>

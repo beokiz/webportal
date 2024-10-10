@@ -36,6 +36,7 @@ class UpdateTrainingRequest extends CreateTrainingRequest
             'house_number'                   => array_merge($this->textRules(true), ['sometimes']),
             'zip_code'                       => array_merge($this->textRules(10), ['sometimes']),
             'city'                           => array_merge($this->textRules(), ['sometimes']),
+            'district'                       => array_merge($this->textRules(), ['nullable']),
             'notes'                          => array_merge($this->bigTextRules(), ['nullable']),
         ];
     }

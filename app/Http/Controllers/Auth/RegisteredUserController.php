@@ -119,6 +119,7 @@ class RegisteredUserController extends BaseController
                     'house_number'      => $attributes['kita']['house_number'],
                     'zip_code'          => $attributes['kita']['zip_code'],
                     'city'              => $attributes['kita']['city'],
+                    'district'          => $attributes['kita']['district'],
                 ]);
 
                 $trainingProposal->kitas()->attach($kita->id);

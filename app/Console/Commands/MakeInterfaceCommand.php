@@ -68,8 +68,8 @@ class MakeInterfaceCommand extends Command
 
             $this->info($result);
         } catch (\Exception $exception) {
-            $this->error(__('artisan.common.error'));
-            $this->error(__('artisan.common.exception', ['exception' => $exception->getMessage()]));
+            $this->error(__('commands.common.error'));
+            $this->error(__('commands.common.exception', ['exception' => $exception->getMessage()]));
         }
     }
 }

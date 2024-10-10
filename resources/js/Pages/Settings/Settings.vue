@@ -17,6 +17,7 @@ const props = defineProps({
     downloadableFiles: Array,
     emailSettings: Object,
     loginSettings: Object,
+    supportSettings: Object,
     currentPage: Number,
     perPage: Number,
     lastPage: Number,
@@ -264,8 +265,21 @@ const manageLoginSettingsForm = useForm({
     settings: props.loginSettings,
 });
 
+const manageSupportSettingsForm = useForm({
+    settings: props.supportSettings,
+});
+
 const manageSettings = async (type) => {
-    let manageForm = type === 'login' ? manageLoginSettingsForm : manageEmailSettingsForm;
+    let manageForm;
+
+  console.log(type)
+    if (type === 'login') {
+        manageForm = manageLoginSettingsForm;
+    } else if (type === 'support') {
+        manageForm = manageSupportSettingsForm;
+    } else {
+        manageForm = manageEmailSettingsForm;
+    }
 
     manageForm.processing = true;
 
@@ -713,7 +727,41 @@ const deleteDownloadableFile = async () => {
                 <v-col cols="12" class="tw-flex tw-items-center tw-justify-start">
                     <v-hover v-slot:default="{ isHovering, props }">
                         <v-btn-primary @click="manageSettings('login')" v-bind="props"
-                                       :color="isHovering ? 'accent' : 'primary'">Speichern
+                                       :color="isHovering ? 'accent' : 'primary'">
+                            Speichern
+                        </v-btn-primary>
+                    </v-hover>
+                </v-col>
+            </v-row>
+        </div>
+
+        <!-- Support page settings block -->
+        <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-mb-8">
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight tw-mb-4">Text auf der Support-Seite</h2>
+
+            <v-row>
+                <v-col cols="12">
+                    <template v-for="(value, name) in supportSettings">
+                        <div class="tw-flex tw-items-center tw-justify-start">
+                            <template v-if="name === 'imprint_support_html'">
+                                <TiptapEditor v-model="manageSupportSettingsForm.settings[name]" :minHeight="300"/>
+                            </template>
+                            <template v-else>
+                                <v-text-field v-model="manageSupportSettingsForm.settings[name]"
+                                              :error-messages="errors?.settings ? errors.settings[name] : false"
+                                              :label="`${settingsLabel[name]}*`" required></v-text-field>
+                            </template>
+                        </div>
+                    </template>
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col cols="12" class="tw-flex tw-items-center tw-justify-start">
+                    <v-hover v-slot:default="{ isHovering, props }">
+                        <v-btn-primary @click="manageSettings('support')" v-bind="props"
+                                       :color="isHovering ? 'accent' : 'primary'">
+                            Speichern
                         </v-btn-primary>
                     </v-hover>
                 </v-col>

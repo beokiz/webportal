@@ -62,7 +62,7 @@ return [
     'email_verified' => [
         'subject'             => sprintf("%s: Bestätigung Ihrer Terminvorschläge zur BeoKiz-Schulung", config('app.name')),
         'greeting'            => "Sehr geehrte:r :name!",
-        'first_line'          => "Ihre Terminanfrage(n) zur BeoKiz-Schulung: \n :training_proposals",
+        'first_line'          => "Ihre Terminanfrage(n) zur BeoKiz-Schulung: \n :training_proposals <br/> sind eingegangen.",
         'second_line'         => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator: innen bald mit Ihnen in Verbindung setzen.",
         'salutation'          => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
         'first_training_item' => "am :first_date und :second_date",
@@ -126,11 +126,11 @@ return [
     ],
 
     'new_operator_kita' => [
-        'subject'     => sprintf("%s: Schulungswunsch der Kita :kita_name", config('app.name')),
+        'subject'     => sprintf("%s: Schulungswunsch der KiTa :kita_name", config('app.name')),
         'greeting'    => "Hallo liebe Multiplikator*innen vom Träger :operator_name,",
-        'first_line'  => "im BeoKiz-Anmeldeportal hat sich die Kita :kita_name für eine BeoKiz Schulung anmelden wollen.",
-        'second_line' => "Die Kita hat vom System automatisch eine Mail erhalten, in der sie darauf hingewiesen wurde, dass Ihr Euch – in Eurer Funktion als Träger-Multis - bei der Kita melden werden, um weitere Schritte abzustimmen.",
-        'third_line'  => "Wenn ihr einen Schulungstermin mit der Kita abgesprochen habt, legt diesen bitte selbst im Portal an.",
+        'first_line'  => "im BeoKiz-Anmeldeportal hat sich die KiTa :kita_name für eine BeoKiz Schulung anmelden wollen.",
+        'second_line' => "Die KiTa hat vom System automatisch eine Mail erhalten, in der sie darauf hingewiesen wurde, dass Ihr Euch – in Eurer Funktion als Träger-Multis - bei der KiTa melden werden, um weitere Schritte abzustimmen.",
+        'third_line'  => "Wenn ihr einen Schulungstermin mit der KiTa abgesprochen habt, legt diesen bitte selbst im Portal an.",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
 
@@ -140,13 +140,25 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'yearly_evaluation_reminder'             => [
+    'yearly_evaluation_reminder' => [
         'subject'     => sprintf("%s: Jährliche Evaluierungserinnerung", config('app.name')),
         'greeting'    => "Sehr geehrte:r Einrichtungsleitung,",
-        'first_line'  => "die jährliche Rückmeldung zur Statistischen Auswertung des Sprachstandsfeststellung für Kinder in Kindertageseinrichtungen und Kindertagespflege (Statuserhebung) für das Kita-Jahr :evaluation_year  muss bis zum :survey_end_date erfolgen.",
+        'first_line'  => "die jährliche Rückmeldung zur Statistischen Auswertung des Sprachstandsfeststellung für Kinder in Kindertageseinrichtungen und Kindertagespflege (Statuserhebung) für das KiTa-Jahr :evaluation_year  muss bis zum :survey_end_date erfolgen.",
         'second_line' => "Bisher haben wir aus Ihrer Einrichtung noch keine Statuserhebung erhalten. Daher bitten wir Sie mit dieser Mail darum diese bis zum :survey_end_date einzureichen. Die entsprechende Funktion ist in ihrem Nutzer*innenkonto auf <a href=':site'>:site</a> verfügbar.",
         'third_line'  => "Vielen Dank und beste Grüße",
         'salutation'  => sprintf('Ihr %s-Team', config('app.name')) . " \nim Auftrag der Senatsverwaltung für Bildung, Jugend und Familie",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database Backup Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'database_backup'                        => [
+        'subject'    => sprintf("%s: Tägliches Datenbank-Backup", config('app.name')),
+        'greeting'   => "Hallo,",
+        'first_line' => "ein tägliches Backup der Datenbank befindet sich in den angehängten Dateien.",
     ],
 
     /*
@@ -158,7 +170,7 @@ return [
     // 'confirmed' status notification
     'training_confirmed'                     => [
         'subject'     => sprintf("%s: Bestätigung des Schulungstermine am :first_date und :second_date", config('app.name')),
-        'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita,",
+        'greeting'    => "Sehr geehrtes Pädagogisches Team der KiTa,",
         'first_line'  => "Wir freuen uns, Ihnen mitteilen zu können, dass Ihr gewählter Schulungstermin bestätigt werden konnte.",
         'second_line' => "1. Schulungstag: :first_date von :first_date_start_and_end_time  \n2. Schulungstag: :second_date von :second_date_start_and_end_time  \nOrt: :location  \nIhr Multiplikator: :multiplier_name ",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
@@ -167,7 +179,7 @@ return [
     // 'completed' status notification
     'training_completed'                     => [
         'subject'     => sprintf("%s: Schulung erfolgreich abgeschlossen", config('app.name')),
-        'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita,",
+        'greeting'    => "Sehr geehrtes Pädagogisches Team der KiTa,",
         'first_line'  => "Wir freuen uns, Ihnen mitzuteilen, dass Ihre Schulung am :first_date und :second_date erfolgreich abgeschlossen wurde.",
         'second_line' => sprintf("Sie werden in Kürze ihren Zugang zum %s Portal erhalten.", config('app.name')),
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
@@ -176,7 +188,7 @@ return [
     // 'cancelled' status notification
     'training_cancelled'                     => [
         'subject'     => sprintf("%s: Absage des Schulungstermine am :first_date und :second_date", config('app.name')),
-        'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita,",
+        'greeting'    => "Sehr geehrtes Pädagogisches Team der KiTa,",
         'first_line'  => "Leider müssen wir Ihnen mitteilen, dass der Schulungstermin am :first_date und :second_date abgesagt werden musste.",
         'second_line' => "Wir entschuldigen uns für etwaige Unannehmlichkeiten.",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
@@ -191,7 +203,7 @@ return [
     // 'confirmation_pending' status notification
     'training_proposal_confirmation_pending' => [
         'subject'     => sprintf("%s: Bestätigung des Terminvorschlags am :first_date und :second_date", config('app.name')),
-        'greeting'    => "Sehr geehrtes Pädagogisches Team der Kita, ",
+        'greeting'    => "Sehr geehrtes Pädagogisches Team der KiTa, ",
         'first_line'  => "Bitte bestätigen Sie den vorgeschlagenen Schulungstermin durch Klicken auf den folgenden Link: :confirmation_link",
         'second_line' => "Schulungstage: :first_date und :second_date jeweils von 09 bis 17 Uhr  \nOrt: :location  <br/> Ihr Multiplikator: :multiplier_name ",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),

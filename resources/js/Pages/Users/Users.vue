@@ -547,7 +547,7 @@ const sendVerificationLink = async (item) => {
                                         <template v-slot:activator="{ props }">
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-alert-circle</v-icon>
                                         </template>
-                                        <span>E-Mail wurde nicht verifiziert</span>
+                                        <span>Verifizierungsmail erneut senden</span>
                                     </v-tooltip>
                                 </template>
 

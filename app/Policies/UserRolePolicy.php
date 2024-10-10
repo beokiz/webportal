@@ -444,4 +444,13 @@ class UserRolePolicy extends BasePolicy
 
         return false;
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function authorizeAccessToImprintAndSupport(User $user) : bool
+    {
+        return true;
+    }
 }

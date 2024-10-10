@@ -82,6 +82,10 @@ class SettingsController extends BaseController
             return in_array($name, ['login_form_additional_html']);
         }, ARRAY_FILTER_USE_BOTH);
 
+        $supportSettings = array_filter($settings, function ($value, $name) {
+            return in_array($name, ['imprint_support_html']);
+        }, ARRAY_FILTER_USE_BOTH);
+
         /*
          * Return results
          */
@@ -92,6 +96,7 @@ class SettingsController extends BaseController
             'downloadableFiles' => $downloadableFiles,
             'emailSettings'     => $emailSettings,
             'loginSettings'     => $loginSettings,
+            'supportSettings'   => $supportSettings,
         ]);
     }
 

@@ -43,7 +43,7 @@ class DatabaseExportCommand extends Command
     public function handle()
     {
         try {
-            $this->info(__('artisan.database_export.start_message'));
+            $this->info(__('commands.database_export.start_message'));
 
             $result = MysqlDatabaseHelper::export(config('database.default'), [
                 '--no-tablespaces',
@@ -51,13 +51,13 @@ class DatabaseExportCommand extends Command
             ], $this->option('path'));
 
             if ($result) {
-                $this->info(__('artisan.database_export.success_message', ['path' => $result]));
+                $this->info(__('commands.database_export.success_message', ['path' => $result]));
             } else {
-                $this->error(__('artisan.database_export.error_message'));
+                $this->error(__('commands.database_export.error_message'));
             }
         } catch (\Exception $exception) {
-            $this->error(__('artisan.common.error'));
-            $this->error(__('artisan.common.exception', ['exception' => $exception->getMessage()]));
+            $this->error(__('commands.common.error'));
+            $this->error(__('commands.common.exception', ['exception' => $exception->getMessage()]));
         }
     }
 }

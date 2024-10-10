@@ -37,6 +37,7 @@ class TrainingProposalFactory extends BaseFactory
             'house_number'      => $this->faker->randomNumber(),
             'zip_code'          => $this->faker->randomNumber(6),
             'city'              => $this->faker->city,
+            'district'          => $this->faker->randomElement(['Zentral', 'Nord', 'Süd', 'Ost', 'West', 'Innenstadt', 'Oberstadt', 'Stadtmitte']),
             'participant_count' => $this->faker->randomNumber(2),
             'status'            => $this->faker->randomElement(TrainingProposal::STATUSES),
             'notes'             => rand(0, 1) ? $this->faker->sentence : null,

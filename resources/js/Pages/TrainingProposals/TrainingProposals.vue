@@ -98,7 +98,7 @@ const mainTableHeaders = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '25%', sortable: true },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: true },
-    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
     { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
@@ -109,7 +109,7 @@ const additionalTableHeaders = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: false },
     { title: 'Ort', key: 'location', width: '25%', sortable: false },
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: false },
-    { title: 'Kita', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
     { title: 'Status', key: 'status', width: '5%', sortable: false },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
@@ -353,10 +353,6 @@ const close = () => {
     dialog.value = false;
     acceptTrainingProposalDialog.value = false;
     revokeTrainingProposalDialog.value = false;
-    confirmTrainingProposalDialog.value = false;
-    addMultiplierToTrainingProposalDialog.value = false;
-    addKitaToTrainingProposalDialog.value = false;
-    removeKitaFromTrainingProposalDialog.value = false;
 
     manageForm.reset();
     manageForm.clearErrors();
@@ -396,6 +392,7 @@ const manageForm = useForm({
     house_number: null,
     zip_code: null,
     city: null,
+    district: null,
     notes: null,
 });
 
@@ -543,7 +540,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                         </v-row>
 
                                         <v-row>
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.street"
                                                     :error-messages="errors.street"
@@ -553,7 +550,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.house_number"
                                                     :error-messages="errors.house_number"
@@ -563,7 +560,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.zip_code"
                                                     :error-messages="errors.zip_code"
@@ -572,8 +569,20 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                                     clearable
                                                 ></v-text-field>
                                             </v-col>
+                                        </v-row>
 
-                                            <v-col cols="12" sm="3">
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field
+                                                    v-model="manageForm.district"
+                                                    :error-messages="errors.district"
+                                                    label="Bezirk"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="6">
                                                 <v-text-field
                                                     v-model="manageForm.city"
                                                     :error-messages="errors.city"
@@ -754,7 +763,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                     :items="kitas"
                                     item-title="name"
                                     item-value="id"
-                                    label="Kita"
+                                    label="KiTa"
                                     multiple
                                     :disabled="loading"
                                     clearable
@@ -825,7 +834,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                         </a>
                                     </template>
-                                    <span>Mail an Kita(s) schreiben</span>
+                                    <span>Mail an KiTa(s) schreiben</span>
                                 </v-tooltip>
                             </template>
 
@@ -942,7 +951,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                             <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
                                         </a>
                                     </template>
-                                    <span>Mail an Kita(s) schreiben</span>
+                                    <span>Mail an KiTa(s) schreiben</span>
                                 </v-tooltip>
 
                                 <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">

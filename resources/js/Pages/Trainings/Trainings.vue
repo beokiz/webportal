@@ -102,7 +102,7 @@ const headers = [
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '19%', sortable: true },
     { title: 'Teilnehmer ', key: 'prepared_participant_count', width: '5%', sortable: true },
-    { title: 'Kita', key: 'kitas_list', width: '17%', sortable: false },
+    { title: 'KiTa', key: 'kitas_list', width: '17%', sortable: false },
     { title: 'Typ', key: 'type', width: '7%', sortable: true },
     { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Multiplikator', key: 'multi_id', width: '7%', sortable: true },
@@ -421,6 +421,7 @@ const manageForm = useForm({
     house_number: null,
     zip_code: null,
     city: null,
+    district: null,
     notes: null,
 });
 
@@ -671,7 +672,7 @@ const manageTrainingStatus = async (status) => {
                                         </v-row>
 
                                         <v-row>
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.street"
                                                     :error-messages="errors.street"
@@ -681,7 +682,7 @@ const manageTrainingStatus = async (status) => {
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.house_number"
                                                     :error-messages="errors.house_number"
@@ -691,7 +692,7 @@ const manageTrainingStatus = async (status) => {
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <v-col cols="12" sm="3">
+                                            <v-col cols="12" sm="4">
                                                 <v-text-field
                                                     v-model="manageForm.zip_code"
                                                     :error-messages="errors.zip_code"
@@ -700,8 +701,20 @@ const manageTrainingStatus = async (status) => {
                                                     clearable
                                                 ></v-text-field>
                                             </v-col>
+                                        </v-row>
 
-                                            <v-col cols="12" sm="3">
+                                        <v-row>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field
+                                                    v-model="manageForm.district"
+                                                    :error-messages="errors.district"
+                                                    label="Bezirk"
+                                                    :disabled="loading"
+                                                    clearable
+                                                ></v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="6">
                                                 <v-text-field
                                                     v-model="manageForm.city"
                                                     :error-messages="errors.city"
@@ -904,7 +917,7 @@ const manageTrainingStatus = async (status) => {
                                 :items="kitas"
                                 item-title="name"
                                 item-value="id"
-                                label="Kita"
+                                label="KiTa"
                                 multiple
                                 :disabled="loading"
                                 clearable
@@ -1035,7 +1048,7 @@ const manageTrainingStatus = async (status) => {
                     <v-dialog v-model="confirmTrainingDialog" width="80vw">
                         <v-card height="80vw">
                             <v-card-title>
-                                <span class="tw-text-h5">Schulung gegenüber den Kitas bestätigen?</span>
+                                <span class="tw-text-h5">Schulung gegenüber den KiTas bestätigen?</span>
                             </v-card-title>
 
                             <v-card-text>
@@ -1058,8 +1071,8 @@ const manageTrainingStatus = async (status) => {
 
                                     <v-row v-if="selectedTrainingKitas  && selectedTrainingKitas.length">
                                         <v-col cols="12">
-                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
-                                            <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
+                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden KiTas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede KiTa.</p>
+                                            <p>Bitte klicken Sie auf den Namen der KiTa, um diesen zu erhalten.</p>
                                         </v-col>
 
                                         <v-col cols="12" class="tw--mt-6">

@@ -89,6 +89,9 @@ onMounted(() => {
 
     menuItemsList.value['profile.edit'] = 'Profil';
     menuGroupsList.value['profile.edit'] = 'profile.*';
+
+    menuItemsList.value['other.imprint_and_support_index'] = 'Impressum und Support';
+    menuGroupsList.value['other.imprint_and_support_index'] = 'profile.imprint_and_support_index';
 });
 
 const errors = computed(() => props.errors ?? usePage().props.errors);

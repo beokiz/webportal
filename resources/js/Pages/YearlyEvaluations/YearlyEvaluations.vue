@@ -80,7 +80,7 @@ const canSavePopupForm = ref(false);
 
 const headers = [
     { title: 'Jahr', key: 'year', width: '7%', sortable: false},
-    { title: 'Kitas', key: 'kita_name', width: '11%', sortable: false },
+    { title: 'KiTas', key: 'kita_name', width: '11%', sortable: false },
     { title: 'Gemeldete Kinder bis 2.5 Jahre', key: 'children_2_born_per_year', width: '18%', sortable: false },
     { title: 'Gemeldete Kinder bis 4.5 Jahre', key: 'children_4_born_per_year', width: '18%', sortable: false },
     { title: 'Evaluationen für Kinder bis 2.5 Jahre', key: 'evaluations_with_daz_2_total_per_year', width: '18%', sortable: false },
@@ -496,7 +496,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                                                     :error-messages="errors.kita_id"
                                                     item-title="name"
                                                     item-value="id"
-                                                    label="Kita*"
+                                                    label="KiTa*"
                                                 ></v-select>
                                             </v-col>
                                         </v-row>
@@ -707,7 +707,7 @@ const getWarningText = (age, childs_amount, evaluations_amount) => {
                                 :items="kitas"
                                 item-title="name"
                                 item-value="name"
-                                label="Kitas"
+                                label="KiTas"
                                 multiple
                                 :disabled="loading"
                                 clearable

@@ -163,6 +163,7 @@ const manageForm = useForm({
     house_number: editedTraining.value?.house_number,
     zip_code: editedTraining.value?.zip_code,
     city: editedTraining.value?.city,
+    district: editedTraining.value?.district,
     notes: editedTraining.value?.notes,
 });
 
@@ -726,7 +727,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                 </v-row>
 
                 <v-row>
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.street"
                             :error-messages="errors.street"
@@ -736,7 +737,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.house_number"
                             :error-messages="errors.house_number"
@@ -746,7 +747,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field
                             v-model="manageForm.zip_code"
                             :error-messages="errors.zip_code"
@@ -755,8 +756,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             clearable
                         ></v-text-field>
                     </v-col>
+                </v-row>
 
-                    <v-col cols="12" sm="3">
+                <v-row>
+                    <v-col cols="12" sm="6">
+                        <v-text-field
+                            v-model="manageForm.district"
+                            :error-messages="errors.district"
+                            label="Bezirk"
+                            :disabled="loading"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="6">
                         <v-text-field
                             v-model="manageForm.city"
                             :error-messages="errors.city"
@@ -998,7 +1011,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-dialog v-model="confirmTrainingDialog" width="80vw">
                         <v-card height="80vw">
                             <v-card-title>
-                                <span class="tw-text-h5">Schulung gegenüber den Kitas bestätigen?</span>
+                                <span class="tw-text-h5">Schulung gegenüber den KiTas bestätigen?</span>
                             </v-card-title>
 
                             <v-card-text>
@@ -1021,8 +1034,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                     <v-row v-if="trainingKitas && trainingKitas.length">
                                         <v-col cols="12">
-                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden Kitas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede Kita.</p>
-                                            <p>Bitte klicken Sie auf den Namen der Kita, um diesen zu erhalten.</p>
+                                            <p class="mb-4">Sind Sie sich sicher, dass Sie die Termine gegenüber den folgenden KiTas bestätigen wollen? Im Folgenden gibt es individuelle E-Mail-Vorschläge für jede KiTa.</p>
+                                            <p>Bitte klicken Sie auf den Namen der KiTa, um diesen zu erhalten.</p>
                                         </v-col>
 
                                         <v-col cols="12" class="tw--mt-6">
@@ -1126,7 +1139,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                 :error-messages="errors.kitas"
                                                 item-title="name"
                                                 item-value="id"
-                                                label="Kita"
+                                                label="KiTa"
                                                 multiple
                                                 required
                                             ></v-autocomplete>

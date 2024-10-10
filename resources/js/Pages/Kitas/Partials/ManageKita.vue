@@ -410,8 +410,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-col cols="12" sm="6">
                         <v-text-field v-model="manageForm.number"
                                       :error-messages="errors.number"
-                                      label="Kita Nummer*"
-                                      type="number"
+                                      label="KiTa Nummer*"
                                       required
                                       :readonly="!canBeEdited"
                         ></v-text-field>
@@ -514,7 +513,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <v-col cols="12" sm="6">
                             <v-checkbox
                                 v-model="manageForm.approved"
-                                label="Kita zur Ampel zugelassen"
+                                label="KiTa zur Ampel zugelassen"
                                 :value="true"
                                 :readonly="!canBeEdited"
                             ></v-checkbox>

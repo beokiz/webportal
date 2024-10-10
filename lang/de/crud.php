@@ -274,7 +274,7 @@ return [
         'restore_error'   => "Fehler! Bei der Wiederherstellung des Trainings ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'restore_denied'  => "Fehler! Das ausgewählte Training kann nicht wiederhergestellt werden.",
 
-        'choose_location'  => "[Ort bei einer der Kitas erfragen!]",
+        'choose_location'  => "[Ort bei einer der KiTas erfragen!]",
     ],
 
     /*

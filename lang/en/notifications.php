@@ -62,7 +62,7 @@ return [
     'email_verified' => [
         'subject'             => sprintf("%s: Confirmation of your suggested dates for BeoKiz training", config('app.name')),
         'greeting'            => "Dear :name!",
-        'first_line'          => "Your training request(s) for BeoKiz: \n :trainings_list",
+        'first_line'          => "Your training request(s) for BeoKiz: \n :trainings_list <br/> have been received.",
         'second_line'         => "One of our BeoKiz multipliers will soon contact you to confirm the appointment.",
         'salutation'          => sprintf("Best regards,  \n your %s team", config('app.name')),
         'first_training_item' => "on :first_date and :second_date",
@@ -119,7 +119,7 @@ return [
     */
 
     'connected_to_kitas' => [
-        'subject'     => sprintf("%s: Connected to Kitas", config('app.name')),
+        'subject'     => sprintf("%s: Connected to KiTas", config('app.name')),
         'greeting'    => "Hello :name,",
         'first_line'  => "you have just been assigned to another facility in the BeoKiz traffic light portal. You are now assigned to the following facilities: \n :kitas",
         'second_line' => "Your access data has not changed as a result.",
@@ -141,13 +141,25 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'yearly_evaluation_reminder'             => [
+    'yearly_evaluation_reminder' => [
         'subject'     => sprintf("%s: Yearly evaluation reminder", config('app.name')),
         'greeting'    => "Dear facility manager,",
         'first_line'  => "The annual feedback on the statistical evaluation of the language proficiency assessment for children in daycare centers and childcare (status survey) for the daycare year :evaluation_year must be provided by :survey_end_date.",
         'second_line' => "We have not yet received a status report from your facility. We therefore ask you to submit this email by :survey_end_date. The corresponding function is available in your user account on <a href=':site'>:site</a>.",
         'third_line'  => "Thanks and best regards",
         'salutation'  => sprintf('Your %s Team', config('app.name')) . "\non behalf of the Senate Department for Education, Youth and Family",
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database Backup Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'database_backup'                        => [
+        'subject'    => sprintf("%s: Daily database backup", config('app.name')),
+        'greeting'   => "Hello,",
+        'first_line' => "a daily backup of the database is in the attached files.",
     ],
 
     /*

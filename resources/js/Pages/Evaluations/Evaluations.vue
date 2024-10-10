@@ -344,9 +344,7 @@ const unfinishedEvaluation = async (id) => {
                             <v-col cols="12">
                                 <v-hover v-slot:default="{ isHovering, props }">
                                     <div class="tw-text-right">
-                                        <a :href="route('evaluations.pdf', { id: evaluationResultItem.id })" @click="close" title="Fenster schließen">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2" @click="">mdi-close</v-icon>
-                                        </a>
+                                        <v-icon v-bind="props" size="small" class="tw-me-2" @click="close" title="Fenster schließen">mdi-close</v-icon>
                                     </div>
                                 </v-hover>
                             </v-col>
@@ -369,11 +367,13 @@ const unfinishedEvaluation = async (id) => {
                                         </v-btn>
                                     </v-hover>
 
-                                    <v-hover v-slot:default="{ isHovering, props }">
-                                        <v-btn @click="unfinishedEvaluation(evaluationResultItem.id)" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'accent' : 'primary'">
-                                            Abgabe zurückziehen
-                                        </v-btn>
-                                    </v-hover>
+                                    <template v-if="evaluationResultItem.editable && ($page.props.auth.user.is_manager || $page.props.auth.user.is_employer)">
+                                        <v-hover v-slot:default="{ isHovering, props }">
+                                            <v-btn @click="unfinishedEvaluation(evaluationResultItem.id)" class="tw-px-2 tw-py-3 tw-mb-4 tw-normal-case" :color="isHovering ? 'accent' : 'primary'">
+                                                Abgabe zurückziehen
+                                            </v-btn>
+                                        </v-hover>
+                                    </template>
                                 </div>
                             </v-col>
 
