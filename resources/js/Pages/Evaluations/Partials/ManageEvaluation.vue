@@ -117,6 +117,7 @@ const clear = () => {
 };
 
 const manageForm = useForm({
+    id: isEditMode.value ? props.evaluation.id : null,
     custom_unique_id: isEditMode.value ? props.evaluation.custom_unique_id : props.newCustomUniqueId,
     uuid: isEditMode.value ? props.evaluation.uuid : null,
     user_id: isEditMode.value ? props.evaluation.user_id : currentUser.id,

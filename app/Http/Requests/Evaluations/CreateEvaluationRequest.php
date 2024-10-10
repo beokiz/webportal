@@ -75,10 +75,10 @@ class CreateEvaluationRequest extends BaseFormRequest
     |--------------------------------------------------------------------------
     */
     /**
-     * @param string $age
+     * @param string|null $age
      * @return array
      */
-    protected function childDurationInKitaRules(string $age) : array
+    protected function childDurationInKitaRules(?string $age) : array
     {
         $childDurationInKitaRules = [];
 
