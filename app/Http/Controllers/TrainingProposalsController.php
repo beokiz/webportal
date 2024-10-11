@@ -66,6 +66,10 @@ class TrainingProposalsController extends BaseController
             'with_multipliers', 'status', 'with_kitas',
         ]);
 
+        if (!empty($args['order_by']) && $args['order_by'] === 'location') {
+            $args['order_by'] = 'zip_code';
+        }
+
         if ($currentUser->is_user_multiplier) {
             $args['status'] = TrainingProposal::STATUS_OPEN;
 

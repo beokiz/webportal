@@ -68,6 +68,10 @@ class TrainingsController extends BaseController
             $args['order_by'] = 'participant_count';
         }
 
+        if (!empty($args['order_by']) && $args['order_by'] === 'location') {
+            $args['order_by'] = 'zip_code';
+        }
+
         if ($currentUser->is_user_multiplier) {
             $args['with_multipliers'] = [$currentUser->id];
         }

@@ -164,6 +164,85 @@ class UserItemService extends BaseItemService
     }
 
     /**
+     * @param int   $id
+     * @param array $kitas
+     * @param bool  $removeKitas
+     * @param bool  $sendNotification
+     * @return bool|null
+     */
+    public function updateAttachedKitas(int $id, array $kitas, bool $removeKitas = false, bool $sendNotification = true) : ?bool
+    {
+        $item = $this->find($id);
+
+        if (!empty($kitas)) {
+            if ($removeKitas) {
+                $item->kitas()->detach($kitas);
+            } else {
+                $userKitas = $item->kitas->pluck('id');
+
+                foreach ($kitas as $kitaId) {
+                    $kitaId = (int) $kitaId;
+
+                    if (!$userKitas->contains($kitaId)) {
+                        $userKitas->add($kitaId);
+                    }
+                }
+
+                if (!empty($userKitas)) {
+                    $item->kitas()->sync($userKitas);
+
+                    if (!empty($sendNotification)) {
+                        $item->sendConnectedToKitasNotification(
+                            $item->kitas()
+                                ->pluck('name')
+                                ->toArray()
+                        );
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int   $id
+     * @param array $operators
+     * @param bool  $removeOperators
+     * @return bool|null
+     */
+    public function updateAttachedOperators(int $id, array $operators, bool $removeOperators = false) : ?bool
+    {
+        $item = $this->find($id);
+
+        if (!empty($operators)) {
+            if ($removeOperators) {
+                $item->operators()->detach($operators);
+            } else {
+                $userOperators = $item->operators->pluck('id');
+
+                foreach ($operators as $operatorId) {
+                    $operatorId = (int) $operatorId;
+
+                    if (!$userOperators->contains($operatorId)) {
+                        $userOperators->add($operatorId);
+                    }
+                }
+
+                if (!empty($userOperators)) {
+                    $item->operators()->sync($userOperators);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param int $id
      * @return bool|null
      */

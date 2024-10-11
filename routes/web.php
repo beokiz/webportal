@@ -153,6 +153,14 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
         Route::put('/{user}', [UsersController::class, 'update'])->name('update');
         Route::post('/{user}/send-verification-link', [UsersController::class, 'sendVerificationLink'])->name('send_verification_link');
+        Route::post('/{user}/connect-kita', [UsersController::class, 'connectKita'])->name('connect_kita');
+        Route::post('/{user}/connect-kitas', [UsersController::class, 'connectKitas'])->name('connect_kitas');
+        Route::post('/{user}/disconnect-kita', [UsersController::class, 'disconnectKita'])->name('disconnect_kita');
+        Route::post('/{user}/disconnect-kitas', [UsersController::class, 'disconnectKitas'])->name('disconnect_kitas');
+        Route::post('/{user}/connect-operator', [UsersController::class, 'connectOperator'])->name('connect_operator');
+        Route::post('/{user}/connect-operators', [UsersController::class, 'connectOperators'])->name('connect_operators');
+        Route::post('/{user}/disconnect-operator', [UsersController::class, 'disconnectOperator'])->name('disconnect_operator');
+        Route::post('/{user}/disconnect-operators', [UsersController::class, 'disconnectOperators'])->name('disconnect_operators');
         Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
     });
 

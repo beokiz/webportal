@@ -6,11 +6,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Users\ConnectKitasToUserRequest;
+use App\Http\Requests\Users\ConnectKitaToUserRequest;
+use App\Http\Requests\Users\ConnectOperatorsToUserRequest;
+use App\Http\Requests\Users\ConnectOperatorToUserRequest;
 use App\Http\Requests\Users\CreateUserFromKitaRequest;
 use App\Http\Requests\Users\CreateUserFromOperatorRequest;
 use App\Http\Requests\Users\CreateUserRequest;
+use App\Http\Requests\Users\DisconnectKitaFromUserRequest;
+use App\Http\Requests\Users\DisconnectKitasFromUserRequest;
+use App\Http\Requests\Users\DisconnectOperatorFromUserRequest;
+use App\Http\Requests\Users\DisconnectOperatorsFromUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
+use App\Models\Kita;
 use App\Models\User;
+use App\Services\Items\KitaItemService;
+use App\Services\Items\OperatorItemService;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
@@ -119,6 +130,7 @@ class UsersController extends BaseController
         $this->authorize('authorizeAdminAccess', User::class);
 //        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
+        // Check user can be edited
         $currentUser = $request->user();
 
         if (
@@ -129,6 +141,24 @@ class UsersController extends BaseController
             return $this->accessDeniedResponse();
         }
 
+        $kitaItemService     = app(KitaItemService::class);
+        $operatorItemService = app(OperatorItemService::class);
+
+        // Get params for sorting & filtering Kitas & Operators
+        $kitaArgs     = $request->only(['kita_args']);
+        $operatorArgs = $request->only(['operator_args']);
+
+        $userKitas     = $kitaItemService->collection(array_merge($kitaArgs['kita_args'] ?? [], ['paginated' => false, 'with_users' => [$user->id], 'with' => ['users', 'currentYearlyEvaluations']]));
+        $userOperators = $operatorItemService->collection(array_merge($operatorArgs['operator_args'] ?? [], ['paginated' => false, 'with_users' => [$user->id]]));
+
+        // Fetch all zip codes from kitas
+        $zipCodesList = $userKitas->pluck('zip_code')->unique()->transform(function ($zipCode) {
+            return [
+                'title' => $zipCode,
+                'value' => $zipCode,
+            ];
+        })->values()->toArray();
+
         $rolesFilters = [];
 
         if ($currentUser->is_admin) {
@@ -136,9 +166,23 @@ class UsersController extends BaseController
         }
 
         return Inertia::render('Users/Partials/ManageUser', [
-            'user'  => $user,
-            'roles' => $this->roleItemService->collection($rolesFilters),
-            'from'  => $request->input('from'),
+            'user'            => $user,
+            'userKitas'       => $userKitas,
+            'userOperators'   => $userOperators,
+//            'usersEmails'   => (!empty($operatorKitas) && $operatorKitas->isNotEmpty()) ? $kitaItemService->getUsersEmails($operatorKitas->pluck('id')->toArray()) : [],
+            'roles'           => $this->roleItemService->collection($rolesFilters),
+            'kitas'           => $kitaItemService->collection(['paginated' => false]),
+            'operators'       => $operatorItemService->collection(['paginated' => false]),
+            'kitaFilters'     => $kitaArgs['kita_args'] ?? [],
+            'operatorFilters' => $operatorArgs['operator_args'] ?? [],
+            'kitaTypes'       => array_map(function ($type) {
+                return [
+                    'title' => __("validation.attributes.{$type}"),
+                    'value' => $type,
+                ];
+            }, Kita::TYPES),
+            'zipCodes'        => $zipCodesList,
+//            'from'            => $request->input('from'),
         ]);
     }
 
@@ -241,6 +285,150 @@ class UsersController extends BaseController
         }
 
         return Redirect::back()->withErrors(__('crud.users.send_verification_link_denied'));
+    }
+
+    /**
+     * @param ConnectKitaToUserRequest $request
+     * @param User                     $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectKita(ConnectKitaToUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedKitas($user->id, [$attributes['kita']]);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
+    }
+
+    /**
+     * @param ConnectKitasToUserRequest $request
+     * @param User                      $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectKitas(ConnectKitasToUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedKitas($user->id, $attributes['kitas']);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
+    }
+
+    /**
+     * @param DisconnectKitaFromUserRequest $request
+     * @param User                          $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectKita(DisconnectKitaFromUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedKitas($user->id, [$attributes['kita']], true);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
+    }
+
+    /**
+     * @param DisconnectKitasFromUserRequest $request
+     * @param User                           $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectKitas(DisconnectKitasFromUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedKitas($user->id, $attributes['kitas'], true);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
+    }
+
+    /**
+     * @param ConnectOperatorToUserRequest $request
+     * @param User                         $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectOperator(ConnectOperatorToUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedOperators($user->id, [$attributes['operator']]);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
+    }
+
+    /**
+     * @param ConnectOperatorsToUserRequest $request
+     * @param User                          $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function connectOperators(ConnectOperatorsToUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedOperators($user->id, $attributes['operators']);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
+    }
+
+    /**
+     * @param DisconnectOperatorFromUserRequest $request
+     * @param User                              $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectOperator(DisconnectOperatorFromUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedOperators($user->id, [$attributes['operator']], true);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
+    }
+
+    /**
+     * @param DisconnectOperatorsFromUserRequest $request
+     * @param User                               $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disconnectOperators(DisconnectOperatorsFromUserRequest $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $attributes = $request->validated();
+        $result     = $this->userItemService->updateAttachedOperators($user->id, $attributes['operators'], true);
+
+        return $result
+            ? Redirect::back()->withSuccesses(__('crud.users.update_success'))
+            : Redirect::back()->withErrors(__('crud.users.update_error'));
     }
 
     /**
