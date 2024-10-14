@@ -548,8 +548,8 @@ const validateTrainingSuggestionDates = (index) => {
                         <v-col cols="12" sm="6">
                             <v-text-field v-model="registrationForm.kita.zip_code"
                                           :error-messages="errors['kita.zip_code']"
-                                          label="Postleitzahl"
-                                          type="number *"
+                                          label="Postleizahl*"
+                                          type="number"
                                           required
                             ></v-text-field>
                         </v-col>

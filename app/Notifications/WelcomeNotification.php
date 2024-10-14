@@ -91,7 +91,8 @@ class WelcomeNotification extends Notification
             ->greeting(__('notifications.welcome.greeting', ['name' => $name]))
             ->line(__('notifications.welcome.first_line'))
             ->line(__('notifications.welcome.second_line'))
-            ->action(__('notifications.welcome.action_text'), $url);
+            ->action(__('notifications.welcome.action_text'), $url)
+            ->salutation(__('notifications.welcome.salutation'));
     }
 
     /**

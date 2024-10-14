@@ -92,8 +92,9 @@ return [
         'subject'     => sprintf("%s: Konto erstellt", config('app.name')),
         'greeting'    => "Hallo :name,",
         'action_text' => "Neues Passwort festlegen",
-        'first_line'  => "du wurdest zum BeoKiz Ampel-Portal der Berliner Meilensteine eingeladen.",
+        'first_line'  => "du wurdest zum BeoKiz-Portal eingeladen.",
         'second_line' => "Damit du dich anmelden kannst, musst du erstmal ein Passwort setzen:",
+        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nDein %s-Team", config('app.name')),
     ],
 
     /*

@@ -594,7 +594,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <template v-if="editedTraining.status === 'confirmed'">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'success'" dark @click="openCompleteTrainingDialog">
-                                    <span>Training abschließen und Einrichtungen zulassen</span>
+                                    <span>Schulung abschließen und Einrichtung zum Ampelportal zulassen</span>
                                 </v-btn>
                             </v-hover>
                         </template>
@@ -1096,7 +1096,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12">
-                                            <p>Möchten Sie die ausgewählte Ausbildung wirklich absolvieren?</p>
+                                            <p>Möchten Sie diese Schulung wirklich abschliessen?</p>
                                         </v-col>
                                     </v-row>
                                 </v-container>

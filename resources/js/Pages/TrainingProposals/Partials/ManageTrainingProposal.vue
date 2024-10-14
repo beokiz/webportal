@@ -584,7 +584,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <template v-if="showConfirmationPopupButton">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'success'" dark @click="openConfirmTrainingProposalDialog">
-                                    <span>Termin reservieren</span>
+                                    <span>Termin bestätigen</span>
                                 </v-btn>
                             </v-hover>
                         </template>
