@@ -107,6 +107,7 @@ class TrainingsController extends BaseController
                     'value' => $type,
                 ];
             }, Training::TYPES),
+            'from'        => $request->input('from'),
         ]));
     }
 

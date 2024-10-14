@@ -74,10 +74,15 @@ watch(dialog, (val) => {
 // Computed
 const backRoute = computed(() => {
     if (props.from) {
-        const routeParams = props.from.split(';');
+        const params = props.from.split(';');
 
-        if (routeParams.length === 2) {
-            return route(routeParams[0], { kita: routeParams[1] })
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
         }
     }
 
@@ -511,6 +516,10 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
     /*
      * Apply filters
      */
+    if (props.from) {
+        data.from = props.from;
+    }
+
     // Apply kitas filters
     if (searchFilter.value) {
         data.kita_args.search = searchFilter.value;
@@ -841,7 +850,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                         <td class="text-center">
                                             <v-tooltip location="top">
                                                 <template v-slot:activator="{ props }">
-                                                    <Link :href="route('kitas.show', { id: item.id })">
+                                                    <Link :href="`${route('kitas.show', { id: item.id })}?from=users.edit;user;${editedUser.id}`">
                                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                     </Link>
                                                 </template>
@@ -1022,7 +1031,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                     <td align="center">
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
-                                                <Link :href="route('operators.show', { id: item.id })">
+                                                <Link :href="`${route('operators.show', { id: item.id })}?from=users.edit;user;${editedUser.id}`">
                                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>

@@ -17,6 +17,7 @@ const props = defineProps({
     users: Array,
     operatorUsers: Array,
     operatorKitas: Array,
+    from: String,
     // Users & kitas tables
     currentPage: Number,
     perPage: Number,
@@ -61,10 +62,29 @@ const connectUserDialog = ref(false);
 const dialogDeleteOperatorUser = ref(false);
 const dialogDeleteOperatorKita = ref(false);
 
+// Computed
 watch(dialog, (val) => {
     if (!val) {
         close();
     }
+});
+
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+        console.log(params)
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('operators.index');
 });
 
 // Methods
@@ -442,6 +462,10 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
     /*
      * Apply filters
      */
+    if (props.from) {
+        data.from = props.from;
+    }
+
     // Apply users filters
     if (statusFilter.value) {
         data.user_args.status = statusFilter.value;
@@ -547,7 +571,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
 
                     <v-col cols="12" sm="6" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('operators.index')">
+                            <Link :href="backRoute">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>
@@ -699,7 +723,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
 
                                           <v-tooltip location="top">
                                               <template v-slot:activator="{ props }">
-                                                  <Link :href="route('kitas.show', { id: item.id })">
+                                                  <Link :href="`${route('kitas.show', { id: item.id })}?from=operators.show;operator;${editedOperator.id}`">
                                                       <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                   </Link>
                                               </template>
@@ -935,7 +959,7 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                                     <td align="center">
                                         <v-tooltip location="top">
                                             <template v-slot:activator="{ props }">
-                                                <Link :href="`${route('users.edit', { id: item.id })}?from=operators.show;${operator.id}`">
+                                                <Link :href="`${route('users.edit', { id: item.id })}?from=operators.show;operator;${editedOperator.id}`">
                                                     <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                 </Link>
                                             </template>

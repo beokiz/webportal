@@ -182,7 +182,7 @@ class UsersController extends BaseController
                 ];
             }, Kita::TYPES),
             'zipCodes'        => $zipCodesList,
-//            'from'            => $request->input('from'),
+            'from'            => $request->input('from'),
         ]);
     }
 

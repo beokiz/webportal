@@ -13,6 +13,7 @@ import { prepareDate, ages } from "@/Composables/common.js";
 const props = defineProps({
     surveyTimePeriod: Object,
     errors: Object,
+    from: String,
 });
 
 
@@ -45,6 +46,24 @@ const rawSurveyStart = ref(prepareDate(props.surveyTimePeriod.survey_start_date)
 const rawSurveyEnd = ref(prepareDate(props.surveyTimePeriod.survey_end_date));
 const surveyStart = ref(new Date(props.surveyTimePeriod.survey_start_date).toString());
 const surveyEnd = ref(new Date(props.surveyTimePeriod.survey_end_date).toString());
+
+// Computed
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('settings.index');
+});
 
 // Watch
 watch(surveyStart, (val) => {
@@ -155,7 +174,7 @@ const manageSurveyTimePeriod = async () => {
                 <v-row>
                     <v-col cols="12" sm="12" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('survey_time_periods.index')">
+                            <Link :href="backRoute">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>

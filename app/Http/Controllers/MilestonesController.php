@@ -69,6 +69,7 @@ class MilestonesController extends BaseController
 
         return Inertia::render('Domains/Partials/ManageMilestone', [
             'milestone' => $milestone,
+            'from'      => $request->input('from'),
         ]);
     }
 

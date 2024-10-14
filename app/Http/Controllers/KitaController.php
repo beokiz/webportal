@@ -190,6 +190,7 @@ class KitaController extends BaseController
                 ];
             }, Kita::TYPES),
             'canBeEdited' => $canBeEdited,
+            'from'        => $request->input('from'),
         ]);
     }
 

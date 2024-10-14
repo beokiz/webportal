@@ -49,6 +49,7 @@ class SurveyTimePeriodController extends BaseController
 
         return Inertia::render('SurveyTimePeriods/Partials/ManageSurveyTimePeriod', [
             'surveyTimePeriod' => $surveyTimePeriod,
+            'from'             => $request->input('from'),
         ]);
     }
 

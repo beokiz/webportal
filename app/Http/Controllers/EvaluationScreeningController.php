@@ -80,6 +80,7 @@ class EvaluationScreeningController extends BaseController
         return Inertia::render('Evaluations/Partials/MakeEvaluationScreening', [
             'domains'      => $this->prepareDomainsData($domains),
             'dazDependent' => $domain->daz_dependent,
+            'from'         => $request->input('from'),
         ]);
     }
 
