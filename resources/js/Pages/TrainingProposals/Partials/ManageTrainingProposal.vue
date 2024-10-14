@@ -935,7 +935,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                               <template v-else>
                                                   <v-tooltip location="top">
                                                       <template v-slot:activator="{ props }">
-                                                          <Link :href="route('kitas.show', { id: item.id })">
+                                                          <Link :href="`${route('kitas.show', { id: item.id })}?from=training_proposals.show;trainingProposal;${editedTrainingProposal.id}`">
                                                               <v-icon v-bind="props" size="small" class="tw-me-2">mdi-eye</v-icon>
                                                           </Link>
                                                       </template>
