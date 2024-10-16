@@ -13,7 +13,6 @@ use App\Http\Requests\Kitas\DisconnectUserFromKitaRequest;
 use App\Http\Requests\Kitas\DisconnectUsersFromKitaRequest;
 use App\Http\Requests\Kitas\ReorderKitasRequest;
 use App\Http\Requests\Kitas\UpdateKitaRequest;
-use App\Interfaces\FileGenerators\PdfGeneratorServiceInterface;
 use App\Models\Kita;
 use App\Models\Operator;
 use App\Models\User;
@@ -22,7 +21,6 @@ use App\Services\Items\OperatorItemService;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
@@ -233,40 +231,20 @@ class KitaController extends BaseController
     /**
      * @param Request $request
      * @param Kita    $kita
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function sendKitaCertificateNotification(Request $request, Kita $kita)
     {
-        $this->authorize('authorizeAccessToSingleKita', User::class);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
-        /*
-         * Generate PDF file
-         */
-        $pdfGeneratorService = app(PdfGeneratorServiceInterface::class);
+        $pdfFile = $this->kitaItemService->generatePdfCertificate($kita->id);
 
-        Carbon::setLocale('de');
+        if (!empty($pdfFile)) {
 
-        $pdfHeaderFooterData = [
-            'header' => [],
-            'footer' => [
-                'display_document_meta' => false,
-            ],
-        ];
+        } else {
 
-        $pdfFile = $pdfGeneratorService->createFromBlade(
-            'file-templates.pdf.kita-certificate',
-            [
-                'kita_name' => $kita->name,
-                'date'      => Carbon::now()->translatedFormat('d F'),
-            ],
-            [
-                'file_name'   => 'BeoKiz_Teilnahmebescheinigung',
-                'header-html' => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
-                'footer-html' => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
-            ],
-            false
-        );
+        }
 
         return $pdfFile ?
             Response::download($pdfFile, basename($pdfFile), [

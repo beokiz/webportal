@@ -68,7 +68,9 @@
 <body>
 <div id="report-pdf-image-header">
     <div>
-        <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.png')) }}"/>
+        @if(empty($headerData['hide_logo']))
+            <img src="{{ base64_encode_file_to_uri(resource_path('images/logo-pdf.png')) }}"/>
+        @endif
     </div>
 
     <div>
@@ -80,7 +82,10 @@
             @if(!empty($headerData['report_date']))
                 <li>@lang('files.common.created_date_line', ['date' => $headerData['report_date']])</li>
             @endif
-            <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
+
+            @if(!empty($headerData['current_time']))
+                <li>@lang('files.common.created_date_line', ['date' => $headerData['current_time']])</li>
+            @endif
         </ul>
     </div>
 </div>
