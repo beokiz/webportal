@@ -209,6 +209,7 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::get('/{kita}', [KitaController::class, 'show'])->name('show');
         Route::post('/', [KitaController::class, 'store'])->name('store');
         Route::put('/{kita}', [KitaController::class, 'update'])->name('update');
+        Route::put('/{kita}/send-kita-certificate-notification', [KitaController::class, 'sendKitaCertificateNotification'])->name('send_kita_certificate_notification');
         Route::post('/{kita}/connect-user', [KitaController::class, 'connectUser'])->name('connect_user');
         Route::post('/{kita}/connect-users', [KitaController::class, 'connectUsers'])->name('connect_users');
         Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');

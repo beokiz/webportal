@@ -227,6 +227,28 @@ const manageConnectKitaUser = async () => {
     });
 };
 
+const sendKitaCertificateNotificationForm = useForm({
+    id: editedKita.value.id,
+});
+
+const sendKitaCertificateNotification = async () => {
+    sendKitaCertificateNotificationForm.processing = true;
+
+    let formOptions = {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            sendKitaCertificateNotificationForm.processing = false;
+        },
+    };
+
+    sendKitaCertificateNotificationForm.post(route('kitas.send_kita_certificate_notification', { user: sendKitaCertificateNotificationForm.id }), formOptions);
+};
+
 /*
  * Users table
  */
@@ -404,6 +426,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+            <v-container>
+                <v-row>
+                    <v-col cols="12" class="text-right">
+                        <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="sendKitaCertificateNotification" :disabled="manageForm.processing || sendKitaCertificateNotificationForm.processing">
+                                    <span>Zertifikat versenden</span>
+                                </v-btn>
+                            </v-hover>
+                        </template>
+                    </v-col>
+                </v-row>
+            </v-container>
+
             <v-container>
                 <v-row>
                     <v-col cols="12">
