@@ -288,6 +288,22 @@ class UsersController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @param User    $user
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function sendWelcomeNotification(Request $request, User $user)
+    {
+        $this->authorize('authorizeAdminAccess', User::class);
+//        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
+
+        $user->sendEmailVerificationNotification();
+
+        return Redirect::back()->withSuccesses(__('crud.users.welcome_notification_success'));
+    }
+
+    /**
      * @param ConnectKitaToUserRequest $request
      * @param User                     $user
      * @return \Illuminate\Http\RedirectResponse

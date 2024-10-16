@@ -322,6 +322,28 @@ const sendVerificationLink = async (item) => {
 
     sendVerificationLinkForm.post(route('users.send_verification_link', { user: item?.id }), formOptions);
 };
+
+const sendWelcomeNotificationForm = useForm({
+    //
+});
+
+const sendWelcomeNotification = async (item) => {
+    sendWelcomeNotificationForm.processing = true;
+
+    let formOptions = {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            sendWelcomeNotificationForm.processing = false;
+        },
+    };
+
+    sendWelcomeNotificationForm.post(route('users.send_welcome_notification', { user: item?.id }), formOptions);
+};
 </script>
 
 <template>
@@ -567,6 +589,13 @@ const sendVerificationLink = async (item) => {
                                     <v-icon v-bind="props" size="small" class="tw-me-2" @click="sendVerificationLink(item)">mdi-email-sync-outline</v-icon>
                                 </template>
                                 <span>Verifikations-Email erneut senden</span>
+                            </v-tooltip>
+
+                            <v-tooltip v-if="($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin) && $page.props.auth.user.id !== item.id" location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-icon v-bind="props" size="small" class="tw-me-2" @click="sendWelcomeNotification(item)">mdi-account-check-outline </v-icon>
+                                </template>
+                                <span>Zulassung senden</span>
                             </v-tooltip>
 
                             <v-tooltip v-if="$page.props.auth.user.is_super_admin || (($page.props.auth.user.is_admin || $page.props.auth.user.is_manager) && !item.is_super_admin && !item.is_admin) || ($page.props.auth.user.is_admin && $page.props.auth.user.id === item.id)" location="top">

@@ -38,6 +38,8 @@ return [
         'send_verification_link_success' => "Verification link has been sent successfully.",
         'send_verification_link_error'   => "Error! Failed to send verification link. Please try again later.",
         'send_verification_link_denied'  => "Error! The email has already been verified.",
+        'welcome_notification_success'   => "Welcome notification has been sent successfully.",
+        'welcome_notification_error'     => "Error! Failed to send welcome notification. Please try again later.",
         'delete_success'                 => "User has been deleted successfully.",
         'delete_error'                   => "Error! Something went wrong while deleting a user. Please try again later.",
         'delete_denied'                  => "Error! Selected user cannot be deleted.",
@@ -274,7 +276,7 @@ return [
         'restore_error'   => "Error! Something went wrong while restoring the training. Please try again later.",
         'restore_denied'  => "Error! The selected training cannot be restored.",
 
-        'choose_location'  => "[Ask for location at one of the daycare centers!]",
+        'choose_location' => "[Ask for location at one of the daycare centers!]",
     ],
 
     /*

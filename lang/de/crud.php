@@ -38,6 +38,8 @@ return [
         'send_verification_link_success' => "Der Bestätigungslink wurde erfolgreich gesendet.",
         'send_verification_link_error'   => "Fehler! Der Bestätigungslink konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
         'send_verification_link_denied'  => "Fehler! Die E-Mail wurde bereits verifiziert.",
+        'welcome_notification_success'   => "Willkommensbenachrichtigung wurde erfolgreich gesendet.",
+        'welcome_notification_error'     => "Fehler! Senden der Willkommensbenachrichtigung fehlgeschlagen. Bitte versuchen Sie es später erneut.",
         'delete_success'                 => "Der Benutzer wurde erfolgreich gelöscht.",
         'delete_error'                   => "Fehler! Beim Löschen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'delete_denied'                  => "Fehler! Der ausgewählte Benutzer kann nicht gelöscht werden.",

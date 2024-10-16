@@ -153,6 +153,7 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
         Route::put('/{user}', [UsersController::class, 'update'])->name('update');
         Route::post('/{user}/send-verification-link', [UsersController::class, 'sendVerificationLink'])->name('send_verification_link');
+        Route::post('/{user}/send-welcome-notification', [UsersController::class, 'sendWelcomeNotification'])->name('send_welcome_notification');
         Route::post('/{user}/connect-kita', [UsersController::class, 'connectKita'])->name('connect_kita');
         Route::post('/{user}/connect-kitas', [UsersController::class, 'connectKitas'])->name('connect_kitas');
         Route::post('/{user}/disconnect-kita', [UsersController::class, 'disconnectKita'])->name('disconnect_kita');
