@@ -234,12 +234,13 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
     });
 
     /*
-     * Check Evaluation routes
+     * Evaluation Screening routes
      */
     Route::group(['prefix' => 'screening', 'as' => 'screening.'], function () {
         Route::get('/', [EvaluationScreeningController::class, 'index'])->name('index');
-        Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
+        Route::get('/pdf', [EvaluationScreeningController::class, 'pdf'])->name('pdf');
         Route::post('/make', [EvaluationScreeningController::class, 'make'])->name('make');
+        Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
     });
 
     /*

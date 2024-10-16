@@ -1,19 +1,21 @@
 @php
-    $item = $data['item'];
-    $kita = $data['kita'];
     $domains = $data['domains']->keyBy('id')->toArray();
 
-    if ($item->age) {
-        $localPreparedDomains = array_map(function ($domain) use ($item) {
+    $age = $data['age'];
+    $result = $data['result'];
+    $domainNames = $data['domain_names'];
+
+    if ($age) {
+        $localPreparedDomains = array_map(function ($domain) {
             return [
                 'id' => $domain['id'],
                 'name' => $domain['name'],
-                'subdomains' => array_filter(array_map(function ($subdomain) use ($item) {
+                'subdomains' => array_filter(array_map(function ($subdomain) {
                     return [
                         'id' => $subdomain['id'],
                         'name' => $subdomain['name'],
-                        'milestones' => array_filter($subdomain['milestones'], function ($milestone) use ($item) {
-                            return floatval($milestone['age']) === floatval($item->age);
+                        'milestones' => array_filter($subdomain['milestones'], function ($milestone) {
+                            return floatval($milestone['age']) === floatval($age);
                         }),
                     ];
                 }, $domain['subdomains']), function ($subdomain) {
@@ -29,7 +31,7 @@
 
     $ratingData = [];
 
-    foreach ($item->data as $domain) {
+    foreach ($result as $domain) {
         $domainMilestones = [];
 
         foreach ($domain['milestones'] as $milestones) {
@@ -49,17 +51,12 @@
         <div class="result-evaluation-col result-evaluation-col-head">
             <div class="tw-text-center">
                 <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
-                    Einschätzung wurde eingereicht
+                    Ampelergebnis im Bereiche {{ $domainNames }}
                 </h1>
             </div>
         </div>
 
-        <div class="result-evaluation-col result-evaluation-col-title">
-            <p>
-                <span class="tw-font-black">Bezeichner des Einschätzung</span>:
-                {{ $kita['formatted_name'] }}_{{ $item['custom_unique_id'] }}
-            </p>
-        </div>
+        <div class="result-evaluation-col result-evaluation-col-title"></div>
 
         <div class="result-evaluation-col result-evaluation-col-content">
             <div class="domains-list-container">
@@ -109,6 +106,7 @@
                                 @endif
                             </div>
                         @endforeach
+
                     </div>
                 @endforeach
             </div>
