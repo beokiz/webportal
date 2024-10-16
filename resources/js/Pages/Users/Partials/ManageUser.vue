@@ -176,7 +176,7 @@ const sendVerificationLinkForm = useForm({
     id: editedUser.value.id,
 });
 
-const sendVerificationLink = async (item) => {
+const sendVerificationLink = async () => {
     sendVerificationLinkForm.processing = true;
 
     let formOptions = {
@@ -192,6 +192,28 @@ const sendVerificationLink = async (item) => {
     };
 
     sendVerificationLinkForm.post(route('users.send_verification_link', { user: sendVerificationLinkForm.id }), formOptions);
+};
+
+const sendWelcomeNotificationForm = useForm({
+    id: editedUser.value.id,
+});
+
+const sendWelcomeNotification = async () => {
+    sendWelcomeNotificationForm.processing = true;
+
+    let formOptions = {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            sendWelcomeNotificationForm.processing = false;
+        },
+    };
+
+    sendWelcomeNotificationForm.post(route('users.send_welcome_notification', { user: sendWelcomeNotificationForm.id }), formOptions);
 };
 
 /*
@@ -584,8 +606,16 @@ const goToPage = async (data, { page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-col cols="12" class="text-right">
                         <template v-if="!editedUser.email_verified_at || editedUser.email_verified_at === '-'">
                             <v-hover v-slot:default="{ isHovering, props }">
-                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="sendVerificationLink" :disabled="manageForm.processing || sendVerificationLinkForm.processing">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="sendVerificationLink" :disabled="manageForm.processing || sendVerificationLinkForm.processing || sendWelcomeNotificationForm.processing">
                                     <span>Verifizierungsmail erneut senden</span>
+                                </v-btn>
+                            </v-hover>
+                        </template>
+
+                        <template v-if="$page.props.auth.user.id !== editedUser.id">
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="sendWelcomeNotification" :disabled="manageForm.processing || sendVerificationLinkForm.processing || sendWelcomeNotificationForm.processing">
+                                    <span>Zulassung senden</span>
                                 </v-btn>
                             </v-hover>
                         </template>

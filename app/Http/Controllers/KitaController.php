@@ -13,6 +13,7 @@ use App\Http\Requests\Kitas\DisconnectUserFromKitaRequest;
 use App\Http\Requests\Kitas\DisconnectUsersFromKitaRequest;
 use App\Http\Requests\Kitas\ReorderKitasRequest;
 use App\Http\Requests\Kitas\UpdateKitaRequest;
+use App\Interfaces\FileGenerators\PdfGeneratorServiceInterface;
 use App\Models\Kita;
 use App\Models\Operator;
 use App\Models\User;
@@ -21,7 +22,9 @@ use App\Services\Items\OperatorItemService;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
 
 /**
@@ -225,6 +228,56 @@ class KitaController extends BaseController
         return $result
             ? Redirect::back()->withSuccesses(__('crud.kitas.update_success'))
             : Redirect::back()->withErrors(__('crud.kitas.update_error'));
+    }
+
+    /**
+     * @param Request $request
+     * @param Kita    $kita
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function sendKitaCertificateNotification(Request $request, Kita $kita)
+    {
+        $this->authorize('authorizeAccessToSingleKita', User::class);
+
+        /*
+         * Generate PDF file
+         */
+        $pdfGeneratorService = app(PdfGeneratorServiceInterface::class);
+
+        Carbon::setLocale('de');
+
+        $pdfHeaderFooterData = [
+            'header' => [],
+            'footer' => [
+                'display_document_meta' => false,
+            ],
+        ];
+
+        $pdfFile = $pdfGeneratorService->createFromBlade(
+            'file-templates.pdf.kita-certificate',
+            [
+                'kita_name' => $kita->name,
+                'date'      => Carbon::now()->translatedFormat('d F'),
+            ],
+            [
+                'file_name'   => 'BeoKiz_Teilnahmebescheinigung',
+                'header-html' => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
+                'footer-html' => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
+            ],
+            false
+        );
+
+        return $pdfFile ?
+            Response::download($pdfFile, basename($pdfFile), [
+                'Content-Type'        => mime_content_type($pdfFile),
+                'Content-Disposition' => 'attachment; filename="' . basename($pdfFile) . '"',
+            ])
+            : Redirect::back()->withErrors(__('crud.evaluations.pdf_error'));
+
+//        $user->sendEmailVerificationNotification();
+//
+//        return Redirect::back()->withSuccesses(__('crud.users.welcome_notification_success'));
     }
 
     /**
