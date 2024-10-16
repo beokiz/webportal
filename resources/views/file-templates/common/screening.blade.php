@@ -6,15 +6,15 @@
     $domainNames = $data['domain_names'];
 
     if ($age) {
-        $localPreparedDomains = array_map(function ($domain) {
+        $localPreparedDomains = array_map(function ($domain) use ($age) {
             return [
                 'id' => $domain['id'],
                 'name' => $domain['name'],
-                'subdomains' => array_filter(array_map(function ($subdomain) {
+                'subdomains' => array_filter(array_map(function ($subdomain) use ($age) {
                     return [
                         'id' => $subdomain['id'],
                         'name' => $subdomain['name'],
-                        'milestones' => array_filter($subdomain['milestones'], function ($milestone) {
+                        'milestones' => array_filter($subdomain['milestones'], function ($milestone) use ($age) {
                             return floatval($milestone['age']) === floatval($age);
                         }),
                     ];
@@ -34,8 +34,10 @@
     foreach ($result as $domain) {
         $domainMilestones = [];
 
-        foreach ($domain['milestones'] as $milestones) {
-            $domainMilestones[$milestones['id']] = $milestones['value'];
+        foreach ($domain['milestones'] as $milestone) {
+            if (!empty($milestone['value'])) {
+                $domainMilestones[$milestone['id']] = $milestone['value'];
+            }
         }
 
         $ratingData[$domain['domain']] = [
@@ -51,7 +53,7 @@
         <div class="result-evaluation-col result-evaluation-col-head">
             <div class="tw-text-center">
                 <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
-                    Ampelergebnis im Bereiche {{ $domainNames }}
+                    Ampelergebnis im Bereich {{ $domainNames }}
                 </h1>
             </div>
         </div>
@@ -106,7 +108,6 @@
                                 @endif
                             </div>
                         @endforeach
-
                     </div>
                 @endforeach
             </div>
