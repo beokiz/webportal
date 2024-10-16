@@ -246,7 +246,7 @@ const sendKitaCertificateNotification = async () => {
         },
     };
 
-    sendKitaCertificateNotificationForm.post(route('kitas.send_kita_certificate_notification', { user: sendKitaCertificateNotificationForm.id }), formOptions);
+    sendKitaCertificateNotificationForm.post(route('kitas.send_kita_certificate_notification', { kita: sendKitaCertificateNotificationForm.id }), formOptions);
 };
 
 /*
