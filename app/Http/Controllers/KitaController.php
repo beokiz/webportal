@@ -238,24 +238,25 @@ class KitaController extends BaseController
     {
         $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
+        $roles = config('permission.project_roles');
+
         $pdfFile = $this->kitaItemService->generatePdfCertificate($kita->id);
 
         if (!empty($pdfFile)) {
+            // Send kitas managers notifications
+            $kita->users()->whereHas('roles', function ($query) use ($roles, $pdfFile) {
+                $query->where('name', $roles['manager']);
+            })->get()->each(function (User $user) use ($pdfFile, $kita) {
+                $user->sendKitaCertificateNotificationNotification([
+                    'kita'      => $kita,
+                    'file_path' => $pdfFile,
+                ]);
+            });
 
+            return Redirect::back()->withSuccesses(__('crud.kitas.send_certificate_success'));
         } else {
-
+            return Redirect::back()->withErrors(__('crud.kitas.send_certificate_error'));
         }
-
-        return $pdfFile ?
-            Response::download($pdfFile, basename($pdfFile), [
-                'Content-Type'        => mime_content_type($pdfFile),
-                'Content-Disposition' => 'attachment; filename="' . basename($pdfFile) . '"',
-            ])
-            : Redirect::back()->withErrors(__('crud.evaluations.pdf_error'));
-
-//        $user->sendEmailVerificationNotification();
-//
-//        return Redirect::back()->withSuccesses(__('crud.users.welcome_notification_success'));
     }
 
     /**

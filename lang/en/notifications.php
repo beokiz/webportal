@@ -212,4 +212,19 @@ return [
         'copy_label'  => 'Copy',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Kita Certificate Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'kita_certificate' => [
+        'subject'     => sprintf("%s: Test subject", config('app.name')),
+        'greeting'    => "Dear facility manager,",
+        'first_line'  => "Test line 1",
+        'second_line' => "Test line 2",
+        'third_line'  => "Thanks and best regards",
+        'salutation'  => sprintf('Your %s Team', config('app.name')),
+    ],
+
 ];
