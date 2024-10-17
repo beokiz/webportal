@@ -24,6 +24,7 @@ use App\Services\Items\KitaItemService;
 use App\Services\Items\OperatorItemService;
 use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
+use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
@@ -48,16 +49,24 @@ class UsersController extends BaseController
     protected $roleItemService;
 
     /**
+     * @var PasswordBroker
+     */
+    protected $tokens;
+
+    /**
      * UsersController constructor.
      *
      * @param UserItemService $userItemService
      * @param RoleItemService $roleItemService
+     * @param PasswordBroker  $factory
      * @return void
      */
-    public function __construct(UserItemService $userItemService, RoleItemService $roleItemService)
+    public function __construct(UserItemService $userItemService, RoleItemService $roleItemService, PasswordBroker $factory)
     {
         $this->userItemService = $userItemService;
         $this->roleItemService = $roleItemService;
+
+        $this->tokens = $factory->getRepository();
     }
 
     /**
@@ -298,7 +307,9 @@ class UsersController extends BaseController
         $this->authorize('authorizeAdminAccess', User::class);
 //        $this->authorize('authorizeAccessToSingleUser', [User::class, $user->id]);
 
-        $user->sendEmailVerificationNotification();
+        $user->sendWelcomeNotification(
+            $this->tokens->create($user)
+        );
 
         return Redirect::back()->withSuccesses(__('crud.users.welcome_notification_success'));
     }

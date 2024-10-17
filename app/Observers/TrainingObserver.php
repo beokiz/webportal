@@ -87,7 +87,7 @@ class TrainingObserver extends BaseObserver
                                 $pdfFile = $kitaItemService->generatePdfCertificate($kita->id);
 
                                 if (!empty($pdfFile)) {
-                                    $user->sendTrainingCompletedNotification([
+                                    $user->sendKitaCertificateNotificationNotification([
                                         'kita'      => $kita,
                                         'file_path' => $pdfFile,
                                     ]);
