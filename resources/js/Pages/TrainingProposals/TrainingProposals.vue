@@ -93,7 +93,7 @@ const secondDateField = ref(null);
 const selectedTrainingProposal = ref(null);
 const selectedTrainingProposalKitas = ref([]);
 
-const mainTableHeaders = [
+const tableHeaders = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: true },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '25%', sortable: true },
@@ -101,17 +101,6 @@ const mainTableHeaders = [
     { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
     { title: 'Status', key: 'status', width: '5%', sortable: true },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: true },
-    { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
-];
-
-const additionalTableHeaders = [
-    { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: false },
-    { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: false },
-    { title: 'Ort', key: 'location', width: '25%', sortable: false },
-    { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: false },
-    { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
-    { title: 'Status', key: 'status', width: '5%', sortable: false },
-    { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: false },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
 
@@ -792,7 +781,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                   { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
                 ]"
                 :items-per-page-text="'Objekte pro Seite:'"
-                :headers="mainTableHeaders"
+                :headers="tableHeaders"
                 :page="currentPage"
                 :items-length="totalItems"
                 :items="modifiedItems"
@@ -905,7 +894,17 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                 </div>
 
                 <v-data-table-server
-                    :headers="additionalTableHeaders"
+                    :items-per-page-options="[
+                      { value: 10, title: '10' },
+                      { value: 25, title: '25' },
+                      { value: 50, title: '50' },
+                      { value: 100, title: '100' },
+                      { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
+                    ]"
+                    :items-per-page-text="'Objekte pro Seite:'"
+                    :page="1"
+                    :items-length="modifiedUserTrainingProposals.length"
+                    :headers="tableHeaders"
                     :items="modifiedUserTrainingProposals"
                     :search="search"
                     :loading="loading"
