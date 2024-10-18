@@ -93,7 +93,7 @@ const secondDateField = ref(null);
 const selectedTrainingProposal = ref(null);
 const selectedTrainingProposalKitas = ref([]);
 
-const tableHeaders = [
+const mainTableHeaders = [
     { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: true },
     { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: true },
     { title: 'Ort', key: 'location', width: '25%', sortable: true },
@@ -104,10 +104,21 @@ const tableHeaders = [
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
 
+const additionalTableHeaders = [
+    { title: 'Erster Schulungstag', key: 'first_date', width: '4%', sortable: false },
+    { title: 'Zweiter Schulungstag', key: 'second_date', width: '4%', sortable: false },
+    { title: 'Ort', key: 'location', width: '25%', sortable: false },
+    { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: false },
+    { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
+    { title: 'Status', key: 'status', width: '5%', sortable: false },
+    { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: false },
+    { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
+];
+
 
 // Computed
 const modifyItems = (items) => {
-    return items?.map(item => {
+    return items && items.length > 0 ? items.map(item => {
         const modifiedItem = {...item};
         for (const key in modifiedItem) {
             if (modifiedItem[key] === null || modifiedItem[key] === undefined) {
@@ -115,19 +126,15 @@ const modifyItems = (items) => {
             }
         }
         return modifiedItem;
-    });
+    }) : [];
 };
 
 const modifiedItems = computed(() => {
-    return modifyItems(props.items ?? []);
+    return modifyItems(props.items);
 });
 
 const modifiedUserTrainingProposals = computed(() => {
-    return modifyItems(props.userTrainingProposals ?? []);
-});
-
-const modifiedUserTrainingProposalsLength = computed(() => {
-    return modifiedUserTrainingProposals.value ? modifiedUserTrainingProposals.value.length : 0;
+    return modifyItems(props.userTrainingProposals);
 });
 
 const allFiltersEmpty = computed(() => {
@@ -784,7 +791,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                   { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
                 ]"
                 :items-per-page-text="'Objekte pro Seite:'"
-                :headers="tableHeaders"
+                :headers="mainTableHeaders"
                 :page="currentPage"
                 :items-length="totalItems"
                 :items="modifiedItems"
@@ -905,9 +912,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                       { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
                     ]"
                     :items-per-page-text="'Objekte pro Seite:'"
-                    :page="1"
-                    :items-length="modifiedUserTrainingProposalsLength"
-                    :headers="tableHeaders"
+                    :headers="additionalTableHeaders"
                     :items="modifiedUserTrainingProposals"
                     :search="search"
                     :loading="loading"
@@ -915,61 +920,61 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                     item-value="name"
                 >
                     <template v-slot:item="{ item }">
-<!--                        <tr :data-id="item.id" :data-order="item.order">-->
-<!--                            <td>{{!item.first_date || item.first_date === '-' ? 'item.first_date' : formatDate(item.first_date, 'de-DE')}}</td>-->
+                        <tr :data-id="item.id" :data-order="item.order">
+                            <td>{{!item.first_date || item.first_date === '-' ? 'item.first_date' : formatDate(item.first_date, 'de-DE')}}</td>
 
-<!--                            <td>{{!item.second_date || item.second_date === '-' ? 'item.second_date' : formatDate(item.second_date, 'de-DE')}}</td>-->
+                            <td>{{!item.second_date || item.second_date === '-' ? 'item.second_date' : formatDate(item.second_date, 'de-DE')}}</td>
 
-<!--                            <td>{{item.formatted_location}}</td>-->
+                            <td>{{item.formatted_location}}</td>
 
-<!--                            <td>{{item.participant_count}}</td>-->
+                            <td>{{item.participant_count}}</td>
 
-<!--                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>-->
+                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
-<!--                            <td>-->
-<!--                                <v-tooltip location="top">-->
-<!--                                    <template v-slot:activator="{ props }">-->
-<!--                                        <span class="tw-cursor-pointer">-->
-<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>-->
-<!--                                        </span>-->
-<!--                                    </template>-->
-<!--                                    <span>{{item.formatted_status}}</span>-->
-<!--                                </v-tooltip>-->
-<!--                            </td>-->
+                            <td>
+                                <v-tooltip location="top">
+                                    <template v-slot:activator="{ props }">
+                                        <span class="tw-cursor-pointer">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>
+                                        </span>
+                                    </template>
+                                    <span>{{item.formatted_status}}</span>
+                                </v-tooltip>
+                            </td>
 
-<!--                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>-->
+                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 
-<!--                            <td class="text-center">-->
-<!--                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">-->
-<!--                                    <template v-slot:activator="{ props }">-->
-<!--                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">-->
-<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>-->
-<!--                                        </a>-->
-<!--                                    </template>-->
-<!--                                    <span>Mail an KiTa(s) schreiben</span>-->
-<!--                                </v-tooltip>-->
+                            <td class="text-center">
+                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">
+                                    <template v-slot:activator="{ props }">
+                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
+                                        </a>
+                                    </template>
+                                    <span>Mail an KiTa(s) schreiben</span>
+                                </v-tooltip>
 
-<!--                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">-->
-<!--                                    <v-tooltip location="top">-->
-<!--                                        <template v-slot:activator="{ props }">-->
-<!--                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">-->
-<!--                                                <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>-->
-<!--                                            </span>-->
-<!--                                        </template>-->
-<!--                                        <span>Reservierung aufheben</span>-->
-<!--                                    </v-tooltip>-->
-<!--                                </template>-->
+                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
+                                    <v-tooltip location="top">
+                                        <template v-slot:activator="{ props }">
+                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">
+                                                <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>
+                                            </span>
+                                        </template>
+                                        <span>Reservierung aufheben</span>
+                                    </v-tooltip>
+                                </template>
 
-<!--                                <v-tooltip location="top">-->
-<!--                                    <template v-slot:activator="{ props }">-->
-<!--                                        <Link :href="route('training_proposals.show', { id: item.id })">-->
-<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>-->
-<!--                                        </Link>-->
-<!--                                    </template>-->
-<!--                                    <span>Schulung bearbeiten</span>-->
-<!--                                </v-tooltip>-->
-<!--                            </td>-->
-<!--                        </tr>-->
+                                <v-tooltip location="top">
+                                    <template v-slot:activator="{ props }">
+                                        <Link :href="route('training_proposals.show', { id: item.id })">
+                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
+                                        </Link>
+                                    </template>
+                                    <span>Schulung bearbeiten</span>
+                                </v-tooltip>
+                            </td>
+                        </tr>
                     </template>
 
                     <template #bottom></template>
