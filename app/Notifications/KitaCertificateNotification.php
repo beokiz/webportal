@@ -63,7 +63,7 @@ class KitaCertificateNotification extends Notification
 
         return (new CustomMailMessage)
             ->subject(__('notifications.kita_certificate.subject'))
-            ->greeting(__('notifications.kita_certificate.greeting'))
+            ->greeting(__('notifications.kita_certificate.greeting', ['full_name' => $notifiable->full_name]))
             ->line(__('notifications.kita_certificate.first_line'))
             ->line(__('notifications.kita_certificate.second_line'))
             ->line(__('notifications.kita_certificate.third_line'))

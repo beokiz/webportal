@@ -219,12 +219,12 @@ return [
     */
 
     'kita_certificate' => [
-        'subject'     => sprintf("%s: Test subject", config('app.name')),
-        'greeting'    => "Dear facility manager,",
-        'first_line'  => "Test line 1",
-        'second_line' => "Test line 2",
-        'third_line'  => "Thanks and best regards",
-        'salutation'  => sprintf('Your %s Team', config('app.name')),
+        'subject'     => sprintf("%s: BeoKiz training completed", config('app.name')),
+        'greeting'    => "Hello :full_name,",
+        'first_line'  => "You have successfully completed the training on the BeoKiz process. Congratulations! Attached to this email you will find the certificate of participation for your institution.",
+        'second_line' => "We also have a request for you: Part of the introduction of the BeoKiz process is scientific support, through which factors that influence the introduction of BeoKiz in the country are constantly identified and adjusted. The aim of this is to design the introduction of BeoKiz in such a way that it is continuously adapted to the needs of everyone involved in the process. The children in particular will benefit from an effective and comprehensive introduction of the process.",
+        'third_line'  => "We therefore ask you and your employees to fill out an initial online questionnaire on the introduction of BeoKiz. All information is completely anonymous. It is not possible to draw conclusions about you or your institution. The link to the questionnaire, as well as an invitation to print out with a QR code for easy completion on your smartphone, can be found at: http://www.kitearo.de/BeoKiz-Fragebogen/",
+        'salutation'  => sprintf("Many thanks and best regards,  \n your %s Team", config('app.name')),
     ],
 
 ];
