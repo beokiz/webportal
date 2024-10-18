@@ -218,7 +218,7 @@ return [
     */
 
     'kita_certificate' => [
-        'subject'     => sprintf("%s: BeoKiz training completed", config('app.name')),
+        'subject'     => sprintf("%s: BeoKiz-Schulung abgeschlossen", config('app.name')),
         'greeting'    => "Hallo :full_name,",
         'first_line'  => "Sie haben die Schulung zum BeoKiz-Verfahren erfolgreich abgeschlossen. Herzlichen Glückwunsch! Im Anhang dieser Mail erhalten Sie die Teilnahmebescheinigung für Ihre Einrichtung.",
         'second_line' => "Darüber hinaus haben wir noch eine Bitte an Sie: Teil der Einführung des BeoKiz-Verfahrens ist eine wissenschaftliche Begleitung, durch die stetig Faktoren identifiziert und angepasst werden, die die Einführung von BeoKiz im Land beeinflussen. Dies hat zum Ziel, die Einführung von BeoKiz so zu gestalten, dass sie auf die Bedürfnisse aller Beteiligten im Prozess kontinuierlich angepasst wird. Von einer wirkungsvollen und flächendeckenden Einführung des Verfahrens profitieren dann vor allem auch die Kinder.",
