@@ -22,6 +22,7 @@ const props = defineProps({
     statuses: Array,
     types: Array,
     emailMessages: Object,
+    from: String,
     // Kitas table
     currentPage: Number,
     perPage: Number,
@@ -99,6 +100,24 @@ const completedTrainingInfo = ref([
         value: editedTraining.value?.participant_count,
     },
 ]);
+
+// Computed
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('trainings.index');
+});
 
 watch(dialog, (val) => {
     if (!val) {
@@ -346,7 +365,7 @@ const removeKitaFromTraining = async () => {
  * Kitas tables
  */
 const modifyItems = (items) => {
-    return items.map(item => {
+    return items && items.length > 0 ? items.map(item => {
         const modifiedItem = {...item};
         for (const key in modifiedItem) {
             if (modifiedItem[key] === null || modifiedItem[key] === undefined) {
@@ -354,7 +373,7 @@ const modifyItems = (items) => {
             }
         }
         return modifiedItem;
-    });
+    }) : [];
 };
 
 const headers = [
@@ -491,6 +510,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             data.sort = null;
         }
 
+        if (props.from) {
+            data.from = props.from;
+        }
+
         // Apply kitas filters
         if (searchFilter.value) {
             data.search = searchFilter.value;
@@ -571,7 +594,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <template v-if="editedTraining.status === 'confirmed'">
                             <v-hover v-slot:default="{ isHovering, props }">
                                 <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'background' : 'success'" dark @click="openCompleteTrainingDialog">
-                                    <span>Training abschließen und Einrichtungen zulassen</span>
+                                    <span>Schulung abschließen und Einrichtung zum Ampelportal zulassen</span>
                                 </v-btn>
                             </v-hover>
                         </template>
@@ -809,7 +832,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                     <v-col cols="12" sm="6" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('trainings.index')">
+                            <Link :href="backRoute">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>
@@ -974,7 +997,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                               <v-tooltip location="top">
                                                   <template v-slot:activator="{ props }">
-                                                      <Link :href="route('kitas.show', { id: item.id })">
+                                                      <Link :href="`${route('kitas.show', { id: item.id })}?from=trainings.show;training;${editedTraining.id}`">
                                                           <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                       </Link>
                                                   </template>
@@ -1073,7 +1096,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12">
-                                            <p>Möchten Sie die ausgewählte Ausbildung wirklich absolvieren?</p>
+                                            <p>Möchten Sie diese Schulung wirklich abschliessen?</p>
                                         </v-col>
                                     </v-row>
                                 </v-container>

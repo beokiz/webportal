@@ -18,6 +18,7 @@ const props = defineProps({
     domains: Array,
     errors: Object,
     newCustomUniqueId: String,
+    from: String,
 });
 
 /*
@@ -56,6 +57,23 @@ const periods = ref([
 ])
 
 // Computed
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('yearly_evaluations.index');
+});
+
 const isEditMode = computed(() => {
     return !!props.evaluation;
 });

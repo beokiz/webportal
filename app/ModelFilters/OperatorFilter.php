@@ -41,4 +41,15 @@ class OperatorFilter extends BaseFilter
     {
         return parent::booleanFilter($value);
     }
+
+    /**
+     * @param string|array $values
+     * @return ModelFilter
+     */
+    public function withUsers($values) : ModelFilter
+    {
+        return $this->whereHas('users', function ($query) use ($values) {
+            $query->whereIn('id', (array) $values);
+        });
+    }
 }

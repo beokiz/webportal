@@ -49,6 +49,7 @@ class DownloadableFilesController extends BaseController
 
         return Inertia::render('DownloadableFiles/Partials/ManageDownloadableFile', [
             'downloadableFile' => $downloadableFile,
+            'from'             => $request->input('from'),
         ]);
     }
 

@@ -153,6 +153,15 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::post('/operator', [UsersController::class, 'storeFromOperator'])->name('store_from_operator');
         Route::put('/{user}', [UsersController::class, 'update'])->name('update');
         Route::post('/{user}/send-verification-link', [UsersController::class, 'sendVerificationLink'])->name('send_verification_link');
+        Route::post('/{user}/send-welcome-notification', [UsersController::class, 'sendWelcomeNotification'])->name('send_welcome_notification');
+        Route::post('/{user}/connect-kita', [UsersController::class, 'connectKita'])->name('connect_kita');
+        Route::post('/{user}/connect-kitas', [UsersController::class, 'connectKitas'])->name('connect_kitas');
+        Route::post('/{user}/disconnect-kita', [UsersController::class, 'disconnectKita'])->name('disconnect_kita');
+        Route::post('/{user}/disconnect-kitas', [UsersController::class, 'disconnectKitas'])->name('disconnect_kitas');
+        Route::post('/{user}/connect-operator', [UsersController::class, 'connectOperator'])->name('connect_operator');
+        Route::post('/{user}/connect-operators', [UsersController::class, 'connectOperators'])->name('connect_operators');
+        Route::post('/{user}/disconnect-operator', [UsersController::class, 'disconnectOperator'])->name('disconnect_operator');
+        Route::post('/{user}/disconnect-operators', [UsersController::class, 'disconnectOperators'])->name('disconnect_operators');
         Route::delete('/{user}', [UsersController::class, 'destroy'])->name('destroy');
     });
 
@@ -200,6 +209,7 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::get('/{kita}', [KitaController::class, 'show'])->name('show');
         Route::post('/', [KitaController::class, 'store'])->name('store');
         Route::put('/{kita}', [KitaController::class, 'update'])->name('update');
+        Route::post('/{kita}/send-kita-certificate-notification', [KitaController::class, 'sendKitaCertificateNotification'])->name('send_kita_certificate_notification');
         Route::post('/{kita}/connect-user', [KitaController::class, 'connectUser'])->name('connect_user');
         Route::post('/{kita}/connect-users', [KitaController::class, 'connectUsers'])->name('connect_users');
         Route::post('/{kita}/disconnect-user', [KitaController::class, 'disconnectUser'])->name('disconnect_user');
@@ -226,12 +236,13 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
     });
 
     /*
-     * Check Evaluation routes
+     * Evaluation Screening routes
      */
     Route::group(['prefix' => 'screening', 'as' => 'screening.'], function () {
         Route::get('/', [EvaluationScreeningController::class, 'index'])->name('index');
-        Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
+        Route::get('/pdf', [EvaluationScreeningController::class, 'pdf'])->name('pdf');
         Route::post('/make', [EvaluationScreeningController::class, 'make'])->name('make');
+        Route::get('/{domain}', [EvaluationScreeningController::class, 'show'])->name('show');
     });
 
     /*

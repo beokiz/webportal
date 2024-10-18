@@ -4,7 +4,7 @@
   -->
 
 <script setup>
-import { ref } from 'vue';
+import {computed, ref, watch} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm, usePage, Link } from '@inertiajs/vue3';
 import { ages } from '@/Composables/common';
@@ -13,6 +13,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 const props = defineProps({
     milestone: Object,
     errors: Object,
+    from: String,
 });
 
 
@@ -38,6 +39,24 @@ const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 const editedMilestone = ref(props.milestone);
 const errors = ref(props.errors || {});
 const loading = ref(false);
+
+// Computed
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('subdomains.show', { id: editedMilestone.value?.subdomain_id });
+});
 
 // Methods
 const close = () => {
@@ -149,7 +168,7 @@ const manageMilestone = async () => {
                     </v-col>
                     <v-col cols="12" sm="6" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('subdomains.show', { id: editedMilestone.subdomain_id })">
+                            <Link :href="backRoute">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>

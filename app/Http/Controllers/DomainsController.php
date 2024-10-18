@@ -71,6 +71,7 @@ class DomainsController extends BaseController
             'domain' => $domain->loadMissing(['subdomains' => function ($query) {
                 $query->orderBy('order');
             }]),
+            'from'   => $request->input('from'),
         ]);
     }
 

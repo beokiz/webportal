@@ -93,8 +93,9 @@ return [
         'subject'     => sprintf("%s: Created account", config('app.name')),
         'greeting'    => "Hello :name,",
         'action_text' => "Set new password",
-        'first_line'  => "you have been invited to the BeoKiz portal of Berlin milestones.",
+        'first_line'  => "you have been invited to the BeoKiz portal.",
         'second_line' => "To be able to log in, you must first set a password:",
+        'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
     ],
 
     /*
@@ -209,6 +210,21 @@ return [
         'second_line' => "Training days: :first_date and :second_date from 9 a.m. to 3 p.m. \nLocation: :location \nMultiplier: :multiplier_name",
         'salutation'  => sprintf("Best regards,  \n your %s team", config('app.name')),
         'copy_label'  => 'Copy',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Kita Certificate Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'kita_certificate' => [
+        'subject'     => sprintf("%s: BeoKiz training completed", config('app.name')),
+        'greeting'    => "Hello :full_name,",
+        'first_line'  => "You have successfully completed the training on the BeoKiz process. Congratulations! Attached to this email you will find the certificate of participation for your institution.",
+        'second_line' => "We also have a request for you: Part of the introduction of the BeoKiz process is scientific support, through which factors that influence the introduction of BeoKiz in the country are constantly identified and adjusted. The aim of this is to design the introduction of BeoKiz in such a way that it is continuously adapted to the needs of everyone involved in the process. The children in particular will benefit from an effective and comprehensive introduction of the process.",
+        'third_line'  => "We therefore ask you and your employees to fill out an initial online questionnaire on the introduction of BeoKiz. All information is completely anonymous. It is not possible to draw conclusions about you or your institution. The link to the questionnaire, as well as an invitation to print out with a QR code for easy completion on your smartphone, can be found at: http://www.kitearo.de/BeoKiz-Fragebogen/",
+        'salutation'  => sprintf("Many thanks and best regards,  \n your %s Team", config('app.name')),
     ],
 
 ];

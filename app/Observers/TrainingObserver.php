@@ -9,6 +9,7 @@ namespace App\Observers;
 use App\Models\Kita;
 use App\Models\Training;
 use App\Models\User;
+use App\Services\Items\KitaItemService;
 use Illuminate\Auth\Passwords\PasswordBroker;
 
 /**
@@ -65,6 +66,8 @@ class TrainingObserver extends BaseObserver
                     //
                     break;
                 case Training::STATUS_COMPLETED:
+                    $kitaItemService = app(KitaItemService::class);
+
                     $training->loadMissing(['kitas.users']);
 
                     if (!empty($training->kitas)) {
@@ -74,11 +77,21 @@ class TrainingObserver extends BaseObserver
                         ]);
 
                         // Send kitas managers notifications
-                        $training->kitas->each(function (Kita $kita) use ($training, $notificationData, $roles) {
+                        $training->kitas->each(function (Kita $kita) use ($kitaItemService, $training, $notificationData, $roles) {
                             $kita->users()->whereHas('roles', function ($query) use ($roles) {
                                 $query->where('name', $roles['manager']);
-                            })->get()->each(function (User $user) use ($training, $notificationData) {
+                            })->get()->each(function (User $user) use ($kitaItemService, $training, $kita, $notificationData) {
                                 $user->sendTrainingCompletedNotification($notificationData);
+
+                                // Send certificate to kita managers
+                                $pdfFile = $kitaItemService->generatePdfCertificate($kita->id);
+
+                                if (!empty($pdfFile)) {
+                                    $user->sendKitaCertificateNotificationNotification([
+                                        'kita'      => $kita,
+                                        'file_path' => $pdfFile,
+                                    ]);
+                                }
 
                                 // If the field 'first_login_at' is empty - we send the user a letter to install credentials
                                 if (empty($user->first_login_at)) {

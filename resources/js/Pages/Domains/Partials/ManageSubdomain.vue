@@ -70,6 +70,23 @@ watch(dialog, (val) => {
     }
 });
 
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('domains.show', { id: editedSubdomain.domain_id });
+});
+
 onMounted(() => {
     const options = {
         handle: '.v-data-table tbody .glyphicon-move',

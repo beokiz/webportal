@@ -3,6 +3,9 @@
  * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
  */
 
+/*
+ * Evaluation PDF
+ */
 .domains-list-container {
     width: 100%;
 }
@@ -80,4 +83,34 @@
     float: left;
     width: 25%;
     text-align: center;
+}
+
+/*
+ * Certificate PDF
+ */
+.kita-certificate {
+    position: fixed;
+    top: -0.75cm;
+    bottom: -1cm;
+    left: -1cm;
+    right: -1cm;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.kita-certificate .kita-name {
+    position: absolute;
+    top: calc(20% + 25px);
+    left: calc(50% - 65px);
+    font-family: Arial;
+    font-size: 35px;
+}
+
+.kita-certificate .date {
+    position: absolute;
+    bottom: calc(10% + 6px);
+    left: calc(20% - 5px);
+    font-family: Arial;
+    font-size: 14px;
 }

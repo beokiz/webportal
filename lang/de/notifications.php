@@ -92,8 +92,9 @@ return [
         'subject'     => sprintf("%s: Konto erstellt", config('app.name')),
         'greeting'    => "Hallo :name,",
         'action_text' => "Neues Passwort festlegen",
-        'first_line'  => "du wurdest zum BeoKiz Ampel-Portal der Berliner Meilensteine eingeladen.",
+        'first_line'  => "du wurdest zum BeoKiz-Portal eingeladen.",
         'second_line' => "Damit du dich anmelden kannst, musst du erstmal ein Passwort setzen:",
+        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nDein %s-Team", config('app.name')),
     ],
 
     /*
@@ -208,6 +209,21 @@ return [
         'second_line' => "Schulungstage: :first_date und :second_date jeweils von 09 bis 17 Uhr  \nOrt: :location  <br/> Ihr Multiplikator: :multiplier_name ",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
         'copy_label'  => 'Kopie',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Kita Certificate Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'kita_certificate' => [
+        'subject'     => sprintf("%s: BeoKiz-Schulung abgeschlossen", config('app.name')),
+        'greeting'    => "Hallo :full_name,",
+        'first_line'  => "Sie haben die Schulung zum BeoKiz-Verfahren erfolgreich abgeschlossen. Herzlichen Glückwunsch! Im Anhang dieser Mail erhalten Sie die Teilnahmebescheinigung für Ihre Einrichtung.",
+        'second_line' => "Darüber hinaus haben wir noch eine Bitte an Sie: Teil der Einführung des BeoKiz-Verfahrens ist eine wissenschaftliche Begleitung, durch die stetig Faktoren identifiziert und angepasst werden, die die Einführung von BeoKiz im Land beeinflussen. Dies hat zum Ziel, die Einführung von BeoKiz so zu gestalten, dass sie auf die Bedürfnisse aller Beteiligten im Prozess kontinuierlich angepasst wird. Von einer wirkungsvollen und flächendeckenden Einführung des Verfahrens profitieren dann vor allem auch die Kinder.",
+        'third_line'  => "Daher bitten wir Sie und Ihre Mitarbeitenden einen ersten Online-Fragebogen zur BeoKiz Einführung auszufüllen. Alle Angaben sind vollständig anonym. Ein Rückschluss auf Sie, oder Ihre Einrichtung ist nicht möglich. Den Link zum Fragebogen, sowie eine Einladung zum Ausdrucken mit QR-Code für bequemes Ausfüllen am Smartphone finden Sie unter: http://www.kitearo.de/BeoKiz-Fragebogen/",
+        'salutation'  => sprintf("Vielen Dank und beste Grüße,  \nIhr %s Team", config('app.name')),
     ],
 
 ];

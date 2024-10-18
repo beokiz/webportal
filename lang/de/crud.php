@@ -38,6 +38,8 @@ return [
         'send_verification_link_success' => "Der Bestätigungslink wurde erfolgreich gesendet.",
         'send_verification_link_error'   => "Fehler! Der Bestätigungslink konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
         'send_verification_link_denied'  => "Fehler! Die E-Mail wurde bereits verifiziert.",
+        'welcome_notification_success'   => "Willkommensbenachrichtigung wurde erfolgreich gesendet.",
+        'welcome_notification_error'     => "Fehler! Senden der Willkommensbenachrichtigung fehlgeschlagen. Bitte versuchen Sie es später erneut.",
         'delete_success'                 => "Der Benutzer wurde erfolgreich gelöscht.",
         'delete_error'                   => "Fehler! Beim Löschen des Benutzers ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'delete_denied'                  => "Fehler! Der ausgewählte Benutzer kann nicht gelöscht werden.",
@@ -119,20 +121,22 @@ return [
     */
 
     'kitas' => [
-        'create_success'      => "Einrichtung wurde erfolgreich erstellt.",
-        'create_error'        => "Fehler! Beim Erstellen eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'update_success'      => "Einrichtung wurde erfolgreich aktualisiert.",
-        'update_error'        => "Fehler! Beim Aktualisieren eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'update_denied'       => "Fehler! Ausgewählter Einrichtung kann nicht aktualisiert werden.",
-        'delete_success'      => "Einrichtung wurde erfolgreich gelöscht.",
-        'delete_error'        => "Fehler! Beim Löschen eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'delete_denied'       => "Fehler! Ausgewählter Einrichtung kann nicht gelöscht werden.",
-        'delete_users_denied' => "Fehler! Der ausgewählten Einrichtung sind Benutzer zugeordnet, daher kann sie nicht gelöscht werden.",
-        'restore_success'     => "Einrichtung wurde erfolgreich wiederhergestellt.",
-        'restore_error'       => "Fehler! Beim Wiederherstellen eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-        'restore_denied'      => "Fehler! Ausgewählter Einrichtung kann nicht wiederhergestellt werden.",
-        'reorder_success'     => "Einrichtungen wurden erfolgreich neu angeordnet.",
-        'reorder_error'       => "Fehler! Beim Neuanordnen der Einrichtungen ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        'create_success'           => "Einrichtung wurde erfolgreich erstellt.",
+        'create_error'             => "Fehler! Beim Erstellen eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_success'           => "Einrichtung wurde erfolgreich aktualisiert.",
+        'update_error'             => "Fehler! Beim Aktualisieren eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'update_denied'            => "Fehler! Ausgewählter Einrichtung kann nicht aktualisiert werden.",
+        'send_certificate_success' => "Zertifikat wurde erfolgreich gesendet.",
+        'send_certificate_error'   => "Fehler! Der Zertifikatslink konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
+        'delete_success'           => "Einrichtung wurde erfolgreich gelöscht.",
+        'delete_error'             => "Fehler! Beim Löschen eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'delete_denied'            => "Fehler! Ausgewählter Einrichtung kann nicht gelöscht werden.",
+        'delete_users_denied'      => "Fehler! Der ausgewählten Einrichtung sind Benutzer zugeordnet, daher kann sie nicht gelöscht werden.",
+        'restore_success'          => "Einrichtung wurde erfolgreich wiederhergestellt.",
+        'restore_error'            => "Fehler! Beim Wiederherstellen eines Einrichtung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+        'restore_denied'           => "Fehler! Ausgewählter Einrichtung kann nicht wiederhergestellt werden.",
+        'reorder_success'          => "Einrichtungen wurden erfolgreich neu angeordnet.",
+        'reorder_error'            => "Fehler! Beim Neuanordnen der Einrichtungen ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.",
     ],
 
     /*
@@ -274,7 +278,7 @@ return [
         'restore_error'   => "Fehler! Bei der Wiederherstellung des Trainings ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
         'restore_denied'  => "Fehler! Das ausgewählte Training kann nicht wiederhergestellt werden.",
 
-        'choose_location'  => "[Ort bei einer der KiTas erfragen!]",
+        'choose_location' => "[Ort bei einer der KiTas erfragen!]",
     ],
 
     /*

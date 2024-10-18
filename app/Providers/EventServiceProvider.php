@@ -8,10 +8,12 @@ namespace App\Providers;
 
 use App\Listeners\TriggerUserVerifiedEmailEvent;
 use App\Models\DownloadableFile;
+use App\Models\Kita;
 use App\Models\Training;
 use App\Models\TrainingProposal;
 use App\Models\User;
 use App\Observers\DownloadableFileObserver;
+use App\Observers\KitaObserver;
 use App\Observers\TrainingObserver;
 use App\Observers\TrainingProposalObserver;
 use App\Observers\UserObserver;
@@ -50,6 +52,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         DownloadableFile::observe(DownloadableFileObserver::class);
+        Kita::observe(KitaObserver::class);
         Training::observe(TrainingObserver::class);
         TrainingProposal::observe(TrainingProposalObserver::class);
         User::observe(UserObserver::class);

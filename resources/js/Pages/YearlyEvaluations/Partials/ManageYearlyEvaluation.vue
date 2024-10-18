@@ -15,6 +15,7 @@ const props = defineProps({
     errors: Object,
     kitas: Array,
     surveyTimePeriods: Array,
+    from: String,
 });
 
 
@@ -72,6 +73,23 @@ const modifiedItems = computed(() => {
         }
         return modifiedItem;
     });
+});
+
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+          const routeName = params[0];
+          const routeParams = {};
+
+          routeParams[params[1]] = params[2];
+
+          return route(routeName, routeParams)
+        }
+    }
+
+    return route('yearly_evaluations.index');
 });
 
 const childsTotal2Label = computed(() => {
@@ -359,7 +377,7 @@ const validateChildrensAmount = (age) => {
                 <v-row>
                     <v-col cols="12" sm="12" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('yearly_evaluations.index')">
+                            <Link :href="backRoute">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>
