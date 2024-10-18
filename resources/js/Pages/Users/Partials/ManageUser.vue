@@ -322,7 +322,7 @@ const deleteOperatorFromUser = async () => {
  * Kitas & operators tables
  */
 const modifyItems = (items) => {
-    return items.map(item => {
+    return items && items.length > 0 ? items.map(item => {
         const modifiedItem = {...item};
         for (const key in modifiedItem) {
             if (modifiedItem[key] === null || modifiedItem[key] === undefined) {
@@ -330,7 +330,7 @@ const modifyItems = (items) => {
             }
         }
         return modifiedItem;
-    });
+    }) : [];
 };
 
 const kitaHeaders = [
