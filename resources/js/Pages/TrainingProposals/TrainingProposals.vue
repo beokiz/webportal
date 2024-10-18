@@ -894,105 +894,105 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
             </v-data-table-server>
 
             <!-- Additional data table -->
-            <template v-if="$page.props.auth.user.is_user_multiplier">
-                <div class="tw-border-t-8 tw-mt-16 tw-pt-8"></div>
+<!--            <template v-if="$page.props.auth.user.is_user_multiplier">-->
+<!--                <div class="tw-border-t-8 tw-mt-16 tw-pt-8"></div>-->
 
-                <div class="tw-mx-4 tw-mb-8">
-                    <h2 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight">
-                        Meine Terminvorschläge
-                    </h2>
-                </div>
+<!--                <div class="tw-mx-4 tw-mb-8">-->
+<!--                    <h2 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight">-->
+<!--                        Meine Terminvorschläge-->
+<!--                    </h2>-->
+<!--                </div>-->
 
-                <v-data-table-server
-                    :items-per-page-options="[
-                      { value: 10, title: '10' },
-                      { value: 25, title: '25' },
-                      { value: 50, title: '50' },
-                      { value: 100, title: '100' },
-                      { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }
-                    ]"
-                    :items-per-page-text="'Objekte pro Seite:'"
-                    :headers="additionalTableHeaders"
-                    :items="modifiedUserTrainingProposals"
-                    :search="search"
-                    :loading="loading"
-                    class="data-table-container elevation-1"
-                    item-value="name"
-                >
-                    <template v-slot:item="{ item }">
-                        <tr :data-id="item.id" :data-order="item.order">
-                            <td>{{!item.first_date || item.first_date === '-' ? 'item.first_date' : formatDate(item.first_date, 'de-DE')}}</td>
+<!--                <v-data-table-server-->
+<!--                    :items-per-page-options="[-->
+<!--                      { value: 10, title: '10' },-->
+<!--                      { value: 25, title: '25' },-->
+<!--                      { value: 50, title: '50' },-->
+<!--                      { value: 100, title: '100' },-->
+<!--                      { value: -1, title: '$vuetify.dataFooter.itemsPerPageAll' }-->
+<!--                    ]"-->
+<!--                    :items-per-page-text="'Objekte pro Seite:'"-->
+<!--                    :headers="additionalTableHeaders"-->
+<!--                    :items="modifiedUserTrainingProposals"-->
+<!--                    :search="search"-->
+<!--                    :loading="loading"-->
+<!--                    class="data-table-container elevation-1"-->
+<!--                    item-value="name"-->
+<!--                >-->
+<!--                    <template v-slot:item="{ item }">-->
+<!--                        <tr :data-id="item.id" :data-order="item.order">-->
+<!--                            <td>{{!item.first_date || item.first_date === '-' ? 'item.first_date' : formatDate(item.first_date, 'de-DE')}}</td>-->
 
-                            <td>{{!item.second_date || item.second_date === '-' ? 'item.second_date' : formatDate(item.second_date, 'de-DE')}}</td>
+<!--                            <td>{{!item.second_date || item.second_date === '-' ? 'item.second_date' : formatDate(item.second_date, 'de-DE')}}</td>-->
 
-                            <td>{{item.formatted_location}}</td>
+<!--                            <td>{{item.formatted_location}}</td>-->
 
-                            <td>{{item.participant_count}}</td>
+<!--                            <td>{{item.participant_count}}</td>-->
 
-                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
+<!--                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>-->
 
-                            <td>
-                                <v-tooltip location="top">
-                                    <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>
-                                        </span>
-                                    </template>
-                                    <span>{{item.formatted_status}}</span>
-                                </v-tooltip>
-                            </td>
+<!--                            <td>-->
+<!--                                <v-tooltip location="top">-->
+<!--                                    <template v-slot:activator="{ props }">-->
+<!--                                        <span class="tw-cursor-pointer">-->
+<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>-->
+<!--                                        </span>-->
+<!--                                    </template>-->
+<!--                                    <span>{{item.formatted_status}}</span>-->
+<!--                                </v-tooltip>-->
+<!--                            </td>-->
 
-                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
+<!--                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>-->
 
-                            <td class="text-center">
-                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">
-                                    <template v-slot:activator="{ props }">
-                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                        </a>
-                                    </template>
-                                    <span>Mail an KiTa(s) schreiben</span>
-                                </v-tooltip>
+<!--                            <td class="text-center">-->
+<!--                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">-->
+<!--                                    <template v-slot:activator="{ props }">-->
+<!--                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">-->
+<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>-->
+<!--                                        </a>-->
+<!--                                    </template>-->
+<!--                                    <span>Mail an KiTa(s) schreiben</span>-->
+<!--                                </v-tooltip>-->
 
-                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
-                                    <v-tooltip location="top">
-                                        <template v-slot:activator="{ props }">
-                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">
-                                                <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>
-                                            </span>
-                                        </template>
-                                        <span>Reservierung aufheben</span>
-                                    </v-tooltip>
-                                </template>
+<!--                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">-->
+<!--                                    <v-tooltip location="top">-->
+<!--                                        <template v-slot:activator="{ props }">-->
+<!--                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">-->
+<!--                                                <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>-->
+<!--                                            </span>-->
+<!--                                        </template>-->
+<!--                                        <span>Reservierung aufheben</span>-->
+<!--                                    </v-tooltip>-->
+<!--                                </template>-->
 
-                                <v-tooltip location="top">
-                                    <template v-slot:activator="{ props }">
-                                        <Link :href="route('training_proposals.show', { id: item.id })">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
-                                        </Link>
-                                    </template>
-                                    <span>Schulung bearbeiten</span>
-                                </v-tooltip>
-                            </td>
-                        </tr>
-                    </template>
+<!--                                <v-tooltip location="top">-->
+<!--                                    <template v-slot:activator="{ props }">-->
+<!--                                        <Link :href="route('training_proposals.show', { id: item.id })">-->
+<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>-->
+<!--                                        </Link>-->
+<!--                                    </template>-->
+<!--                                    <span>Schulung bearbeiten</span>-->
+<!--                                </v-tooltip>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                    </template>-->
 
-                    <template #bottom></template>
+<!--                    <template #bottom></template>-->
 
-                    <template v-slot:no-data>
-                        <div class="tw-py-6">
-                            <template v-if="allFiltersEmpty">
-                                <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>
-                            </template>
-                            <template v-else>
-                                <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>
+<!--                    <template v-slot:no-data>-->
+<!--                        <div class="tw-py-6">-->
+<!--                            <template v-if="allFiltersEmpty">-->
+<!--                                <h3 class="tw-mb-4">Die Tabelle ist leer.</h3>-->
+<!--                            </template>-->
+<!--                            <template v-else>-->
+<!--                                <h3 class="tw-mb-4">Die Tabelle ist leer. Bitte setzen Sie die Suchfilter zurück.</h3>-->
 
-                                <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>
-                            </template>
-                        </div>
-                    </template>
-                </v-data-table-server>
-            </template>
+<!--                                <v-btn color="primary" @click="goToPage({ page: 1, itemsPerPage: perPage, clearFilters: true })">Reset</v-btn>-->
+<!--                            </template>-->
+<!--                        </div>-->
+<!--                    </template>-->
+<!--                </v-data-table-server>-->
+<!--            </template>-->
 
             <!-- Popups -->
             <v-container>
