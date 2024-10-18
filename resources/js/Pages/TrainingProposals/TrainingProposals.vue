@@ -913,61 +913,61 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                     item-value="name"
                 >
                     <template v-slot:item="{ item }">
-                        <tr :data-id="item.id" :data-order="item.order">
-                            <td>{{!item.first_date || item.first_date === '-' ? 'item.first_date' : formatDate(item.first_date, 'de-DE')}}</td>
+<!--                        <tr :data-id="item.id" :data-order="item.order">-->
+<!--                            <td>{{!item.first_date || item.first_date === '-' ? 'item.first_date' : formatDate(item.first_date, 'de-DE')}}</td>-->
 
-                            <td>{{!item.second_date || item.second_date === '-' ? 'item.second_date' : formatDate(item.second_date, 'de-DE')}}</td>
+<!--                            <td>{{!item.second_date || item.second_date === '-' ? 'item.second_date' : formatDate(item.second_date, 'de-DE')}}</td>-->
 
-                            <td>{{item.formatted_location}}</td>
+<!--                            <td>{{item.formatted_location}}</td>-->
 
-                            <td>{{item.participant_count}}</td>
+<!--                            <td>{{item.participant_count}}</td>-->
 
-                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
+<!--                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>-->
 
-                            <td>
-                                <v-tooltip location="top">
-                                    <template v-slot:activator="{ props }">
-                                        <span class="tw-cursor-pointer">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>
-                                        </span>
-                                    </template>
-                                    <span>{{item.formatted_status}}</span>
-                                </v-tooltip>
-                            </td>
+<!--                            <td>-->
+<!--                                <v-tooltip location="top">-->
+<!--                                    <template v-slot:activator="{ props }">-->
+<!--                                        <span class="tw-cursor-pointer">-->
+<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">{{getTrainingProposalStatusIcon(item.status)}}</v-icon>-->
+<!--                                        </span>-->
+<!--                                    </template>-->
+<!--                                    <span>{{item.formatted_status}}</span>-->
+<!--                                </v-tooltip>-->
+<!--                            </td>-->
 
-                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
+<!--                            <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>-->
 
-                            <td class="text-center">
-                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">
-                                    <template v-slot:activator="{ props }">
-                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
-                                        </a>
-                                    </template>
-                                    <span>Mail an KiTa(s) schreiben</span>
-                                </v-tooltip>
+<!--                            <td class="text-center">-->
+<!--                                <v-tooltip v-if="item?.kitas_users_emails.length > 0" location="top">-->
+<!--                                    <template v-slot:activator="{ props }">-->
+<!--                                        <a :href="`mailto:?bcc=${item?.kitas_users_emails.join(',')}`" v-bind="props">-->
+<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>-->
+<!--                                        </a>-->
+<!--                                    </template>-->
+<!--                                    <span>Mail an KiTa(s) schreiben</span>-->
+<!--                                </v-tooltip>-->
 
-                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">
-                                    <v-tooltip location="top">
-                                        <template v-slot:activator="{ props }">
-                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">
-                                                <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>
-                                            </span>
-                                        </template>
-                                        <span>Reservierung aufheben</span>
-                                    </v-tooltip>
-                                </template>
+<!--                                <template v-if="item.status === 'reserved' && ($page.props.auth.user.is_user_multiplier)">-->
+<!--                                    <v-tooltip location="top">-->
+<!--                                        <template v-slot:activator="{ props }">-->
+<!--                                            <span class="tw-cursor-pointer" @click="openChangeTrainingProposalStatusDialog(item, 'open')">-->
+<!--                                                <v-icon v-bind="props" size="small" class="tw-me-2">mdi-minus-circle-outline</v-icon>-->
+<!--                                            </span>-->
+<!--                                        </template>-->
+<!--                                        <span>Reservierung aufheben</span>-->
+<!--                                    </v-tooltip>-->
+<!--                                </template>-->
 
-                                <v-tooltip location="top">
-                                    <template v-slot:activator="{ props }">
-                                        <Link :href="route('training_proposals.show', { id: item.id })">
-                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
-                                        </Link>
-                                    </template>
-                                    <span>Schulung bearbeiten</span>
-                                </v-tooltip>
-                            </td>
-                        </tr>
+<!--                                <v-tooltip location="top">-->
+<!--                                    <template v-slot:activator="{ props }">-->
+<!--                                        <Link :href="route('training_proposals.show', { id: item.id })">-->
+<!--                                            <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>-->
+<!--                                        </Link>-->
+<!--                                    </template>-->
+<!--                                    <span>Schulung bearbeiten</span>-->
+<!--                                </v-tooltip>-->
+<!--                            </td>-->
+<!--                        </tr>-->
                     </template>
 
                     <template #bottom></template>
