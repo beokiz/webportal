@@ -130,11 +130,11 @@ const modifyItems = (items) => {
 };
 
 const modifiedItems = computed(() => {
-    return modifyItems(props.items);
+    return modifyItems(props.items ?? []);
 });
 
 const modifiedUserTrainingProposals = computed(() => {
-    return modifyItems(props.userTrainingProposals);
+    return modifyItems(props.userTrainingProposals ?? []);
 });
 
 const allFiltersEmpty = computed(() => {
@@ -929,7 +929,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
 
                             <td>{{item.participant_count}}</td>
 
-                            <td></td>
+                            <td>{{item?.kitas_list && item?.kitas_list.length ? item?.kitas_list.join(',') : '-'}}</td>
 
                             <td>
                                 <v-tooltip location="top">
