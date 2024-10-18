@@ -123,8 +123,11 @@ const modifiedItems = computed(() => {
 });
 
 const modifiedUserTrainingProposals = computed(() => {
-    console.log(props.userTrainingProposals)
     return modifyItems(props.userTrainingProposals ?? []);
+});
+
+const modifiedUserTrainingProposalsLength = computed(() => {
+    return modifiedUserTrainingProposals.value ? modifiedUserTrainingProposals.value.length : 0;
 });
 
 const allFiltersEmpty = computed(() => {
@@ -903,7 +906,7 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                     ]"
                     :items-per-page-text="'Objekte pro Seite:'"
                     :page="1"
-                    :items-length="modifiedUserTrainingProposals.length"
+                    :items-length="modifiedUserTrainingProposalsLength"
                     :headers="tableHeaders"
                     :items="modifiedUserTrainingProposals"
                     :search="search"
