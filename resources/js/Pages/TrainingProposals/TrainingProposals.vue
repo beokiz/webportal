@@ -118,7 +118,7 @@ const additionalTableHeaders = [
 
 // Computed
 const modifyItems = (items) => {
-    return items.map(item => {
+    return items?.map(item => {
         const modifiedItem = {...item};
         for (const key in modifiedItem) {
             if (modifiedItem[key] === null || modifiedItem[key] === undefined) {
