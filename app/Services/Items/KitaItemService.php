@@ -122,7 +122,7 @@ class KitaItemService extends BaseItemService
             'file-templates.pdf.kita-certificate',
             [
                 'kita_name' => $item->name,
-                'date'      => Carbon::now()->translatedFormat('F d'),
+                'date'      => Carbon::now()->translatedFormat('F Y'),
             ],
             [
                 'file_name'   => 'BeoKiz_Teilnahmebescheinigung',

@@ -46,11 +46,11 @@ return [
 
     'email_verification' => [
         'subject'     => sprintf("%s: Bitte bestätigen Sie Ihre E-Mail-Adresse", config('app.name')),
-        'greeting'    => "Sehr geehrte:r Damen und Herren,",
+        'greeting'    => "Sehr geehrte Damen und Herren,",
         'action_text' => "Bestätigen",
         'first_line'  => "Vielen Dank für Ihr Interesse an der BeoKiz-Schulung. Bitte klicken Sie auf folgenden Link, um Ihre Terminvorschläge für die BeoKiz-Schulung zu übermitteln. Dieser Schritt stellt sicher, dass wir Sie unter Ihrer angegebenen E-Mail-Adresse erreichen können.", // OLD: Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:
         'second_line' => "Zur finalen Bestätigung Ihres Schulungstermins wird sich ein BeoKiz-Multiplikator oder eine BeoKiz-Multiplikatorin mit Ihnen in Verbindung setzen.",
-        'salutation'  => sprintf("Herzlichen Dank und beste Grüße,,  \nIhr %s-Team", config('app.name')),
+        'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
 
     /*
@@ -182,7 +182,7 @@ return [
         'subject'     => sprintf("%s: Schulung erfolgreich abgeschlossen", config('app.name')),
         'greeting'    => "Sehr geehrtes Pädagogisches Team der KiTa,",
         'first_line'  => "Wir freuen uns, Ihnen mitzuteilen, dass Ihre Schulung am :first_date und :second_date erfolgreich abgeschlossen wurde.",
-        'second_line' => sprintf("Sie werden in Kürze ihren Zugang zum %s Portal erhalten.", config('app.name')),
+        'second_line' => sprintf("Sie werden in Kürze Ihren Zugang zum %s Portal, Ihre Teilnahmebescheinigung sowie den Link zu einem Feedbackfragebogen erhalten.", config('app.name')),
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
 
