@@ -120,6 +120,7 @@ class OperatorsController extends BaseController
                 ];
             }, Kita::TYPES),
             'zipCodes'      => $zipCodesList,
+            'from'          => $request->input('from'),
         ]);
     }
 

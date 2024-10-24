@@ -13,6 +13,7 @@ import { prepareDate, ages } from "@/Composables/common.js";
 const props = defineProps({
     downloadableFile: Object,
     errors: Object,
+    from: String,
 });
 
 
@@ -38,6 +39,24 @@ const currentUser = usePage().props.auth.user ?? {};  // Global info about user
 const editedDownloadableFile = ref(props.downloadableFile);
 const errors = ref(props.errors || {});
 const loading = ref(false);
+
+// Computed
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('settings.index');
+});
 
 // Methods
 const manageForm = useForm({
@@ -88,7 +107,7 @@ const manageDownloadableFile = async () => {
                 <v-row>
                     <v-col cols="12" sm="12" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('settings.index')">
+                            <Link :href="backRoute">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>

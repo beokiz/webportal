@@ -127,6 +127,7 @@ class YearlyEvaluationsController extends BaseController
             'yearlyEvaluation'  => $yearlyEvaluation,
             'kitas'             => $kitas,
             'surveyTimePeriods' => $surveyTimePeriodItemService->collection(),
+            'from'              => $request->input('from'),
         ]);
     }
 

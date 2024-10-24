@@ -32,8 +32,8 @@
     foreach ($item->data as $domain) {
         $domainMilestones = [];
 
-        foreach ($domain['milestones'] as $milestones) {
-            $domainMilestones[$milestones['id']] = $milestones['value'];
+        foreach ($domain['milestones'] as $milestone) {
+            $domainMilestones[$milestone['id']] = $milestone['value'];
         }
 
         $ratingData[$domain['domain']] = [
@@ -109,10 +109,8 @@
                                 @endif
                             </div>
                         @endforeach
-
                     </div>
                 @endforeach
-
             </div>
         </div>
     </div>

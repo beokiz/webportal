@@ -49,7 +49,6 @@ class MakeDatabaseBackupJob implements ShouldQueue
             if (!empty($backupEmail)) {
                 $filePath = MysqlDatabaseHelper::export(config('database.default'), [
                     '--no-tablespaces',
-                    '--column-statistics=0',
                 ]);
 
                 if (!empty($filePath)) {

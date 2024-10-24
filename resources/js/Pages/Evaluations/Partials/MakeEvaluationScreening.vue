@@ -203,11 +203,27 @@ const screeningEvaluation = async () => {
                 <v-card-text>
                     <v-container>
                         <v-row class="result-evaluation-domains">
+                            <v-col cols="12">
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <div class="tw-text-right">
+                                        <v-icon v-bind="props" size="small" class="tw-me-2" @click="close" title="Fenster schließen">mdi-close</v-icon>
+                                    </div>
+                                </v-hover>
+                            </v-col>
+                        </v-row>
+
+                        <v-row class="result-evaluation-domains">
                             <v-col cols="8" offset="2">
                                 <div class="tw-text-center">
                                     <h1 class="tw-uppercase text-primary tw-font-black tw-text-xl tw-mb-8">
                                         Ampelergebnis im Bereich {{evaluationResultDomainName}}
                                     </h1>
+
+                                    <v-hover v-slot:default="{ isHovering, props }">
+                                        <v-btn :href="route('screening.pdf', screeningForm)" class="tw-px-2 tw-py-3 tw-mb-4 tw-mr-4 tw-normal-case" :color="isHovering ? 'primary' : 'accent'">
+                                            Einschätzung als PDF downloaden
+                                        </v-btn>
+                                    </v-hover>
                                 </div>
                             </v-col>
 

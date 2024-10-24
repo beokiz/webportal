@@ -19,6 +19,7 @@ const props = defineProps({
     operators: Array,
     users: Array,
     canBeEdited: Boolean,
+    from: String,
     // Users table
     currentPage: Number,
     perPage: Number,
@@ -64,6 +65,23 @@ watch(dialog, (val) => {
     if (!val) {
         close();
     }
+});
+
+const backRoute = computed(() => {
+    if (props.from) {
+        const params = props.from.split(';');
+
+        if (params.length === 3) {
+            const routeName = params[0];
+            const routeParams = {};
+
+            routeParams[params[1]] = params[2];
+
+            return route(routeName, routeParams)
+        }
+    }
+
+    return route('kitas.index');
 });
 
 // Methods
@@ -209,6 +227,28 @@ const manageConnectKitaUser = async () => {
     });
 };
 
+const sendKitaCertificateNotificationForm = useForm({
+    id: editedKita.value.id,
+});
+
+const sendKitaCertificateNotification = async () => {
+    sendKitaCertificateNotificationForm.processing = true;
+
+    let formOptions = {
+        onSuccess: (page) => {
+            close();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            sendKitaCertificateNotificationForm.processing = false;
+        },
+    };
+
+    sendKitaCertificateNotificationForm.post(route('kitas.send_kita_certificate_notification', { kita: sendKitaCertificateNotificationForm.id }), formOptions);
+};
+
 /*
  * Users table
  */
@@ -328,6 +368,10 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         }
 
         // Apply filters
+        if (props.from) {
+            data.from = props.from;
+        }
+
         if (statusFilter.value) {
             data.status = statusFilter.value;
         }
@@ -382,6 +426,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
+            <v-container>
+                <v-row>
+                    <v-col cols="12" class="text-right">
+                        <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn class="tw-ml-4 tw-mb-4" v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="sendKitaCertificateNotification" :disabled="manageForm.processing || sendKitaCertificateNotificationForm.processing">
+                                    <span>Zertifikat versenden</span>
+                                </v-btn>
+                            </v-hover>
+                        </template>
+                    </v-col>
+                </v-row>
+            </v-container>
+
             <v-container>
                 <v-row>
                     <v-col cols="12">
@@ -543,7 +601,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                     <v-col cols="12" sm="6" align="right">
                         <v-hover v-slot:default="{ isHovering, props }">
-                            <Link :href="route('kitas.index')">
+                            <Link :href="backRoute">
                                 <v-btn class="mr-2" variant="text" v-bind="props" :color="isHovering ? 'accent' : 'primary'">Zurück</v-btn>
                             </Link>
                         </v-hover>
@@ -831,7 +889,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                                             <v-tooltip location="top">
                                                 <template v-slot:activator="{ props }">
-                                                    <Link :href="`${route('users.edit', { id: item.id })}?from=kitas.show;${kita.id}`">
+                                                    <Link :href="`${route('users.edit', { id: item.id })}?from=kitas.show;kita;${kita.id}`">
                                                         <v-icon v-bind="props" size="small" class="tw-me-2">mdi-pencil</v-icon>
                                                     </Link>
                                                 </template>

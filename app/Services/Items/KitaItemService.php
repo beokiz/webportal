@@ -6,9 +6,12 @@
 
 namespace App\Services\Items;
 
+use App\Interfaces\FileGenerators\PdfGeneratorServiceInterface;
 use App\Models\Kita;
 use Batch;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * Kita Item Service
@@ -90,6 +93,44 @@ class KitaItemService extends BaseItemService
         return $throwExceptionIfFail
             ? Kita::findOrFail($id)
             : Kita::find($id);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function generatePdfCertificate(int $id)
+    {
+        $pdfGeneratorService = app(PdfGeneratorServiceInterface::class);
+
+        $item = $this->find($id, true);
+
+        $item->loadMissing(['users']);
+
+        Carbon::setLocale('de');
+
+        $pdfHeaderFooterData = [
+            'header' => [
+                'hide_logo' => true,
+            ],
+            'footer' => [
+                'display_document_meta' => false,
+            ],
+        ];
+
+        return $pdfGeneratorService->createFromBlade(
+            'file-templates.pdf.kita-certificate',
+            [
+                'kita_name' => $item->name,
+                'date'      => Carbon::now()->translatedFormat('F Y'),
+            ],
+            [
+                'file_name'   => 'BeoKiz_Teilnahmebescheinigung',
+                'header-html' => view('layouts.pdf-components.pdf-file-spatie-header', ['headerData' => $pdfHeaderFooterData['header']])->render(),
+                'footer-html' => view('layouts.pdf-components.pdf-file-spatie-footer', ['footerData' => $pdfHeaderFooterData['footer']])->render(),
+            ],
+            false
+        );
     }
 
     /**

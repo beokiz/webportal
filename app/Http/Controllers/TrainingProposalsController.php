@@ -66,6 +66,10 @@ class TrainingProposalsController extends BaseController
             'with_multipliers', 'status', 'with_kitas',
         ]);
 
+        if (!empty($args['order_by']) && $args['order_by'] === 'location') {
+            $args['order_by'] = 'zip_code';
+        }
+
         if ($currentUser->is_user_multiplier) {
             $args['status'] = TrainingProposal::STATUS_OPEN;
 
@@ -77,7 +81,7 @@ class TrainingProposalsController extends BaseController
         ]), ['kitas.users']);
 
         return Inertia::render('TrainingProposals/TrainingProposals', array_merge($this->prepareItemsCollection($result), [
-            'userTrainingProposals' => $currentUser->is_user_multiplier ? $currentUser->trainingProposals : null,
+            'userTrainingProposals' => $currentUser->is_user_multiplier ? $currentUser->trainingProposals->where('status', '!=', TrainingProposal::STATUS_CONFIRMED)->values() : null,
             'filters'               => $request->only(['first_date', 'second_date', 'location', 'participant_count', 'with_multipliers', 'status', 'with_kitas',]),
             'multipliers'           => $userItemService->collection(['with_roles' => [config('permission.project_roles.user_multiplier')]]),
             'kitas'                 => $kitaItemService->collection(['paginated' => false]),
@@ -178,6 +182,7 @@ class TrainingProposalsController extends BaseController
                 ];
             }, Kita::TYPES),
             'zipCodes'              => $zipCodesList,
+            'from'                  => $request->input('from'),
         ]);
     }
 

@@ -38,6 +38,8 @@ return [
         'send_verification_link_success' => "Verification link has been sent successfully.",
         'send_verification_link_error'   => "Error! Failed to send verification link. Please try again later.",
         'send_verification_link_denied'  => "Error! The email has already been verified.",
+        'welcome_notification_success'   => "Welcome notification has been sent successfully.",
+        'welcome_notification_error'     => "Error! Failed to send welcome notification. Please try again later.",
         'delete_success'                 => "User has been deleted successfully.",
         'delete_error'                   => "Error! Something went wrong while deleting a user. Please try again later.",
         'delete_denied'                  => "Error! Selected user cannot be deleted.",
@@ -119,20 +121,22 @@ return [
     */
 
     'kitas' => [
-        'create_success'      => "KiTa has been created successfully.",
-        'create_error'        => "Error! Something went wrong while creating a KiTa. Please try again later.",
-        'update_success'      => "KiTa has been updated successfully.",
-        'update_error'        => "Error! Something went wrong while updating a KiTa. Please try again later.",
-        'update_denied'       => "Error! Selected KiTa cannot be updated.",
-        'delete_success'      => "KiTa has been deleted successfully.",
-        'delete_error'        => "Error! Something went wrong while deleting a KiTa. Please try again later.",
-        'delete_denied'       => "Error! Selected KiTa cannot be deleted.",
-        'delete_users_denied' => "Error! The selected KiTa has associated users, so it cannot be deleted.",
-        'restore_success'     => "KiTa has been restored successfully.",
-        'restore_error'       => "Error! Something went wrong while restoring a KiTa. Please try again later.",
-        'restore_denied'      => "Error! Selected KiTa cannot be restored.",
-        'reorder_success'     => "KiTas has been reordered successfully.",
-        'reorder_error'       => "Error! Something went wrong while reordering KiTas. Please try again later.",
+        'create_success'           => "KiTa has been created successfully.",
+        'create_error'             => "Error! Something went wrong while creating a KiTa. Please try again later.",
+        'update_success'           => "KiTa has been updated successfully.",
+        'update_error'             => "Error! Something went wrong while updating a KiTa. Please try again later.",
+        'update_denied'            => "Error! Selected KiTa cannot be updated.",
+        'send_certificate_success' => "Certificate has been sent successfully.",
+        'send_certificate_error'   => "Error! Failed to certificate link. Please try again later.",
+        'delete_success'           => "KiTa has been deleted successfully.",
+        'delete_error'             => "Error! Something went wrong while deleting a KiTa. Please try again later.",
+        'delete_denied'            => "Error! Selected KiTa cannot be deleted.",
+        'delete_users_denied'      => "Error! The selected KiTa has associated users, so it cannot be deleted.",
+        'restore_success'          => "KiTa has been restored successfully.",
+        'restore_error'            => "Error! Something went wrong while restoring a KiTa. Please try again later.",
+        'restore_denied'           => "Error! Selected KiTa cannot be restored.",
+        'reorder_success'          => "KiTas has been reordered successfully.",
+        'reorder_error'            => "Error! Something went wrong while reordering KiTas. Please try again later.",
     ],
 
     /*
@@ -274,7 +278,7 @@ return [
         'restore_error'   => "Error! Something went wrong while restoring the training. Please try again later.",
         'restore_denied'  => "Error! The selected training cannot be restored.",
 
-        'choose_location'  => "[Ask for location at one of the daycare centers!]",
+        'choose_location' => "[Ask for location at one of the daycare centers!]",
     ],
 
     /*

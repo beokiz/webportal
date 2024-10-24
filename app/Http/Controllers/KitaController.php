@@ -22,6 +22,7 @@ use App\Services\Items\RoleItemService;
 use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
 
 /**
@@ -190,6 +191,7 @@ class KitaController extends BaseController
                 ];
             }, Kita::TYPES),
             'canBeEdited' => $canBeEdited,
+            'from'        => $request->input('from'),
         ]);
     }
 
@@ -224,6 +226,37 @@ class KitaController extends BaseController
         return $result
             ? Redirect::back()->withSuccesses(__('crud.kitas.update_success'))
             : Redirect::back()->withErrors(__('crud.kitas.update_error'));
+    }
+
+    /**
+     * @param Request $request
+     * @param Kita    $kita
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function sendKitaCertificateNotification(Request $request, Kita $kita)
+    {
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
+
+        $roles = config('permission.project_roles');
+
+        $pdfFile = $this->kitaItemService->generatePdfCertificate($kita->id);
+
+        if (!empty($pdfFile)) {
+            // Send kitas managers notifications
+            $kita->users()->whereHas('roles', function ($query) use ($roles, $pdfFile) {
+                $query->where('name', $roles['manager']);
+            })->get()->each(function (User $user) use ($pdfFile, $kita) {
+                $user->sendKitaCertificateNotificationNotification([
+                    'kita'      => $kita,
+                    'file_path' => $pdfFile,
+                ]);
+            });
+
+            return Redirect::back()->withSuccesses(__('crud.kitas.send_certificate_success'));
+        } else {
+            return Redirect::back()->withErrors(__('crud.kitas.send_certificate_error'));
+        }
     }
 
     /**
