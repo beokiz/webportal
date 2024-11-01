@@ -206,7 +206,7 @@ class UsersController extends BaseController
 
         $attributes = $request->validated();
         $result     = $this->userItemService->create(array_merge($attributes, [
-            'email_verified_at' => null, // OLD: Carbon::now()
+            'email_verified_at' => Carbon::now(),
             'password'          => Str::random(20),
         ]));
 
