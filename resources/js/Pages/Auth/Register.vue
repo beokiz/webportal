@@ -331,7 +331,7 @@ const validateTrainingSuggestionDates = (index) => {
                         <v-col cols="12" sm="7" class="tw-mb-8">
                             <v-fade-transition>
                                 <template v-if="showTrainingDisclaimer">
-                                    <InfoMessage :text="`Leider gibt es aktuell keine verfügbarern Tremin für ein Team mit der Größe von ${registrationForm.kita.participant_count} Mitarbeitenden. <br/> Voraussichtlich ab nächsten August, werden neune Termin bekannt gegeben!`"/>
+                                    <InfoMessage :text="`Leider gibt es aktuell keine verfügbarern Tremin für ein Team mit der Größe von ${registrationForm.kita.participant_count} Mitarbeitenden.`"/>
                                 </template>
                             </v-fade-transition>
                         </v-col>
