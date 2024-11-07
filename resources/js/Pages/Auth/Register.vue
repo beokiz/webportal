@@ -307,6 +307,10 @@ const validateTrainingSuggestionDates = (index) => {
                                 Sehr geehrte BeoKiz-Interessenten,
                             </p>
 
+                            <p class="tw-mb-4 tw-text-blue-600">
+                                Hallo Ruben: Ich habe diesen Text hinzugefügt, um zu zeigen, dass ich den Code bearbeiten kann! 🎉
+                            </p>
+
                             <p class="tw-mb-4">
                                 die BeoKiz-Schulungen finden als Team-Schulung statt. Das heißt, alle pädagogischen Mitarbeitenden (Azubis, Quereinsteiger und Kitaleitungen) nehmen gemeinsam teil. In dem folgenden Formular können Sie Ihre Daten hinterlegen und Termine für die Schulungen Ihrer pädagogischen Fachkräfte auswählen bzw. Terminvorschläge für Ihre Schulungen an uns übermitteln.
                             </p>
