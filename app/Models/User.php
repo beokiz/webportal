@@ -385,7 +385,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendConnectedToKitasNotification(?array $kitas) : void
     {
-        if (!empty($kitas)) {
+        if (!empty($kitas) && count($kitas) >= 2) {
             $this->notify(new ConnectedToKitasNotification($kitas));
         }
     }
