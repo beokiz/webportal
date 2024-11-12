@@ -686,7 +686,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                                             <v-card height="80vh">
                                                 <v-card-title>
-                                                    <span class="tw-text-h5">Neue Benutzer</span>
+                                                    <span class="tw-text-h5">Neuen Benutzer hinzufügen</span>
                                                 </v-card-title>
 
                                                 <v-card-text>

@@ -221,7 +221,7 @@ class UsersController extends BaseController
      */
     public function storeFromKita(CreateUserFromKitaRequest $request)
     {
-        $this->authorize('authorizeAccessToUsers', User::class);
+        $this->authorize('authorizeAccessToKitas', User::class);
 
         $attributes = $request->validated();
         $result     = $this->userItemService->createFromKitaOrOperator($attributes);
