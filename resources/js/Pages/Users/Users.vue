@@ -394,7 +394,7 @@ const sendWelcomeNotification = async (item) => {
                                                     :error-messages="errors.role"
                                                     item-title="human_name"
                                                     item-value="id"
-                                                    label="Role"
+                                                    label="Rolle"
                                                     required
                                                 ></v-select>
                                             </v-col>
