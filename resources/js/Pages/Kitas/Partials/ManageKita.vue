@@ -719,7 +719,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                                     :error-messages="errors.role"
                                                                     item-title="human_name"
                                                                     item-value="id"
-                                                                    label="Role"
+                                                                    label="Rolle"
                                                                     required
                                                                 ></v-select>
                                                             </v-col>
