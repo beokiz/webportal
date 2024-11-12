@@ -619,7 +619,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             </v-container>
 
             <!-- Kita users block -->
-            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_manager">
+            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_manager || $page.props.auth.user.is_user_multiplier">
                 <v-container>
                     <v-row class="tw-border-t-8 tw-mt-8 tw-pt-8">
                         <v-col cols="12" sm="6">
