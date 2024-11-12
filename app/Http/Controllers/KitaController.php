@@ -52,7 +52,7 @@ class KitaController extends BaseController
      * @param Request $request
      * @return \Inertia\Response
      */
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $this->authorize('authorizeAccessToKitas', User::class);
 
