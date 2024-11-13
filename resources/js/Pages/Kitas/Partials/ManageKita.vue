@@ -619,7 +619,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             </v-container>
 
             <!-- Kita users block -->
-            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_manager">
+            <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_manager || $page.props.auth.user.is_user_multiplier">
                 <v-container>
                     <v-row class="tw-border-t-8 tw-mt-8 tw-pt-8">
                         <v-col cols="12" sm="6">
@@ -686,7 +686,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                                             <v-card height="80vh">
                                                 <v-card-title>
-                                                    <span class="tw-text-h5">Neue Benutzer</span>
+                                                    <span class="tw-text-h5">Neuen Benutzer hinzufügen</span>
                                                 </v-card-title>
 
                                                 <v-card-text>
@@ -719,7 +719,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                                     :error-messages="errors.role"
                                                                     item-title="human_name"
                                                                     item-value="id"
-                                                                    label="Role"
+                                                                    label="Rolle"
                                                                     required
                                                                 ></v-select>
                                                             </v-col>

@@ -39,9 +39,12 @@ class UserObserver extends BaseObserver
      */
     public function created(User $user)
     {
-        $user->sendWelcomeNotification(
-            $this->tokens->create($user)
-        );
+        // Prüfen, ob der Benutzer nicht durch einen Multiplikator erstellt wurde
+        if (!$user->created_by || !$user->created_by->hasRole(config('permission.project_roles.user_multiplier'))) {
+            $user->sendWelcomeNotification(
+                $this->tokens->create($user)
+            );
+        }
     }
 
     /**
