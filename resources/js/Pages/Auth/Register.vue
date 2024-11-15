@@ -84,16 +84,14 @@ const maxDisplayDate = ref(new Date(maxTrainingDate.value));
 
 const showTrainingDisclaimer = ref(false);
 
-const smallKitasOperators = computed(() => {
-    return props.operators.filter(operator => operator?.self_training === false || operator?.self_training === undefined);
-});
-
-const largeKitasOperators = computed(() => {
-    return props.operators.filter(operator => operator?.self_training === true || operator?.self_training === undefined);
-});
-
 const selfTrainingOperators = computed(() => {
-    return props.operators.filter(operator => operator?.self_training === true || operator?.self_training === undefined);
+    return props.operators
+        .filter(operator => operator?.self_training === true || operator?.self_training === undefined)
+        .sort((a, b) => {
+            if (a.name === 'Sonstiger Träger') return -1; // "Sonstiger Träger" kommt an den Anfang
+            if (b.name === 'Sonstiger Träger') return 1;  // "Sonstiger Träger" kommt an den Anfang
+            return a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }); // Alphabetische Sortierung
+        });
 });
 
 const availableKitasByParticipantCount = computed(() => {
