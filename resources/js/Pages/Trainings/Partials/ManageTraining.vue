@@ -119,6 +119,16 @@ const backRoute = computed(() => {
     return route('trainings.index');
 });
 
+// Computed
+const availableTrainingTypes = computed(() => {
+    if (currentUser?.is_user_multiplier) {
+        // Beschränkung auf "In-house Schulungen" für Multiplikatoren
+        return props.types.filter(type => type.value === 'in-house');
+    }
+    // Standardtypen für andere Rollen
+    return props.types;
+});
+
 watch(dialog, (val) => {
     if (!val) {
         close();
@@ -713,7 +723,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                         <v-select
                             v-model="manageForm.type"
                             :error-messages="errors.type"
-                            :items="types"
+                            :items="availableTrainingTypes"
                             item-title="title"
                             item-value="value"
                             label="Typ*"

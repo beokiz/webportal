@@ -124,6 +124,16 @@ const modifiedItems = computed(() => {
     });
 });
 
+// Computed
+const availableTrainingTypes = computed(() => {
+    if (currentUser?.is_user_multiplier) {
+        // Beschränkung auf "In-house Schulungen" für Multiplikatoren
+        return props.types.filter(type => type.value === 'in-house');
+    }
+    // Standardtypen für andere Rollen
+    return props.types;
+});
+
 const allFiltersEmpty = computed(() => {
     return firstDateFilter.value === null &&
         secondDateFilter.value === null &&
@@ -635,7 +645,7 @@ const manageTrainingStatus = async (status) => {
                                                 <v-select
                                                     v-model="manageForm.type"
                                                     :error-messages="errors.type"
-                                                    :items="types"
+                                                    :items="availableTrainingTypes"
                                                     item-title="title"
                                                     item-value="value"
                                                     label="Typ*"
