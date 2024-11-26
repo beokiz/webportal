@@ -132,7 +132,7 @@ watch(secondDateField, (val) => {
 // Methods
 const manageForm = useForm({
     id: editedTrainingProposal.value?.id,
-    // multi_id: editedTrainingProposal.value?.multi_id,
+    multi_id: editedTrainingProposal.value?.multi_id,
     first_date: editedTrainingProposal.value?.first_date,
     second_date: editedTrainingProposal.value?.second_date,
     location: editedTrainingProposal.value?.location,
@@ -700,6 +700,20 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             clearable
                         ></v-text-field>
                     </v-col>
+                    <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
+                        <v-col cols="12" sm="4">
+                            <v-select
+                                v-model="manageForm.multi_id"
+                                :error-messages="errors.multi_id"
+                                :items="multipliers"
+                                item-title="full_name"
+                                item-value="id"
+                                label="Multiplikator*"
+                                :disabled="loading || $page.props.auth.user.is_user_multiplier"
+                                clearable
+                            ></v-select>
+                        </v-col>
+                    </template>
                 </v-row>
 
                 <v-row>
