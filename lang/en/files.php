@@ -37,7 +37,7 @@ return [
         'uuid_label'                        => "UUID",
         'kita_label'                        => "KiTa",
         'child_duration_in_kita_label'      => "Child duration in kita",
-        'upToOneYear_label'                 => "Up to one year",
+        'up_to_one_year_label'              => "Up to one year",
         'up_to_two_years_label'             => "Up to two years",
         'up_to_three_years_label'           => "Up to three years",
         'more_than_three_years_label'       => "More than three years",
