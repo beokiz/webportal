@@ -94,9 +94,12 @@ const selfTrainingOperators = computed(() => {
         });
 });
 
-const availableKitasByParticipantCount = computed(() => {
-    return props.availableTrainings.filter(kita => {
-        return parseInt(kita?.available_participant_count) >= parseInt(registrationForm.kita.participant_count);
+const availableTrainingsByParticipantCount = computed(() => {
+    return props.availableTrainings.filter(training => {
+        return (
+            parseInt(training?.available_participant_count) >= parseInt(registrationForm.kita.participant_count) &&
+            training?.type === 'combined' // Hier wird sichergestellt, dass der Typ TYPE_COMBINED ist
+        );
     });
 });
 
@@ -141,7 +144,7 @@ const showSuccessMessage = ref(false);
 
 watch(() => registrationForm.kita.participant_count, (val) => {
     if (val && val <= 10) {
-        showTrainingDisclaimer.value = availableKitasByParticipantCount.value.length <= 0;
+        showTrainingDisclaimer.value = availableTrainingsByParticipantCount.value.length <= 0;
 
         if (val <= 0) {
             registrationForm.kita.participant_count = 1;
@@ -473,7 +476,7 @@ const validateTrainingSuggestionDates = (index) => {
                                 </template>
                                 <template v-else>
                                     <v-radio-group v-model="registrationForm.kita.training_id">
-                                        <v-radio v-for="training in availableKitasByParticipantCount" :key="training.id"
+                                        <v-radio v-for="training in availableTrainingsByParticipantCount" :key="training.id"
                                                  :label="`${formatDate(training.first_date, 'de-DE')} und ${formatDate(training.second_date, 'de-DE')} in ${training.street} ${training.house_number}, ${training.zip_code} - ${training.location}`"
                                                  :value="training?.id"
                                         ></v-radio>
