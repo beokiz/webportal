@@ -37,7 +37,7 @@ return [
         'uuid_label'                        => "Einrichtung",
         'kita_label'                        => "KiTa",
         'child_duration_in_kita_label'      => "Zeitraum in der KiTa",
-        'upToOneYear_label'                 => "1 - 12 Monate",
+        'up_to_one_year_label'              => "1 - 12 Monate",
         'up_to_two_years_label'             => "12 - 24 Monate",
         'up_to_three_years_label'           => "24 - 36 Monate",
         'more_than_three_years_label'       => "Länger als 36 Monate",
