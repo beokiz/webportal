@@ -100,6 +100,7 @@ const mainTableHeaders = [
     { title: 'Teilnehmer ', key: 'participant_count', width: '5%', sortable: true },
     { title: 'KiTa', key: 'kitas_list', width: '26%', sortable: false },
     { title: 'Status', key: 'status', width: '5%', sortable: true },
+    { title: 'Multiplikator', key: 'multi_id', width: '7%', sortable: true },
     { title: 'Geändert am', key: 'updated_at', width: '16%', sortable: true },
     { title: 'Aktion', key: 'actions', width: '15%', sortable: false, align: 'center' },
 ];
@@ -823,6 +824,8 @@ const manageTrainingProposalStatus = async (status, multi_id) => {
                                 <span>{{item.formatted_status}}</span>
                             </v-tooltip>
                         </td>
+
+                        <td>{{item?.multiplier ? item?.multiplier?.full_name : '-'}}</td>
 
                         <td>{{!item.updated_at || item.updated_at === '-' ? item.updated_at : formatDateTime(item.updated_at, 'de-DE')}}</td>
 

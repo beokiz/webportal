@@ -350,7 +350,7 @@ const validateTrainingSuggestionDates = (index) => {
                             </template>
                             <template v-else>
                                 <p class="tw-mb-4">
-                                    Die BeoKiz-Schulungen finden für Einrichtungen mit <b>bis zu 10</b> pädagogischen Fachkräften an bereits terminierten Zeiträumen in der KiTeAro Akademie (Stromstrasse 38, 10551 Berlin) statt und werden gemeinsam mit Fachkräften aus anderen Einrichtungen durchgeführt.
+                                    Die BeoKiz-Schulungen finden für Einrichtungen mit <b>bis zu 10</b> pädagogischen Fachkräften an bereits terminierten Zeiträumen statt und werden gemeinsam mit Fachkräften aus anderen Einrichtungen durchgeführt.
                                 </p>
                             </template>
 
@@ -395,7 +395,7 @@ const validateTrainingSuggestionDates = (index) => {
                             <v-col cols="12">
                                 <template v-if="!isNewKitaWasLarge">
                                     <h2 class="tw-font-semibold tw-text-base tw-text-gray-800 tw-leading-tight tw-mb-4">
-                                        Noch verfügbare Schulungszeiträume sind folgende:
+                                        Verfügbare Schulungen:
                                     </h2>
                                 </template>
                             </v-col>
@@ -474,7 +474,7 @@ const validateTrainingSuggestionDates = (index) => {
                                 <template v-else>
                                     <v-radio-group v-model="registrationForm.kita.training_id">
                                         <v-radio v-for="training in availableKitasByParticipantCount" :key="training.id"
-                                                 :label="`${formatDate(training.first_date, 'de-DE')} und ${formatDate(training.second_date, 'de-DE')}`"
+                                                 :label="`${formatDate(training.first_date, 'de-DE')} und ${formatDate(training.second_date, 'de-DE')} in ${training.street} ${training.house_number}, ${training.zip_code} - ${training.location}`"
                                                  :value="training?.id"
                                         ></v-radio>
                                     </v-radio-group>
@@ -482,7 +482,7 @@ const validateTrainingSuggestionDates = (index) => {
                             </v-col>
 
                             <v-col cols="12" md="6">
-                                <InfoMessage :text="isNewKitaWasLarge ? 'Wählen Sie bitte nachfolgend zwei direkt aufeinanderfolgende Schulungstermine aus. Wenn für Sie zwei aufeinanderfolgende Termine nicht möglich sind, wählen Sie bitte zwei Tage aus, die weniger als 7 Tage auseinander liegen. Es handelt sich dabei um Terminvorschläge, die Sie einreichen. Eine Bestätigung der Schulungstermine findet erst statt, wenn sich ein BeoKiz-Multiplikator für Ihren Terminvorschlag gefunden hat und dieser Kontakt mit Ihnen aufgenommen hat.' : 'Bitte wählen Sie ein Schulungszeitraum aus, an welchen Tagen eine Durchführung mit Ihrem gesamten pädagogischen Team möglich ist. Schulungsort ist die KiTeAro Akademie - Stromstr. 38 - 10551 Berlin.'"/>
+                                <InfoMessage :text="isNewKitaWasLarge ? 'Wählen Sie bitte nachfolgend zwei direkt aufeinanderfolgende Schulungstermine aus. Wenn für Sie zwei aufeinanderfolgende Termine nicht möglich sind, wählen Sie bitte zwei Tage aus, die weniger als 7 Tage auseinander liegen. Es handelt sich dabei um Terminvorschläge, die Sie einreichen. Eine Bestätigung der Schulungstermine findet erst statt, wenn sich ein BeoKiz-Multiplikator für Ihren Terminvorschlag gefunden hat und dieser Kontakt mit Ihnen aufgenommen hat.' : 'Bitte wählen Sie ein Schulungszeitraum aus, an welchen Tagen eine Durchführung mit Ihrem gesamten pädagogischen Team möglich ist.'"/>
                             </v-col>
                         </v-row>
                     </v-fade-transition>
