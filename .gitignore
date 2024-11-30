@@ -122,3 +122,6 @@ _old/
 pkginfo
 nohup.out
 /.vagrant
+
+# Exports
+*.xlsx
