@@ -1,4 +1,5 @@
 import os
+import glob
 import subprocess
 import mysql.connector
 from datetime import datetime
@@ -6,8 +7,8 @@ import pandas as pd
 import requests
 
 # Lokale Einstellungen
-LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup.sql")
-CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup_cleaned.sql")
+LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup_20241203.sql")
+CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup_20241203_cleaned.sql")
 
 DB_CONFIG = {
     "host": "localhost",
@@ -17,9 +18,12 @@ DB_CONFIG = {
     "database": "beokiz_prod"
 }
 
+# Steuere, ob lokale Skripte verwendet werden
+USE_LOCAL_SCRIPTS = True
+LOCAL_SCRIPT_PATH = os.path.expanduser("./")  # Pfad zu lokalen SQL-Skripten
 SQL_SCRIPT_URLS = [
-    "https://raw.githubusercontent.com/beokiz/webportal/refs/heads/main/database/exports/export_trainings.sql",
-    "https://raw.githubusercontent.com/beokiz/webportal/refs/heads/main/database/exports/export_trainings_and_proposal.sql"
+    "https://raw.githubusercontent.com/beokiz/webportal/refs/heads/main/database/exports/export_Schulungen.sql",
+    "https://raw.githubusercontent.com/beokiz/webportal/refs/heads/main/database/exports/export_Schulungen_und_Terminvorschlaege.sql"
 ]
 
 def clean_dump_file(input_path, output_path):
@@ -27,7 +31,6 @@ def clean_dump_file(input_path, output_path):
     print("Bereinige Dump-Datei...")
     with open(input_path, "r") as infile, open(output_path, "w") as outfile:
         for line in infile:
-            # Problematische Zeilen überspringen
             if "/*!999999\\- enable the sandbox mode */" in line:
                 continue
             outfile.write(line)
@@ -78,6 +81,14 @@ def download_sql_script(url):
     else:
         raise Exception(f"Fehler beim Herunterladen des SQL-Skripts: {response.status_code}")
 
+def load_local_sql_scripts(path):
+    """Lädt alle lokalen SQL-Skripte aus dem angegebenen Pfad."""
+    scripts = []
+    for file_path in glob.glob(os.path.join(path, "*.sql")):
+        with open(file_path, "r") as file:
+            scripts.append((os.path.basename(file_path), file.read()))
+    return scripts
+
 def execute_sql_and_export_to_excel(sql_script, db_config, output_file):
     """Führt ein SQL-Skript aus und exportiert die Ergebnisse in eine Excel-Datei."""
     connection = mysql.connector.connect(**db_config)
@@ -112,9 +123,16 @@ if __name__ == "__main__":
             raise FileNotFoundError(f"Dump-Datei nicht gefunden: {LOCAL_DUMP_PATH}")
 
         # SQL-Skripte ausführen
-        for sql_url in SQL_SCRIPT_URLS:
-            sql_script = download_sql_script(sql_url)
-            output_file = f"{datetime.now().strftime('%Y-%m-%d')}_{os.path.basename(sql_url).replace('.sql', '')}.xlsx"
+        if USE_LOCAL_SCRIPTS:
+            print("Verwende lokale SQL-Skripte...")
+            sql_scripts = load_local_sql_scripts(LOCAL_SCRIPT_PATH)
+        else:
+            print("Lade SQL-Skripte aus URLs...")
+            sql_scripts = [(os.path.basename(url), download_sql_script(url)) for url in SQL_SCRIPT_URLS]
+
+        for script_name, sql_script in sql_scripts:
+            output_file = f"{datetime.now().strftime('%Y-%m-%d')}_{script_name.replace('.sql', '')}.xlsx"
             execute_sql_and_export_to_excel(sql_script, DB_CONFIG, output_file)
+
     except Exception as e:
         print(f"Fehler: {e}")
