@@ -58,6 +58,20 @@ class TrainingProposalsController extends BaseController
 
         $currentUser = $request->user();
 
+        if ($currentUser->is_user_multiplier) {
+            $currentUser->loadMissing(['operators']);
+
+            // Prüfen, ob ALLE Operatoren explizit nicht selbstschulend sind
+            $hasNoSelfTrainingOperator = $currentUser->operators->every(function ($operator) {
+                return $operator->has_self_training_operator === false;
+            });
+
+            // Zugriff verweigern, wenn ein selbstschulender Träger existiert
+            if (!$hasNoSelfTrainingOperator) {
+                abort(403, __('Sie haben keinen Zugriff auf diese Seite, da Ihr Betreiber selbstschulend ist.'));
+            }
+        }
+
         $userItemService = app(UserItemService::class);
         $kitaItemService = app(KitaItemService::class);
 

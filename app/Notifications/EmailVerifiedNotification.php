@@ -1,19 +1,14 @@
 <?php
-/*
- * GorKa Team
- * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
- */
 
 namespace App\Notifications;
 
 use App\Notifications\Messages\CustomMailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Email Verified Notification
- *
- * @package \App\Notifications
  */
 class EmailVerifiedNotification extends Notification
 {
@@ -54,23 +49,52 @@ class EmailVerifiedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        if (!empty($this->data) && is_array($this->data)) {
-            $trainingProposals = count($this->data) > 1
-                ? "\n &#x2022; " . implode("\n &#x2022; ", (array) $this->data)
-                : "\n &#x2022; {$this->data[0]}";
-        } else {
-            $trainingProposals = "-";
+        // Ermitteln der ersten Kita des Benutzers
+        $kita = $notifiable->kitas->first();
+
+        // Prüfen, ob es sich um eine zusammengelegte Schulung handelt
+        $isMergedTraining = $kita && $kita->num_pedagogical_staff <= 10;
+
+        if ($isMergedTraining && $kita) {
+            // Trainings der Kita laden
+            $trainings = $kita->trainings;
+
+            // Formatieren der Trainingsdetails
+            $trainingDetails = $trainings->isNotEmpty()
+                ? implode("\n", $trainings->map(function ($training) {
+                    $data = $training->getNotificationsData();
+                    return sprintf(
+                        "• Erster Schulungstag: %s (%s)\n• Zweiter Schulungstag: %s (%s)\n• Ort: %s",
+                        $data['first_date'],
+                        $data['first_date_start_and_end_time'],
+                        $data['second_date'],
+                        $data['second_date_start_and_end_time'],
+                        $data['location']
+                    );
+                })->toArray())
+                : "Noch keine Details verfügbar.";
+
+            $trainingDetailsFormatted = nl2br($trainingDetails);
+
+            return (new CustomMailMessage)
+                ->subject(__('notifications.email_verified.subject'))
+                ->greeting(__('notifications.email_verified.greeting', [
+                    'name' => $notifiable->full_name,
+                ]))
+                ->line(__('Ihre Schulung ist hiermit bestätigt.'))
+                ->line(__('Hier sind die Details:') . '<br/>' . $trainingDetailsFormatted)
+                ->line(__('Wir freuen uns auf Sie und Ihr Team.'))
+                ->salutation(__('notifications.email_verified.salutation'));
         }
 
-        $trainingProposals = nl2br($trainingProposals);
-
+        // Standard-Mail für andere Schulungen
         return (new CustomMailMessage)
             ->subject(__('notifications.email_verified.subject'))
             ->greeting(__('notifications.email_verified.greeting', [
                 'name' => $notifiable->full_name,
             ]))
             ->line(__('notifications.email_verified.first_line', [
-                'training_proposals' => $trainingProposals,
+                'training_proposals' => '-',
             ]))
             ->line(__('notifications.email_verified.second_line'))
             ->salutation(__('notifications.email_verified.salutation'));
@@ -84,8 +108,6 @@ class EmailVerifiedNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

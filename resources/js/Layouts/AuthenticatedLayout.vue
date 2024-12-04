@@ -77,7 +77,7 @@ onMounted(() => {
         menuGroupsList.value['trainings.index'] = 'trainings.*';
     }
 
-    if (currentUser.is_super_admin || currentUser.is_admin || currentUser.is_user_multiplier) {
+    if (currentUser.is_super_admin || currentUser.is_admin || (currentUser.is_user_multiplier && !currentUser.has_self_training_operator)) {
         menuItemsList.value['training_proposals.index'] = 'Terminvorschläge';
         menuGroupsList.value['training_proposals.index'] = 'training_proposals.*';
     }

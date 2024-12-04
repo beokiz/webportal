@@ -18,6 +18,10 @@ const userHasKita = computed(() => {
     return props.user?.kitas && props.user?.kitas[0];
 });
 
+const isMergedTraining = computed(() => {
+    return userHasKita.value && props.user.kitas[0]?.num_pedagogical_staff <= 10;
+});
+
 const isUserKitaHasSelfTrainingOperator = computed(() => {
     return userHasKita.value && props.user?.kitas[0]?.operator_id;
 });
@@ -58,7 +62,7 @@ const isUserKitaHasSelfTrainingOperator = computed(() => {
                                 Falls sie die E-Mail nicht erhalten haben, überprüfen Sie bitte Ihren Spam-Ordner oder versuchen Sie es erneut.
                             </p>
 
-                            <p class="tw-mb-4">
+                            <p v-if="!isMergedTraining" class="tw-mb-4">
                                 Zur finalen Bestätigung Ihres Schulungstermins wird sich ein Beokiz Multiplikator, oder eine BeoKiz Multiplikatorin mit Ihnen in Verbindung setzen.
                             </p>
 
