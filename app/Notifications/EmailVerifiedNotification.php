@@ -55,19 +55,19 @@ class EmailVerifiedNotification extends Notification
         // Prüfen, ob es sich um eine zusammengelegte Schulung handelt
         $isMergedTraining = $kita && $kita->num_pedagogical_staff <= 10;
 
-        // Schulungsdaten für zusammengelegte Schulungen
-        if ($isMergedTraining) {
-            $trainings = $notifiable->trainings;
+        if ($isMergedTraining && $kita) {
+            // Trainings der Kita laden
+            $trainings = $kita->trainings;
 
             // Logging der Trainingsdaten
             if ($trainings->isNotEmpty()) {
-                Log::info('Trainings des Benutzers:', [
-                    'user_id' => $notifiable->id,
+                Log::info('Trainings der Kita:', [
+                    'kita_id' => $kita->id,
                     'trainings' => $trainings->map->getNotificationsData(),
                 ]);
             } else {
-                Log::warning('Keine Trainings für den Benutzer gefunden.', [
-                    'user_id' => $notifiable->id,
+                Log::warning('Keine Trainings für die Kita gefunden.', [
+                    'kita_id' => $kita->id,
                 ]);
             }
 
@@ -75,7 +75,7 @@ class EmailVerifiedNotification extends Notification
             $trainingDetails = $trainings->isNotEmpty()
                 ? implode("\n", $trainings->map(function ($training) {
                     $data = $training->getNotificationsData();
-                    Log::info('Training-Daten:', $data);
+                    Log::info('Training-Daten aus der Kita:', $data);
                     return sprintf(
                         "• %s\n  Datum 1: %s (%s)\n  Datum 2: %s (%s)\n  Ort: %s",
                         $data['multiplier_name'] ?? 'Training',
@@ -90,10 +90,6 @@ class EmailVerifiedNotification extends Notification
 
             $trainingDetailsFormatted = nl2br($trainingDetails);
 
-            Log::info('Formatiertes Trainings-Details:', [
-                'training_details' => $trainingDetailsFormatted,
-            ]);
-
             return (new CustomMailMessage)
                 ->subject(__('notifications.email_verified.subject'))
                 ->greeting(__('notifications.email_verified.greeting', [
@@ -106,28 +102,13 @@ class EmailVerifiedNotification extends Notification
         }
 
         // Standard-Mail für andere Schulungen
-        if (!empty($this->data) && is_array($this->data)) {
-            $trainingProposals = count($this->data) > 1
-                ? "\n &#x2022; " . implode("\n &#x2022; ", (array) $this->data)
-                : "\n &#x2022; {$this->data[0]}";
-        } else {
-            $trainingProposals = "-";
-        }
-
-        $trainingProposals = nl2br($trainingProposals);
-
-        Log::info('Standard-Mail wird gesendet.', [
-            'user_id' => $notifiable->id,
-            'training_proposals' => $trainingProposals,
-        ]);
-
         return (new CustomMailMessage)
             ->subject(__('notifications.email_verified.subject'))
             ->greeting(__('notifications.email_verified.greeting', [
                 'name' => $notifiable->full_name,
             ]))
             ->line(__('notifications.email_verified.first_line', [
-                'training_proposals' => $trainingProposals,
+                'training_proposals' => '-',
             ]))
             ->line(__('notifications.email_verified.second_line'))
             ->salutation(__('notifications.email_verified.salutation'));
