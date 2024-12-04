@@ -23,7 +23,6 @@ use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 /**
@@ -86,15 +85,9 @@ class TrainingProposalsController extends BaseController
         }
 
         if ($currentUser->is_user_multiplier) {
-            // Multiplikatoren dürfen nur offene Trainingsvorschläge sehen
             $args['status'] = TrainingProposal::STATUS_OPEN;
 
-            $currentUserOperators = $currentUser->operators->pluck('id')
-                ->flatten()
-                ->unique()
-                ->toArray();
-
-            $args['with_operators'] = !empty($currentUserOperators) ? $currentUserOperators : [-1];
+            $currentUser->loadMissing(['trainingProposals.kitas.users']);
         }
 
         $result = $this->trainingProposalItemService->collection(array_merge($args, [
