@@ -59,26 +59,12 @@ class EmailVerifiedNotification extends Notification
             // Trainings der Kita laden
             $trainings = $kita->trainings;
 
-            // Logging der Trainingsdaten
-            if ($trainings->isNotEmpty()) {
-                Log::info('Trainings der Kita:', [
-                    'kita_id' => $kita->id,
-                    'trainings' => $trainings->map->getNotificationsData(),
-                ]);
-            } else {
-                Log::warning('Keine Trainings für die Kita gefunden.', [
-                    'kita_id' => $kita->id,
-                ]);
-            }
-
             // Formatieren der Trainingsdetails
             $trainingDetails = $trainings->isNotEmpty()
                 ? implode("\n", $trainings->map(function ($training) {
                     $data = $training->getNotificationsData();
-                    Log::info('Training-Daten aus der Kita:', $data);
                     return sprintf(
-                        "• %s\n  Datum 1: %s (%s)\n  Datum 2: %s (%s)\n  Ort: %s",
-                        $data['multiplier_name'] ?? 'Training',
+                        "• Erster Schulungstag: %s (%s)\n• Zweiter Schulungstag: %s (%s)\n• Ort: %s",
                         $data['first_date'],
                         $data['first_date_start_and_end_time'],
                         $data['second_date'],
