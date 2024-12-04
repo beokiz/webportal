@@ -71,9 +71,19 @@ class TrainingProposalsController extends BaseController
         }
 
         if ($currentUser->is_user_multiplier) {
+            // Multiplikatoren dürfen nur offene Trainingsvorschläge sehen
             $args['status'] = TrainingProposal::STATUS_OPEN;
 
-            $currentUser->loadMissing(['trainingProposals.kitas.users']);
+            // Lade die Betreiber des aktuellen Benutzers
+            $currentUser->loadMissing(['operators']);
+
+            $currentUserOperators = $currentUser->operators->pluck('id')
+                ->flatten()
+                ->unique()
+                ->toArray();
+
+            // Falls keine Betreiber vorhanden sind, keine Ergebnisse zurückgeben
+            $args['with_operators'] = !empty($currentUserOperators) ? $currentUserOperators : [-1];
         }
 
         $result = $this->trainingProposalItemService->collection(array_merge($args, [

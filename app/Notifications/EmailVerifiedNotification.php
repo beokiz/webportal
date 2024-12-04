@@ -1,19 +1,14 @@
 <?php
-/*
- * GorKa Team
- * Copyright (c) 2023  Vlad Horpynych <19dynamo27@gmail.com>, Pavel Karpushevskiy <pkarpushevskiy@gmail.com>
- */
 
 namespace App\Notifications;
 
 use App\Notifications\Messages\CustomMailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Email Verified Notification
- *
- * @package \App\Notifications
  */
 class EmailVerifiedNotification extends Notification
 {
@@ -54,26 +49,48 @@ class EmailVerifiedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        if (!empty($this->data) && is_array($this->data)) {
-            $trainingProposals = count($this->data) > 1
-                ? "\n &#x2022; " . implode("\n &#x2022; ", (array) $this->data)
-                : "\n &#x2022; {$this->data[0]}";
-        } else {
-            $trainingProposals = "-";
-        }
+        // Formatieren der Schulungsdaten
+        $trainingDetails = !empty($this->data) && is_array($this->data)
+            ? implode("\n", array_map(function ($training) {
+                return "• " . $training;
+            }, $this->data))
+            : "Noch keine Details verfügbar.";
 
-        $trainingProposals = nl2br($trainingProposals);
+        $trainingDetailsFormatted = nl2br($trainingDetails); // Zeilenumbrüche zu <br/>
 
-        return (new CustomMailMessage)
+        // Loggen der bereitgestellten Daten
+        Log::info('Benachrichtigung: EmailVerifiedNotification', [
+            'notifiable' => $notifiable,
+            'data' => $this->data,
+            'training_details' => $trainingDetails,
+        ]);
+
+        // Erstellen der E-Mail
+        $mailMessage = (new CustomMailMessage)
             ->subject(__('notifications.email_verified.subject'))
             ->greeting(__('notifications.email_verified.greeting', [
                 'name' => $notifiable->full_name,
             ]))
-            ->line(__('notifications.email_verified.first_line', [
-                'training_proposals' => $trainingProposals,
-            ]))
-            ->line(__('notifications.email_verified.second_line'))
+            ->line(__('Ihre Schulung ist hiermit bestätigt.'))
+            ->line(__('Hier sind die Details:') . '<br/>' . $trainingDetailsFormatted)
+            ->line(__('Wir freuen uns auf Sie und Ihr Team.'))
             ->salutation(__('notifications.email_verified.salutation'));
+
+        // Finalen E-Mail-Inhalt loggen
+        Log::info('Finaler E-Mail-Inhalt:', [
+            'subject' => __('notifications.email_verified.subject'),
+            'greeting' => __('notifications.email_verified.greeting', [
+                'name' => $notifiable->full_name,
+            ]),
+            'lines' => [
+                __('Ihre Schulung ist hiermit bestätigt.'),
+                __('Hier sind die Details:') . '<br/>' . $trainingDetailsFormatted,
+                __('Wir freuen uns auf Sie und Ihr Team.'),
+            ],
+            'salutation' => __('notifications.email_verified.salutation'),
+        ]);
+
+        return $mailMessage;
     }
 
     /**
@@ -84,8 +101,6 @@ class EmailVerifiedNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

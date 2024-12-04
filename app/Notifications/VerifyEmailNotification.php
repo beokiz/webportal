@@ -78,17 +78,28 @@ class VerifyEmailNotification extends Notification
      */
     protected function buildMailMessage($url)
     {
-        return (new CustomMailMessage)
+        // Ermitteln der ersten Kita des Benutzers
+        $kita = $this->notifiable->kitas->first();
+
+        // Prüfen, ob es sich um eine zusammengelegte Schulung handelt
+        $isMergedTraining = $kita && $kita->num_pedagogical_staff <= 10;
+
+        // Erstellen der E-Mail
+        $mailMessage = (new CustomMailMessage)
             ->subject(__('notifications.email_verification.subject'))
             ->greeting(__('notifications.email_verification.greeting', [
                 'name' => $this->notifiable->full_name,
             ]))
             ->line(__('notifications.email_verification.first_line'))
-            ->action(__('notifications.email_verification.action_text'), $url)
-            ->line(__('notifications.email_verification.second_line'))
-            ->salutation(__('notifications.email_verification.salutation'));
-    }
+            ->action(__('notifications.email_verification.action_text'), $url);
 
+        // Optionaler Hinweis nur bei nicht-zusammengelegten Schulungen
+        if (!$isMergedTraining) {
+            $mailMessage->line(__('notifications.email_verification.second_line'));
+        }
+
+        return $mailMessage->salutation(__('notifications.email_verification.salutation'));
+    }
     /**
      * Get the verification URL for the given notifiable.
      *
