@@ -23,6 +23,7 @@ use App\Services\Items\UserItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 /**
@@ -58,6 +59,20 @@ class TrainingProposalsController extends BaseController
 
         $currentUser = $request->user();
 
+        if ($currentUser->is_user_multiplier) {
+            $currentUser->loadMissing(['operators']);
+
+            // Prüfen, ob ALLE Operatoren explizit nicht selbstschulend sind
+            $hasNoSelfTrainingOperator = $currentUser->operators->every(function ($operator) {
+                return $operator->has_self_training_operator === false;
+            });
+
+            // Zugriff verweigern, wenn ein selbstschulender Träger existiert
+            if (!$hasNoSelfTrainingOperator) {
+                abort(403, __('Sie haben keinen Zugriff auf diese Seite, da Ihr Betreiber selbstschulend ist.'));
+            }
+        }
+
         $userItemService = app(UserItemService::class);
         $kitaItemService = app(KitaItemService::class);
 
@@ -74,15 +89,11 @@ class TrainingProposalsController extends BaseController
             // Multiplikatoren dürfen nur offene Trainingsvorschläge sehen
             $args['status'] = TrainingProposal::STATUS_OPEN;
 
-            // Lade die Betreiber des aktuellen Benutzers
-            $currentUser->loadMissing(['operators']);
-
             $currentUserOperators = $currentUser->operators->pluck('id')
                 ->flatten()
                 ->unique()
                 ->toArray();
 
-            // Falls keine Betreiber vorhanden sind, keine Ergebnisse zurückgeben
             $args['with_operators'] = !empty($currentUserOperators) ? $currentUserOperators : [-1];
         }
 
