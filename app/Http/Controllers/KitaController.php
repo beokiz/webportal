@@ -237,57 +237,25 @@ class KitaController extends BaseController
      */
     public function sendKitaCertificateNotification(Request $request, Kita $kita)
     {
-        try {
-            // Autorisierung prüfen
-            Log::info('Authorizing access to Kita.', ['kita_id' => $kita->id, 'user_id' => $request->user()->id]);
-            $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
+        $this->authorize('authorizeAccessToSingleKita', [User::class, $kita->id]);
 
-            $roles = config('permission.project_roles');
-            Log::info('Roles loaded.', ['roles' => $roles]);
+        $roles = config('permission.project_roles');
 
-            // Generiere PDF-Zertifikat
-            Log::info('Generating PDF certificate for Kita.', ['kita_id' => $kita->id]);
-            $pdfFile = $this->kitaItemService->generatePdfCertificate($kita->id);
+        $pdfFile = $this->kitaItemService->generatePdfCertificate($kita->id);
 
-            if (!empty($pdfFile)) {
-                Log::info('PDF certificate generated successfully.', ['file_path' => $pdfFile]);
+        if (!empty($pdfFile)) {
+            // Send kitas managers notifications
+            $kita->users()->whereHas('roles', function ($query) use ($roles) {
+                $query->where('name', $roles['manager']);
+            })->get()->each(function (User $user) use ($pdfFile, $kita) {
+                $user->sendKitaCertificateNotificationNotification([
+                    'kita'      => $kita,
+                    'file_path' => $pdfFile,
+                ]);
+            });
 
-                // Benachrichtigung an Kita-Manager senden
-                Log::info('Fetching users with manager role for the Kita.', ['kita_id' => $kita->id]);
-                $kita->users()->whereHas('roles', function ($query) use ($roles) {
-                    $query->where('name', $roles['manager']);
-                })->get()->each(function (User $user) use ($pdfFile, $kita) {
-                    Log::info('Sending notification to user.', [
-                        'user_id' => $user->id,
-                        'email'   => $user->email,
-                        'file_path' => $pdfFile,
-                    ]);
-
-                    try {
-                        $user->sendKitaCertificateNotificationNotification([
-                            'kita'      => $kita,
-                            'file_path' => $pdfFile,
-                        ]);
-                        Log::info('Notification sent successfully.', ['user_id' => $user->id]);
-                    } catch (\Exception $e) {
-                        Log::error('Failed to send notification.', [
-                            'user_id' => $user->id,
-                            'email'   => $user->email,
-                            'error'   => $e->getMessage(),
-                        ]);
-                    }
-                });
-
-                return Redirect::back()->withSuccesses(__('crud.kitas.send_certificate_success'));
-            } else {
-                Log::error('Failed to generate PDF certificate.', ['kita_id' => $kita->id]);
-                return Redirect::back()->withErrors(__('crud.kitas.send_certificate_error'));
-            }
-        } catch (\Exception $e) {
-            Log::error('Error in sendKitaCertificateNotification.', [
-                'kita_id' => $kita->id,
-                'error'   => $e->getMessage(),
-            ]);
+            return Redirect::back()->withSuccesses(__('crud.kitas.send_certificate_success'));
+        } else {
             return Redirect::back()->withErrors(__('crud.kitas.send_certificate_error'));
         }
     }

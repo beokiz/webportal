@@ -57,26 +57,14 @@ class KitaCertificateNotification extends Notification
     public function toMail($notifiable)
     {
         try {
-            Log::info('Preparing certificate email for user.', [
-                'user_id' => $notifiable->id ?? null,
-                'user_email' => $notifiable->email ?? null,
-                'file_path' => $this->data['file_path'] ?? 'File path not set',
-            ]);
-
             $filePath = $this->data['file_path'];
 
             if (!file_exists($filePath)) {
-                Log::error('Certificate file not found.', ['file_path' => $filePath]);
                 throw new \Exception('Certificate file does not exist.');
             }
 
             $fileName = basename($filePath);
             $mimeType = File::mimeType($filePath);
-
-            Log::info('Certificate file details retrieved.', [
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
-            ]);
 
             return (new CustomMailMessage)
                 ->subject(__('notifications.kita_certificate.subject'))
@@ -98,14 +86,7 @@ class KitaCertificateNotification extends Notification
                     'mime' => $mimeType,
                 ]);
         } catch (\Exception $e) {
-            Log::error('Failed to send certificate email.', [
-                'user_id' => $notifiable->id ?? null,
-                'user_email' => $notifiable->email ?? null,
-                'error_message' => $e->getMessage(),
-            ]);
-
-            // Optionally rethrow the exception if needed
-            throw $e;
+            throw $e; // Optional, um den Fehler weiterzugeben
         }
     }
 
