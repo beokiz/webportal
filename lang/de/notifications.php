@@ -219,10 +219,18 @@ return [
 
     'kita_certificate' => [
         'subject'     => sprintf("%s: BeoKiz-Schulung abgeschlossen", config('app.name')),
-        'greeting'    => "Hallo :full_name,",
-        'first_line'  => "Sie haben die Schulung zum BeoKiz-Verfahren erfolgreich abgeschlossen. Herzlichen Glückwunsch! Im Anhang dieser Mail erhalten Sie die Teilnahmebescheinigung für Ihre Einrichtung.",
-        'second_line' => "Darüber hinaus haben wir noch eine Bitte an Sie: Teil der Einführung des BeoKiz-Verfahrens ist eine wissenschaftliche Begleitung, durch die stetig Faktoren identifiziert und angepasst werden, die die Einführung von BeoKiz im Land beeinflussen. Dies hat zum Ziel, die Einführung von BeoKiz so zu gestalten, dass sie auf die Bedürfnisse aller Beteiligten im Prozess kontinuierlich angepasst wird. Von einer wirkungsvollen und flächendeckenden Einführung des Verfahrens profitieren dann vor allem auch die Kinder.",
-        'third_line'  => "Daher bitten wir Sie und Ihre Mitarbeitenden einen ersten Online-Fragebogen zur BeoKiz Einführung auszufüllen. Alle Angaben sind vollständig anonym. Ein Rückschluss auf Sie, oder Ihre Einrichtung ist nicht möglich. Den Link zum Fragebogen, sowie eine Einladung zum Ausdrucken mit QR-Code für bequemes Ausfüllen am Smartphone finden Sie unter: http://www.kitearo.de/BeoKiz-Fragebogen/",
+        'greeting'    => "Hallo BeoKiz :full_name,",
+        'first_line'  => "Es gibt viel zu entdecken - zwar ist die Mail etwas länger, aber es lohnt sich :-)",
+        'second_line' => "Sie haben die Schulung zum BeoKiz-Verfahren erfolgreich abgeschlossen. Herzlichen Glückwunsch! Im Anhang dieser Mail erhalten Sie die Teilnahmebescheinigung für Ihre Einrichtung.",
+        'third_line'  => "Darüber hinaus haben wir noch eine Bitte an Sie: Teil der Einführung des BeoKiz-Verfahrens ist eine wissenschaftliche Begleitung, durch die stetig Faktoren identifiziert und angepasst werden, die die Einführung von BeoKiz im Land beeinflussen. Dies hat zum Ziel, die Einführung von BeoKiz so zu gestalten, dass sie auf die Bedürfnisse aller Beteiligten im Prozess kontinuierlich angepasst wird. Von einer wirkungsvollen und flächendeckenden Einführung des Verfahrens profitieren dann vor allem auch die Kinder.",
+        'fourth_line' => "Daher bitten wir Sie und Ihre Mitarbeitenden, einen ersten Online-Fragebogen zur BeoKiz-Einführung auszufüllen. Alle Angaben sind vollständig anonym. Ein Rückschluss auf Sie oder Ihre Einrichtung ist nicht möglich. Den Link zum Fragebogen sowie eine Einladung zum Ausdrucken mit QR-Code für bequemes Ausfüllen am Smartphone finden Sie unter: http://www.kitearo.de/BeoKiz-Fragebogen/",
+        'fifth_line'  => "Des Weiteren erinnern wir Sie an dieser Stelle gerne an das BeoKiz-Forum. Das BeoKiz-Forum findet jeden letzten Mittwoch im Monat statt, mit Ausnahme im Dezember - da ist es der letzte Mittwoch vor Weihnachten.",
+        'sixth_line'  => "Dieses Forum ist für alle bereits geschulten Fachkräfte und Leitungen aus Berliner KiTas oder der Kindertagespflege. Ein/e Kolleg:in aus dem KiTeAro-Institut wird moderierend und für Fragen anwesend sein. Wir möchten mit diesem Format insbesondere den kollegialen Austausch der Teilnehmenden untereinander unterstützen.",
+        'seventh_line' => "Eine Anmeldung ist nicht notwendig.",
+        'zoom_title' => '**Zoom-Link zum BeoKiz-Forum für geschulte KiTas:**',
+        'zoom_link' => 'https://link.kitearo.de/BeoKizForum',
+        'zoom_meeting_id' => 'Meeting-ID: 867 1267 9075',
+        'zoom_password' => 'Kennwort: 236794',
         'salutation'  => sprintf("Vielen Dank und beste Grüße,  \nIhr %s Team", config('app.name')),
     ],
 
