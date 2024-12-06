@@ -67,9 +67,17 @@ class KitaCertificateNotification extends Notification
             ->line(__('notifications.kita_certificate.first_line'))
             ->line(__('notifications.kita_certificate.second_line'))
             ->line(__('notifications.kita_certificate.third_line'))
+            ->line(__('notifications.kita_certificate.fourth_line'))
+            ->line(__('notifications.kita_certificate.fifth_line'))
+            ->line(__('notifications.kita_certificate.sixth_line'))
+            ->line(__('notifications.kita_certificate.seventh_line'))
+            ->line(__('notifications.kita_certificate.zoom_title'))
+            ->line(__('notifications.kita_certificate.zoom_link'))
+            ->line(__('notifications.kita_certificate.zoom_meeting_id'))
+            ->line(__('notifications.kita_certificate.zoom_password'))
             ->salutation(__('notifications.kita_certificate.salutation'))
             ->attach($filePath, [
-                'as'   => $fileName,
+                'as' => $fileName,
                 'mime' => $mimeType,
             ]);
     }
