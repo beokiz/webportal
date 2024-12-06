@@ -302,15 +302,19 @@ const validateTrainingSuggestionDates = (index) => {
                             </h2>
 
                             <p class="tw-mb-4">
-                                Sehr geehrte BeoKiz-Interessenten,
+                                Sehr geehrte BeoKiz-Interessierte,
                             </p>
 
                             <p class="tw-mb-4">
-                                die BeoKiz-Schulungen finden als Team-Schulung statt. Das heißt, alle pädagogischen Mitarbeitenden (Azubis, Quereinsteiger und Kitaleitungen) nehmen gemeinsam teil. In dem folgenden Formular können Sie Ihre Daten hinterlegen und Termine für die Schulungen Ihrer pädagogischen Fachkräfte auswählen bzw. Terminvorschläge für Ihre Schulungen an uns übermitteln.
+                                die BeoKiz-Schulungen werden als <strong>Team-Schulungen</strong> durchgeführt. Dies bedeutet, dass alle <strong>pädagogischen Fachkräfte</strong> Ihrer Einrichtung – einschließlich Auszubildenden, Quereinsteigende und Kitaleitungen – gemeinsam daran teilnehmen.
                             </p>
 
                             <p class="tw-mb-4">
-                                Aus organisatorischen Gründen ist es zunächst relevant, wie viele pädagogische Fachkräfte, inklusive Kitaleitung, an Ihrer Einrichtung beschäftigt sind. Bitte wählen Sie aus, wie viele pädagogische Fachkräfte zu Ihrem Team zählen:
+                                Über das folgende Formular können Sie Ihre Daten hinterlegen, Schulungstermine für Ihr pädagogisches Team auswählen oder uns Terminvorschläge übermitteln.
+                            </p>
+
+                            <p class="tw-mb-4">
+                                Um die Organisation zu erleichtern, bitten wir Sie, zunächst die Anzahl der pädagogischen Fachkräfte, einschließlich der Kitaleitung, in Ihrer Einrichtung anzugeben. Bitte wählen Sie dafür nachfolgend die Anzahl der pädagogischen Fachkräfte in Ihrer Einrichtung aus:
                             </p>
                         </v-col>
                     </v-row>
