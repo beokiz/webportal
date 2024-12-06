@@ -126,11 +126,11 @@
   },
   "resources/images/logo-pdf.png": {
     "file": "assets/logo-98fbc18d.png",
-    "src": "resources/images/logo-pdf.png"
+    "src": "resources/images/logo.png"
   },
   "resources/images/logo.png": {
     "file": "assets/logo-98fbc18d.png",
-    "src": "resources/images/logo-pdf.png"
+    "src": "resources/images/logo.png"
   },
   "resources/images/preloader.svg": {
     "file": "assets/preloader-631afbcb.svg",
