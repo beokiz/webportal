@@ -46,19 +46,19 @@ WITH RankedData AS (
         ROW_NUMBER() OVER (PARTITION BY k.name ORDER BY t.first_date ASC) AS `Rank`,
         MIN(t.first_date) OVER (PARTITION BY k.name) AS `EarliestDate`
     FROM
-        beokiz_prod.trainings t
+        beokiz.trainings t
     LEFT JOIN
-        beokiz_prod.kita_has_trainings kht ON t.id = kht.training_id
+        beokiz.kita_has_trainings kht ON t.id = kht.training_id
     LEFT JOIN
-        beokiz_prod.kitas k ON kht.kita_id = k.id
+        beokiz.kitas k ON kht.kita_id = k.id
     LEFT JOIN
-        beokiz_prod.operators o ON k.operator_id = o.id
+        beokiz.operators o ON k.operator_id = o.id
     LEFT JOIN
-        beokiz_prod.kita_has_users khu ON k.id = khu.kita_id
+        beokiz.kita_has_users khu ON k.id = khu.kita_id
     LEFT JOIN
-        beokiz_prod.users kita_user ON khu.user_id = kita_user.id
+        beokiz.users kita_user ON khu.user_id = kita_user.id
     LEFT JOIN
-        beokiz_prod.users multiplikator_user ON t.multi_id = multiplikator_user.id
+        beokiz.users multiplikator_user ON t.multi_id = multiplikator_user.id
     WHERE
         k.id IS NOT NULL
         AND t.id NOT IN (1, 2, 3, 27)
@@ -113,19 +113,19 @@ WITH RankedData AS (
         ROW_NUMBER() OVER (PARTITION BY k.name ORDER BY tp.first_date ASC) AS `Rank`,
         MIN(tp.first_date) OVER (PARTITION BY k.name) AS `EarliestDate`
     FROM
-        beokiz_prod.training_proposals tp
+        beokiz.training_proposals tp
     LEFT JOIN
-        beokiz_prod.kita_has_training_proposals kht ON tp.id = kht.training_proposal_id
+        beokiz.kita_has_training_proposals kht ON tp.id = kht.training_proposal_id
     LEFT JOIN
-        beokiz_prod.kitas k ON kht.kita_id = k.id
+        beokiz.kitas k ON kht.kita_id = k.id
     LEFT JOIN
-        beokiz_prod.operators o ON k.operator_id = o.id
+        beokiz.operators o ON k.operator_id = o.id
     LEFT JOIN
-        beokiz_prod.users multiplikator_user ON tp.multi_id = multiplikator_user.id
+        beokiz.users multiplikator_user ON tp.multi_id = multiplikator_user.id
     LEFT JOIN
-        beokiz_prod.kita_has_users khu ON k.id = khu.kita_id
+        beokiz.kita_has_users khu ON k.id = khu.kita_id
     LEFT JOIN
-        beokiz_prod.users kita_user ON khu.user_id = kita_user.id
+        beokiz.users kita_user ON khu.user_id = kita_user.id
     WHERE
         tp.status NOT IN ('obsolete', 'confirmed')
         AND tp.id NOT IN (234, 2, 3, 27)

@@ -41,19 +41,19 @@ SELECT
     GROUP_CONCAT(DISTINCT CONCAT(kita_user.first_name, ' ', kita_user.last_name) SEPARATOR ', ') AS `Zugeordnete Manager der Einrichtung`,
     GROUP_CONCAT(DISTINCT kita_user.email SEPARATOR ', ') AS `Mailadresse der Manager`
 FROM
-    beokiz_prod.trainings t
+    beokiz.trainings t
 LEFT JOIN
-    beokiz_prod.kita_has_trainings kht ON t.id = kht.training_id
+    beokiz.kita_has_trainings kht ON t.id = kht.training_id
 LEFT JOIN
-    beokiz_prod.kitas k ON kht.kita_id = k.id
+    beokiz.kitas k ON kht.kita_id = k.id
 LEFT JOIN
-    beokiz_prod.operators o ON k.operator_id = o.id
+    beokiz.operators o ON k.operator_id = o.id
 LEFT JOIN
-    beokiz_prod.kita_has_users khu ON k.id = khu.kita_id
+    beokiz.kita_has_users khu ON k.id = khu.kita_id
 LEFT JOIN
-    beokiz_prod.users kita_user ON khu.user_id = kita_user.id
+    beokiz.users kita_user ON khu.user_id = kita_user.id
 LEFT JOIN
-    beokiz_prod.users multiplikator_user ON t.multi_id = multiplikator_user.id
+    beokiz.users multiplikator_user ON t.multi_id = multiplikator_user.id
 WHERE
     k.id IS NOT NULL
     AND t.id NOT IN (1, 2, 3, 27) -- Exkludiere Schulungen mit diesen IDs
