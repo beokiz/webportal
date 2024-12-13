@@ -91,16 +91,32 @@ return [
     */
 
     'email_verified' => [
-        'subject' => [
-            'training_proposal' => sprintf("%s: Bestätigung Ihrer Terminvorschläge zur BeoKiz-Schulung", config('app.name')),
-            'training_confirmation' => sprintf("%s: Bestätigung Ihrer BeoKiz-Schulung", config('app.name')),
+        'common' => [
+            'greeting'  => "Sehr geehrte:r :name!",
+            'salutation' => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
         ],
-        'greeting'            => "Sehr geehrte:r :name!",
-        'first_line'          => "Ihre Terminanfrage(n) zur BeoKiz-Schulung: \n :training_proposals <br/> sind eingegangen.",
-        'second_line'         => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator: innen bald mit Ihnen in Verbindung setzen.",
-        'salutation'          => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
-        'first_training_item' => "am :first_date und :second_date",
-        'other_training_item' => "oder am :first_date und :second_date",
+        'merged' => [
+            'subject'         => sprintf("%s: Bestätigung Ihrer BeoKiz-Schulung", config('app.name')),
+            'confirmation'    => "Ihre Schulung ist hiermit bestätigt.",
+            'details_header'  => "Hier sind die Details: ",
+            'closing'         => "Wir freuen uns auf Sie und Ihr Team.",
+            'no_details'      => "Noch keine Details verfügbar.",
+            'details' => [
+                'first_day'   => "Erster Schulungstag: :date (:time)",
+                'second_day'  => "Zweiter Schulungstag: :date (:time)",
+                'location'    => "Ort: :location",
+            ],
+        ],
+        'default' => [
+            'subject'         => sprintf("%s: Bestätigung Ihrer Terminvorschläge zur BeoKiz-Schulung", config('app.name')),
+            'first_line'      => "Ihre Terminanfrage(n) zur BeoKiz-Schulung: \n :training_proposals <br/> sind eingegangen.",
+            'second_line'     => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator:innen bald mit Ihnen in Verbindung setzen.",
+            'proposals' => [
+                'first' => "am :first_date und :second_date",
+                'other' => "oder am :first_date und :second_date",
+            ],
+            'no_proposals'    => "Noch keine Terminvorschläge verfügbar.",
+        ],
     ],
 
     /*

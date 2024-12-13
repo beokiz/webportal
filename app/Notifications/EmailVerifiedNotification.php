@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Notifications\Messages\CustomMailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Email Verified Notification
@@ -56,84 +55,96 @@ class EmailVerifiedNotification extends Notification
 
         // Subjekt basierend auf dem Szenario auswählen
         $subjectKey = $isMergedTraining
-            ? 'notifications.email_verified.subject.training_confirmation'
-            : 'notifications.email_verified.subject.training_proposal';
+            ? __('notifications.email_verified.merged.subject')
+            : __('notifications.email_verified.default.subject');
 
-        if ($isMergedTraining) {
-            // Trainings der Kita laden und formatieren
-            $trainingDetailsFormatted = $kitas->first()->trainings->isNotEmpty()
-                ? '<ul>' . implode('', $kitas->first()->trainings->map(function ($training) {
-                    $data = $training->getNotificationsData();
-                    return sprintf(
-                        "<li>Erster Schulungstag: %s (%s)</li><li>Zweiter Schulungstag: %s (%s)</li><li>Ort: %s</li>",
-                        $data['first_date'],
-                        $data['first_date_start_and_end_time'],
-                        $data['second_date'],
-                        $data['second_date_start_and_end_time'],
-                        $data['location']
-                    );
-                })->toArray()) . '</ul>'
-                : "<p>Noch keine Details verfügbar.</p>";
+        $lines = $isMergedTraining
+            ? $this->buildMergedTrainingLines($kitas)
+            : $this->buildDefaultTrainingLines($kitas);
 
-            return (new CustomMailMessage)
-                ->subject(__($subjectKey))
-                ->greeting(__('notifications.email_verified.greeting', [
-                    'name' => $notifiable->full_name,
-                ]))
-                ->line(__('Ihre Schulung ist hiermit bestätigt.'))
-                ->line(__('Hier sind die Details:') . $trainingDetailsFormatted)
-                ->line(__('Wir freuen uns auf Sie und Ihr Team.'))
-                ->salutation(__('notifications.email_verified.salutation'));
+        // Build the message
+        $mailMessage = new CustomMailMessage();
+        $mailMessage->subject($subjectKey)
+            ->greeting(__('notifications.email_verified.common.greeting', [
+                'name' => $notifiable->full_name,
+            ]));
+
+        foreach ($lines as $line) {
+            $mailMessage->line($line);
         }
 
-        // Trainingsproposals aller Kitas sammeln und formatieren
-        $trainingProposalDetailsFormatted = $kitas->flatMap(function ($kita) {
+        return $mailMessage->salutation(__('notifications.email_verified.common.salutation'));
+    }
+
+    private function buildMergedTrainingLines($kitas): array
+    {
+        $trainingDetails = $kitas->first()->trainings->isNotEmpty()
+            ? $this->formatTrainingDetails($kitas)
+            : __('notifications.email_verified.merged.no_details');
+
+        return [
+            __('notifications.email_verified.merged.confirmation'),
+            __('notifications.email_verified.merged.details_header') . $trainingDetails,
+            __('notifications.email_verified.merged.closing'),
+        ];
+    }
+
+    private function buildDefaultTrainingLines($kitas): array
+    {
+        $trainingProposalDetails = $this->formatTrainingProposals($kitas);
+
+        return [
+            __('notifications.email_verified.default.first_line', [
+                'training_proposals' => $trainingProposalDetails,
+            ]),
+            __('notifications.email_verified.default.second_line'),
+        ];
+    }
+
+    private function formatTrainingDetails($kitas): string
+    {
+        return '<ul>' . implode('', $kitas->first()->trainings->map(function ($training) {
+            $data = $training->getNotificationsData();
+            return sprintf(
+                "<li>%s</li><li>%s</li><li>%s</li>",
+                __('notifications.email_verified.merged.details.first_day', [
+                    'date' => $data['first_date'],
+                    'time' => $data['first_date_start_and_end_time'],
+                ]),
+                __('notifications.email_verified.merged.details.second_day', [
+                    'date' => $data['second_date'],
+                    'time' => $data['second_date_start_and_end_time'],
+                ]),
+                __('notifications.email_verified.merged.details.location', [
+                    'location' => $data['location'],
+                ])
+            );
+        })->toArray()) . '</ul>';
+    }
+
+    private function formatTrainingProposals($kitas): string
+    {
+        $proposals = $kitas->flatMap(function ($kita) {
             return $kita->trainingProposals->map(function ($proposal, $index) {
                 return __(
                     $index > 0
-                        ? 'notifications.email_verified.other_training_item'
-                        : 'notifications.email_verified.first_training_item',
+                        ? 'notifications.email_verified.default.proposals.other'
+                        : 'notifications.email_verified.default.proposals.first',
                     [
                         'first_date'  => $proposal->first_date->format('d.m.Y'),
                         'second_date' => $proposal->second_date->format('d.m.Y'),
                     ]
                 );
             });
-        })->isNotEmpty()
-            ? '<ul>' . implode('', $kitas->flatMap(function ($kita) {
-                return $kita->trainingProposals->map(function ($proposal, $index) {
-                    return sprintf("<li>%s</li>", __(
-                        $index > 0
-                            ? 'notifications.email_verified.other_training_item'
-                            : 'notifications.email_verified.first_training_item',
-                        [
-                            'first_date'  => $proposal->first_date->format('d.m.Y'),
-                            'second_date' => $proposal->second_date->format('d.m.Y'),
-                        ]
-                    ));
-                });
-            })->toArray()) . '</ul>'
-            : "<p>Noch keine Terminvorschläge verfügbar.</p>";
+        });
 
-        // Standard-Mail für Terminvorschläge
-        return (new CustomMailMessage)
-            ->subject(__($subjectKey))
-            ->greeting(__('notifications.email_verified.greeting', [
-                'name' => $notifiable->full_name,
-            ]))
-            ->line(__('notifications.email_verified.first_line', [
-                'training_proposals' => $trainingProposalDetailsFormatted,
-            ]))
-            ->line(__('notifications.email_verified.second_line'))
-            ->salutation(__('notifications.email_verified.salutation'));
+        if ($proposals->isEmpty()) {
+            return __('notifications.email_verified.default.no_proposals');
+        }
+
+        return '<ul>' . implode('', $proposals->map(fn($item) => "<li>{$item}</li>")->toArray()) . '</ul>';
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return array
-     */
     public function toArray($notifiable)
     {
         return [];
