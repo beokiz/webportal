@@ -45,12 +45,43 @@ return [
     */
 
     'email_verification' => [
-        'subject'     => sprintf("%s: Bitte bestätigen Sie Ihre E-Mail-Adresse", config('app.name')),
-        'greeting'    => "Sehr geehrte Damen und Herren,",
-        'action_text' => "Bestätigen",
-        'first_line'  => "Vielen Dank für Ihr Interesse an der BeoKiz-Schulung. Bitte klicken Sie auf folgenden Link, um Ihre Terminvorschläge für die BeoKiz-Schulung zu übermitteln. Dieser Schritt stellt sicher, dass wir Sie unter Ihrer angegebenen E-Mail-Adresse erreichen können.", // OLD: Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:
-        'second_line' => "Zur finalen Bestätigung Ihres Schulungstermins wird sich ein BeoKiz-Multiplikator oder eine BeoKiz-Multiplikatorin mit Ihnen in Verbindung setzen.",
+        'subject'     => ':app_name: Bitte bestätigen Sie Ihre E-Mail-Adresse',
+        'greeting'    => 'Sehr geehrte Damen und Herren,',
+        'action_text' => 'Bestätigen',
+        'first_line'  => [
+            'default' => 'Vielen Dank für Ihr Interesse an der BeoKiz-Schulung. Bitte klicken Sie auf folgenden Link, um Ihre Terminvorschläge für die BeoKiz-Schulung zu übermitteln. Dieser Schritt stellt sicher, dass wir Sie unter Ihrer angegebenen E-Mail-Adresse erreichen können.',
+            'self_training' => 'Vielen Dank für Ihr Interesse an der BeoKiz-Schulung. Bitte klicken Sie auf folgenden Link, um Ihre E-Mail-Adresse zu bestätigen. Dieser Schritt stellt sicher, dass wir Sie unter Ihrer angegebenen E-Mail-Adresse erreichen können.',
+        ],
+        'second_line' => [
+            'default' => 'Ein BeoKiz-Multiplikator oder eine BeoKiz-Multiplikatorin wird sich mit Ihnen in Verbindung setzen, um Ihren Schulungstermin zu bestätigen.',
+            'self_training' => 'Ein zuständiger BeoKiz-Multiplikator oder eine zuständige BeoKiz-Multiplikatorin wird sich mit Ihnen in Verbindung setzen, um einen Schulungstermin zu vereinbaren.',
+            'merged_training' => 'Nach Bestätigung ihrer Email sollten, werden Sie direkt eine Terminbestätigung erhalten.',
+        ],
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Träger Mutliplikator new selftraining Kita Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'email_new_selftraining_kita' => [
+        'subject'     => sprintf("%s: Neue Schulungsanfrage: Bitte einen Schulungstermin mit :kita_name vereinbaren", config('app.name')),
+        'greeting'    => "Hallo :multi_name,",
+        'first_line'  => "Soeben hat sich die Einrichtung :kita_name über das BeoKiz-Portal registriert und den Wunsch nach einer Schulung geäußert. Die Kita wurde bereits darüber informiert, dass Du dich mit ihr in Verbindung setzen wirst.",
+        'second_line' => "Bitte kontaktiere die Kita, um mit ihr einen Schulungstermin zu vereinbaren:",
+        'details'     => "
+                            - **Kitanummer:** :kita_number
+                            - **Einrichtungsname:** :kita_name
+                            - **Anschrift:** :kita_address
+                            - **Ansprechpartner:in:** :manager_name
+                            - **E-Mail:** :manager_email
+                            - **Telefon:** :manager_phone
+                            - **Anmerkungen der Kita:** :kita_remarks",
+        'third_line'  => "Bitte vergiss nicht, die Schulung nach Vereinbarung im BeoKiz-Portal zu hinterlegen.",
+        'closing_line'=> "Vielen Dank für Deine Unterstützung und Deine sorgfältige Bearbeitung dieser Anfrage.",
+        'salutation'  => sprintf("Danke und beste Grüße,  \das %s-Team", config('app.name')),
     ],
 
     /*
@@ -60,7 +91,10 @@ return [
     */
 
     'email_verified' => [
-        'subject'             => sprintf("%s: Bestätigung Ihrer Terminvorschläge zur BeoKiz-Schulung", config('app.name')),
+        'subject' => [
+            'training_proposal' => sprintf("%s: Bestätigung Ihrer Terminvorschläge zur BeoKiz-Schulung", config('app.name')),
+            'training_confirmation' => sprintf("%s: Bestätigung Ihrer BeoKiz-Schulung", config('app.name')),
+        ],
         'greeting'            => "Sehr geehrte:r :name!",
         'first_line'          => "Ihre Terminanfrage(n) zur BeoKiz-Schulung: \n :training_proposals <br/> sind eingegangen.",
         'second_line'         => "Zur Terminbestätigung wird sich einer unserer BeoKiz-Multiplikator: innen bald mit Ihnen in Verbindung setzen.",

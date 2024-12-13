@@ -622,10 +622,12 @@ const validateTrainingSuggestionDates = (index) => {
                               >
                               </v-textarea>
                           </v-col>
-
-                          <v-col cols="12" sm="6">
+                          <v-col v-if="registrationForm.kita.other_operator" cols="12" sm="6">
                               <InfoMessage text="Für die Durchführung der BeoKiz-Schulung stehen, von der Senatsverwaltung für Bildung, Jugend und Familie anerkannte, Multiplikator:innen zur Verfügung. <br/> Wir freuen uns auf Sie!"/>
                           </v-col>
+                          <v-col v-else cols="12" sm="6">
+                            <InfoMessage text="Für die Durchführung der BeoKiz-Schulung stehen von der Senatsverwaltung für Bildung, Jugend und Familie anerkannte Multiplikator:innen Ihres Trägers zur Verfügung.  Wir werden diesen Multiplikator:innen gerne mitteilen, dass Sie eine Schulung wünschen!"/>
+                         </v-col>
                     </v-row>
 
                     <v-row>

@@ -38,6 +38,31 @@ return [
         'third_line'  => "If you did not make this request, please ignore this email and possibly inform us at <:support_email> so that we can take appropriate action.",
     ],
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Träger Mutliplikator new selftraining Kita Notification Lines
+    |--------------------------------------------------------------------------
+    */
+
+    'email_new_selftraining_kita' => [
+        'subject'     => sprintf("%s: New Training Request: Please arrange a training session with :kita_name", config('app.name')),
+        'greeting'    => "Hello :multi_name,",
+        'first_line'  => "The facility :kita_name has just registered on the BeoKiz portal and expressed the wish for a training session. The facility has already been informed that you will get in touch with them.",
+        'second_line' => "Please contact the facility to arrange a training session:",
+        'details'     => "
+                                - **Facility Number:** :kita_number
+                                - **Facility Name:** :kita_name
+                                - **Address:** :kita_address
+                                - **Contact Person:** :manager_name
+                                - **Email:** :manager_email
+                                - **Phone:** :manager_phone
+                                - **Notes from the Facility:** :kita_remarks",
+        'third_line'  => "Please don't forget to document the training in the BeoKiz portal after scheduling it.",
+        'closing_line'=> "Thank you for your support and your careful handling of this request.",
+        'salutation'  => sprintf("Thanks and best regards,  \nYour %s Team", config('app.name')),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Email Verification Notification Lines
@@ -48,8 +73,14 @@ return [
         'subject'     => sprintf("%s: Please confirm your email address", config('app.name')),
         'greeting'    => "Ladies and Gentlemen,",
         'action_text' => "Confirm",
-        'first_line'  => "Thank you for your interest in the BeoKiz training. Please click on the following link to submit your appointment suggestions for the BeoKiz training. This step ensures that we can reach you at your provided email address.",
-        'second_line' => "A BeoKiz trainer will contact you to finalize the confirmation of your training appointment.",
+        'first_line'  => [
+            'default' => "Thank you for your interest in the BeoKiz training. Please click on the following link to submit your appointment suggestions for the BeoKiz training. This step ensures that we can reach you at your provided email address.",
+            'self_training' => "Thank you for your interest in the BeoKiz training. Please click on the following link to confirm your email address. A BeoKiz trainer will contact you to arrange a training appointment.",
+        ],
+        'second_line' => [
+            'default' => "A BeoKiz trainer will contact you to finalize the confirmation of your training appointment.",
+            'self_training' => null, // No second line for self-training operators
+        ],
         'salutation'  => sprintf("Best regards,  \nYour %s team", config('app.name')),
     ],
 

@@ -55,15 +55,6 @@ class EmailVerifiedPromptController extends BaseController
                         $trainingItems->push(...$kita->trainingProposals);
                     }
 
-                    // Send operator multipliers notifications
-                    if (!empty($kita->operator->users) && $kita->operator->users->isNotEmpty()) {
-                        $kita->operator->users->each(function ($user) use ($kita) {
-                            $user->sendNewOperatorKitaNotification([
-                                'kita_name'     => $kita->name,
-                                'operator_name' => $kita->operator->name,
-                            ]);
-                        });
-                    }
                 });
 
                 return Inertia::render('Auth/Verified');

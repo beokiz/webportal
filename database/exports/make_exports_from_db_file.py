@@ -7,8 +7,8 @@ import pandas as pd
 import requests
 
 # Lokale Einstellungen
-LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup_20241203.sql")
-CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup_20241203_cleaned.sql")
+LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/2024-12-10-010003-dump-beokiz.sql")
+CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/2024-12-10-010003-dump-beokiz_cleaned.sql")
 
 DB_CONFIG = {
     "host": "localhost",
@@ -126,6 +126,8 @@ if __name__ == "__main__":
         if USE_LOCAL_SCRIPTS:
             print("Verwende lokale SQL-Skripte...")
             sql_scripts = load_local_sql_scripts(LOCAL_SCRIPT_PATH)
+            if not sql_scripts:  # Überprüfe, ob keine Skripte im Ordner sind
+                raise FileNotFoundError(f"Keine SQL-Skripte im Ordner gefunden: {LOCAL_SCRIPT_PATH}")
         else:
             print("Lade SQL-Skripte aus URLs...")
             sql_scripts = [(os.path.basename(url), download_sql_script(url)) for url in SQL_SCRIPT_URLS]
@@ -134,5 +136,5 @@ if __name__ == "__main__":
             output_file = f"{datetime.now().strftime('%Y-%m-%d')}_{script_name.replace('.sql', '')}.xlsx"
             execute_sql_and_export_to_excel(sql_script, DB_CONFIG, output_file)
 
-    except Exception as e:
+    except FileNotFoundError as e:
         print(f"Fehler: {e}")
