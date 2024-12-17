@@ -254,9 +254,11 @@ return [
     // 'confirmation_pending' status notification
     'training_proposal_confirmation_pending' => [
         'subject'     => sprintf("%s: Bestätigung des Terminvorschlags am :first_date und :second_date", config('app.name')),
-        'greeting'    => "Sehr geehrtes Pädagogisches Team der KiTa, ",
-        'first_line'  => "Bitte bestätigen Sie den vorgeschlagenen Schulungstermin durch Klicken auf den folgenden Link: :confirmation_link",
+        'greeting'    => "Sehr geehrte Nutzer*innen,",
+        'first_line'  => "bitte bestätigen Sie den Schulungstermin, indem Sie auf den untenstehenden Link klicken.",
+        'action_text' => "Schulungstermin bestätigen",
         'second_line' => "Schulungstage: :first_date und :second_date jeweils von 09 bis 17 Uhr  \nOrt: :location  <br/> Ihr Multiplikator: :multiplier_name ",
+        'third_line'  => "Sobald Sie den Termin bestätigt haben, wird die weitere organisatorische Bearbeitung automatisch ausgelöst.\n\nVielen Dank für Ihre Unterstützung.",
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
         'copy_label'  => 'Kopie',
     ],

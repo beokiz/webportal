@@ -69,15 +69,15 @@ class TrainingProposalConfirmationPendingNotification extends Notification
         return (new CustomMailMessage)
             ->subject($subject)
             ->greeting(__('notifications.training_proposal_confirmation_pending.greeting'))
-            ->line(__('notifications.training_proposal_confirmation_pending.first_line', [
-                'confirmation_link' => $this->args['confirmation_link'],
-            ]))
+            ->line(__('notifications.training_proposal_confirmation_pending.first_line'))
             ->line(__('notifications.training_proposal_confirmation_pending.second_line', [
                 'first_date'      => $this->args['first_date'],
                 'second_date'     => $this->args['second_date'],
                 'location'        => $this->args['location'],
                 'multiplier_name' => $this->args['multiplier_name'],
             ]))
+            ->action(__('notifications.training_proposal_confirmation_pending.action_text'), $this->args['confirmation_link'])
+            ->line(__('notifications.training_proposal_confirmation_pending.third_line'))
             ->salutation(__('notifications.training_proposal_confirmation_pending.salutation'));
     }
 
