@@ -55,7 +55,7 @@ return [
         'second_line' => [
             'default' => 'Ein BeoKiz-Multiplikator oder eine BeoKiz-Multiplikatorin wird sich mit Ihnen in Verbindung setzen, um Ihren Schulungstermin zu bestätigen.',
             'self_training' => 'Ein zuständiger BeoKiz-Multiplikator oder eine zuständige BeoKiz-Multiplikatorin wird sich mit Ihnen in Verbindung setzen, um einen Schulungstermin zu vereinbaren.',
-            'merged_training' => 'Nach Bestätigung ihrer Email sollten, werden Sie direkt eine Terminbestätigung erhalten.',
+            'merged_training' => 'Nach Bestätigung Ihrer E-Mailadresse werden Sie eine Terminbestätigung erhalten.',
         ],
         'salutation'  => sprintf("Mit freundlichen Grüßen,  \nIhr %s-Team", config('app.name')),
     ],
