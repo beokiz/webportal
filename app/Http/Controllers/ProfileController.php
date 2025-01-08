@@ -56,9 +56,12 @@ class ProfileController extends BaseController
     {
         $request->user()->fill($request->validated());
 
+        // Keine Zurücksetzung des Verifizierungsstatus mehr
+        /*
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
+        */
 
         $result = $request->user()->save();
 
