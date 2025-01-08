@@ -83,22 +83,41 @@ class VerifyEmailNotification extends Notification
 
         // Prüfen, ob es sich um eine zusammengelegte Schulung handelt
         $isMergedTraining = $kita && $kita->num_pedagogical_staff <= 10;
+        $isSelfTraining = $kita && !empty($kita->operator_id);
 
-        // Erstellen der E-Mail
-        $mailMessage = (new CustomMailMessage)
-            ->subject(__('notifications.email_verification.subject'))
-            ->greeting(__('notifications.email_verification.greeting', [
-                'name' => $this->notifiable->full_name,
-            ]))
-            ->line(__('notifications.email_verification.first_line'))
-            ->action(__('notifications.email_verification.action_text'), $url);
+        // Übersetzungsschlüssel basierend auf den Bedingungen auswählen
+        $firstLineKey = $isSelfTraining
+            ? 'notifications.email_verification.first_line.self_training'
+            : 'notifications.email_verification.first_line.default';
 
-        // Optionaler Hinweis nur bei nicht-zusammengelegten Schulungen
-        if (!$isMergedTraining) {
-            $mailMessage->line(__('notifications.email_verification.second_line'));
+        if ($isSelfTraining) {
+            $secondLineKey = 'notifications.email_verification.second_line.self_training';
+        } elseif ($isMergedTraining) {
+            $secondLineKey = 'notifications.email_verification.second_line.merged_training';
+        } else {
+            $secondLineKey = 'notifications.email_verification.second_line.default';
         }
 
-        return $mailMessage->salutation(__('notifications.email_verification.salutation'));
+        // E-Mail erstellen
+        $mailMessage = (new CustomMailMessage)
+            ->subject(__('notifications.email_verification.subject', [
+                'app_name' => config('app.name'),
+            ]))
+            ->greeting(__('notifications.email_verification.greeting'))
+            ->line(__('' . $firstLineKey));
+
+        // Zweite Zeile nur hinzufügen, wenn sie existiert und nicht null ist
+        if ($secondLineKey && __($secondLineKey) !== $secondLineKey) {
+            $mailMessage->line(__('' . $secondLineKey));
+        }
+
+        // Aktion hinzufügen
+        $mailMessage->action(__('notifications.email_verification.action_text'), $url);
+
+        // E-Mail abschließen
+        return $mailMessage->salutation(__('notifications.email_verification.salutation', [
+            'app_name' => config('app.name'),
+        ]));
     }
     /**
      * Get the verification URL for the given notifiable.

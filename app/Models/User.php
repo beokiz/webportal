@@ -10,6 +10,7 @@ use App\ModelFilters\UserFilter;
 use App\Models\Traits\CanGetTableNameStatically;
 use App\Models\Traits\HasOrderScope;
 use App\Notifications\ConnectedToKitasNotification;
+use App\Notifications\NewSelfTrainingKitaNotification;
 use App\Notifications\EmailVerifiedNotification;
 use App\Notifications\KitaCertificateNotification;
 use App\Notifications\NewOperatorKitaNotification;
@@ -318,31 +319,56 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Send a notification for a new self-training request.
+     *
+     * @param array $data
      * @return void
      */
-    public function sendEmailVerifiedNotification() : void
+    public function sendNewSelfTrainingKitaNotification(array $data): void
     {
-        $this->loadMissing(['kitas.trainingProposals']);
+        $this->notify(new NewSelfTrainingKitaNotification($data));
+    }
 
-        $trainingProposalsData = [];
+    /**
+     * @return void
+     */
+    public function sendEmailVerifiedNotification(): void
+    {
+        $this->loadMissing(['kitas.trainingProposals', 'kitas.operator']);
 
-        $this->kitas->each(function ($kita) use (&$trainingProposalsData) {
-            if ($kita->trainingProposals->isNotEmpty()) {
-                $counter = 0;
-
-                $kita->trainingProposals->each(function ($trainingProposal) use (&$trainingProposalsData, &$counter, $kita) {
-                    $counter++;
-
-                    $trainingProposalsData[] = __(
-                        $counter > 1 ? 'notifications.email_verified.other_training_item' : 'notifications.email_verified.first_training_item',
-                        [
-                            'first_date'  => $trainingProposal->first_date->format('d.m.Y'),
-                            'second_date' => $trainingProposal->second_date->format('d.m.Y'),
-                        ]
-                    );
-                });
-            }
+        // Prüfen, ob eine selbstschulende Kita existiert
+        $hasSelfTrainingKita = $this->kitas->contains(function ($kita) {
+            return $kita->operator !== null;
         });
+
+        if ($hasSelfTrainingKita) {
+            // Wenn mindestens eine selbstschulende Kita existiert, Nachricht nicht senden
+            \Log::info("Email notification skipped due to self-training Kita", [
+                'user_id' => $this->id,
+                'user_email' => $this->email,
+            ]);
+            return;
+        }
+
+        // Trainingsvorschläge sammeln
+        $trainingProposalsData = $this->kitas->flatMap(function ($kita) {
+            return $kita->trainingProposals->map(function ($trainingProposal, $index) {
+                return __(
+                    $index > 0 ? 'notifications.email_verified.other_training_item' : 'notifications.email_verified.first_training_item',
+                    [
+                        'first_date'  => $trainingProposal->first_date->format('d.m.Y'),
+                        'second_date' => $trainingProposal->second_date->format('d.m.Y'),
+                    ]
+                );
+            });
+        })->toArray();
+
+        // Nachricht senden
+        \Log::info("Sending email notification for user", [
+            'user_id' => $this->id,
+            'user_email' => $this->email,
+            'training_proposals' => $trainingProposalsData,
+        ]);
 
         $this->notify(new EmailVerifiedNotification($trainingProposalsData));
     }

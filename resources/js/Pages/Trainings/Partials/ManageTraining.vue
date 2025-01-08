@@ -88,7 +88,7 @@ const completedTrainingInfo = ref([
         value: `${prepareDate(editedTraining.value?.second_date)} ${editedTraining.value?.second_date_start_and_end_time}`,
     },
     {
-        label: 'Ort',
+        label: 'Schulungsort',
         value: editedTraining.value?.formatted_location,
     },
     {
@@ -644,7 +644,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-col>
 
                     <v-col cols="12" sm="6">
-                        <v-label class="tw-mt-6 tw-mr-2">Zeitraum erster Schulungstag*</v-label>
+                        <v-label class="tw-mt-6 tw-mr-2">Beginn erster Schulungstag (Uhrzeit)*</v-label>
 
                         <vue-timepicker v-model="manageForm.first_date_start_and_end_time"
                                         :hideClearButton="true"
@@ -680,7 +680,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-col>
 
                     <v-col cols="12" sm="6">
-                        <v-label class="tw-mt-6 tw-mr-2">Zeitraum zweiter Schulungstag*</v-label>
+                        <v-label class="tw-mt-6 tw-mr-2">Beginn zweiter Schulungstag (Uhrzeit)*</v-label>
 
                         <vue-timepicker v-model="manageForm.second_date_start_and_end_time"
                                         :hideClearButton="true"
@@ -817,7 +817,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     <v-col cols="12" sm="6">
                         <v-textarea v-model="manageForm.location"
                                     :error-messages="errors.location"
-                                    label="Ort*"
+                                    label="Schulungsort*"
                                     required
                                     :disabled="loading">
                         </v-textarea>

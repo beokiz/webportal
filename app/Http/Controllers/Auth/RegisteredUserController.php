@@ -107,6 +107,32 @@ class RegisteredUserController extends BaseController
         // Connect manager user to the kita
         $kita->users()->sync([$user->id]);
 
+        // Check if an operator is selected and link it to the Kita
+        if (!empty($attributes['kita']['operator_id'])) {
+            $kita->operator()->associate($attributes['kita']['operator_id']);
+            $kita->save();
+
+            // Retrieve the operator
+            $operator = Operator::find($attributes['kita']['operator_id']);
+
+            // Retrieve all Multiplikatoren (users associated with the operator)
+            $multiplikatoren = $operator->users;
+
+            foreach ($multiplikatoren as $multiplikator) {
+                // Prepare and send notification to each Multiplikator
+                $multiplikator->sendNewSelfTrainingKitaNotification([
+                    'kita_name' => $kita->name,
+                    'kita_number' => $kita->number,
+                    'kita_address' => $attributes['kita']['street'] . ' ' . $attributes['kita']['house_number'] . ', ' . $attributes['kita']['zip_code'] . ' ' . $attributes['kita']['city'],
+                    'manager_name' => $user->first_name . ' ' . $user->last_name,
+                    'manager_email' => $user->email,
+                    'manager_phone' => $attributes['user']['phone_number'] ?? 'N/A',
+                    'kita_remarks' => $attributes['kita']['additional_info'] ?? 'Keine Anmerkungen',
+                    'multi_name' => $multiplikator->fullName,
+                ]);
+            }
+        }
+
         // Create training proposal for kita or connect kita to existed training
         if (!empty($attributes['kita']['trainings'])) {
             foreach ($attributes['kita']['trainings'] as $trainingData) {
