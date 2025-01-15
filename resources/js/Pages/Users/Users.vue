@@ -281,6 +281,7 @@ const manageForm = useForm({
     role: null,
     two_factor_auth_enabled: false,
     phone_number: null,
+    send_invite_email: false,
 });
 
 const manageUser = async () => {
@@ -327,6 +328,11 @@ const sendWelcomeNotificationForm = useForm({
     //
 });
 
+const currentUserIsAdmin = computed(() => {
+    return currentUser.is_admin || currentUser.is_super_admin;
+
+});
+
 const sendWelcomeNotification = async (item) => {
     sendWelcomeNotificationForm.processing = true;
 
@@ -361,7 +367,7 @@ const sendWelcomeNotification = async (item) => {
                         <v-dialog v-model="dialog" activator="parent" width="80vw">
                             <v-card height="80vh">
                                 <v-card-title>
-                                    <span class="tw-text-h5">Neuen Benutzer</span>
+                                    <span class="tw-text-h5">Neuen Benutzer hinzufügen</span>
                                 </v-card-title>
 
                                 <v-card-text>
@@ -403,6 +409,16 @@ const sendWelcomeNotification = async (item) => {
                                                 <v-checkbox
                                                     v-model="manageForm.two_factor_auth_enabled"
                                                     label="Zwei-Faktor-Authentifizierung"
+                                                    :value="true"
+                                                ></v-checkbox>
+                                            </v-col>
+                                        </v-row>
+                                        <!-- Checkbox für Einladungsmail nur für Admins -->
+                                        <v-row v-if="currentUserIsAdmin">
+                                            <v-col cols="12" sm="6">
+                                                <v-checkbox
+                                                    v-model="manageForm.send_invite_email"
+                                                    label="Einladungsmail senden"
                                                     :value="true"
                                                 ></v-checkbox>
                                             </v-col>
