@@ -232,7 +232,15 @@ class UsersController extends BaseController
         $this->authorize('authorizeAccessToKitas', User::class);
 
         $attributes = $request->validated();
+
+        $sendInviteEmail = filter_var($request->input('send_invite_email', false), FILTER_VALIDATE_BOOLEAN);
         $result     = $this->userItemService->createFromKitaOrOperator($attributes);
+
+        if ($result && $sendInviteEmail) {
+            $result->sendWelcomeNotification(
+                $this->tokens->create($result)
+            );
+        }
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
