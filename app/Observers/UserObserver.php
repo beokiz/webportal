@@ -42,8 +42,12 @@ class UserObserver extends BaseObserver
         // Hole den aktuellen Benutzer
         $currentUser = auth()->user();
 
-        // Prüfen, ob der aktuelle Benutzer die Rolle "Multiplikator" hat
-        if ($currentUser && $currentUser->hasRole(config('permission.project_roles.user_multiplier'))) {
+        // Prüfen, ob der aktuelle Benutzer existiert und die Rolle "Multiplikator" oder "Admin" hat
+        if ($currentUser && (
+            $currentUser->hasRole(config('permission.project_roles.user_multiplier')) ||
+            $currentUser->hasRole(config('permission.project_roles.super_admin')) ||
+            $currentUser->hasRole(config('permission.project_roles.admin'))
+        )) {
             return;
         }
 

@@ -202,13 +202,21 @@ class UsersController extends BaseController
     public function store(CreateUserRequest $request)
     {
         $this->authorize('authorizeAdminAccess', User::class);
-//        $this->authorize('authorizeAccessToUsers', User::class);
 
         $attributes = $request->validated();
+
+        $sendInviteEmail = filter_var($request->input('send_invite_email', false), FILTER_VALIDATE_BOOLEAN);
+
         $result     = $this->userItemService->create(array_merge($attributes, [
             'email_verified_at' => Carbon::now(),
             'password'          => Str::random(20),
         ]));
+
+        if ($result && $sendInviteEmail) {
+            $result->sendWelcomeNotification(
+                $this->tokens->create($result)
+            );
+        }
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.users.create_success'))
@@ -224,7 +232,15 @@ class UsersController extends BaseController
         $this->authorize('authorizeAccessToKitas', User::class);
 
         $attributes = $request->validated();
+
+        $sendInviteEmail = filter_var($request->input('send_invite_email', false), FILTER_VALIDATE_BOOLEAN);
         $result     = $this->userItemService->createFromKitaOrOperator($attributes);
+
+        if ($result && $sendInviteEmail) {
+            $result->sendWelcomeNotification(
+                $this->tokens->create($result)
+            );
+        }
 
         return $result
             ? Redirect::back()->withSuccesses(__('crud.users.create_success'))

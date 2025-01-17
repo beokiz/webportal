@@ -186,7 +186,8 @@ const manageCreateKitaUserForm = useForm({
     role: null,
     two_factor_auth_enabled: false,
     phone_number: null,
-    kitas: [editedKita.value.id]
+    kitas: [editedKita.value.id],
+    send_invite_email: false
 });
 
 const manageCreateKitaUser = async () => {
@@ -248,6 +249,11 @@ const sendKitaCertificateNotification = async () => {
 
     sendKitaCertificateNotificationForm.post(route('kitas.send_kita_certificate_notification', { kita: sendKitaCertificateNotificationForm.id }), formOptions);
 };
+
+const currentUserIsAdmin = computed(() => {
+    return currentUser.is_admin || currentUser.is_super_admin;
+
+});
 
 /*
  * Users table
@@ -732,6 +738,16 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                                                 ></v-checkbox>
                                                             </v-col>
                                                         </v-row>
+                                                            <!-- Checkbox für Einladungsmail nur für Admins -->
+                                                            <v-row v-if="currentUserIsAdmin">
+                                                                <v-col cols="12" sm="6">
+                                                                    <v-checkbox
+                                                                        v-model="manageCreateKitaUserForm.send_invite_email"
+                                                                        label="Einladungsmail senden"
+                                                                        :value="true"
+                                                                    ></v-checkbox>
+                                                                </v-col>
+                                                            </v-row>
                                                     </v-container>
                                                 </v-card-text>
 

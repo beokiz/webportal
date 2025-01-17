@@ -281,6 +281,25 @@ class TrainingProposalsController extends BaseController
             : Redirect::route('profile.edit')->withErrors(__('crud.training_proposals.confirm_error'));
     }
 
+    public function confirmByAdmin(Request $request, TrainingProposal $trainingProposal)
+    {
+        $kitaId = $request->input('kita_id');
+
+        if (empty($kitaId)) {
+            \Log::warning("confirmByAdmin fehlgeeschlagen: Kita-ID ist leer oder fehlt.");
+            return Redirect::back()->withErrors(['error' => 'Kita-ID ist erforderlich.']);
+        }
+
+        $result = $this->trainingProposalItemService->confirmByAdmin($trainingProposal->id, $kitaId);
+
+        if ($result) {
+            return Redirect::back()->with('success', 'Training erfolgreich bestätigt.');
+        }
+
+        \Log::error("confirmByAdmin fehlgeeschlagen: Bestätigung des TrainingProposals fehlgeschlagen für Kita-ID: $kitaId");
+        return Redirect::back()->withErrors(['error' => 'Die Bestätigung ist fehlgeschlagen.']);
+    }
+
     /**
      * @param AddKitaToTrainingProposalRequest $request
      * @param TrainingProposal                 $trainingProposal

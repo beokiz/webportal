@@ -356,6 +356,7 @@ Route::group(['middleware' => ['auth', 'verified', 'verified_2fa']], function ()
         Route::post('/{trainingProposal}/add-kitas', [TrainingProposalsController::class, 'addKitas'])->name('add_kitas');
         Route::post('/{trainingProposal}/remove-kita', [TrainingProposalsController::class, 'removeKita'])->name('remove_kita');
         Route::post('/{trainingProposal}/remove-kitas', [TrainingProposalsController::class, 'removeKitas'])->name('remove_kitas');
+        Route::post('/{trainingProposal}/confirm-by-admin', [TrainingProposalsController::class, 'confirmByAdmin'])->name('confirm_by_admin');
         Route::delete('/{trainingProposal}', [TrainingProposalsController::class, 'destroy'])->name('destroy');
     });
 
