@@ -117,39 +117,60 @@ class TrainingProposalItemService extends BaseItemService
      * @param string $token
      * @return bool
      */
-    public function confirm(int $id, string $token) : bool
+    public function confirm(int $id, string $token): bool
     {
-        if (!empty($token)) {
-            $trainingItemService = app(TrainingItemService::class);
-
-            $item = $this->find($id)->loadMissing(['kitas', 'trainingProposalConfirmations']);
-
-            $trainingProposalConfirmation = $item->trainingProposalConfirmations->where('token', $token)->first();
-
-            if (!empty($trainingProposalConfirmation) && $item->kitas->contains('id', $trainingProposalConfirmation->kita_id)) {
-                if ($item->status !== TrainingProposal::STATUS_CONFIRMED) {
-                    $item->update(['status' => TrainingProposal::STATUS_CONFIRMED]);
-                }
-
-                // If the Kita manager has confirmed his participation, we add the Kita to the training
-                $trainings = $trainingItemService->collection([
-                    'paginated'         => false,
-                    'training_proposal' => $item->id,
-                ]);
-
-                if (!empty($trainings) && $trainings->isNotEmpty()) {
-                    $trainingItemService->updateAttachedKitas(
-                        $trainings->first()->id,
-                        [$trainingProposalConfirmation->kita_id],
-                        false
-                    );
-                }
-
-                return $trainingProposalConfirmation->update(['confirmed' => true]);
-            }
+        if (empty($token)) {
+            return false;
         }
 
-        return false;
+        $item = $this->find($id)->loadMissing(['kitas', 'trainingProposalConfirmations']);
+
+        $trainingProposalConfirmation = $item->trainingProposalConfirmations->where('token', $token)->first();
+
+        if (empty($trainingProposalConfirmation)) {
+            return false;
+        }
+
+        return $this->processConfirmation($item, $trainingProposalConfirmation);
+    }
+
+    public function confirmByAdmin(int $id, int $kitaId): bool
+    {
+        $item = $this->find($id)->loadMissing(['kitas', 'trainingProposalConfirmations']);
+
+        $trainingProposalConfirmation = $item->trainingProposalConfirmations->where('kita_id', $kitaId)->first();
+
+        if (empty($trainingProposalConfirmation)) {
+            \Log::warning("Keine TrainingProposalConfirmation gefunden für Kita-ID: $kitaId");
+            return false;
+        }
+
+        return $this->processConfirmation($item, $trainingProposalConfirmation);
+    }
+
+    private function processConfirmation($item, $trainingProposalConfirmation): bool
+    {
+        $trainingItemService = app(TrainingItemService::class);
+
+        if ($item->status !== TrainingProposal::STATUS_CONFIRMED) {
+            $item->update(['status' => TrainingProposal::STATUS_CONFIRMED]);
+        }
+
+        // If the Kita manager has confirmed his participation, we add the Kita to the training
+        $trainings = $trainingItemService->collection([
+            'paginated'         => false,
+            'training_proposal' => $item->id,
+        ]);
+
+        if (!empty($trainings) && $trainings->isNotEmpty()) {
+            $trainingItemService->updateAttachedKitas(
+                $trainings->first()->id,
+                [$trainingProposalConfirmation->kita_id],
+                false
+            );
+        }
+
+        return $trainingProposalConfirmation->update(['confirmed' => true]);
     }
 
     /**

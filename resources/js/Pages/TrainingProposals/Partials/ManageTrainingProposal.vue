@@ -65,6 +65,7 @@ const selectedKitaName = ref(null);
 const dialog = ref(false);
 const acceptTrainingProposalDialog = ref(false);
 const revokeTrainingProposalDialog = ref(false);
+const confirmKitaParticipationDialog = ref(false);
 const confirmTrainingProposalDialog = ref(false);
 const addMultiplierToTrainingProposalDialog = ref(false);
 const addKitaToTrainingProposalDialog = ref(false);
@@ -311,6 +312,7 @@ const close = () => {
     selectedKitaName.value = null;
     acceptTrainingProposalDialog.value = false;
     revokeTrainingProposalDialog.value = false;
+    confirmKitaParticipationDialog.value = false;
     confirmTrainingProposalDialog.value = false;
     addMultiplierToTrainingProposalDialog.value = false;
     addKitaToTrainingProposalDialog.value = false;
@@ -339,6 +341,50 @@ const clear = () => {
 
     firstDateField.value = null;
     secondDateField.value = null;
+};
+
+const confirmKitaParticipationForm = useForm({
+    kita_id: null,
+});
+
+
+const openConfirmKitaParticipationDialog = (item) => {
+    selectedKitaName.value = item.name;
+    confirmKitaParticipationForm.kita_id = item.id;
+    confirmKitaParticipationDialog.value = true;
+};
+
+
+const confirmKitaParticipation = async () => {
+    console.log("Bestätigung gestartet für Kita:", confirmKitaParticipationForm.kita_id);
+
+    confirmKitaParticipationForm.processing = true;
+
+    let formOptions = {
+        onSuccess: () => {
+            closeConfirmKitaParticipationDialog();
+        },
+        onError: (err) => {
+            errors.value = err;
+        },
+        onFinish: () => {
+            confirmKitaParticipationForm.processing = false;
+        },
+    };
+
+    try {
+        await confirmKitaParticipationForm.post(
+            route('training_proposals.confirm_by_admin', { id: props.trainingProposal.id }),
+            { kita_id: confirmKitaParticipationForm.kita_id, ...formOptions }
+        );
+    } catch (error) {
+        console.error("Fehler bei der Anfrage:", error);
+    }
+};
+
+const closeConfirmKitaParticipationDialog = () => {
+    confirmKitaParticipationDialog.value = false;
+    confirmKitaParticipationForm.reset();
 };
 
 /*
@@ -569,7 +615,7 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
             <v-container>
                 <v-row>
                     <v-col cols="12" sm="3">
-                        <h3>Termin</h3>
+                        <h3>Eigenschaften des Terminvorschlags</h3>
                     </v-col>
 
                     <v-col cols="12" sm="9" class="text-right">
@@ -793,12 +839,27 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
 
                         <v-col cols="12" sm="6" class="text-right">
                             <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin">
-                                <v-hover v-slot:default="{ isHovering, props }">
-                                    <v-btn v-bind="props" :color="isHovering ? 'accent' : 'primary'" dark @click="openAddKitaToTrainingProposalDialog">
-                                        <span>Einrichtung hinzufügen</span>
-                                    </v-btn>
-                                </v-hover>
-                            </template>
+                            <v-hover v-slot:default="{ isHovering, props }">
+                                <v-btn
+                                    v-bind="props"
+                                    :color="isHovering ? 'accent' : 'primary'"
+                                    dark
+                                    :disabled="!(editedTrainingProposal.status === 'open' || editedTrainingProposal.status === 'reserved')"
+                                    @click="openAddKitaToTrainingProposalDialog"
+                                >
+                                    <span>Einrichtung hinzufügen</span>
+                                </v-btn>
+                            </v-hover>
+                            <v-tooltip
+                                v-if="!(editedTrainingProposal.status === 'open' || editedTrainingProposal.status === 'reserved')"
+                                location="top"
+                            >
+                                <template v-slot:activator="{ props }">
+                                    <v-icon v-bind="props" class="tw-me-2">mdi-alert-circle-outline</v-icon>
+                                </template>
+                                <span>Einrichtungen können nur zu offenen oder reservierten Terminvorschlägen hinzugefügt werden.</span>
+                            </v-tooltip>
+                        </template>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -925,8 +986,26 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                                         <td>{{item?.zip_code}}</td>
 
                                         <td class="text-center">
+                                            <template v-if="($page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin)
+                                                            && editedTrainingProposal.status === 'confirmation_pending'
+                                                            && item?.training_proposal_confirmations?.length > 0
+                                                            && !item?.training_proposal_confirmed">
+                                                <v-tooltip location="top">
+                                                    <template v-slot:activator="{ props }">
+                                                        <v-icon
+                                                            v-bind="props"
+                                                            size="small"
+                                                            class="tw-me-2"
+                                                            @click="openConfirmKitaParticipationDialog(item)"
+                                                        >
+                                                            mdi-email-check-outline
+                                                        </v-icon>
+                                                    </template>
+                                                    <span>Gesendeten Terminvorschlag für diese Einrichtung bestätigen</span>
+                                                </v-tooltip>
+                                            </template>
                                               <template v-if="$page.props.auth.user.is_super_admin || $page.props.auth.user.is_admin || $page.props.auth.user.is_user_multiplier">
-                                                  <v-tooltip v-if="item?.approved && item?.users_emails.length > 0" location="top">
+                                                  <v-tooltip v-if="item?.users_emails.length > 0" location="top">
                                                       <template v-slot:activator="{ props }">
                                                           <a :href="`mailto:?bcc=${item?.users_emails.join(',')}`" v-bind="props">
                                                               <v-icon v-bind="props" size="small" class="tw-me-2">mdi-email</v-icon>
@@ -1253,6 +1332,48 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                             </v-card>
                         </v-dialog>
                     </v-col>
+
+                    <!-- Bestätigung der Teinlahme der Einrichtung Popup-->
+                    <v-dialog v-model="confirmKitaParticipationDialog" width="30vw">
+                        <v-card height="30vh">
+                            <v-card-title>
+                                <span class="tw-text-h5">Termin für die Einrichtung bestätigen?</span>
+                            </v-card-title>
+
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <p class="tw-mb-4">Bitte stimmen Sie die Bestätigung mit der Einrichtung ab!</p>
+                                            <p class="tw-mb-4">
+                                                Normalerweise bestätigt eine Einrichtung ihre Teilnahme an einem Schulungstermin über den Link in der an den Manager der Einrichtung versendeten E-Mail, nachdem der Termin durch den Multiplikator bestätigt wurde.
+                                            </p>
+                                            <p class="tw-mb-4">
+                                                Mit Bestigung des Terminvorschlags wird ein Schulungstermin erzeugt!
+                                            </p>
+                                            <p class="tw-mb-4">
+                                                Möchten Sie die Teilnahme der Einrichtung <strong>{{ selectedKitaName }}</strong> an diesem Schulungstermin bestätigen?
+                                            </p>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn @click="closeConfirmKitaParticipationDialog" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
+                                        Abbrechen
+                                    </v-btn>
+                                </v-hover>
+                                <v-hover v-slot:default="{ isHovering, props }">
+                                    <v-btn-primary @click="confirmKitaParticipation" v-bind="props" :color="isHovering ? 'accent' : 'primary'" :loading="confirmKitaParticipationForm.processing">
+                                        Bestätigen
+                                    </v-btn-primary>
+                                </v-hover>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                 </v-row>
             </v-container>
         </div>
