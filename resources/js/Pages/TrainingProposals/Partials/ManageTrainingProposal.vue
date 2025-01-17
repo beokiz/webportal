@@ -1334,8 +1334,8 @@ const goToPage = async ({ page, itemsPerPage, sortBy, clearFilters }) => {
                     </v-col>
 
                     <!-- Bestätigung der Teinlahme der Einrichtung Popup-->
-                    <v-dialog v-model="confirmKitaParticipationDialog" width="30vw">
-                        <v-card height="30vh">
+                    <v-dialog v-model="confirmKitaParticipationDialog" width="40vw">
+                        <v-card height="40vh">
                             <v-card-title>
                                 <span class="tw-text-h5">Termin für die Einrichtung bestätigen?</span>
                             </v-card-title>
