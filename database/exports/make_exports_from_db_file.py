@@ -7,8 +7,8 @@ import pandas as pd
 import requests
 
 # Lokale Einstellungen
-LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/2024-12-10-010003-dump-beokiz.sql")
-CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/2024-12-10-010003-dump-beokiz_cleaned.sql")
+LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/2025-01-20-010003-dump-beokiz.sql")
+CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/2025-01-20-010003-dump-beokiz_cleaned.sql")
 
 DB_CONFIG = {
     "host": "localhost",
