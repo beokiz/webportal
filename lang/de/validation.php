@@ -277,7 +277,7 @@ return [
         'ratings'                                  => "Bewertungen",
         'child_duration_in_kita'                   => "Zeitraum in der KiTa",
         'integration_status'                       => "Integrationsstatus",
-        'speech_therapy_status'                    => "in logopädische Behandlung",
+        'speech_therapy_status'                    => "in logopädischer Behandlung",
         'year'                                     => "Jahr",
         'age_year'                                 => "Altersgruppe (Jahre)",
         'survey_start_date'                        => "Erhebungsbeginn",

@@ -32,7 +32,7 @@ return [
         'age_label'                         => "Altersgruppe",
         'is_daz_label'                      => "DaZ",
         'integration_status'                => "Integrationsstatus",
-        'speech_therapy_status'             => "in logopädische Behandlung",
+        'speech_therapy_status'             => "in logopädischer Behandlung",
         'postal_label'                      => "Postleitzahl",
         'uuid_label'                        => "Einrichtung",
         'kita_label'                        => "KiTa",

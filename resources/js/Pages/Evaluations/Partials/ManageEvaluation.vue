@@ -302,7 +302,7 @@ const unfinishedEvaluation = async (id) => {
                     <v-col cols="12" sm="3">
                         <v-text-field v-model="manageForm.custom_unique_id" :error-messages="errors.custom_unique_id"
                                       readonly
-                                      label="Bezeichner der Einschatzung" required></v-text-field>
+                                      label="Bezeichner der Einschätzung" required></v-text-field>
                     </v-col>
 
                     <v-col cols="12" sm="2">
@@ -349,7 +349,7 @@ const unfinishedEvaluation = async (id) => {
                         ></v-checkbox>
                         <v-checkbox
                             v-model="manageForm.speech_therapy_status"
-                            label="in logopädische Behandlung"
+                            label="in logopädischer Behandlung"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
