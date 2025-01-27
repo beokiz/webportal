@@ -54,10 +54,13 @@ LEFT JOIN
     beokiz.users kita_user ON khu.user_id = kita_user.id
 LEFT JOIN
     beokiz.users multiplikator_user ON t.multi_id = multiplikator_user.id
+LEFT JOIN
+    beokiz.model_has_roles mhr ON kita_user.id = mhr.model_id AND mhr.model_type = 'App\\Models\\User'
 WHERE
     k.id IS NOT NULL
     AND t.id NOT IN (1, 2, 3, 27) -- Exkludiere Schulungen mit diesen IDs
     AND k.id NOT IN (1,2,21,109,110,111,134,199,220,221,245,249)          -- Exkludiere Kitas mit dieser ID
+    AND mhr.role_id = 5
 GROUP BY
     t.id, k.id, o.name
 ORDER BY t.first_date ASC ;
