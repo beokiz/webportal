@@ -21,23 +21,23 @@ SELECT
         ELSE NULL
     END AS `Schulungsadresse`,
     t.participant_count AS `Teilnehmeranzahl - Schulung`,
-    k.name AS `Kitaname`,
-    k.number AS `Kitannummer`,
-    k.num_pedagogical_staff AS `Anzahl pFK - Kita`,
+    COALESCE(k.name, 'Keine Kita zugeordnet') AS `Kitaname`,
+    COALESCE(k.number, 'Keine Nummer') AS `Kitannummer`,
+    COALESCE(k.num_pedagogical_staff, 0) AS `Anzahl pFK - Kita`,
     CASE
         WHEN (k.street IS NOT NULL AND k.street != '') AND (k.house_number IS NOT NULL AND k.house_number != '') THEN CONCAT(k.street, ' ', k.house_number)
         WHEN k.street IS NOT NULL AND k.street != '' THEN k.street
         WHEN k.house_number IS NOT NULL AND k.house_number != '' THEN k.house_number
-        ELSE NULL
+        ELSE 'Keine Adresse'
     END AS `Straße - Kita`,
-    k.zip_code AS `PLZ - Kita`,
+    COALESCE(k.zip_code, 'Keine PLZ') AS `PLZ - Kita`,
     CASE
         WHEN (o.name IS NOT NULL AND o.name != '') AND (k.other_operator IS NOT NULL AND k.other_operator != '') THEN CONCAT(o.name, ', ', k.other_operator)
         WHEN o.name IS NOT NULL AND o.name != '' THEN o.name
         WHEN k.other_operator IS NOT NULL AND k.other_operator != '' THEN k.other_operator
-        ELSE NULL
+        ELSE 'Kein Träger'
     END AS `Träger`,
-    GROUP_CONCAT(DISTINCT CONCAT(multiplikator_user.first_name, ' ', multiplikator_user.last_name) SEPARATOR ', ') AS `Multiplikator:In`,
+    GROUP_CONCAT(DISTINCT CONCAT(COALESCE(multiplikator_user.first_name, ''), ' ', COALESCE(multiplikator_user.last_name, '')) SEPARATOR ', ') AS `Multiplikator:In`,
     GROUP_CONCAT(DISTINCT CONCAT(kita_user.first_name, ' ', kita_user.last_name) SEPARATOR ', ') AS `Zugeordnete Manager der Einrichtung`,
     GROUP_CONCAT(DISTINCT kita_user.email SEPARATOR ', ') AS `Mailadresse der Manager`
 FROM
@@ -57,10 +57,9 @@ LEFT JOIN
 LEFT JOIN
     beokiz.model_has_roles mhr ON kita_user.id = mhr.model_id AND mhr.model_type = 'App\\Models\\User'
 WHERE
-    k.id IS NOT NULL
-    AND t.id NOT IN (1, 2, 3, 27) -- Exkludiere Schulungen mit diesen IDs
-    AND k.id NOT IN (1,2,21,109,110,111,134,199,220,221,245,249)          -- Exkludiere Kitas mit dieser ID
-    AND mhr.role_id = 5
+    t.id NOT IN (1, 2, 3, 27) -- Exkludiere Schulungen mit diesen IDs
+    AND (k.id IS NULL OR k.id NOT IN (1,2,21,109,110,111,134,199,220,221,245,249)) -- Berücksichtigt auch NULL-Werte für Schulungen ohne Kita
+    AND (mhr.role_id = 5 OR mhr.role_id IS NULL) -- Falls keine Kita-Manager zugeordnet sind
 GROUP BY
     t.id, k.id, o.name
-ORDER BY t.first_date ASC ;
+ORDER BY t.first_date ASC;
