@@ -7,15 +7,15 @@ import pandas as pd
 import requests
 
 # Lokale Einstellungen
-LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/2025-01-20-010003-dump-beokiz.sql")
-CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/2025-01-20-010003-dump-beokiz_cleaned.sql")
+LOCAL_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup_20250130.sql")
+CLEANED_DUMP_PATH = os.path.expanduser("~/Downloads/prod_database_backup_20250130_cleaned.sql")
 
 DB_CONFIG = {
     "host": "localhost",
     "port": 3306,
     "user": "root",
     "password": "",
-    "database": "beokiz_prod"
+    "database": "beokiz"
 }
 
 # Steuere, ob lokale Skripte verwendet werden
@@ -47,9 +47,9 @@ def setup_local_database(dump_path):
     cursor = connection.cursor()
     try:
         print("Dropping existing database...")
-        cursor.execute("DROP DATABASE IF EXISTS beokiz_prod;")
+        cursor.execute(f"DROP DATABASE IF EXISTS {DB_CONFIG['database']};")
         print("Creating new database...")
-        cursor.execute("CREATE DATABASE beokiz_prod;")
+        cursor.execute(f"CREATE DATABASE {DB_CONFIG['database']};")
         connection.commit()
 
         if not os.path.exists(dump_path):
@@ -60,7 +60,7 @@ def setup_local_database(dump_path):
             "mysql",
             "-u", DB_CONFIG["user"],
             f"-p{DB_CONFIG['password']}",
-            "beokiz_prod"
+            DB_CONFIG["database"]
         ]
         with open(dump_path, "r") as dump_file:
             result = subprocess.run(restore_command, stdin=dump_file, text=True, capture_output=True)
