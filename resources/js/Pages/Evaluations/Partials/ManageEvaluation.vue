@@ -390,7 +390,7 @@ const unfinishedEvaluation = async (id) => {
                         </v-hover>
                         <v-hover v-if="!!manageForm.age && preparedDomains.length > 0" v-slot:default="{ isHovering, props }">
                             <v-btn-primary @click="manageEvaluation" v-bind="props" :color="isHovering ? 'accent' : 'primary'">
-                                Prüfen und Einreichen
+                                Auswerten
                             </v-btn-primary>
                         </v-hover>
                     </v-col>

@@ -35,7 +35,7 @@ onMounted(() => {
     }
 
     if (currentUser.is_manager || currentUser.is_employer) {
-        menuItemsList.value['screening.index'] = 'Prüfen';
+        menuItemsList.value['screening.index'] = 'Überprüfen';
         menuGroupsList.value['screening.index'] = 'screening.*';
     }
 
