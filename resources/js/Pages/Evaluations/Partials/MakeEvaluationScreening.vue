@@ -122,18 +122,18 @@ const screeningEvaluation = async () => {
 </script>
 
 <template>
-    <Head title="Ampel-Prüfung"/>
+    <Head title="Überprüfen"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Ampel-Prüfung</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Überprüfen</h2>
         </template>
 
         <div class="tw-table-block tw-max-w-full tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <h3>Eigenschaften</h3>
+                        <h3>Zutreffendes auswählen</h3>
                     </v-col>
                 </v-row>
             </v-container>

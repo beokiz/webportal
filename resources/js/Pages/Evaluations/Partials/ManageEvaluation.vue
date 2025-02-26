@@ -292,7 +292,7 @@ const unfinishedEvaluation = async (id) => {
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <h3>Eigenschaften</h3>
+                        <h3>Zutreffendes auswählen</h3>
                     </v-col>
                 </v-row>
             </v-container>
@@ -302,7 +302,7 @@ const unfinishedEvaluation = async (id) => {
                     <v-col cols="12" sm="3">
                         <v-text-field v-model="manageForm.custom_unique_id" :error-messages="errors.custom_unique_id"
                                       readonly
-                                      label="Bezeichner der Einschätzung" required></v-text-field>
+                                      label="Kind (Pseudonym wird automatisch generiert)" required></v-text-field>
                     </v-col>
 
                     <v-col cols="12" sm="2">

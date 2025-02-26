@@ -226,11 +226,11 @@ const unfinishedEvaluation = async (id) => {
 </script>
 
 <template>
-    <Head title="Einschätzungen"/>
+    <Head title="Einschätzen"/>
 
     <AuthenticatedLayout :errors="errors">
         <template #header>
-            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Einschätzungen</h2>
+            <h2 class="tw-font-semibold tw-text-xl tw-text-gray-800 tw-leading-tight">Einschätzen</h2>
 
             <div v-if="$page.props.auth.user.is_manager || $page.props.auth.user.is_employer" class="tw-flex tw-items-center tw-justify-end">
                 <Link :href="route('evaluations.create')">
