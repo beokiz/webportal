@@ -60,9 +60,8 @@ WITH RankedData AS (
     LEFT JOIN
         beokiz.users multiplikator_user ON t.multi_id = multiplikator_user.id
     WHERE
-        k.id IS NOT NULL
-        AND t.id NOT IN (1, 2, 3, 27)
-        AND k.id NOT IN (1,2,21,109,110,111,134,199,220,221,245,249)
+        t.id NOT IN (1, 2, 3, 27) -- Exkludiere Schulungen mit diesen IDs
+        AND (k.id IS NULL OR k.id NOT IN (1, 2, 21, 109, 110, 111, 134, 199, 220, 221, 245, 249))
     GROUP BY
         t.id, k.id, o.name
 
