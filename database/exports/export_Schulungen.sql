@@ -15,12 +15,17 @@ SELECT
     DATE_FORMAT(t.first_date, '%d.%m.%Y') AS `Erster Schulungstag`,
     t.location AS `Schulungsort`,
     CASE
-        WHEN (t.street IS NOT NULL AND t.street != '') AND (t.house_number IS NOT NULL AND t.house_number != '') THEN CONCAT(t.street, ' ', t.house_number, ', ', t.zip_code, ' ', t.city)
-        WHEN t.street IS NOT NULL AND t.street != '' THEN CONCAT(t.street, ', ', t.zip_code, ' ', t.city)
-        WHEN t.house_number IS NOT NULL AND t.house_number != '' THEN CONCAT(t.house_number, ', ', t.zip_code, ' ', t.city)
+        WHEN (t.street IS NOT NULL AND t.street != '') AND (t.house_number IS NOT NULL AND t.house_number != '') THEN CONCAT(t.street, ' ', t.house_number)
+        WHEN t.street IS NOT NULL AND t.street != '' THEN t.street
+        WHEN t.house_number IS NOT NULL AND t.house_number != '' THEN t.house_number
         ELSE NULL
-    END AS `Schulungsadresse`,
+    END AS `Schulungsadresse-Str.`,
+    CASE
+        WHEN t.zip_code IS NOT NULL AND t.zip_code != '' THEN t.zip_code
+        ELSE NULL
+    END AS `Schulungsadresse-PLZ`,
     t.participant_count AS `Teilnehmeranzahl - Schulung`,
+    t.max_participant_count AS `Maximale Teilnehmeranzahl-Schulung`,
     k.name AS `Kitaname`,
     k.number AS `Kitannummer`,
     k.num_pedagogical_staff AS `Anzahl pFK - Kita`,
