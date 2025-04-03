@@ -1,5 +1,7 @@
 WITH params AS (
-    SELECT 2024 AS jahr
+    SELECT
+        2024 AS jahr,
+        2.5 AS altersgrenze
 ),
 
 sprach_ampel AS (
@@ -20,7 +22,7 @@ sprach_ampel AS (
         params p
     WHERE
         YEAR(e.finished_at) = p.jahr
-        AND e.age <= 4.5
+        AND e.age <= p.altersgrenze
         AND jt.abbreviation = 'S'
 ),
 
@@ -72,6 +74,7 @@ ampel_aggregiert AS (
 
 SELECT
     ye.`year` AS `Erhebungsjahr`,
+    p.altersgrenze AS `Altersgruppe (max)`,
     k.`name` AS `Name der Einrichtung`,
 
     -- Anschrift
@@ -95,45 +98,44 @@ SELECT
     END AS `Träger`,
 
     -- Statistik
-    ye.children_4_born_per_year AS `Gesamtzahl der im Zeitraum geborenen Kinder 4,5`,
+    ye.children_4_born_per_year AS `Gesamtzahl der im Zeitraum geborenen Kinder`,
     ye.children_4_with_german_lang AS `Kinder mit deutscher Herkunftssprache`,
     ye.children_4_with_foreign_lang AS `Kinder mit nicht deutscher Herkunftssprache`,
 
-    -- Fix für Evaluationen mit age <= 4.5
     (
         SELECT COUNT(e.id)
-        FROM beokiz_prod.evaluations e, params p
+        FROM beokiz_prod.evaluations e
         WHERE e.kita_id = ye.kita_id
           AND YEAR(e.finished_at) = p.jahr
-          AND e.age <= 4.5
+          AND e.age <= p.altersgrenze
     ) AS `submitted Evaluation`,
 
     -- Ampelgrün
-    COALESCE(aa.gruen_gesamt, 0) AS `4,5 Jährige Kinder mit grüner Ampel`,
-    COALESCE(aa.gruen_deutsch, 0) AS `4,5, grün, deutsche Herkunftssprache`,
-    COALESCE(aa.gruen_nd, 0) AS `4,5, grün, nicht deutsche Herkunftssprache`,
-    COALESCE(aa.gruen_1_12, 0) AS `4,5, grün Ampel - 1-12 Monate`,
-    COALESCE(aa.gruen_12_24, 0) AS `4,5, grün Ampel - 12-24 Monate`,
-    COALESCE(aa.gruen_24_36, 0) AS `4,5, grün Ampel - 24-36 Monate`,
-    COALESCE(aa.gruen_mehr_36, 0) AS `4,5, grün Ampel - mehr als 36 Monate`,
+    COALESCE(aa.gruen_gesamt, 0) AS `grün gesamt`,
+    COALESCE(aa.gruen_deutsch, 0) AS `grün, deutsche Herkunftssprache`,
+    COALESCE(aa.gruen_nd, 0) AS `grün, nicht deutsche Herkunftssprache`,
+    COALESCE(aa.gruen_1_12, 0) AS `grün - 1-12 Monate`,
+    COALESCE(aa.gruen_12_24, 0) AS `grün - 12-24 Monate`,
+    COALESCE(aa.gruen_24_36, 0) AS `grün - 24-36 Monate`,
+    COALESCE(aa.gruen_mehr_36, 0) AS `grün - mehr als 36 Monate`,
 
     -- Ampelgelb
-    COALESCE(aa.gelb_gesamt, 0) AS `4,5 Jährige Kinder mit gelber Ampel`,
-    COALESCE(aa.gelb_deutsch, 0) AS `4,5, gelb, deutsche Herkunftssprache`,
-    COALESCE(aa.gelb_nd, 0) AS `4,5, gelb, nicht deutsche Herkunftssprache`,
-    COALESCE(aa.gelb_1_12, 0) AS `4,5, gelbe Ampel - 1-12 Monate`,
-    COALESCE(aa.gelb_12_24, 0) AS `4,5, gelbe Ampel - 12-24 Monate`,
-    COALESCE(aa.gelb_24_36, 0) AS `4,5, gelbe Ampel - 24-36 Monate`,
-    COALESCE(aa.gelb_mehr_36, 0) AS `4,5, gelbe Ampel - mehr als 36 Monate`,
+    COALESCE(aa.gelb_gesamt, 0) AS `gelb gesamt`,
+    COALESCE(aa.gelb_deutsch, 0) AS `gelb, deutsche Herkunftssprache`,
+    COALESCE(aa.gelb_nd, 0) AS `gelb, nicht deutsche Herkunftssprache`,
+    COALESCE(aa.gelb_1_12, 0) AS `gelb - 1-12 Monate`,
+    COALESCE(aa.gelb_12_24, 0) AS `gelb - 12-24 Monate`,
+    COALESCE(aa.gelb_24_36, 0) AS `gelb - 24-36 Monate`,
+    COALESCE(aa.gelb_mehr_36, 0) AS `gelb - mehr als 36 Monate`,
 
     -- Ampelrot
-    COALESCE(aa.rot_gesamt, 0) AS `4,5 Jährige Kinder mit roter Ampel`,
-    COALESCE(aa.rot_deutsch, 0) AS `4,5, rote , deutsche Herkunftssprache`,
-    COALESCE(aa.rot_nd, 0) AS `4,5, rot, nicht deutsche Herkunftssprache`,
-    COALESCE(aa.rot_1_12, 0) AS `4,5, rot Ampel -  1-12 Monate`,
-    COALESCE(aa.rot_12_24, 0) AS `4,5, rot Ampel - 12-24 Monate`,
-    COALESCE(aa.rot_24_36, 0) AS `4,5, rot Ampel - 24-36 Monate`,
-    COALESCE(aa.rot_mehr_36, 0) AS `4,5, rot  Ampel - mehr als 36 Monate`
+    COALESCE(aa.rot_gesamt, 0) AS `rot gesamt`,
+    COALESCE(aa.rot_deutsch, 0) AS `rot, deutsche Herkunftssprache`,
+    COALESCE(aa.rot_nd, 0) AS `rot, nicht deutsche Herkunftssprache`,
+    COALESCE(aa.rot_1_12, 0) AS `rot - 1-12 Monate`,
+    COALESCE(aa.rot_12_24, 0) AS `rot - 12-24 Monate`,
+    COALESCE(aa.rot_24_36, 0) AS `rot - 24-36 Monate`,
+    COALESCE(aa.rot_mehr_36, 0) AS `rot - mehr als 36 Monate`
 
 FROM
     beokiz_prod.yearly_evaluations ye
