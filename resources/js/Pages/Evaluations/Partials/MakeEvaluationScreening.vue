@@ -154,7 +154,7 @@ const screeningEvaluation = async () => {
                     <v-col v-if="dazDependent" cols="12" sm="3">
                         <v-checkbox
                             v-model="screeningForm.is_daz"
-                            label="Deutsch ist nicht Erstsprache des Kindes"
+                            label="Deutsch ist nicht Erstsprache des Kindes (Angabe wie auf Kitagutschein)"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
