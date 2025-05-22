@@ -395,7 +395,7 @@ chown -R www-data:www-data ./
 https://portal.beokiz.de
 ```
 
-**Or, if it is dev**
+**Or, if it is development**
 ```
 https://dev.beokiz.de
 ```
